@@ -2,10 +2,20 @@
 
 import type { EPGProgram } from './useEPG';
 
+export type EpgSkeletonProgram = {
+    index: number;
+    startMinutes: number;
+    durationMinutes: number;
+};
+
+export const MINUTES_IN_DAY = 24 * 60;
 export const HOUR_IN_MS = 60 * 60 * 1000;
 export const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
 export const EPG_PLAYER_NOW_REFRESH_INTERVAL = 1000;
 export const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
+export const EPG_SKELETON_MIN_DURATION_MINUTES = 30;
+export const EPG_SKELETON_MAX_DURATION_MINUTES = 120;
+export const EPG_SKELETON_STEP_MINUTES = 30;
 
 export const addonResourceUrl = (base: string, resource: string, type: string, id: string): string | null => {
     try {
@@ -207,4 +217,47 @@ export const programEndMs = (program: EPGProgram): number => {
 
 export const programTitle = (program: EPGProgram): string => {
     return program.title;
+};
+
+const seededRandom = (seed: number): number => {
+    const x = Math.sin(seed) * 10000;
+
+    return x - Math.floor(x);
+};
+
+export const getRandomEpgSkeletonDuration = (
+    seed: number,
+    minDuration = EPG_SKELETON_MIN_DURATION_MINUTES,
+    maxDuration = EPG_SKELETON_MAX_DURATION_MINUTES,
+    stepDuration = EPG_SKELETON_STEP_MINUTES,
+): number => {
+    const steps = ((maxDuration - minDuration) / stepDuration) + 1;
+    const step = Math.floor(seededRandom(seed) * steps);
+
+    return minDuration + step * stepDuration;
+};
+
+export const getEpgSkeletonPrograms = (
+    rowIndex: number,
+    seedOffset = 100,
+): EpgSkeletonProgram[] => {
+    const programs: EpgSkeletonProgram[] = [];
+    let startMinutes = 0;
+    let index = 0;
+
+    while (startMinutes < MINUTES_IN_DAY) {
+        const duration = getRandomEpgSkeletonDuration((rowIndex + 1) * seedOffset + index);
+        const endMinutes = Math.min(startMinutes + duration, MINUTES_IN_DAY);
+
+        programs.push({
+            index,
+            startMinutes,
+            durationMinutes: endMinutes - startMinutes,
+        });
+
+        startMinutes = endMinutes;
+        index += 1;
+    }
+
+    return programs;
 };

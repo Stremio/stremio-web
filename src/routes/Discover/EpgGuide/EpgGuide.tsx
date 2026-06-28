@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
-import { useEPG, EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs } from 'stremio/common/EPG';
+import { useEPG, EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEpgSkeletonPrograms } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
@@ -13,10 +13,10 @@ const MAX_PIXELS_PER_HOUR = 360; // cap — at 720 a 10-min show is 120 px (~17 
 const MIN_PROGRAM_WIDTH = 120; // px — wide enough to show a thumbnail + label
 const CHANNEL_COLUMN_WIDTH = 130;
 const ROW_HEIGHT = 56;
-const DAY_IN_MS = 24 * HOUR_IN_MS;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
 const COMPACT_DAY_COUNT = 3;
 const COMPACT_DAY_SELECTOR_QUERY = '(max-width: 800px)';
+const SKELETON_ROWS = 20;
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -296,7 +296,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                 >
                     <div ref={channelColumnInnerRef} className={styles['epg-channel-column-inner']}>
                         {loading
-                            ? Array.from({ length: 6 }, (_, i) => (
+                            ? Array.from({ length: SKELETON_ROWS }, (_, i) => (
                                 <div key={i} className={styles['epg-channel-cell']} style={{ height: `${ROW_HEIGHT}px` }}>
                                     <div className={styles['epg-skeleton']} style={{ width: '60%', height: '18px', borderRadius: '4px' }} />
                                 </div>
@@ -322,13 +322,35 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                 <div ref={viewportRef} className={styles['epg-viewport']} onScroll={onViewportScroll}>
                     <div className={styles['epg-program-grid']} style={{ width: `${totalGridWidth}px` }}>
                         {loading
-                            ? Array.from({ length: 6 }, (_, i) => (
-                                <div key={i} className={styles['epg-skeleton-row']} style={{ height: `${ROW_HEIGHT}px` }}>
-                                    <div className={styles['epg-skeleton-programs']}>
-                                        <div className={styles['epg-skeleton']} style={{ flex: 2 }} />
-                                        <div className={styles['epg-skeleton']} style={{ flex: 3 }} />
-                                        <div className={styles['epg-skeleton']} style={{ flex: 1 }} />
-                                    </div>
+                            ? Array.from({ length: SKELETON_ROWS }, (_, rowIndex) => (
+                                <div
+                                    key={rowIndex}
+                                    className={styles['epg-skeleton-row']}
+                                    style={{ height: `${ROW_HEIGHT}px`, width: `${totalGridWidth}px` }}
+                                >
+                                    {getEpgSkeletonPrograms(rowIndex).map((program) => {
+                                        const left = (program.startMinutes / 60) * pixelsPerHour;
+                                        const width = (program.durationMinutes / 60) * pixelsPerHour;
+
+                                        return (
+                                            <div
+                                                key={program.index}
+                                                className={styles['epg-skeleton-program']}
+                                                style={{
+                                                    left: `${left}px`,
+                                                    width: `${Math.max(4, width)}px`,
+                                                }}
+                                            >
+                                                <div className={styles['epg-skeleton-program-inner']}>
+                                                    <div className={styles['epg-skeleton-thumb']} />
+                                                    <div className={styles['epg-skeleton-content']}>
+                                                        <div className={styles['epg-skeleton-title']} />
+                                                        <div className={styles['epg-skeleton-time']} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             ))
                             : channels.length > 0
