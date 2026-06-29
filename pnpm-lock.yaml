@@ -24,8 +24,8 @@ importers:
         specifier: 5.10.0
         version: 5.10.0
       '@stremio/stremio-video':
-        specifier: 0.0.82
-        version: 0.0.82
+        specifier: 0.0.83
+        version: 0.0.83
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1
@@ -1423,8 +1423,8 @@ packages:
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
 
-  '@stremio/stremio-video@0.0.82':
-    resolution: {integrity: sha512-bY1NGlbvErqRJ7dj/dk5T5wpRmo+By8s/7adnSjUeLhwOPzypjAxoPJKHBKbpM54vXezvVSGdtmTCf/p6RkiNg==}
+  '@stremio/stremio-video@0.0.83':
+    resolution: {integrity: sha512-AACSgLvvdEyn3JPz+kr/CqX1ngUbqUHZEuKo/OhryK0lq01YzQTyMwHX3eZxijqF2vH0FAVFoUid0J967uPGkA==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6488,7 +6488,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.10.0': {}
 
-  '@stremio/stremio-video@0.0.82':
+  '@stremio/stremio-video@0.0.83':
     dependencies:
       buffer: 6.0.3
       color: 4.2.3
