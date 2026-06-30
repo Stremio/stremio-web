@@ -14,7 +14,7 @@ const UpdaterBanner = ({ className }: Props) => {
     const { t } = useTranslation();
     const { shell } = usePlatform();
     const [visible, show, hide] = useBinaryState(false);
-    const isPlayer = useMatch('/player/:stream/*');
+    const isPlayer = useMatch('/player/*');
 
     const onInstallClick = () => {
         shell.send('autoupdater-notif-clicked');
