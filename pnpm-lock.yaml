@@ -96,8 +96,8 @@ importers:
         specifier: github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6
         version: https://codeload.github.com/Stremio/spatial-navigation/tar.gz/64871b1422466f5f45d24ebc8bbd315b2ebab6a6
       stremio-translations:
-        specifier: github:Stremio/stremio-translations#89e695effcd165b6b1f2133d9bc5c4ffe37ba4be
-        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/89e695effcd165b6b1f2133d9bc5c4ffe37ba4be
+        specifier: github:Stremio/stremio-translations#5140f0db28f61b3f80939bed36df93512ca3e841
+        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/5140f0db28f61b3f80939bed36df93512ca3e841
       url:
         specifier: 0.11.4
         version: 0.11.4
@@ -4457,9 +4457,9 @@ packages:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/89e695effcd165b6b1f2133d9bc5c4ffe37ba4be:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/89e695effcd165b6b1f2133d9bc5c4ffe37ba4be}
-    version: 1.52.0
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/5140f0db28f61b3f80939bed36df93512ca3e841:
+    resolution: {gitHosted: true, integrity: sha512-VMsyYmJ9J61/lKrabbHMeQ8W2u6SixJqclJVSNNo7qCkZuZ9DepaDsmfyTK/POwql1oS2k9weXFqLC40M6gKVg==, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/5140f0db28f61b3f80939bed36df93512ca3e841}
+    version: 1.53.0
 
   string-length@4.0.2:
     resolution: {integrity: sha512-+l6rNN5fYHNhZZy41RXsYptCjA2Igmq4EG7kZAYFQI1E1VTXarr6ZPXBg6eq7Y6eK4FEhY6AJlyuFIb/v/S0VQ==}
@@ -10050,7 +10050,7 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/89e695effcd165b6b1f2133d9bc5c4ffe37ba4be: {}
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/5140f0db28f61b3f80939bed36df93512ca3e841: {}
 
   string-length@4.0.2:
     dependencies:
