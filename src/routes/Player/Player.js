@@ -11,11 +11,12 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity, useOsdClockSettings } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
+const ClockOverlay = require('./ClockOverlay/ClockOverlay');
 const Error = require('./Error');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
@@ -85,6 +86,7 @@ const Player = () => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
+    const { enabled: osdClockEnabled, format: osdClockFormat, position: osdClockPosition } = useOsdClockSettings();
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
@@ -843,6 +845,16 @@ const Player = () => {
                     <VolumeChangeIndicator
                         muted={video.state.muted}
                         volume={video.state.volume}
+                    />
+                    :
+                    null
+            }
+            {
+                fullscreen && osdClockEnabled ?
+                    <ClockOverlay
+                        className={styles['layer']}
+                        format={osdClockFormat}
+                        position={osdClockPosition}
                     />
                     :
                     null
