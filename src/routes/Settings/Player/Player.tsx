@@ -1,10 +1,9 @@
-// New i18n keys added for OSD Clock (to be submitted to stremio-translations later):
-// OSD_CLOCK_LABEL, OSD_CLOCK_FORMAT_LABEL, OSD_CLOCK_FORMAT_AUTO, OSD_CLOCK_FORMAT_12H,
-// OSD_CLOCK_FORMAT_24H, OSD_CLOCK_POSITION_LABEL, OSD_CLOCK_POSITION_TOP_LEFT,
-// OSD_CLOCK_POSITION_TOP_CENTER, OSD_CLOCK_POSITION_TOP_RIGHT
+// New i18n keys for OSD Clock (to be submitted to stremio-translations later):
+// OSD_CLOCK_OVERLAY, OSD_CLOCK_SHOW, OSD_CLOCK_FORMAT, OSD_CLOCK_FORMAT_AUTO,
+// OSD_CLOCK_FORMAT_12H, OSD_CLOCK_FORMAT_24H, OSD_CLOCK_POSITION,
+// OSD_CLOCK_POSITION_TOP_LEFT, OSD_CLOCK_POSITION_TOP_CENTER, OSD_CLOCK_POSITION_TOP_RIGHT
 
 import React, { forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ColorInput, MultiselectMenu, Toggle } from 'stremio/components';
 import { usePlatform, useOsdClockSettings } from 'stremio/common';
 import { Category, Option, Section } from '../components';
@@ -15,7 +14,6 @@ type Props = {
 };
 
 const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
-    const { t } = useTranslation();
     const { shell } = usePlatform();
     const platform = usePlatform();
 
@@ -49,16 +47,18 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         setPosition: setOsdClockPosition,
     } = useOsdClockSettings();
 
+    // Labels passed as strings — t() falls back to the string itself when the key is missing,
+    // so the UI shows proper text until these are submitted to stremio-translations.
     const osdClockFormatOptions = [
-        { label: t('OSD_CLOCK_FORMAT_AUTO'), value: 'auto' },
-        { label: t('OSD_CLOCK_FORMAT_12H'), value: '12h' },
-        { label: t('OSD_CLOCK_FORMAT_24H'), value: '24h' },
+        { label: 'Auto', value: 'auto' },
+        { label: '12-hour', value: '12h' },
+        { label: '24-hour', value: '24h' },
     ];
 
     const osdClockPositionOptions = [
-        { label: t('OSD_CLOCK_POSITION_TOP_LEFT'), value: 'top-left' },
-        { label: t('OSD_CLOCK_POSITION_TOP_CENTER'), value: 'top-center' },
-        { label: t('OSD_CLOCK_POSITION_TOP_RIGHT'), value: 'top-right' },
+        { label: 'Top left', value: 'top-left' },
+        { label: 'Top center', value: 'top-center' },
+        { label: 'Top right', value: 'top-right' },
     ];
 
     return (
@@ -144,15 +144,15 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     />
                 </Option>
             </Category>
-            <Category icon={'clock'} label={'OSD_CLOCK_LABEL'}>
-                <Option label={'OSD_CLOCK_LABEL'}>
+            <Category icon={'clock'} label={'Clock overlay'}>
+                <Option label={'Show clock'}>
                     <Toggle
                         tabIndex={-1}
                         checked={osdClockEnabled}
                         onClick={() => setOsdClockEnabled(!osdClockEnabled)}
                     />
                 </Option>
-                <Option label={'OSD_CLOCK_FORMAT_LABEL'}>
+                <Option label={'Clock format'}>
                     <MultiselectMenu
                         className={'multiselect'}
                         options={osdClockFormatOptions}
@@ -161,7 +161,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         onSelect={setOsdClockFormat}
                     />
                 </Option>
-                <Option label={'OSD_CLOCK_POSITION_LABEL'}>
+                <Option label={'Clock position'}>
                     <MultiselectMenu
                         className={'multiselect'}
                         options={osdClockPositionOptions}
