@@ -96,6 +96,29 @@ html:not(.active-slider-within) {
             transform: translateY(-50%);
         }
 
+        &.clock-overlay-layer {
+            left: var(--safe-area-inset-left);
+            right: var(--safe-area-inset-right);
+            bottom: initial;
+            display: flex;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: transparent;
+            pointer-events: none;
+
+            &.top-left {
+                justify-content: flex-start;
+            }
+
+            &.top-center {
+                justify-content: center;
+            }
+
+            &.top-right {
+                justify-content: flex-end;
+            }
+        }
+
         &.control-bar-layer {
             left: var(--safe-area-inset-left);
             right: var(--safe-area-inset-right);
