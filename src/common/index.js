@@ -7,6 +7,7 @@ const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
 const { ShortcutsProvider, useShortcuts, onShortcut } = require('./Shortcuts');
 const { DiscordProvider, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('./Discord');
+const { OsdClockProvider, useOsdClock, formatClockTime } = require('./OsdClock');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
@@ -31,7 +32,6 @@ const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
 const { default: useOrientation } = require('./useOrientation');
 const { default: useLanguageSorting } = require('./useLanguageSorting');
-const useOsdClockSettings = require('./useOsdClockSettings');
 
 module.exports = {
     FileDropProvider,
@@ -51,6 +51,9 @@ module.exports = {
     useDiscord,
     EMPTY_DISCORD_TIMESTAMPS,
     getPlaybackDiscordActivity,
+    OsdClockProvider,
+    useOsdClock,
+    formatClockTime,
     CONSTANTS,
     withCoreSuspender,
     useCoreSuspender,
@@ -77,5 +80,4 @@ module.exports = {
     useTranslate,
     useOrientation,
     useLanguageSorting,
-    useOsdClockSettings,
 };

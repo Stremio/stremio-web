@@ -7,7 +7,7 @@ const { useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
 const { Routes } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, OsdClockProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const DeepLinkHandler = require('./DeepLinkHandler');
@@ -187,19 +187,21 @@ const App = () => {
                     <GamepadProvider enabled={gamepadSupportEnabled} onGuide={toggleGamepadModal}>
                         <ShortcutsProvider onShortcut={onShortcut}>
                             <FullscreenProvider>
-                                <DiscordProvider>
-                                    {
-                                        shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
-                                    }
-                                    {
-                                        gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
-                                    }
-                                    <ServicesToaster />
-                                    <SearchParamsHandler />
-                                    <DeepLinkHandler />
-                                    <UpdaterBanner className={styles['updater-banner-container']} />
-                                    <ProtectedRoutes />
-                                </DiscordProvider>
+                                <OsdClockProvider>
+                                    <DiscordProvider>
+                                        {
+                                            shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
+                                        }
+                                        {
+                                            gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
+                                        }
+                                        <ServicesToaster />
+                                        <SearchParamsHandler />
+                                        <DeepLinkHandler />
+                                        <UpdaterBanner className={styles['updater-banner-container']} />
+                                        <ProtectedRoutes />
+                                    </DiscordProvider>
+                                </OsdClockProvider>
                             </FullscreenProvider>
                         </ShortcutsProvider>
                     </GamepadProvider>
