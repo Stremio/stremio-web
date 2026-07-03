@@ -19,4 +19,12 @@ type Video = {
     upcoming: boolean,
     deepLinks: VideoDeepLinks,
     scheduled: boolean,
+    startTime?: string | null,
+    endTime?: string | null,
+    runtime?: string | null,
+    releaseInfo?: string | null,
+    genres?: string[],
+    cast?: string[],
+    director?: string[],
+    links?: Link[],
 };

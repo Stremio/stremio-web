@@ -25,10 +25,34 @@
         opacity: 0.9;
     }
 
+    .live-badge-layer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 3.25rem;
+        height: 1.5rem;
+        padding: 0 0.5rem;
+        margin: 0 auto;
+        border-radius: 0.25rem;
+        background-color: #e50914;
+
+        .live-badge-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1;
+            text-transform: uppercase;
+            color: #fff;
+        }
+    }
+
     .slider {
         flex: 1;
         align-self: stretch;
         margin: 0 var(--thumb-size);
+
+        &.live-slider:global(.disabled) {
+            opacity: 1;
+        }
 
         .slider-track-after {
             background-color: var(--primary-accent-color);

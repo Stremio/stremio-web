@@ -1,22 +1,25 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { EpgGuideRow, EpgChannel } from './EpgGuideRow';
-import { useEPG, EPGProgram } from './useEPG';
-import { programStartMs, programEndMs } from './epgUtils';
+import { useTranslation } from 'react-i18next';
+import Icon from '@stremio/stremio-icons/react';
+import { MultiselectMenu } from 'stremio/components';
+import { EpgGuideRow } from './EpgGuideRow';
+import { useEPG, EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEpgSkeletonPrograms } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
-const MAX_PIXELS_PER_HOUR = 720; // cap — at 720 a 10-min show is 120 px (~17 000 px total grid)
+const MAX_PIXELS_PER_HOUR = 360; // cap — at 720 a 10-min show is 120 px (~17 000 px total grid)
 const MIN_PROGRAM_WIDTH = 120; // px — wide enough to show a thumbnail + label
 const CHANNEL_COLUMN_WIDTH = 130;
-const ROW_HEIGHT = 68;
-const HOUR_IN_MS = 60 * 60 * 1000;
-const DAY_IN_MS = 24 * HOUR_IN_MS;
+const ROW_HEIGHT = 56;
 const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when choosing scale
+const COMPACT_DAY_COUNT = 3;
+const COMPACT_DAY_SELECTOR_QUERY = '(max-width: 800px)';
+const SKELETON_ROWS = 20;
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => ({
     index: i,
@@ -44,44 +47,62 @@ function generateDayRange(before: number, after: number): Date[] {
     });
 }
 
+function abbreviate(value: string): string {
+    return Array.from(value).slice(0, 3).join('');
+}
+
 type Props = {
-    addon: Addon | null;
-    onProgramSelect: (program: EPGProgram, channel: EpgChannel) => void;
+    requestBase: string | null;
+    channels: EPGChannel[];
+    catalogLoading: boolean;
+    hasNextPage: boolean;
+    loadNextPage: () => void;
+    now: number;
+    onProgramSelect: (program: EPGProgram, channel: EPGChannel) => void;
 };
 
-const EpgGuide = ({ addon, onProgramSelect }: Props) => {
+const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNextPage, now, onProgramSelect }: Props) => {
+    const { t } = useTranslation();
     const viewportRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     // The inner wrapper of the channel column is what we translate — the outer clips it
     const channelColumnInnerRef = useRef<HTMLDivElement>(null);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-    const dropdownListRef = useRef<HTMLDivElement>(null);
 
     const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
-    const [nowLabel, setNowLabel] = useState(() => {
-        const d = new Date();
-        return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    });
+    const [compactDaySelector, setCompactDaySelector] = useState(() =>
+        typeof window !== 'undefined' && window.matchMedia(COMPACT_DAY_SELECTOR_QUERY).matches,
+    );
 
-    const days = useMemo(() => generateDayRange(3, 3), []);
+    const { programs, loading: programsLoading } = useEPG(requestBase, channels);
+    const loading = catalogLoading || (programsLoading && channels.length === 0);
+
+    const days = useMemo(() => {
+        const baseDays = generateDayRange(3, 3);
+        const programDays = Array.from(
+            new Set(Object.values(programs).flat().map((program) => {
+                const day = new Date(program.startTime);
+                day.setHours(0, 0, 0, 0);
+                return day.getTime();
+            })),
+        );
+
+        return Array.from(
+            new Set([
+                ...baseDays.map((day) => day.getTime()),
+                ...programDays,
+            ]),
+        )
+            .sort((a, b) => a - b)
+            .map((time) => new Date(time));
+    }, [programs]);
 
     const effectiveDay = useMemo(() => {
-        if (selectedDay) return selectedDay;
+        if (selectedDay && days.some((day) => day.getTime() === selectedDay.getTime())) return selectedDay;
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
         return days.find((d) => d.getTime() === todayStart.getTime()) ?? days[0];
     }, [selectedDay, days]);
-
-    const dateStr = useMemo(() => {
-        const y = effectiveDay.getFullYear();
-        const m = String(effectiveDay.getMonth() + 1).padStart(2, '0');
-        const d = String(effectiveDay.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`;
-    }, [effectiveDay]);
-
-    const { channels, programs, loading } = useEPG(addon, dateStr);
 
     // Compute a scale that guarantees every program (≥ 5 min) is at least
     // MIN_PROGRAM_WIDTH pixels wide, so thumbnails always fit.
@@ -121,6 +142,8 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                 if (headerRef.current) {
                     headerRef.current.scrollLeft = viewport.scrollLeft;
                 }
+                const slot = Math.max(0, Math.min(TIME_SLOTS.length - 1, Math.round(viewport.scrollLeft / halfHourPx)));
+                setSelectedSlot((selectedSlot) => selectedSlot === slot ? selectedSlot : slot);
             });
         };
 
@@ -129,7 +152,7 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
             viewport.removeEventListener('scroll', onScroll);
             if (rafId !== null) cancelAnimationFrame(rafId);
         };
-    }, []);
+    }, [halfHourPx]);
 
     // Reset channel column translation when the day changes (viewport scroll resets)
     useEffect(() => {
@@ -145,34 +168,62 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
         }
     }, []);
 
-    // Scroll to current time when the effective day is today
+    // Keep the horizontal scroll pinned to the selected time slot as pages load.
     useEffect(() => {
         if (!viewportRef.current) return;
-        const now = new Date();
-        const start = new Date(effectiveDay);
-        start.setHours(0, 0, 0, 0);
-        if (now >= start && now.getTime() < start.getTime() + DAY_IN_MS) {
-            viewportRef.current.scrollLeft = Math.max(0, ((now.getTime() - start.getTime()) / HOUR_IN_MS) * pixelsPerHour - 200);
-        }
-    }, [effectiveDay, pixelsPerHour]);
+        viewportRef.current.scrollLeft = selectedSlot * halfHourPx;
+    }, [effectiveDay, halfHourPx, selectedSlot]);
 
-    const handleSlotSelect = useCallback((index: number) => {
+    const handleSlotSelect = useCallback((value: string | number | null) => {
+        if (value === null) return;
+
+        const index = Number(value);
+        if (!Number.isInteger(index)) return;
+
         setSelectedSlot(index);
-        setDropdownOpen(false);
         if (viewportRef.current) {
             viewportRef.current.scrollLeft = index * halfHourPx;
         }
     }, [halfHourPx]);
 
-    // Reset selected day when the addon changes
+    const onViewportScroll = useCallback(() => {
+        const viewport = viewportRef.current;
+        if (viewport && hasNextPage && viewport.scrollTop + viewport.clientHeight >= viewport.scrollHeight - 400) {
+            loadNextPage();
+        }
+    }, [hasNextPage, loadNextPage]);
+
+    // Reset selected day when the request changes
     useEffect(() => {
         setSelectedDay(null);
-    }, [addon]);
+    }, [requestBase]);
 
     const selectedDayIndex = useMemo(
         () => days.findIndex((d) => effectiveDay && d.getTime() === effectiveDay.getTime()),
         [days, effectiveDay],
     );
+
+    const visibleDays = useMemo(() => {
+        if (!compactDaySelector || days.length <= COMPACT_DAY_COUNT) return days;
+
+        const selectedIndex = Math.max(0, selectedDayIndex);
+        const start = Math.min(
+            Math.max(0, selectedIndex - Math.floor(COMPACT_DAY_COUNT / 2)),
+            Math.max(0, days.length - COMPACT_DAY_COUNT),
+        );
+
+        return days.slice(start, start + COMPACT_DAY_COUNT);
+    }, [compactDaySelector, days, selectedDayIndex]);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia(COMPACT_DAY_SELECTOR_QUERY);
+        const onChange = () => setCompactDaySelector(mediaQuery.matches);
+
+        onChange();
+        mediaQuery.addEventListener('change', onChange);
+
+        return () => mediaQuery.removeEventListener('change', onChange);
+    }, []);
 
     return (
         <div className={styles['epg-guide']} onWheel={handleWheel}>
@@ -183,9 +234,9 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                     disabled={selectedDayIndex <= 0}
                     onClick={() => selectedDayIndex > 0 && setSelectedDay(days[selectedDayIndex - 1])}
                 >
-                    ‹
+                    <Icon className={styles['epg-day-arrow-icon']} name={'chevron-back'} />
                 </button>
-                {days.map((day) => {
+                {visibleDays.map((day) => {
                     const active = effectiveDay.getTime() === day.getTime();
                     const today = isSameDay(day, new Date());
                     return (
@@ -194,10 +245,8 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                             className={`${styles['epg-day-btn']}${active ? ` ${styles['epg-day-btn-active']}` : ''}`}
                             onClick={() => setSelectedDay(day)}
                         >
-                            {today
-                                ? <><span className={styles['epg-day-weekday']}>Today</span><span className={styles['epg-day-date']}>{MONTHS[day.getMonth()]} {day.getDate()}</span></>
-                                : <><span className={styles['epg-day-weekday']}>{WEEKDAYS[day.getDay()]}</span><span className={styles['epg-day-date']}>{day.getDate()}</span></>
-                            }
+                            <span className={styles['epg-day-weekday']}>{abbreviate(t(WEEKDAYS[day.getDay()]))}</span>
+                            <span className={styles['epg-day-date']}>{today ? `${abbreviate(t(MONTHS[day.getMonth()]))} ${day.getDate()}` : day.getDate()}</span>
                         </button>
                     );
                 })}
@@ -206,39 +255,22 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                     disabled={selectedDayIndex >= days.length - 1}
                     onClick={() => selectedDayIndex < days.length - 1 && setSelectedDay(days[selectedDayIndex + 1])}
                 >
-                    ›
+                    <Icon className={styles['epg-day-arrow-icon']} name={'chevron-forward'} />
                 </button>
             </div>
 
             {/* Time header */}
             <div className={styles['epg-header-row']}>
-                <div
-                    className={styles['epg-channel-column-header']}
-                    style={{ width: `${CHANNEL_COLUMN_WIDTH}px` }}
-                >
-                    <div ref={dropdownRef} className={styles['epg-time-picker']}>
-                        <button
-                            className={styles['epg-now-badge']}
-                            onClick={() => setDropdownOpen((o) => !o)}
-                        >
-                            {nowLabel}
-                            <span className={styles['epg-now-badge-arrow']}>▾</span>
-                        </button>
-                        {dropdownOpen && (
-                            <div ref={dropdownListRef} className={styles['epg-time-dropdown']}>
-                                {TIME_SLOTS.map((slot) => (
-                                    <button
-                                        key={slot.index}
-                                        data-active={slot.index === selectedSlot ? 'true' : undefined}
-                                        className={`${styles['epg-time-dropdown-item']}${slot.index === selectedSlot ? ` ${styles['epg-time-dropdown-item-active']}` : ''}`}
-                                        onClick={() => handleSlotSelect(slot.index)}
-                                    >
-                                        {slot.label}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                <div className={styles['epg-channel-column-header']}>
+                    <MultiselectMenu
+                        className={styles['epg-time-menu']}
+                        options={TIME_SLOTS.map((slot) => ({
+                            label: slot.label,
+                            value: slot.index,
+                        }))}
+                        value={selectedSlot}
+                        onSelect={handleSlotSelect}
+                    />
                 </div>
                 <div ref={headerRef} className={styles['epg-header-viewport']}>
                     <div className={styles['epg-header-time-slots']} style={{ width: `${totalGridWidth}px` }}>
@@ -264,7 +296,7 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                 >
                     <div ref={channelColumnInnerRef} className={styles['epg-channel-column-inner']}>
                         {loading
-                            ? Array.from({ length: 6 }, (_, i) => (
+                            ? Array.from({ length: SKELETON_ROWS }, (_, i) => (
                                 <div key={i} className={styles['epg-channel-cell']} style={{ height: `${ROW_HEIGHT}px` }}>
                                     <div className={styles['epg-skeleton']} style={{ width: '60%', height: '18px', borderRadius: '4px' }} />
                                 </div>
@@ -287,16 +319,38 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                 </div>
 
                 {/* Scrollable program grid */}
-                <div ref={viewportRef} className={styles['epg-viewport']}>
+                <div ref={viewportRef} className={styles['epg-viewport']} onScroll={onViewportScroll}>
                     <div className={styles['epg-program-grid']} style={{ width: `${totalGridWidth}px` }}>
                         {loading
-                            ? Array.from({ length: 6 }, (_, i) => (
-                                <div key={i} className={styles['epg-skeleton-row']} style={{ height: `${ROW_HEIGHT}px` }}>
-                                    <div className={styles['epg-skeleton-programs']}>
-                                        <div className={styles['epg-skeleton']} style={{ flex: 2 }} />
-                                        <div className={styles['epg-skeleton']} style={{ flex: 3 }} />
-                                        <div className={styles['epg-skeleton']} style={{ flex: 1 }} />
-                                    </div>
+                            ? Array.from({ length: SKELETON_ROWS }, (_, rowIndex) => (
+                                <div
+                                    key={rowIndex}
+                                    className={styles['epg-skeleton-row']}
+                                    style={{ height: `${ROW_HEIGHT}px`, width: `${totalGridWidth}px` }}
+                                >
+                                    {getEpgSkeletonPrograms(rowIndex).map((program) => {
+                                        const left = (program.startMinutes / 60) * pixelsPerHour;
+                                        const width = (program.durationMinutes / 60) * pixelsPerHour;
+
+                                        return (
+                                            <div
+                                                key={program.index}
+                                                className={styles['epg-skeleton-program']}
+                                                style={{
+                                                    left: `${left}px`,
+                                                    width: `${Math.max(4, width)}px`,
+                                                }}
+                                            >
+                                                <div className={styles['epg-skeleton-program-inner']}>
+                                                    <div className={styles['epg-skeleton-thumb']} />
+                                                    <div className={styles['epg-skeleton-content']}>
+                                                        <div className={styles['epg-skeleton-title']} />
+                                                        <div className={styles['epg-skeleton-time']} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             ))
                             : channels.length > 0
@@ -306,13 +360,14 @@ const EpgGuide = ({ addon, onProgramSelect }: Props) => {
                                         channel={channel}
                                         programs={programs[channel.id] ?? []}
                                         selectedDay={effectiveDay}
+                                        now={now}
                                         onProgramClick={onProgramSelect}
                                         pixelsPerHour={pixelsPerHour}
                                     />
                                 ))
                                 : (
                                     <div className={styles['epg-empty']}>
-                                        No schedule data available for this catalog
+                                        {t('NO_STREAM')}
                                     </div>
                                 )
                         }

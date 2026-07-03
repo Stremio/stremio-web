@@ -4,12 +4,9 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .epg-row {
-    position: relative;
     display: flex;
-    height: 68px;
+    height: 60px;
     flex-shrink: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    box-sizing: border-box;
 }
 
 .epg-program-list {
@@ -21,54 +18,60 @@
 
 .epg-program-block {
     position: absolute;
-    top: 4px;
-    bottom: 4px;
-    padding-right: 3px;
-    box-sizing: border-box;
+    padding-right: 4px;
+    width: 100%;
 
     &:hover {
         z-index: 10;
+        min-width: max-content;
     }
 
     &-inner {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
         width: 100%;
-        height: 100%;
-        padding: 0 0.8rem 0 0.6rem;
-        border-radius: 0.6rem;
-        background-color: rgba(255, 255, 255, 0.07);
-        cursor: pointer;
-        overflow: hidden;
+        height: 56px;
+        display: flex;
         box-sizing: border-box;
+        border-radius: 0.5rem;
+        padding: 0 1rem 0 0.5rem;
+        cursor: pointer;
+        text-align: left;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--color-foreground);
+        background-color: #1E1C2E;
         transition: background-color 0.12s;
 
         &:hover {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: #2B293F;
+            z-index: 10;
+            min-width: max-content;
+            min-height: 56px;
+            height: auto;
+            overflow: visible;
         }
     }
 
     &-current {
         .epg-program-block-inner {
-            background-color: rgba(94, 79, 162, 0.35);
-            border-left: 2.5px solid rgb(94, 79, 162);
+            background-color: #5e4fa2;
 
             &:hover {
-                background-color: rgba(94, 79, 162, 0.5);
+                background-color: var(--primary-accent-color);
             }
         }
     }
 }
 
 .epg-program-thumb {
-    flex: none;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.4rem;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.375rem;
     background-size: cover;
     background-position: center;
-    background-color: var(--overlay-color);
+    background-color: var(--color-surface);
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
 .epg-program-content {
@@ -77,12 +80,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.15rem;
+    gap: 0.125rem;
 }
 
 .epg-program-title {
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 400;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -90,12 +93,12 @@
 }
 
 .epg-program-time {
-    font-size: 1.05rem;
+    font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--primary-foreground-color);
-    opacity: 0.45;
+    opacity: 0.3;
 }
 
 .epg-now-line {

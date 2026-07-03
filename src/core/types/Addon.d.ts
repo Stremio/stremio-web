@@ -15,7 +15,7 @@ type AddonManifest = {
     types: string[],
     catalogs?: AddonManifestCatalog[],
     behaviorHints?: {
-        epgEndpoint?: string,
+        epgProvider?: boolean,
         [key: string]: unknown,
     },
 };

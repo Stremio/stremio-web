@@ -12,7 +12,8 @@ const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const useInstalledAddons = require('../Addons/useInstalledAddons');
-const {default: EpgGuide} = require('./EpgGuide');
+const { default: EpgGuide } = require('./EpgGuide');
+const { useEpgNow } = require('stremio/common/EPG');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
@@ -41,17 +42,33 @@ const Discover = () => {
     const metasContainerRef = React.useRef();
     const metaPreviewRef = React.useRef();
 
-    const [selectedProgram, setSelectedProgram] = React.useState(null);
+    const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
     const installedAddons = useInstalledAddons({ transportUrl: null, catalogId: null });
     const selectedAddon = React.useMemo(() => {
         const selected = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
         const addon = installedAddons.catalog.find(({ manifest }) => manifest.id === selected?.manifest.id);
         return addon;
     }, [discover.selectable.catalogs, installedAddons]);
-    const isEpgLayout = React.useMemo(() => !!selectedAddon?.manifest?.behaviorHints?.epgEndpoint, [selectedAddon]);
-    const onProgramSelect = React.useCallback((program) => {
-        setSelectedProgram(program);
-    }, [setSelectedProgram]);
+    const isEpgLayout = React.useMemo(() => selectedAddon?.manifest?.behaviorHints?.epgProvider === true, [selectedAddon]);
+    const epgNow = useEpgNow(isEpgLayout);
+    const epgChannels = React.useMemo(() => {
+        return discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
+            discover.catalog.content.content.map((metaItem) => ({
+                id: metaItem.id,
+                type: metaItem.type,
+                name: metaItem.name,
+                logo: metaItem.logo ?? metaItem.poster ?? null,
+                deepLinks: metaItem.deepLinks,
+            }))
+            :
+            [];
+    }, [discover.catalog]);
+    const onProgramSelect = React.useCallback((program, channel) => {
+        setSelectedEpgProgram({ program, channel });
+    }, []);
+    const closeEpgPreviewModal = React.useCallback(() => {
+        setSelectedEpgProgram(null);
+    }, []);
 
     React.useEffect(() => {
         if (!isEpgLayout && discover.catalog?.content.type === 'Loading' && metasContainerRef.current) {
@@ -132,9 +149,8 @@ const Discover = () => {
         closeInputsModal();
         closeAddonModal();
         setSelectedMetaItemIndex(0);
-        setSelectedProgram(null);
+        setSelectedEpgProgram(null);
     }, [discover.selected]);
-
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
             <div className={styles['message-container']}>
@@ -158,7 +174,12 @@ const Discover = () => {
         if (isEpgLayout) {
             return (
                 <EpgGuide
-                    addon={selectedAddon}
+                    requestBase={discover.selected?.request?.base ?? null}
+                    channels={epgChannels}
+                    catalogLoading={discover.catalog.content.type === 'Loading'}
+                    hasNextPage={hasNextPage}
+                    loadNextPage={loadNextPage}
+                    now={epgNow}
                     onProgramSelect={onProgramSelect}
                 />
             );
@@ -202,17 +223,7 @@ const Discover = () => {
 
     const renderMetaPreview = () => {
         if (isEpgLayout) {
-            if (selectedProgram === null) return null;
-            return (
-                <MetaPreview
-                    className={styles['meta-preview-container']}
-                    compact={true}
-                    name={selectedProgram.title}
-                    background={selectedProgram.thumbnail}
-                    released={selectedProgram.start ? new Date(selectedProgram.start) : null}
-                    description={selectedProgram.description}
-                />
-            );
+            return null;
         }
 
         if (selectedMetaItem !== null) {
@@ -242,6 +253,36 @@ const Discover = () => {
         }
 
         return null;
+    };
+    const renderEpgPreviewModal = () => {
+        if (!isEpgLayout || selectedEpgProgram === null) {
+            return null;
+        }
+
+        const { program } = selectedEpgProgram;
+        const isCurrentProgram = program.startTime.getTime() <= epgNow && epgNow < program.endTime.getTime();
+
+        return (
+            <ModalDialog
+                className={styles['epg-preview-modal']}
+                background={program.thumbnail ?? undefined}
+                onCloseRequest={closeEpgPreviewModal}
+            >
+                <MetaPreview
+                    className={styles['epg-preview']}
+                    compact={true}
+                    name={program.title}
+                    logo={program.channelLogo}
+                    background={program.thumbnail}
+                    runtime={program.runtime}
+                    releaseInfo={program.releaseInfo}
+                    released={program.released}
+                    description={program.overview}
+                    links={program.links}
+                    deepLinks={isCurrentProgram ? program.deepLinks : undefined}
+                />
+            </ModalDialog>
+        );
     };
 
     return (
@@ -280,6 +321,7 @@ const Discover = () => {
                 </div>
                 {renderMetaPreview()}
             </div>
+            {renderEpgPreviewModal()}
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
