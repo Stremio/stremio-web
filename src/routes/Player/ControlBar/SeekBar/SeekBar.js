@@ -11,11 +11,13 @@ const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed, live, liveProgress }) => {
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed, live, buffering }) => {
     const { t } = useTranslation();
-    const progressTime = typeof liveProgress === 'number' && !isNaN(liveProgress) ? liveProgress : 0;
+    // Live EPG streams are not seekable: once playback is going show the bar
+    // completely filled, and keep it empty while still loading/buffering.
+    const liveFill = live && !buffering ? 100 : 0;
     const progressDuration = live ? 100 : duration;
-    const currentTime = live ? progressTime : time;
+    const currentTime = live ? liveFill : time;
     const disabled = live || currentTime === null || isNaN(currentTime) || progressDuration === null || isNaN(progressDuration);
     const routeFocused = useRouteFocused();
     const [seekTime, setSeekTime] = React.useState(null);
@@ -70,7 +72,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
                         seekTime !== null ? seekTime : currentTime
                         :
                         live ?
-                            progressTime
+                            liveFill
                             :
                             0
                 }
@@ -88,7 +90,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
             />
             <Button onClick={onRemainingTimeModeToggle} tabIndex={-1}>
                 <div className={styles['label']}>
-                    {remainingTimeMode && duration !== null && !isNaN(duration)
+                    {!live && remainingTimeMode && duration !== null && !isNaN(duration)
                         ? formatTime((duration - currentTime)/playbackSpeed, '-')
                         : live ? '' : formatTime(duration) }
                 </div>
@@ -105,7 +107,7 @@ SeekBar.propTypes = {
     onSeekRequested: PropTypes.func,
     playbackSpeed: PropTypes.number,
     live: PropTypes.bool,
-    liveProgress: PropTypes.number
+    buffering: PropTypes.bool
 };
 
 module.exports = SeekBar;

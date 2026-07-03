@@ -191,10 +191,6 @@ const Player = () => {
             null;
     }, [isEpg, metaVideos, currentEpgVideo]);
 
-    const epgProgress = React.useMemo(() => {
-        return isEpg ? getEpgProgress(currentEpgVideo, epgNow) : null;
-    }, [isEpg, currentEpgVideo, epgNow]);
-
     React.useEffect(() => {
         if (isEpg) {
             nextVideoPopupDismissed.current = false;
@@ -1004,7 +1000,7 @@ const Player = () => {
                 videoScale={video.state.videoScale}
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
                 live={isEpg}
-                liveProgress={epgProgress}
+                buffering={video.state.buffering || !video.state.loaded}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onToggleSideDrawer={toggleSideDrawer}

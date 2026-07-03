@@ -55,8 +55,13 @@ const getEpgVideo = (props, now) => {
 
 const ContinueWatchingItem = ({ _id, notifications, ...props }) => {
     const core = useCore();
-    const hasEpgVideos = Array.isArray(props.epgVideos) && props.epgVideos.length > 0;
-    const now = useEpgNow(hasEpgVideos || props.behaviorHints?.epgProvider === true);
+    const hasEpgProgram = [
+        props.currentVideo,
+        props.video,
+        ...(Array.isArray(props.videos) ? props.videos : []),
+        ...(Array.isArray(props.epgVideos) ? props.epgVideos : []),
+    ].some(hasEpgProgramTimes);
+    const now = useEpgNow(hasEpgProgram || props.behaviorHints?.epgProvider === true);
     const epgVideo = getEpgVideo(props, now);
     const isEpg = epgVideo !== null || props.behaviorHints?.epgProvider === true;
     const epgProgress = epgVideo !== null ? getEpgProgress(epgVideo, now) : null;
