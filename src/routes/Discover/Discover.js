@@ -7,7 +7,7 @@ const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { CONSTANTS, useBinaryState, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -50,19 +50,89 @@ const Discover = () => {
         return addon;
     }, [discover.selectable.catalogs, installedAddons]);
     const isEpgLayout = React.useMemo(() => selectedAddon?.manifest?.behaviorHints?.epgProvider === true, [selectedAddon]);
+    const [epgDate, setEpgDate] = React.useState(null);
+    // Load the core LiveTvGuide model for the selected guide catalog.
+    // A null `date` defaults to today core-side; core appends the `date`
+    // extra to the catalog request and expects `metasDetailed` back.
+    React.useEffect(() => {
+        if (!isEpgLayout || !discover.selected?.request) {
+            return;
+        }
+
+        core.transport.dispatch({
+            action: 'Load',
+            args: {
+                model: 'LiveTvGuide',
+                args: {
+                    request: discover.selected.request,
+                    date: epgDate,
+                },
+            },
+        }, 'live_tv_guide');
+
+        return () => {
+            core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
+        };
+    }, [isEpgLayout, discover.selected, epgDate]);
+    React.useEffect(() => {
+        setEpgDate(null);
+    }, [discover.selected]);
+    const liveTvGuide = useModelState({ model: 'live_tv_guide' });
     const epgNow = useEpgNow(isEpgLayout);
     const epgChannels = React.useMemo(() => {
-        return discover.catalog !== null && discover.catalog.content.type === 'Ready' ?
-            discover.catalog.content.content.map((metaItem) => ({
-                id: metaItem.id,
-                type: metaItem.type,
-                name: metaItem.name,
-                logo: metaItem.logo ?? metaItem.poster ?? null,
-                deepLinks: metaItem.deepLinks,
-            }))
-            :
-            [];
-    }, [discover.catalog]);
+        return (liveTvGuide?.channels ?? []).map(({ channel, deepLinks }) => ({
+            id: channel.id,
+            type: channel.type,
+            name: channel.name,
+            logo: channel.logo ?? channel.poster ?? null,
+            deepLinks,
+        }));
+    }, [liveTvGuide]);
+    const epgPrograms = React.useMemo(() => {
+        return (liveTvGuide?.channels ?? []).reduce((programs, { channel, shows }) => {
+            programs[channel.id] = shows.map((show) => ({
+                id: show.id,
+                title: show.title ?? channel.name,
+                overview: show.overview ?? null,
+                thumbnail: show.thumbnail ?? null,
+                links: show.links,
+                runtime: show.runtime ?? null,
+                releaseInfo: show.releaseInfo ?? null,
+                released: show.released ?? null,
+                genres: show.genres,
+                cast: show.cast,
+                directors: show.directors,
+                startTime: new Date(show.startTime),
+                endTime: new Date(show.endTime),
+                channelId: channel.id,
+                channelName: channel.name,
+                channelLogo: channel.logo ?? channel.poster ?? null,
+                deepLinks: show.deepLinks,
+                isLive: show.isLive,
+                raw: show,
+            }));
+            return programs;
+        }, {});
+    }, [liveTvGuide]);
+    const epgLoading = React.useMemo(() => {
+        const catalog = liveTvGuide?.catalog ?? [];
+        return catalog.length === 0 || catalog[catalog.length - 1].type === 'Loading';
+    }, [liveTvGuide]);
+    const epgHasNextPage = (liveTvGuide?.selectable?.nextPage ?? null) !== null;
+    const epgLoadNextPage = React.useCallback(() => {
+        core.transport.dispatch({
+            action: 'LiveTvGuide',
+            args: { action: 'LoadNextPage' },
+        }, 'live_tv_guide');
+    }, []);
+    const onEpgDayChange = React.useCallback((day) => {
+        const date = [
+            day.getFullYear(),
+            String(day.getMonth() + 1).padStart(2, '0'),
+            String(day.getDate()).padStart(2, '0'),
+        ].join('-');
+        setEpgDate(date);
+    }, []);
     const onProgramSelect = React.useCallback((program, channel) => {
         setSelectedEpgProgram({ program, channel });
     }, []);
@@ -168,22 +238,27 @@ const Discover = () => {
     );
 
     const renderCatalogContent = () => {
-        if (discover.catalog === null) return renderEmptyState();
-        if (discover.catalog.content.type === 'Err') return renderErrorState(discover.catalog.content.content);
-
+        // in EPG mode the discover catalog is intentionally not loaded -
+        // the guide feeds from the LiveTvGuide model instead
         if (isEpgLayout) {
             return (
                 <EpgGuide
                     requestBase={discover.selected?.request?.base ?? null}
                     channels={epgChannels}
-                    catalogLoading={discover.catalog.content.type === 'Loading'}
-                    hasNextPage={hasNextPage}
-                    loadNextPage={loadNextPage}
+                    programs={epgPrograms}
+                    programsLoading={epgLoading}
+                    catalogLoading={epgLoading}
+                    hasNextPage={epgHasNextPage}
+                    loadNextPage={epgLoadNextPage}
                     now={epgNow}
                     onProgramSelect={onProgramSelect}
+                    onDayChange={onEpgDayChange}
                 />
             );
         }
+
+        if (discover.catalog === null) return renderEmptyState();
+        if (discover.catalog.content.type === 'Err') return renderErrorState(discover.catalog.content.content);
 
         if (discover.catalog.content.type === 'Loading') {
             return (

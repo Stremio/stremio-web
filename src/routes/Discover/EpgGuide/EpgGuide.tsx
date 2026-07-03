@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
-import { useEPG, EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEpgSkeletonPrograms } from 'stremio/common/EPG';
+import { EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEpgSkeletonPrograms } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
@@ -54,14 +54,19 @@ function abbreviate(value: string): string {
 type Props = {
     requestBase: string | null;
     channels: EPGChannel[];
+    // programs come from the core LiveTvGuide model (one day per load)
+    programs: Record<string, EPGProgram[]>;
+    programsLoading: boolean;
     catalogLoading: boolean;
     hasNextPage: boolean;
     loadNextPage: () => void;
     now: number;
     onProgramSelect: (program: EPGProgram, channel: EPGChannel) => void;
+    // notifies the parent so it can reload the model with the picked date
+    onDayChange?: (day: Date) => void;
 };
 
-const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNextPage, now, onProgramSelect }: Props) => {
+const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoading, hasNextPage, loadNextPage, now, onProgramSelect, onDayChange }: Props) => {
     const { t } = useTranslation();
     const viewportRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
@@ -74,8 +79,12 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
         typeof window !== 'undefined' && window.matchMedia(COMPACT_DAY_SELECTOR_QUERY).matches,
     );
 
-    const { programs, loading: programsLoading } = useEPG(requestBase, channels);
     const loading = catalogLoading || (programsLoading && channels.length === 0);
+
+    const selectDay = useCallback((day: Date) => {
+        setSelectedDay(day);
+        onDayChange?.(day);
+    }, [onDayChange]);
 
     const days = useMemo(() => {
         const baseDays = generateDayRange(3, 3);
@@ -232,7 +241,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                 <button
                     className={styles['epg-day-arrow']}
                     disabled={selectedDayIndex <= 0}
-                    onClick={() => selectedDayIndex > 0 && setSelectedDay(days[selectedDayIndex - 1])}
+                    onClick={() => selectedDayIndex > 0 && selectDay(days[selectedDayIndex - 1])}
                 >
                     <Icon className={styles['epg-day-arrow-icon']} name={'chevron-back'} />
                 </button>
@@ -243,7 +252,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                         <button
                             key={day.getTime()}
                             className={`${styles['epg-day-btn']}${active ? ` ${styles['epg-day-btn-active']}` : ''}`}
-                            onClick={() => setSelectedDay(day)}
+                            onClick={() => selectDay(day)}
                         >
                             <span className={styles['epg-day-weekday']}>{abbreviate(t(WEEKDAYS[day.getDay()]))}</span>
                             <span className={styles['epg-day-date']}>{today ? `${abbreviate(t(MONTHS[day.getMonth()]))} ${day.getDate()}` : day.getDate()}</span>
@@ -253,7 +262,7 @@ const EpgGuide = ({ requestBase, channels, catalogLoading, hasNextPage, loadNext
                 <button
                     className={styles['epg-day-arrow']}
                     disabled={selectedDayIndex >= days.length - 1}
-                    onClick={() => selectedDayIndex < days.length - 1 && setSelectedDay(days[selectedDayIndex + 1])}
+                    onClick={() => selectedDayIndex < days.length - 1 && selectDay(days[selectedDayIndex + 1])}
                 >
                     <Icon className={styles['epg-day-arrow-icon']} name={'chevron-forward'} />
                 </button>
