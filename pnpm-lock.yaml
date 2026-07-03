@@ -18,14 +18,14 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: file:../stremio-core/stremio-core-web
-        version: file:../stremio-core/stremio-core-web
+        specifier: 0.59.0
+        version: 0.59.0
       '@stremio/stremio-icons':
         specifier: 5.10.0
         version: 5.10.0
       '@stremio/stremio-video':
-        specifier: 0.0.80
-        version: 0.0.80
+        specifier: 0.0.83
+        version: 0.0.83
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1
@@ -1417,14 +1417,14 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@file:../stremio-core/stremio-core-web':
-    resolution: {directory: ../stremio-core/stremio-core-web, type: directory}
+  '@stremio/stremio-core-web@0.59.0':
+    resolution: {integrity: sha512-vN7r2rjU/C9Xt29cN2Iim5jowXQQCaIdgbbM25Pg5Uj+ZIr17SFNL0lAI8KuDXaEExGPgli7N7V2fBaMegXDpg==}
 
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
 
-  '@stremio/stremio-video@0.0.80':
-    resolution: {integrity: sha512-9mIDeKUUEt6h7h685Bl9HUTOLT0VtaQWrC7uBlL5uoo2CWohIZBr3KEHYlaTnM2ve6CIQJ/nB+hfTyymgGDiGg==}
+  '@stremio/stremio-video@0.0.83':
+    resolution: {integrity: sha512-AACSgLvvdEyn3JPz+kr/CqX1ngUbqUHZEuKo/OhryK0lq01YzQTyMwHX3eZxijqF2vH0FAVFoUid0J967uPGkA==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6482,13 +6482,13 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@file:../stremio-core/stremio-core-web':
+  '@stremio/stremio-core-web@0.59.0':
     dependencies:
       '@babel/runtime': 7.24.1
 
   '@stremio/stremio-icons@5.10.0': {}
 
-  '@stremio/stremio-video@0.0.80':
+  '@stremio/stremio-video@0.0.83':
     dependencies:
       buffer: 6.0.3
       color: 4.2.3
