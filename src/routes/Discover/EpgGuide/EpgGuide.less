@@ -264,6 +264,33 @@
     }
 }
 
+.epg-error, .epg-error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.epg-error-message {
+    font-size: 1.2rem;
+    color: var(--primary-foreground-color);
+    opacity: 0.6;
+}
+
+.epg-error-retry {
+    flex: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 3rem;
+    font-size: 1.1rem;
+    color: var(--primary-foreground-color);
+    background-color: var(--overlay-color);
+
+    &:hover {
+        background-color: var(--secondary-accent-color);
+    }
+}
+
 .epg-empty {
     display: flex;
     align-items: center;

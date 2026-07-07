@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
-import { MultiselectMenu } from 'stremio/components';
+import { Button, MultiselectMenu } from 'stremio/components';
 import { EpgGuideRow } from './EpgGuideRow';
 import { EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEpgSkeletonPrograms } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
@@ -38,14 +38,13 @@ function getCurrentHalfHourIndex(): number {
     return Math.floor((now.getHours() * 60 + now.getMinutes()) / 30);
 }
 
-function generateDayRange(before: number, after: number): Date[] {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return Array.from({ length: before + after + 1 }, (_, i) => {
-        const d = new Date(today);
-        d.setDate(today.getDate() + i - before);
-        return d;
-    });
+// core dates ('YYYY-MM-DD') are the user's local dates
+function parseLocalDate(value: string | null | undefined): Date | null {
+    const match = typeof value === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
+    return match !== null ?
+        new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+        :
+        null;
 }
 
 function abbreviate(value: string): string {
@@ -53,12 +52,17 @@ function abbreviate(value: string): string {
 }
 
 type Props = {
-    requestBase: string | null;
     channels: EPGChannel[];
     // programs come from the core LiveTvGuide model (one day per load)
     programs: Record<string, EPGProgram[]>;
     programsLoading: boolean;
     catalogLoading: boolean;
+    // the selected day ('YYYY-MM-DD') of the core LiveTvGuide model
+    selectedDate: string | null;
+    // today ('YYYY-MM-DD') in the user's timezone, derived core-side
+    today: string | null;
+    error: string | null;
+    onRetry: () => void;
     hasNextPage: boolean;
     loadNextPage: () => void;
     now: number;
@@ -86,14 +90,13 @@ const NowLine = ({ now, day, totalGridWidth }: { now: number, day: Date, totalGr
     );
 };
 
-const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoading, hasNextPage, loadNextPage, now, onProgramSelect, onDayChange }: Props) => {
+const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selectedDate, today, error, onRetry, hasNextPage, loadNextPage, now, onProgramSelect, onDayChange }: Props) => {
     const { t } = useTranslation();
     const viewportRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     // The inner wrapper of the channel column is what we translate — the outer clips it
     const channelColumnInnerRef = useRef<HTMLDivElement>(null);
 
-    const [selectedDay, setSelectedDay] = useState<Date | null>(null);
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
     const [compactDaySelector, setCompactDaySelector] = useState(() =>
         typeof window !== 'undefined' && window.matchMedia(COMPACT_DAY_SELECTOR_QUERY).matches,
@@ -102,36 +105,34 @@ const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoa
     const loading = catalogLoading || (programsLoading && channels.length === 0);
 
     const selectDay = useCallback((day: Date) => {
-        setSelectedDay(day);
         onDayChange?.(day);
     }, [onDayChange]);
 
+    const todayDate = useMemo(() => {
+        if (typeof today === 'string') {
+            const date = parseLocalDate(today);
+            if (date !== null) return date;
+        }
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        return date;
+    }, [today]);
+
+    // the selected day is owned by the core model (via the url param) -
+    // the strip is derived from selected.date/selectable.today
+    const effectiveDay = useMemo(() => {
+        return parseLocalDate(selectedDate) ?? todayDate;
+    }, [selectedDate, todayDate]);
+
     const days = useMemo(() => {
-        const baseDays = generateDayRange(3, 3);
-        const programDays = Array.from(
-            new Set(Object.values(programs).flat().map((program) => {
-                const day = new Date(program.startTime);
-                day.setHours(0, 0, 0, 0);
-                return day.getTime();
-            })),
+        const range = Array.from({ length: 7 }, (_, i) =>
+            new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() + i - 3),
         );
 
-        return Array.from(
-            new Set([
-                ...baseDays.map((day) => day.getTime()),
-                ...programDays,
-            ]),
-        )
+        return Array.from(new Set([...range.map((day) => day.getTime()), effectiveDay.getTime()]))
             .sort((a, b) => a - b)
             .map((time) => new Date(time));
-    }, [programs]);
-
-    const effectiveDay = useMemo(() => {
-        if (selectedDay && days.some((day) => day.getTime() === selectedDay.getTime())) return selectedDay;
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
-        return days.find((d) => d.getTime() === todayStart.getTime()) ?? days[0];
-    }, [selectedDay, days]);
+    }, [todayDate, effectiveDay]);
 
     // Compute a scale that guarantees every program (≥ 5 min) is at least
     // MIN_PROGRAM_WIDTH pixels wide, so thumbnails always fit.
@@ -222,11 +223,6 @@ const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoa
         }
     }, [hasNextPage, loadNextPage]);
 
-    // Reset selected day when the request changes
-    useEffect(() => {
-        setSelectedDay(null);
-    }, [requestBase]);
-
     const selectedDayIndex = useMemo(
         () => days.findIndex((d) => effectiveDay && d.getTime() === effectiveDay.getTime()),
         [days, effectiveDay],
@@ -267,7 +263,7 @@ const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoa
                 </button>
                 {visibleDays.map((day) => {
                     const active = effectiveDay.getTime() === day.getTime();
-                    const today = isSameDay(day, new Date());
+                    const today = isSameDay(day, todayDate);
                     return (
                         <button
                             key={day.getTime()}
@@ -384,22 +380,43 @@ const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoa
                                 </div>
                             ))
                             : channels.length > 0
-                                ? channels.map((channel) => (
-                                    <EpgGuideRow
-                                        key={channel.id}
-                                        channel={channel}
-                                        programs={programs[channel.id] ?? []}
-                                        selectedDay={effectiveDay}
-                                        now={now}
-                                        onProgramClick={onProgramSelect}
-                                        pixelsPerHour={pixelsPerHour}
-                                    />
-                                ))
-                                : (
-                                    <div className={styles['epg-empty']}>
-                                        {t('NO_STREAM')}
-                                    </div>
+                                ? (
+                                    <React.Fragment>
+                                        {channels.map((channel) => (
+                                            <EpgGuideRow
+                                                key={channel.id}
+                                                channel={channel}
+                                                programs={programs[channel.id] ?? []}
+                                                selectedDay={effectiveDay}
+                                                now={now}
+                                                onProgramClick={onProgramSelect}
+                                                pixelsPerHour={pixelsPerHour}
+                                            />
+                                        ))}
+                                        {error !== null && (
+                                            <div className={styles['epg-error-banner']}>
+                                                <div className={styles['epg-error-message']}>{error}</div>
+                                                <Button className={styles['epg-error-retry']} onClick={onRetry}>
+                                                    {t('TRY_AGAIN')}
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </React.Fragment>
                                 )
+                                : error !== null
+                                    ? (
+                                        <div className={styles['epg-error']}>
+                                            <div className={styles['epg-error-message']}>{error}</div>
+                                            <Button className={styles['epg-error-retry']} onClick={onRetry}>
+                                                {t('TRY_AGAIN')}
+                                            </Button>
+                                        </div>
+                                    )
+                                    : (
+                                        <div className={styles['epg-empty']}>
+                                            {t('NO_STREAM')}
+                                        </div>
+                                    )
                         }
                     </div>
                 </div>

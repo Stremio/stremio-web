@@ -61,7 +61,7 @@ const Discover = () => {
     // `date` is the user's local date (null defaults to the local today);
     // core resolves it to a UTC window via `utcOffset`, fetches a catalog
     // page per overlapping UTC date and buckets the shows back into the day.
-    React.useEffect(() => {
+    const loadLiveTvGuide = React.useCallback(() => {
         if (!isEpgLayout || !discover.selected?.request) {
             return;
         }
@@ -77,11 +77,14 @@ const Discover = () => {
                 },
             },
         }, 'live_tv_guide');
+    }, [isEpgLayout, discover.selected, epgDate]);
+    React.useEffect(() => {
+        loadLiveTvGuide();
 
         return () => {
             core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
         };
-    }, [isEpgLayout, discover.selected, epgDate]);
+    }, [loadLiveTvGuide]);
     const liveTvGuide = useModelState({ model: 'live_tv_guide' });
     const epgNow = useEpgNow(isEpgLayout);
     const epgChannels = React.useMemo(() => {
@@ -121,6 +124,13 @@ const Discover = () => {
     const epgLoading = React.useMemo(() => {
         const catalog = liveTvGuide?.catalog ?? [];
         return catalog.length === 0 || catalog[catalog.length - 1].type === 'Loading';
+    }, [liveTvGuide]);
+    const epgError = React.useMemo(() => {
+        const page = (liveTvGuide?.catalog ?? []).find(({ type }) => type === 'Err');
+        return page ?
+            page.content?.content?.message ?? page.content?.type ?? 'Error'
+            :
+            null;
     }, [liveTvGuide]);
     const epgHasNextPage = (liveTvGuide?.selectable?.nextPage ?? null) !== null;
     const epgLoadNextPage = React.useCallback(() => {
@@ -251,11 +261,14 @@ const Discover = () => {
         if (isEpgLayout) {
             return (
                 <EpgGuide
-                    requestBase={discover.selected?.request?.base ?? null}
                     channels={epgChannels}
                     programs={epgPrograms}
                     programsLoading={epgLoading}
                     catalogLoading={epgLoading}
+                    selectedDate={liveTvGuide?.selected?.date ?? epgDate}
+                    today={liveTvGuide?.selectable?.today ?? null}
+                    error={epgError}
+                    onRetry={loadLiveTvGuide}
                     hasNextPage={epgHasNextPage}
                     loadNextPage={epgLoadNextPage}
                     now={epgNow}

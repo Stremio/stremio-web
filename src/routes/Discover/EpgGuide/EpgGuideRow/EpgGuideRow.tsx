@@ -2,6 +2,7 @@
 
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from 'stremio/components';
 import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
 
@@ -34,6 +35,7 @@ const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixe
     }, [selectedDay]);
 
     const totalPx = 24 * pixelsPerHour;
+    const channelHref = channel.deepLinks?.metaDetailsStreams ?? channel.deepLinks?.metaDetailsVideos ?? null;
 
     return (
         <div className={styles['epg-row']}>
@@ -86,8 +88,16 @@ const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixe
                         </button>
                     );
                 })}
+                {/* a channel without a program for the day stays reachable -
+                    the whole 24h block links to its streams */}
                 {programs.length === 0 && (
-                    <div className={styles['epg-no-programs']}>{t('NO_STREAM')}</div>
+                    channelHref !== null ? (
+                        <Button className={styles['epg-no-programs']} href={channelHref} title={channel.name}>
+                            {channel.name}
+                        </Button>
+                    ) : (
+                        <div className={styles['epg-no-programs']}>{t('NO_STREAM')}</div>
+                    )
                 )}
             </div>
         </div>
