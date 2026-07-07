@@ -24,10 +24,21 @@ const Discover = () => {
         transportUrl,
         catalogId
     }), [type, transportUrl, catalogId]);
-    const [queryParams] = useSearchParams();
+    const [queryParams, setQueryParams] = useSearchParams();
+    // the selected EPG date lives in the `epg_date` query param only -
+    // it is stripped from the catalog extra passed to the discover model
+    const epgDate = React.useMemo(() => {
+        const date = queryParams.get('epg_date');
+        return date !== null && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+    }, [queryParams]);
+    const catalogQueryParams = React.useMemo(() => {
+        const params = new URLSearchParams(queryParams);
+        params.delete('epg_date');
+        return params;
+    }, [queryParams]);
     const { t } = useTranslation();
     const core = useCore();
-    const [discover, loadNextPage] = useDiscover(urlParams, queryParams);
+    const [discover, loadNextPage] = useDiscover(urlParams, catalogQueryParams);
     const [selectInputs, hasNextPage] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
@@ -46,7 +57,6 @@ const Discover = () => {
         const selectedAddon = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
         return selectedAddon?.manifest?.behaviorHints?.epgProvider === true;
     }, [discover.selectable.catalogs]);
-    const [epgDate, setEpgDate] = React.useState(null);
     // Load the core LiveTvGuide model for the selected guide catalog.
     // `date` is the user's local date (null defaults to the local today);
     // core resolves it to a UTC window via `utcOffset`, fetches a catalog
@@ -72,9 +82,6 @@ const Discover = () => {
             core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
         };
     }, [isEpgLayout, discover.selected, epgDate]);
-    React.useEffect(() => {
-        setEpgDate(null);
-    }, [discover.selected]);
     const liveTvGuide = useModelState({ model: 'live_tv_guide' });
     const epgNow = useEpgNow(isEpgLayout);
     const epgChannels = React.useMemo(() => {
@@ -128,8 +135,12 @@ const Discover = () => {
             String(day.getMonth() + 1).padStart(2, '0'),
             String(day.getDate()).padStart(2, '0'),
         ].join('-');
-        setEpgDate(date);
-    }, []);
+        setQueryParams((params) => {
+            const nextParams = new URLSearchParams(params);
+            nextParams.set('epg_date', date);
+            return nextParams;
+        }, { replace: true });
+    }, [setQueryParams]);
     const onProgramSelect = React.useCallback((program, channel) => {
         setSelectedEpgProgram({ program, channel });
     }, []);
