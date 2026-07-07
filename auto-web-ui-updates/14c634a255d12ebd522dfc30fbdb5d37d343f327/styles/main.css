@@ -8293,9 +8293,9 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   padding: 2rem;
-  background-color: var(--primary-background-color);
+  background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
   color: var(--primary-foreground-color);
   text-align: center;
   animation: 0.2s ease-out fade-in-ys0wJ;
@@ -8316,6 +8316,14 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
     opacity: 1;
   }
 }
+@keyframes progress-fill-Wm6ze {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
 .web-update-screen-a5UUk .logo-dkgbX {
   flex: none;
   width: 8rem;
@@ -8326,12 +8334,57 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
 }
 .web-update-screen-a5UUk .title-_12l8 {
   max-width: 42rem;
-  font-size: 2rem;
+  margin-top: 0.5rem;
+  font-size: 1.875rem;
   font-weight: 500;
   line-height: 1.25;
   color: var(--primary-foreground-color);
   overflow-wrap: anywhere;
-  animation: 1s linear infinite alternate flash-tM3iF;
+}
+.web-update-screen-a5UUk .progress-S2hgB {
+  position: relative;
+  width: 18rem;
+  max-width: 100%;
+  height: 0.4rem;
+  margin-top: 0.25rem;
+  border-radius: var(--border-radius);
+}
+.web-update-screen-a5UUk .progress-S2hgB::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: inherit;
+  background-color: var(--primary-foreground-color);
+  opacity: 0.2;
+}
+.web-update-screen-a5UUk .progress-value-qfOfG {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--primary-accent-color);
+  transform-origin: left;
+  animation: 2s ease-out forwards progress-fill-Wm6ze;
+}
+@media only screen and (max-width: 30rem) {
+  .web-update-screen-a5UUk {
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  .web-update-screen-a5UUk .logo-dkgbX {
+    width: 6.5rem;
+    height: 6.5rem;
+  }
+  .web-update-screen-a5UUk .title-_12l8 {
+    font-size: 1.4rem;
+  }
+  .web-update-screen-a5UUk .progress-S2hgB {
+    width: 15rem;
+  }
 }
 
 .shortcuts-modal-A5Jm_ {
