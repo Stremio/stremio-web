@@ -16,8 +16,19 @@ export const useEpgNow = (
 
         setNow(Date.now());
         const interval = window.setInterval(() => setNow(Date.now()), intervalMs);
+        // the interval does not fire while the machine sleeps -
+        // resync as soon as the page becomes visible again
+        const onVisibilityChange = () => {
+            if (!document.hidden) {
+                setNow(Date.now());
+            }
+        };
+        document.addEventListener('visibilitychange', onVisibilityChange);
 
-        return () => window.clearInterval(interval);
+        return () => {
+            window.clearInterval(interval);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+        };
     }, [enabled, intervalMs]);
 
     return now;

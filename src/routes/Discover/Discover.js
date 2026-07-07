@@ -61,6 +61,18 @@ const Discover = () => {
     // `date` is the user's local date (null defaults to the local today);
     // core resolves it to a UTC window via `utcOffset`, fetches a catalog
     // page per overlapping UTC date and buckets the shows back into the day.
+    const epgNow = useEpgNow(isEpgLayout);
+    // the local date the guide is following: the picked date, or today -
+    // when following today, a change of this value (midnight rollover,
+    // waking from sleep) re-dispatches the Load below
+    const epgFollowedDate = React.useMemo(() => {
+        const now = new Date(epgNow);
+        return epgDate ?? [
+            now.getFullYear(),
+            String(now.getMonth() + 1).padStart(2, '0'),
+            String(now.getDate()).padStart(2, '0'),
+        ].join('-');
+    }, [epgDate, epgNow]);
     const loadLiveTvGuide = React.useCallback(() => {
         if (!isEpgLayout || !discover.selected?.request) {
             return;
@@ -77,7 +89,7 @@ const Discover = () => {
                 },
             },
         }, 'live_tv_guide');
-    }, [isEpgLayout, discover.selected, epgDate]);
+    }, [isEpgLayout, discover.selected, epgDate, epgFollowedDate]);
     React.useEffect(() => {
         loadLiveTvGuide();
 
@@ -86,7 +98,6 @@ const Discover = () => {
         };
     }, [loadLiveTvGuide]);
     const liveTvGuide = useModelState({ model: 'live_tv_guide' });
-    const epgNow = useEpgNow(isEpgLayout);
     const epgChannels = React.useMemo(() => {
         return (liveTvGuide?.channels ?? []).map(({ channel, deepLinks }) => ({
             id: channel.id,
