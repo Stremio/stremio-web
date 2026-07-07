@@ -34,7 +34,7 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
-const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgProgress, getEpgTimeRange, getNextEpgVideo, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
+const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgProgress, getEpgTimeRange, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
@@ -183,13 +183,6 @@ const Player = () => {
 
         return liveEpgVideo ?? selectedVideo;
     }, [isEpg, liveEpgVideo, metaVideos, player.selected, videoId]);
-
-    const nextEpgVideo = React.useMemo(() => {
-        return isEpg ?
-            getNextEpgVideo(metaVideos, currentEpgVideo)
-            :
-            null;
-    }, [isEpg, metaVideos, currentEpgVideo]);
 
     React.useEffect(() => {
         if (isEpg) {
@@ -515,7 +508,7 @@ const Player = () => {
         }
 
         if (isEpg) {
-            if (liveEpgVideo === null || nextEpgVideo === null) {
+            if (liveEpgVideo === null || player.nextVideo === null) {
                 closeNextVideoPopup();
                 return;
             }
@@ -553,7 +546,7 @@ const Player = () => {
         } else {
             closeNextVideoPopup();
         }
-    }, [ isEpg, liveEpgVideo, nextEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
+    }, [ isEpg, liveEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
 
     // Auto audio track selection
     React.useEffect(() => {
@@ -1014,11 +1007,11 @@ const Player = () => {
                 disabled={subtitlesMenuOpen}
             />
             {
-                nextVideoPopupOpen && (isEpg ? nextEpgVideo !== null : player.nextVideo !== null) ?
+                nextVideoPopupOpen && player.nextVideo !== null ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={metaItemContent}
-                        nextVideo={isEpg ? nextEpgVideo : player.nextVideo}
+                        nextVideo={player.nextVideo}
                         isEpg={isEpg}
                         onDismiss={onDismissNextVideoPopup}
                         onNextVideoRequested={isEpg ? undefined : onNextVideoRequested}

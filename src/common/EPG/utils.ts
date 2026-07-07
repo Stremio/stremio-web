@@ -62,30 +62,6 @@ export const getEpgProgress = (
     return Math.min(100, Math.max(0, ((now - range.startTime) / (range.endTime - range.startTime)) * 100));
 };
 
-export const getNextEpgVideo = <T extends { startTime?: unknown; endTime?: unknown }>(
-    videos: T[] | null | undefined,
-    currentVideo: T | null | undefined
-): T | null => {
-    const currentRange = getEpgTimeRange(currentVideo);
-
-    if (currentRange === null || !Array.isArray(videos)) {
-        return null;
-    }
-
-    return videos
-        .filter((video) => {
-            const range = getEpgTimeRange(video);
-
-            return range !== null && range.startTime >= currentRange.endTime;
-        })
-        .sort((a, b) => {
-            const aRange = getEpgTimeRange(a);
-            const bRange = getEpgTimeRange(b);
-
-            return (aRange?.startTime ?? 0) - (bRange?.startTime ?? 0);
-        })[0] ?? null;
-};
-
 export const getEpgValue = (
     isEpgVideo: boolean,
     video: Record<string, unknown> | null | undefined,
