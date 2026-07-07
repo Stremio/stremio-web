@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
@@ -17,33 +17,34 @@ type Props = {
     pixelsPerHour?: number;
 };
 
-const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, now, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
+const currentProgramKey = (programs: EPGProgram[], now: number): number => {
+    return programs.findIndex((program) => {
+        const startMs = programStartMs(program);
+        const endMs = programEndMs(program);
+        return startMs <= now && now < endMs;
+    });
+};
+
+const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
     const { t } = useTranslation();
-    const timeRange = useMemo(() => {
+    const dayStart = useMemo(() => {
         const start = new Date(selectedDay);
         start.setHours(0, 0, 0, 0);
-        return { start: start.getTime(), end: start.getTime() + DAY_IN_MS };
+        return start.getTime();
     }, [selectedDay]);
-
-    const programs = useMemo(() =>
-        allPrograms.filter((p) => {
-            const s = programStartMs(p);
-            const e = programEndMs(p);
-            return !isNaN(s) && !isNaN(e) && e > timeRange.start && s < timeRange.end;
-        }),
-    [allPrograms, timeRange],
-    );
 
     const totalPx = 24 * pixelsPerHour;
 
     return (
         <div className={styles['epg-row']}>
             <div className={styles['epg-program-list']} style={{ width: `${totalPx}px` }}>
+                {/* core buckets the shows into the selected day - no re-filtering,
+                    blocks spilling over the day edges are pixel-clamped instead */}
                 {programs.map((program, index) => {
                     const startMs = programStartMs(program);
                     const endMs = programEndMs(program);
-                    const left = Math.max(0, ((startMs - timeRange.start) / DAY_IN_MS) * totalPx);
-                    const width = Math.max(4, ((endMs - startMs) / DAY_IN_MS) * totalPx);
+                    const left = Math.max(0, ((startMs - dayStart) / DAY_IN_MS) * totalPx);
+                    const width = Math.max(4, ((Math.min(endMs, dayStart + DAY_IN_MS) - Math.max(startMs, dayStart)) / DAY_IN_MS) * totalPx);
                     const isCurrent = startMs <= now && now < endMs;
                     const label = programTitle(program);
 
@@ -88,15 +89,18 @@ const EpgGuideRow = ({ channel, programs: allPrograms, selectedDay, now, onProgr
                 {programs.length === 0 && (
                     <div className={styles['epg-no-programs']}>{t('NO_STREAM')}</div>
                 )}
-                {timeRange.start <= now && now < timeRange.end && (
-                    <div
-                        className={styles['epg-now-line']}
-                        style={{ left: `${((now - timeRange.start) / DAY_IN_MS) * totalPx}px` }}
-                    />
-                )}
             </div>
         </div>
     );
 };
 
-export default EpgGuideRow;
+// re-render a row on the clock tick only when its live program changes -
+// the now line itself is an overlay owned by the guide
+export default memo(EpgGuideRow, (prev, next) => {
+    return prev.channel === next.channel &&
+        prev.programs === next.programs &&
+        prev.selectedDay.getTime() === next.selectedDay.getTime() &&
+        prev.pixelsPerHour === next.pixelsPerHour &&
+        prev.onProgramClick === next.onProgramClick &&
+        currentProgramKey(prev.programs, prev.now) === currentProgramKey(next.programs, next.now);
+});

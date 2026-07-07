@@ -8,6 +8,7 @@ import { EpgGuideRow } from './EpgGuideRow';
 import { EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEpgSkeletonPrograms } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
+const DAY_IN_MS = 24 * HOUR_IN_MS;
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
 const MAX_PIXELS_PER_HOUR = 360; // cap — at 720 a 10-min show is 120 px (~17 000 px total grid)
 const MIN_PROGRAM_WIDTH = 120; // px — wide enough to show a thumbnail + label
@@ -64,6 +65,25 @@ type Props = {
     onProgramSelect: (program: EPGProgram, channel: EPGChannel) => void;
     // notifies the parent so it can reload the model with the picked date
     onDayChange?: (day: Date) => void;
+};
+
+// a single grid-spanning overlay - the clock tick re-renders only this
+// component instead of every guide row
+const NowLine = ({ now, day, totalGridWidth }: { now: number, day: Date, totalGridWidth: number }) => {
+    const dayStart = new Date(day);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayStartMs = dayStart.getTime();
+
+    if (now < dayStartMs || now >= dayStartMs + DAY_IN_MS) {
+        return null;
+    }
+
+    return (
+        <div
+            className={styles['epg-now-line']}
+            style={{ left: `${((now - dayStartMs) / DAY_IN_MS) * totalGridWidth}px` }}
+        />
+    );
 };
 
 const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoading, hasNextPage, loadNextPage, now, onProgramSelect, onDayChange }: Props) => {
@@ -330,6 +350,7 @@ const EpgGuide = ({ requestBase, channels, programs, programsLoading, catalogLoa
                 {/* Scrollable program grid */}
                 <div ref={viewportRef} className={styles['epg-viewport']} onScroll={onViewportScroll}>
                     <div className={styles['epg-program-grid']} style={{ width: `${totalGridWidth}px` }}>
+                        <NowLine now={now} day={effectiveDay} totalGridWidth={totalGridWidth} />
                         {loading
                             ? Array.from({ length: SKELETON_ROWS }, (_, rowIndex) => (
                                 <div

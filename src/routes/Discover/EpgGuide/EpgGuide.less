@@ -239,6 +239,29 @@
 
 .epg-program-grid {
     display: block;
+    position: relative;
+}
+
+.epg-now-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e53935;
+    z-index: 20;
+    pointer-events: none;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #e53935;
+    }
 }
 
 .epg-empty {
