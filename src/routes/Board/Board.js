@@ -5,7 +5,6 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
 const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, useProfile } = require('stremio/common');
-const { addonResourceUrl, hasEpgProgramTimes } = require('stremio/common/EPG');
 const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -13,70 +12,6 @@ const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
 const THRESHOLD = 5;
-const epgMetaCache = new Map();
-
-const getMetaRequestFromPlayerLink = (link) => {
-    if (typeof link !== 'string') return null;
-
-    const path = link.startsWith('#') ? link.slice(1) : link;
-    const [, route, , , metaTransportUrl, type, id] = path.split('/');
-
-    return route === 'player' &&
-        typeof metaTransportUrl === 'string' &&
-        typeof type === 'string' &&
-        typeof id === 'string' ?
-        {
-            base: decodeURIComponent(metaTransportUrl),
-            type: decodeURIComponent(type),
-            id: decodeURIComponent(id),
-        }
-        :
-        null;
-};
-
-const fetchEpgMetaVideos = (item) => {
-    const request = getMetaRequestFromPlayerLink(item.deepLinks?.player);
-    if (request === null) return null;
-
-    const key = `${request.base}|${request.type}|${request.id}`;
-    const cached = epgMetaCache.get(key);
-    if (cached) return cached;
-
-    const url = addonResourceUrl(request.base, 'meta', request.type, request.id);
-    if (url === null) return null;
-
-    const promise = fetch(url)
-        .then((resp) => resp.ok ? resp.json() : null)
-        .then((result) => {
-            const videos = result?.meta?.videos;
-            return Array.isArray(videos) && videos.some(hasEpgProgramTimes) ? videos : null;
-        })
-        .catch(() => null);
-
-    epgMetaCache.set(key, promise);
-    return promise;
-};
-
-const getEpgVideos = (item, videosByItemId) => {
-    const cachedVideos = videosByItemId[item._id];
-
-    return [
-        item.currentVideo,
-        item.video,
-        ...(Array.isArray(item.videos) ? item.videos : []),
-        ...(Array.isArray(cachedVideos) ? cachedVideos : []),
-    ].filter(hasEpgProgramTimes);
-};
-
-const isEpgContinueWatchingItem = (item, videosByItemId) => {
-    return getEpgVideos(item, videosByItemId).length > 0 || item.behaviorHints?.epgProvider === true;
-};
-
-const addEpgVideosToContinueWatchingItem = (item, videosByItemId) => {
-    const videos = getEpgVideos(item, videosByItemId);
-
-    return videos.length > 0 ? { ...item, epgVideos: videos } : item;
-};
 
 const Board = () => {
     const t = useTranslate();
@@ -85,14 +20,6 @@ const Board = () => {
     const [board, loadBoardRows] = useBoard();
     const notifications = useNotifications();
     const profile = useProfile();
-    const [epgVideosByItemId, setEpgVideosByItemId] = React.useState({});
-    const hasEpgContinueWatching = React.useMemo(() => {
-        return continueWatchingPreview.items.some((item) => isEpgContinueWatchingItem(item, epgVideosByItemId));
-    }, [continueWatchingPreview.items, epgVideosByItemId]);
-    const continueWatchingCatalog = React.useMemo(() => ({
-        ...continueWatchingPreview,
-        items: continueWatchingPreview.items.map((item) => addEpgVideosToContinueWatchingItem(item, epgVideosByItemId)),
-    }), [continueWatchingPreview, epgVideosByItemId]);
     const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
     const scrollContainerRef = React.useRef();
     const showStreamingServerWarning = React.useMemo(() => {
@@ -118,27 +45,6 @@ const Board = () => {
     React.useLayoutEffect(() => {
         onVisibleRangeChange();
     }, [board.catalogs, onVisibleRangeChange]);
-    React.useEffect(() => {
-        let cancelled = false;
-        const requests = continueWatchingPreview.items
-            .map((item) => ({ item, request: fetchEpgMetaVideos(item) }))
-            .filter(({ item, request }) => typeof item._id === 'string' && request !== null);
-
-        if (requests.length === 0) {
-            return undefined;
-        }
-
-        Promise.all(requests.map(({ request }) => request)).then((results) => {
-            if (cancelled) return;
-
-            setEpgVideosByItemId((prev) => requests.reduce((next, { item }, index) => ({
-                ...next,
-                [item._id]: results[index],
-            }), prev));
-        });
-
-        return () => { cancelled = true; };
-    }, [continueWatchingPreview.items]);
     return (
         <div className={styles['board-container']}>
             <EventModal />
@@ -147,9 +53,9 @@ const Board = () => {
                     {
                         continueWatchingPreview.items.length > 0 ?
                             <MetaRow
-                                className={classnames(styles['board-row'], styles[hasEpgContinueWatching ? 'board-row-landscape' : 'continue-watching-row'], 'animation-fade-in')}
+                                className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t.string('BOARD_CONTINUE_WATCHING')}
-                                catalog={continueWatchingCatalog}
+                                catalog={continueWatchingPreview}
                                 itemComponent={ContinueWatchingItem}
                                 notifications={notifications}
                             />
