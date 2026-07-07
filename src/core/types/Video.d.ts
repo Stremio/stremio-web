@@ -25,6 +25,6 @@ type Video = {
     releaseInfo?: string | null,
     genres?: string[],
     cast?: string[],
-    director?: string[],
+    directors?: string[],
     links?: Link[],
 };
