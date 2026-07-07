@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import type { EPGProgram } from './useEPG';
+import type { EPGProgram } from './types';
 
 export type EpgSkeletonProgram = {
     index: number;
@@ -16,31 +16,6 @@ export const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
 export const EPG_SKELETON_MIN_DURATION_MINUTES = 30;
 export const EPG_SKELETON_MAX_DURATION_MINUTES = 120;
 export const EPG_SKELETON_STEP_MINUTES = 30;
-
-export const addonResourceUrl = (base: string, resource: string, type: string, id: string): string | null => {
-    try {
-        const url = new URL(base);
-        if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
-
-        const parts = url.pathname.split('/').filter(Boolean);
-        if (parts[parts.length - 1] === 'manifest.json') {
-            parts.pop();
-        }
-
-        url.pathname = `/${[
-            ...parts,
-            resource,
-            encodeURIComponent(type),
-            `${encodeURIComponent(id)}.json`,
-        ].join('/')}`;
-        url.search = '';
-        url.hash = '';
-
-        return url.toString();
-    } catch {
-        return null;
-    }
-};
 
 export const getEpgTime = (value: unknown): number | null => {
     if (value instanceof Date && !Number.isNaN(value.getTime())) {
