@@ -11,7 +11,6 @@ const { CONSTANTS, useBinaryState, useModelState, useOnScrollToBottom, withCoreS
 const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
-const useInstalledAddons = require('../Addons/useInstalledAddons');
 const { default: EpgGuide } = require('./EpgGuide');
 const { useEpgNow } = require('stremio/common/EPG');
 const styles = require('./styles');
@@ -43,17 +42,15 @@ const Discover = () => {
     const metaPreviewRef = React.useRef();
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
-    const installedAddons = useInstalledAddons({ transportUrl: null, catalogId: null });
-    const selectedAddon = React.useMemo(() => {
-        const selected = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
-        const addon = installedAddons.catalog.find(({ manifest }) => manifest.id === selected?.manifest.id);
-        return addon;
-    }, [discover.selectable.catalogs, installedAddons]);
-    const isEpgLayout = React.useMemo(() => selectedAddon?.manifest?.behaviorHints?.epgProvider === true, [selectedAddon]);
+    const isEpgLayout = React.useMemo(() => {
+        const selectedAddon = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
+        return selectedAddon?.manifest?.behaviorHints?.epgProvider === true;
+    }, [discover.selectable.catalogs]);
     const [epgDate, setEpgDate] = React.useState(null);
     // Load the core LiveTvGuide model for the selected guide catalog.
-    // A null `date` defaults to today core-side; core appends the `date`
-    // extra to the catalog request and expects `metasDetailed` back.
+    // `date` is the user's local date (null defaults to the local today);
+    // core resolves it to a UTC window via `utcOffset`, fetches a catalog
+    // page per overlapping UTC date and buckets the shows back into the day.
     React.useEffect(() => {
         if (!isEpgLayout || !discover.selected?.request) {
             return;
@@ -66,6 +63,7 @@ const Discover = () => {
                 args: {
                     request: discover.selected.request,
                     date: epgDate,
+                    utcOffset: -new Date().getTimezoneOffset(),
                 },
             },
         }, 'live_tv_guide');
@@ -108,7 +106,6 @@ const Discover = () => {
                 channelName: channel.name,
                 channelLogo: channel.logo ?? channel.poster ?? null,
                 deepLinks: show.deepLinks,
-                isLive: show.isLive,
                 raw: show,
             }));
             return programs;
