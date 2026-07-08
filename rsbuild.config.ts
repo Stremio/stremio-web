@@ -12,7 +12,9 @@ import { ProvidePlugin } from '@rspack/core';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const COMMIT_HASH = execSync('git rev-parse HEAD').toString().trim();
-const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')) as {
+const packageJson = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'),
+) as {
   version: string;
 };
 
@@ -34,14 +36,32 @@ export default defineConfig(({ command }) => ({
       faviconsPath: 'favicons',
     },
   },
-  source: {
-    entry: {
-      main: './src/index.js',
-      worker: {
-        import: './node_modules/@stremio/stremio-core-web/worker.js',
-        html: false,
+  environments: {
+    web: {
+      output: {
+        target: 'web',
+      },
+      source: {
+        entry: {
+          index: './src/index.js',
+        },
       },
     },
+    worker: {
+      output: {
+        target: 'web-worker',
+      },
+      source: {
+        entry: {
+          worker: {
+            import: './node_modules/@stremio/stremio-core-web/worker.js',
+            html: false,
+          },
+        },
+      },
+    },
+  },
+  source: {
     define: {
       'process.env.VERSION': JSON.stringify(packageJson.version),
       'process.env.COMMIT_HASH': JSON.stringify(COMMIT_HASH),
@@ -52,7 +72,9 @@ export default defineConfig(({ command }) => ({
       'process.env.SERVICE_WORKER_DISABLED': JSON.stringify(
         process.env.SERVICE_WORKER_DISABLED ?? 'false',
       ),
-      'process.env.DEBUG': JSON.stringify(process.env.NODE_ENV !== 'production'),
+      'process.env.DEBUG': JSON.stringify(
+        process.env.NODE_ENV !== 'production',
+      ),
     },
   },
   output: {
@@ -74,7 +96,8 @@ export default defineConfig(({ command }) => ({
     cssModules: {
       // Webpack applied css-loader `modules` to every app `.less` file (not only `*.module.less`).
       auto: (resourcePath: string) =>
-        /\.less$/i.test(resourcePath) && !resourcePath.includes(`${path.sep}node_modules${path.sep}`),
+        /\.less$/i.test(resourcePath) &&
+        !resourcePath.includes(`${path.sep}node_modules${path.sep}`),
       localIdentName: '[local]-[hash:base64:5]',
       namedExport: false,
     },
@@ -92,7 +115,7 @@ export default defineConfig(({ command }) => ({
     }),
   ],
   tools: {
-    rspack(_config, { addRules, appendPlugins }) {
+    rspack(_config, { addRules, appendPlugins, isWebWorker }) {
       addRules([
         {
           test: /\.(ttf|woff2)$/i,
@@ -122,7 +145,7 @@ export default defineConfig(({ command }) => ({
         new ProvidePlugin({
           Buffer: ['buffer', 'Buffer'],
         }),
-        ...(command === 'build'
+        ...(command === 'build' && !isWebWorker
           ? [
               new GenerateSW({
                 maximumFileSizeToCacheInBytes: 20_000_000,
@@ -172,7 +195,16 @@ export default defineConfig(({ command }) => ({
     },
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.json', '.less', '.wasm'],
+    extensions: [
+      '.tsx',
+      '.ts',
+      '.mjs',
+      '.js',
+      '.jsx',
+      '.json',
+      '.less',
+      '.wasm',
+    ],
     alias: {
       stremio: path.resolve(__dirname, 'src'),
       'stremio-router': path.resolve(__dirname, 'src', 'router'),

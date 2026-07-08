@@ -66,16 +66,18 @@ const Core = (props: Props) => {
             }
         };
 
+        console.log('[core] calling transport.init');
         transport
             .init(props.appInfo)
             .then(() => {
+                console.log('[core] init resolved');
                 window.core = transport;
                 window.onCoreEvent = onCoreEvent;
                 setReady(true);
                 setError(null);
             })
             .catch((e: Error) => {
-                console.error('Failed to initialize core:', e);
+                console.error('[core] init failed:', e);
                 setReady(false);
                 setError(e);
             });

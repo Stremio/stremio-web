@@ -41,6 +41,8 @@ const appInfo = {
     shellVersion: null
 };
 
+console.log("got here")
+
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(
     <React.StrictMode>
