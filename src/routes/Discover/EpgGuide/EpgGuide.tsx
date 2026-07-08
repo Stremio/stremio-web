@@ -9,6 +9,7 @@ import { EPGChannel, EPGProgram, HOUR_IN_MS, programEndMs, programStartMs, getEp
 import styles from './EpgGuide.less';
 
 const DAY_IN_MS = 24 * HOUR_IN_MS;
+const HALF_HOUR_IN_MS = 30 * 60 * 1000;
 const BASE_PIXELS_PER_HOUR = 120; // minimum scale
 const MAX_PIXELS_PER_HOUR = 360; // cap — at 720 a 10-min show is 120 px (~17 000 px total grid)
 const MIN_PROGRAM_WIDTH = 120; // px — wide enough to show a thumbnail + label
@@ -36,6 +37,12 @@ function isSameDay(a: Date, b: Date): boolean {
 function getCurrentHalfHourIndex(): number {
     const now = new Date();
     return Math.floor((now.getHours() * 60 + now.getMinutes()) / 30);
+}
+
+function getDayStartMs(day: Date): number {
+    const start = new Date(day);
+    start.setHours(0, 0, 0, 0);
+    return start.getTime();
 }
 
 // core dates ('YYYY-MM-DD') are the user's local dates
@@ -74,9 +81,7 @@ type Props = {
 // a single grid-spanning overlay - the clock tick re-renders only this
 // component instead of every guide row
 const NowLine = ({ now, day, totalGridWidth }: { now: number, day: Date, totalGridWidth: number }) => {
-    const dayStart = new Date(day);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayStartMs = dayStart.getTime();
+    const dayStartMs = getDayStartMs(day);
 
     if (now < dayStartMs || now >= dayStartMs + DAY_IN_MS) {
         return null;
@@ -96,6 +101,10 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
     const headerRef = useRef<HTMLDivElement>(null);
     // The inner wrapper of the channel column is what we translate — the outer clips it
     const channelColumnInnerRef = useRef<HTMLDivElement>(null);
+    // Latest clock value, read (not subscribed to) by the centering effect so a
+    // minute tick never yanks the viewport out from under the user.
+    const nowRef = useRef(now);
+    nowRef.current = now;
 
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
     const [compactDaySelector, setCompactDaySelector] = useState(() =>
@@ -172,7 +181,7 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
                 if (headerRef.current) {
                     headerRef.current.scrollLeft = viewport.scrollLeft;
                 }
-                const slot = Math.max(0, Math.min(TIME_SLOTS.length - 1, Math.round(viewport.scrollLeft / halfHourPx)));
+                const slot = Math.max(0, Math.min(TIME_SLOTS.length - 1, Math.floor((viewport.scrollLeft + viewport.clientWidth / 2) / halfHourPx)));
                 setSelectedSlot((selectedSlot) => selectedSlot === slot ? selectedSlot : slot);
             });
         };
@@ -198,11 +207,35 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
         }
     }, []);
 
-    // Keep the horizontal scroll pinned to the selected time slot as pages load.
+    // Scroll the grid so that `centerPx` sits at the horizontal center of the viewport.
+    const scrollToCenter = useCallback((centerPx: number) => {
+        const viewport = viewportRef.current;
+        if (!viewport) return;
+        const maxScroll = Math.max(0, totalGridWidth - viewport.clientWidth);
+        viewport.scrollLeft = Math.max(0, Math.min(maxScroll, centerPx - viewport.clientWidth / 2));
+    }, [totalGridWidth]);
+
+    // Center the viewport on the given half-hour slot (its midpoint at the center).
+    const slotCenterPx = useCallback((index: number) => index * halfHourPx + halfHourPx / 2, [halfHourPx]);
+
+    // Restore the horizontal position on initial load and whenever the day or
+    // scale changes. While the menu is still on the current half-hour we center
+    // the now-line itself, so the shows airing now sit dead-center; once the
+    // user scrolls or picks another slot we center that slot instead, keeping
+    // their position through pagination-driven scale recalculations.
     useEffect(() => {
         if (!viewportRef.current) return;
-        viewportRef.current.scrollLeft = selectedSlot * halfHourPx;
-    }, [effectiveDay, halfHourPx, selectedSlot]);
+        const now = nowRef.current;
+        const dayStartMs = getDayStartMs(effectiveDay);
+        const nowWithinDay = now >= dayStartMs && now < dayStartMs + DAY_IN_MS;
+        const nowSlot = nowWithinDay ? Math.floor((now - dayStartMs) / HALF_HOUR_IN_MS) : null;
+
+        if (nowSlot !== null && selectedSlot === nowSlot) {
+            scrollToCenter(((now - dayStartMs) / DAY_IN_MS) * totalGridWidth);
+        } else {
+            scrollToCenter(slotCenterPx(selectedSlot));
+        }
+    }, [effectiveDay, halfHourPx, selectedSlot, totalGridWidth, scrollToCenter, slotCenterPx]);
 
     const handleSlotSelect = useCallback((value: string | number | null) => {
         if (value === null) return;
@@ -211,10 +244,8 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
         if (!Number.isInteger(index)) return;
 
         setSelectedSlot(index);
-        if (viewportRef.current) {
-            viewportRef.current.scrollLeft = index * halfHourPx;
-        }
-    }, [halfHourPx]);
+        scrollToCenter(slotCenterPx(index));
+    }, [scrollToCenter, slotCenterPx]);
 
     const onViewportScroll = useCallback(() => {
         const viewport = viewportRef.current;
