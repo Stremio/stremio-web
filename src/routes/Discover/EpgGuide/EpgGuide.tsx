@@ -19,6 +19,11 @@ const MIN_PROGRAM_DURATION_MS = 10 * 60 * 1000; // ignore sub-10-min filler when
 const COMPACT_DAY_COUNT = 3;
 const COMPACT_DAY_SELECTOR_QUERY = '(max-width: 800px)';
 const SKELETON_ROWS = 20;
+// A scroll counts as user-driven only if real input (wheel/touch/pointer/key)
+// arrived within this window before it - long enough to bridge the gaps between
+// frames of a drag, short enough that a later programmatic scroll or browser
+// clamp is not mistaken for one.
+const USER_SCROLL_WINDOW = 400;
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -105,6 +110,9 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
     // minute tick never yanks the viewport out from under the user.
     const nowRef = useRef(now);
     nowRef.current = now;
+    // Timestamp of the last genuine user scroll input, used to distinguish a
+    // real scroll from a programmatic one or a browser clamp echo.
+    const lastUserScrollRef = useRef(0);
 
     const [selectedSlot, setSelectedSlot] = useState(getCurrentHalfHourIndex);
     const [compactDaySelector, setCompactDaySelector] = useState(() =>
@@ -170,10 +178,15 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
         if (!viewport) return;
         let rafId: number | null = null;
 
+        const markUserScroll = () => {
+            lastUserScrollRef.current = performance.now();
+        };
+
         const onScroll = () => {
             if (rafId !== null) return;
             rafId = requestAnimationFrame(() => {
                 rafId = null;
+                // Header/channel sync must track every scroll, programmatic or not.
                 if (channelColumnInnerRef.current) {
                     channelColumnInnerRef.current.style.transform =
                         `translateY(-${viewport.scrollTop}px)`;
@@ -181,14 +194,29 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
                 if (headerRef.current) {
                     headerRef.current.scrollLeft = viewport.scrollLeft;
                 }
+                // The menu selection only follows genuine user scrolls - otherwise
+                // programmatic centering or a browser clamp echo (e.g. when the grid
+                // narrows on a day/scale change) would hijack it to an arbitrary hour.
+                if (performance.now() - lastUserScrollRef.current > USER_SCROLL_WINDOW) return;
+                lastUserScrollRef.current = performance.now(); // keep the drag session alive between frames
                 const slot = Math.max(0, Math.min(TIME_SLOTS.length - 1, Math.floor((viewport.scrollLeft + viewport.clientWidth / 2) / halfHourPx)));
                 setSelectedSlot((selectedSlot) => selectedSlot === slot ? selectedSlot : slot);
             });
         };
 
         viewport.addEventListener('scroll', onScroll, { passive: true });
+        viewport.addEventListener('wheel', markUserScroll, { passive: true });
+        viewport.addEventListener('touchstart', markUserScroll, { passive: true });
+        viewport.addEventListener('touchmove', markUserScroll, { passive: true });
+        viewport.addEventListener('pointerdown', markUserScroll, { passive: true });
+        viewport.addEventListener('keydown', markUserScroll);
         return () => {
             viewport.removeEventListener('scroll', onScroll);
+            viewport.removeEventListener('wheel', markUserScroll);
+            viewport.removeEventListener('touchstart', markUserScroll);
+            viewport.removeEventListener('touchmove', markUserScroll);
+            viewport.removeEventListener('pointerdown', markUserScroll);
+            viewport.removeEventListener('keydown', markUserScroll);
             if (rafId !== null) cancelAnimationFrame(rafId);
         };
     }, [halfHourPx]);
@@ -217,6 +245,24 @@ const EpgGuide = ({ channels, programs, programsLoading, catalogLoading, selecte
 
     // Center the viewport on the given half-hour slot (its midpoint at the center).
     const slotCenterPx = useCallback((index: number) => index * halfHourPx + halfHourPx / 2, [halfHourPx]);
+
+    // When the shown day changes to one that contains "now" (i.e. the user
+    // returns to today), snap the menu back to the current half-hour. This
+    // re-arms the now-centering branch of the effect below so the now-line and
+    // the time menu line up with the center again. Done during render (not in
+    // an effect) so the centering effect reads the reset slot instead of a
+    // stale one — otherwise it briefly scrolls to the previously picked slot,
+    // which the scroll listener then reads back and sticks on. Keyed on the day
+    // alone, so scrolling or paginating while already on today never resets it.
+    const effectiveDayTime = effectiveDay.getTime();
+    const [prevDayTime, setPrevDayTime] = useState(effectiveDayTime);
+    if (effectiveDayTime !== prevDayTime) {
+        setPrevDayTime(effectiveDayTime);
+        const dayStartMs = getDayStartMs(effectiveDay);
+        if (now >= dayStartMs && now < dayStartMs + DAY_IN_MS) {
+            setSelectedSlot(Math.floor((now - dayStartMs) / HALF_HOUR_IN_MS));
+        }
+    }
 
     // Restore the horizontal position on initial load and whenever the day or
     // scale changes. While the menu is still on the current half-hour we center
