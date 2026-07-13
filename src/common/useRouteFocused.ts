@@ -15,6 +15,11 @@ const useRouteFocused = () => {
         window.addEventListener('focus', handleFocus);
         window.addEventListener('blur', handleBlur);
 
+        // focus may have changed between the initial render and this effect
+        // running; without re-reading it here a focus event fired in that gap
+        // is lost and the app never subscribes to model state updates
+        setIsFocused(document.hasFocus());
+
         return () => {
             window.removeEventListener('focus', handleFocus);
             window.removeEventListener('blur', handleBlur);
