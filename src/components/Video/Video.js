@@ -66,19 +66,29 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
         closeMenu();
         onMarkSeasonAsWatched(season, seasonWatched);
     }, [season, seasonWatched, onMarkSeasonAsWatched]);
-    const videoButtonOnClick = React.useCallback(() => {
+    const selectVideo = React.useCallback(() => {
         if (typeof onSelect === 'function') {
             onSelect();
         }
+    }, [onSelect]);
+    const videoButtonOnClick = React.useCallback(() => {
+        selectVideo();
 
-        if (deepLinks) {
-            if (typeof deepLinks.player === 'string') {
-                navigate(toPath(deepLinks.player));
-            } else if (typeof deepLinks.metaDetailsStreams === 'string') {
-                navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
-            }
+        if (deepLinks && typeof deepLinks.metaDetailsStreams === 'string') {
+            navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
         }
-    }, [deepLinks, onSelect]);
+    }, [deepLinks, navigate, platform.isMobile, selectVideo]);
+    const playButtonOnClick = React.useCallback((event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectVideo();
+        if (deepLinks && typeof deepLinks.player === 'string') {
+            navigate(toPath(deepLinks.player));
+        }
+    }, [deepLinks, navigate, selectVideo]);
+    const playButtonOnKeyDown = React.useCallback((event) => {
+        event.stopPropagation();
+    }, []);
     const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref, ...props }) {
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
 
@@ -163,10 +173,23 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
                         </div>
                     </div>
                 </div>
+                {
+                    deepLinks && typeof deepLinks.player === 'string' ?
+                        <Button
+                            className={styles['play-button-container']}
+                            title={t('CTX_WATCH')}
+                            onClick={playButtonOnClick}
+                            onKeyDown={playButtonOnKeyDown}
+                        >
+                            <Icon className={styles['play-icon']} name={'play'} />
+                        </Button>
+                        :
+                        null
+                }
                 {children}
             </Button>
         );
-    }, [selected]);
+    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
