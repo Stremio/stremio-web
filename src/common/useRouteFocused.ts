@@ -15,6 +15,9 @@ const useRouteFocused = () => {
         window.addEventListener('focus', handleFocus);
         window.addEventListener('blur', handleBlur);
 
+        // catch focus changes that happened before the listeners were attached
+        setIsFocused(document.hasFocus());
+
         return () => {
             window.removeEventListener('focus', handleFocus);
             window.removeEventListener('blur', handleBlur);
