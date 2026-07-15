@@ -30,13 +30,28 @@
   object-position: center;
   opacity: 0.9;
 }
-.error-container-EbAve .error-message-nKSwk {
-  flex: none;
-  padding: 0 3rem;
+.error-container-EbAve .info-u9EcS {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.error-container-EbAve .info-u9EcS .title-wBlEH {
   font-size: 2rem;
-  max-height: 3.6em;
-  text-align: center;
   color: var(--primary-foreground-color);
+}
+.error-container-EbAve .info-u9EcS .message-k1ogE {
+  position: relative;
+  max-width: 40rem;
+  display: -webkit-box;
+  font-size: 1.5rem;
+  color: var(--primary-foreground-color);
+  opacity: 0.6;
+  text-align: center;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 .error-container-EbAve .buttons-container-FbMbf {
   flex: none;
@@ -97,7 +112,16 @@
   transition: border-color 0.25s ease-out;
 }
 .file-drop-container-hPBXO.active {
+  pointer-events: auto;
   border-color: var(--primary-accent-color);
+}
+.file-drop-container-hPBXO .file-input-ZVnG0 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
 }
 
 .modal-container-OuxEF {
@@ -3028,6 +3052,26 @@ kbd {
 }
 .video-container-ezBpK .info-container-xyynk .flex-row-container-CAyQu .upcoming-watched-container-msCaq .watched-container-gvzs3 {
   background-color: var(--tertiary-accent-color);
+}
+.video-container-ezBpK .play-button-container-FY3_A {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  color: var(--primary-foreground-color);
+  background-color: var(--overlay-color);
+}
+.video-container-ezBpK .play-button-container-FY3_A:hover,
+.video-container-ezBpK .play-button-container-FY3_A:focus {
+  background-color: var(--secondary-accent-color);
+}
+.video-container-ezBpK .play-button-container-FY3_A .play-icon-RqfT9 {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 .video-container-ezBpK.selected-AfK31 {
   animation: border-nc19J 3s ease-in-out forwards;
@@ -6344,6 +6388,9 @@ kbd {
 .trakt-container-wWlM8 .icon-fE4hv {
   color: var(--color-trakt) !important;
 }
+.discord-container-yJt0d .icon-fE4hv {
+  color: #5865f2 !important;
+}
 
 .wrapper-mdG7D {
   position: relative;
@@ -8637,6 +8684,8 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
 .routes-container {
   position: relative;
   z-index: 0;
+  height: 100%;
+  width: 100%;
 }
 .routes-container .route-container {
   position: absolute;
@@ -8844,10 +8893,6 @@ html body #app .updater-banner-container-Bk1mq {
   left: 0;
   right: 0;
   bottom: 0;
-}
-html body #app .router-_65XU {
-  width: 100%;
-  height: 100%;
 }
 @media only screen and (min-width: 2800px) {
   html {
