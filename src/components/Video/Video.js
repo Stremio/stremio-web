@@ -90,40 +90,30 @@ const Video = ({
         closeMenu();
         onMarkSeasonAsWatched(season, seasonWatched);
     }, [season, seasonWatched, onMarkSeasonAsWatched]);
-    const videoButtonOnClick = React.useCallback(() => {
+    const selectVideo = React.useCallback(() => {
         if (typeof onSelect === 'function') {
             onSelect();
         }
-        if (isEpg) {
-            return;
+    }, [onSelect]);
+    const videoButtonOnClick = React.useCallback(() => {
+        selectVideo();
+
+        if (deepLinks && typeof deepLinks.metaDetailsStreams === 'string') {
+            navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
         }
-        if (deepLinks) {
-            if (typeof deepLinks.player === 'string') {
-                navigate(toPath(deepLinks.player));
-            } else if (typeof deepLinks.metaDetailsStreams === 'string') {
-                navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
-            }
+    }, [deepLinks, navigate, platform.isMobile, selectVideo]);
+    const playButtonOnClick = React.useCallback((event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectVideo();
+        if (deepLinks && typeof deepLinks.player === 'string') {
+            navigate(toPath(deepLinks.player));
         }
-    }, [deepLinks, isEpg, onSelect, navigate, platform]);
-    const renderLabel = React.useMemo(() => function renderLabel({
-        className,
-        id,
-        title,
-        thumbnail,
-        episode,
-        released,
-        upcoming,
-        watched,
-        progress,
-        scheduled,
-        isEpg,
-        isNow,
-        startTime,
-        endTime,
-        children,
-        ref,
-        ...props
-    }) {
+    }, [deepLinks, navigate, selectVideo]);
+    const playButtonOnKeyDown = React.useCallback((event) => {
+        event.stopPropagation();
+    }, []);
+    const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref, ...props }) {
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
         const epgTimeRange = isEpg ?
             formatEpgTimeRange(startTime, endTime, profile.settings.interfaceLanguage)
@@ -226,10 +216,23 @@ const Video = ({
                         </div>
                     </div>
                 </div>
+                {
+                    deepLinks && typeof deepLinks.player === 'string' ?
+                        <Button
+                            className={styles['play-button-container']}
+                            title={t('CTX_WATCH')}
+                            onClick={playButtonOnClick}
+                            onKeyDown={playButtonOnKeyDown}
+                        >
+                            <Icon className={styles['play-icon']} name={'play'} />
+                        </Button>
+                        :
+                        null
+                }
                 {children}
             </Button>
         );
-    }, [selected]);
+    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
