@@ -96,7 +96,7 @@ const Player = () => {
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [audioMenuOpen, , closeAudioMenu, toggleAudioMenu] = useBinaryState(false);
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
-    const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
+    const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
 
@@ -145,6 +145,7 @@ const Player = () => {
     const playbackSpeed = React.useRef(video.state.playbackSpeed || 1);
     const pressTimer = React.useRef(null);
     const longPress = React.useRef(false);
+    const detailsHold = React.useRef(null);
     const controlBarRef = React.useRef(null);
 
     const HOLD_DELAY = 400;
@@ -643,13 +644,47 @@ const Player = () => {
         }
     }, [video.state.playbackSpeed, onPlaybackSpeedChanged], !menusOpen);
 
-    onShortcut('statisticsMenu', () => {
+    const selectedStream = player.selected?.stream;
+    const statisticsMenuAvailable = streamingServer?.statistics?.type !== 'Err'
+        && typeof selectedStream?.infoHash === 'string'
+        && typeof selectedStream?.fileIdx === 'number';
+
+    const finishDetailsHold = React.useCallback(() => {
+        const hold = detailsHold.current;
+        if (hold === null) return null;
+
+        detailsHold.current = null;
+        if (hold.phase === 'pending') {
+            clearTimeout(hold.timer);
+        } else {
+            closeStatisticsMenu();
+        }
+        return hold.phase;
+    }, [closeStatisticsMenu]);
+
+    const releaseDetailsHold = React.useCallback(() => {
+        if (finishDetailsHold() !== 'pending') return;
+
         closeMenus();
-        const stream = player.selected?.stream;
-        if (streamingServer?.statistics?.type !== 'Err' && typeof stream?.infoHash === 'string' && typeof stream?.fileIdx === 'number') {
+        if (statisticsMenuAvailable) {
             toggleStatisticsMenu();
         }
-    }, [player.selected, streamingServer.statistics, toggleStatisticsMenu]);
+    }, [finishDetailsHold, closeMenus, statisticsMenuAvailable, toggleStatisticsMenu]);
+
+    onShortcut('statisticsMenu', () => {
+        if (detailsHold.current !== null || pressTimer.current !== null) return;
+
+        const hold = { phase: 'pending', timer: null };
+        hold.timer = setTimeout(() => {
+            hold.phase = 'held';
+            hold.timer = null;
+            if (statisticsMenuAvailable) {
+                closeMenus();
+                openStatisticsMenu();
+            }
+        }, HOLD_DELAY);
+        detailsHold.current = hold;
+    }, [statisticsMenuAvailable, closeMenus, openStatisticsMenu], routeFocused);
 
     onShortcut('playNext', () => {
         closeMenus();
@@ -666,6 +701,10 @@ const Player = () => {
     }, [settings.escExitFullscreen]);
 
     React.useLayoutEffect(() => {
+        if (!routeFocused) {
+            finishDetailsHold();
+        }
+
         if (menusOpen) {
             clearTimeout(pressTimer.current);
             pressTimer.current = null;
@@ -675,7 +714,7 @@ const Player = () => {
         const onKeyDown = (e) => {
             const keyboardKey = getKeyboardShortcutKey(e);
             if (keyboardKey !== 'Space' || e.repeat) return;
-            if (menusOpen || e.ctrlKey || e.metaKey || e.altKey) return;
+            if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey) return;
 
             longPress.current = false;
 
@@ -687,6 +726,12 @@ const Player = () => {
 
         const onKeyUp = (e) => {
             const keyboardKey = getKeyboardShortcutKey(e);
+
+            if (keyboardKey === 'KeyD' || keyboardKey === 'D') {
+                releaseDetailsHold();
+                return;
+            }
+
             if (keyboardKey !== 'Space' && keyboardKey !== 'ArrowRight' && keyboardKey !== 'ArrowLeft') return;
             if (e.ctrlKey || e.metaKey || e.altKey) return;
 
@@ -725,7 +770,7 @@ const Player = () => {
 
         const onMouseDownHold = (e) => {
             if (e.button !== 0) return; // left mouse button only
-            if (menusOpen) return;
+            if (menusOpen || detailsHold.current !== null) return;
             if (controlBarRef.current && controlBarRef.current.contains(e.target)) return;
 
             longPress.current = false;
@@ -740,6 +785,7 @@ const Player = () => {
             if (e.button !== 0) return;
 
             clearTimeout(pressTimer.current);
+            pressTimer.current = null;
 
             if (longPress.current) {
                 onPlaybackSpeedChanged(playbackSpeed.current);
@@ -753,6 +799,7 @@ const Player = () => {
                 onPlaybackSpeedChanged(playbackSpeed.current);
                 longPress.current = false;
             }
+            finishDetailsHold();
             setSeeking(false);
         };
 
@@ -772,7 +819,7 @@ const Player = () => {
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('blur', onBlur);
         };
-    }, [routeFocused, menusOpen, video.state.volume, video.state.paused]);
+    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold]);
 
     React.useEffect(() => {
         video.events.on('error', onError);
@@ -786,6 +833,7 @@ const Player = () => {
 
     React.useLayoutEffect(() => {
         return () => {
+            clearTimeout(detailsHold.current?.timer);
             setImmersedDebounced.cancel();
             onPlayRequestedDebounced.cancel();
             onPauseRequestedDebounced.cancel();
