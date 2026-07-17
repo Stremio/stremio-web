@@ -8,7 +8,7 @@
         "codes": ["be-BY", "bel"]
     },
     {
-        "name": "български език",
+        "name": "Български език",
         "codes": ["bg-BG", "bul"]
     },
     {
@@ -16,15 +16,15 @@
         "codes": ["bn-Bd", "ben"]
     },
     {
-        "name": "català",
+        "name": "Català",
         "codes": ["ca-ES", "cat"]
     },
     {
-        "name": "čeština",
+        "name": "Čeština",
         "codes": ["cs-CZ", "ces"]
     },
     {
-        "name": "dansk",
+        "name": "Dansk",
         "codes": ["da-DK", "dan"]
     },
     {
@@ -32,7 +32,7 @@
         "codes": ["de-DE", "deu"]
     },
     {
-        "name": "ελληνικά",
+        "name": "Ελληνικά",
         "codes": ["el-GR", "ell"]
     },
     {
@@ -44,7 +44,7 @@
         "codes": ["eo-EO", "epo"]
     },
     {
-        "name": "español",
+        "name": "Español",
         "codes": ["es-ES", "spa"]
     },
     {
@@ -52,7 +52,7 @@
         "codes": ["et-EE", "est"]
     },
     {
-        "name": "euskara",
+        "name": "Euskara",
         "codes": ["eu-ES", "eus"]
     },
     {
@@ -76,11 +76,11 @@
         "codes": ["hi-IN", "hin"]
     },
     {
-        "name": "hrvatski jezik",
+        "name": "Hrvatski jezik",
         "codes": ["hr-HR", "hrv"]
     },
     {
-        "name": "magyar",
+        "name": "Magyar",
         "codes": ["hu-HU", "hun"]
     },
     {
@@ -88,7 +88,7 @@
         "codes": ["id-ID", "ind"]
     },
     {
-        "name": "italiano",
+        "name": "Italiano",
         "codes": ["it-IT", "ita"]
     },
     {
@@ -104,7 +104,7 @@
         "codes": ["lt-LT", "lit"]
     },
     {
-        "name": "македонски јазик",
+        "name": "Македонски јазик",
         "codes": ["mk-MK", "mkd"]
     },
     {
@@ -132,15 +132,15 @@
         "codes": ["pa-IN", "pan"]
     },
     {
-        "name": "język polski",
+        "name": "Język polski",
         "codes": ["pl-PL", "pol"]
     },
     {
-        "name": "português Brazil",
+        "name": "Português Brazil",
         "codes": ["pt-BR", "por"]
     },
     {
-        "name": "português",
+        "name": "Português",
         "codes": ["pt-PT", "por"]
     },
     {
@@ -148,7 +148,7 @@
         "codes": ["ro-RO", "ron"]
     },
     {
-        "name": "русский язык",
+        "name": "Русский язык",
         "codes": ["ru-RU", "rus"]
     },
     {
@@ -156,11 +156,11 @@
         "codes": ["sk-SK", "slk"]
     },
     {
-        "name": "slovenski jezik",
+        "name": "Slovenski jezik",
         "codes": ["sl-SL", "slv"]
     },
     {
-        "name": "српски језик",
+        "name": "Српски језик",
         "codes": ["sr-RS", "srp"]
     },
     {
@@ -180,7 +180,7 @@
         "codes": ["tr-TR", "tur"]
     },
     {
-        "name": "українська мова",
+        "name": "Українська мова",
         "codes": ["uk-UA", "ukr"]
     },
     {
