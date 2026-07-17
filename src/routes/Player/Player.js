@@ -11,7 +11,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, getKeyboardShortcutKey, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
@@ -673,7 +673,8 @@ const Player = () => {
         }
 
         const onKeyDown = (e) => {
-            if (e.code !== 'Space' || e.repeat) return;
+            const keyboardKey = getKeyboardShortcutKey(e);
+            if (keyboardKey !== 'Space' || e.repeat) return;
             if (menusOpen || e.ctrlKey || e.metaKey || e.altKey) return;
 
             longPress.current = false;
@@ -685,14 +686,15 @@ const Player = () => {
         };
 
         const onKeyUp = (e) => {
-            if (e.code !== 'Space' && e.code !== 'ArrowRight' && e.code !== 'ArrowLeft') return;
+            const keyboardKey = getKeyboardShortcutKey(e);
+            if (keyboardKey !== 'Space' && keyboardKey !== 'ArrowRight' && keyboardKey !== 'ArrowLeft') return;
             if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-            if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
+            if (keyboardKey === 'ArrowRight' || keyboardKey === 'ArrowLeft') {
                 setSeeking(false);
                 return;
             }
-            if (e.code === 'Space') {
+            if (keyboardKey === 'Space') {
                 clearTimeout(pressTimer.current);
                 pressTimer.current = null;
                 if (longPress.current) {
