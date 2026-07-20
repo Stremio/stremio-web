@@ -11,7 +11,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, getKeyboardShortcutKey, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
@@ -29,6 +29,7 @@ const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
+const { default: useKeyboardSeek } = require('./useKeyboardSeek');
 const useStatistics = require('./useStatistics');
 const useVideo = require('./useVideo');
 const { default: useSubtitles } = require('./useSubtitles');
@@ -173,10 +174,6 @@ const Player = () => {
         toggleSubtitlesMenu,
     });
 
-    const overlayHidden = React.useMemo(() => {
-        return immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
-    }, [immersed, casting, video.state.paused, menusOpen]);
-
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
@@ -265,10 +262,31 @@ const Player = () => {
         video.setVolume(volume);
     }, []);
 
-    const onSeekRequested = React.useCallback((time) => {
+    const commitSeek = React.useCallback((time) => {
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
     }, [video.state.duration, video.state.manifest]);
+    const {
+        time: keyboardSeekTime,
+        seekBy: seekByKeyboard,
+        seekTo: onSeekRequested,
+        cancel: cancelKeyboardSeek,
+        flush: flushKeyboardSeek,
+        release: releaseKeyboardSeek,
+    } = useKeyboardSeek({
+        time: video.state.time,
+        duration: video.state.duration,
+        onSeek: commitSeek,
+        setSeeking,
+    });
+    const onKeyboardSeekRequested = React.useCallback((offset) => {
+        setImmersedDebounced.cancel();
+        setImmersed(false);
+        seekByKeyboard(offset);
+    }, [seekByKeyboard]);
+    const overlayHidden = React.useMemo(() => {
+        return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
+    }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);
@@ -302,12 +320,13 @@ const Player = () => {
 
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
+            cancelKeyboardSeek();
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation, profile.settings]);
+    }, [player.nextVideo, handleNextVideoNavigation, profile.settings, cancelKeyboardSeek]);
 
     const onVideoClick = React.useCallback(() => {
         if (video.state.paused !== null && !longPress.current) {
@@ -441,6 +460,7 @@ const Player = () => {
 
     React.useEffect(() => {
         setError(null);
+        cancelKeyboardSeek();
         video.unload();
 
         if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
@@ -477,7 +497,7 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting]);
+    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
@@ -636,20 +656,14 @@ const Player = () => {
     }, [video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
     onShortcut('seekForward', (combo) => {
-        if (video.state.time !== null) {
-            const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
-            setSeeking(true);
-            onSeekRequested(video.state.time + seekDuration);
-        }
-    }, [video.state.time, onSeekRequested], !menusOpen);
+        const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
+        onKeyboardSeekRequested(seekDuration);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen);
 
     onShortcut('seekBackward', (combo) => {
-        if (video.state.time !== null) {
-            const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
-            setSeeking(true);
-            onSeekRequested(video.state.time - seekDuration);
-        }
-    }, [video.state.time, onSeekRequested], !menusOpen);
+        const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
+        onKeyboardSeekRequested(-seekDuration);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen);
 
     onShortcut('mute', () => {
         video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
@@ -771,21 +785,23 @@ const Player = () => {
         };
 
         const onKeyUp = (e) => {
-            const keyboardKey = getKeyboardShortcutKey(e);
+            const keyboardKeys = getKeyboardShortcutKeys(e);
 
-            if (keyboardKey === 'KeyD' || keyboardKey === 'D') {
+            if (keyboardKeys.includes('KeyD') || keyboardKeys.includes('D')) {
                 releaseDetailsHold();
                 return;
             }
 
-            if (keyboardKey !== 'Space' && keyboardKey !== 'ArrowRight' && keyboardKey !== 'ArrowLeft') return;
+            if (!keyboardKeys.includes('Space') && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
             if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-            if (keyboardKey === 'ArrowRight' || keyboardKey === 'ArrowLeft') {
-                setSeeking(false);
+            if (keyboardKeys.includes('ArrowRight') || keyboardKeys.includes('ArrowLeft')) {
+                releaseKeyboardSeek();
+                setImmersed(false);
+                setImmersedDebounced(true);
                 return;
             }
-            if (keyboardKey === 'Space') {
+            if (keyboardKeys.includes('Space')) {
                 clearTimeout(pressTimer.current);
                 pressTimer.current = null;
                 if (longPress.current) {
@@ -846,7 +862,9 @@ const Player = () => {
                 longPress.current = false;
             }
             finishDetailsHold();
-            setSeeking(false);
+            flushKeyboardSeek();
+            setImmersed(false);
+            setImmersedDebounced(true);
         };
 
         if (routeFocused) {
@@ -856,6 +874,8 @@ const Player = () => {
             window.addEventListener('mousedown', onMouseDownHold);
             window.addEventListener('mouseup', onMouseUp);
             window.addEventListener('blur', onBlur);
+        } else {
+            cancelKeyboardSeek();
         }
         return () => {
             window.removeEventListener('keyup', onKeyUp);
@@ -865,7 +885,7 @@ const Player = () => {
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('blur', onBlur);
         };
-    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold]);
+    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold, cancelKeyboardSeek, flushKeyboardSeek, releaseKeyboardSeek]);
 
     React.useEffect(() => {
         video.events.on('error', onError);
@@ -974,7 +994,7 @@ const Player = () => {
                 ref={controlBarRef}
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={video.state.paused}
-                time={video.state.time}
+                time={keyboardSeekTime ?? video.state.time}
                 duration={video.state.duration}
                 buffered={video.state.buffered}
                 volume={video.state.volume}
