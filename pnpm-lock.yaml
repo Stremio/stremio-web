@@ -96,8 +96,8 @@ importers:
         specifier: github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6
         version: https://codeload.github.com/Stremio/spatial-navigation/tar.gz/64871b1422466f5f45d24ebc8bbd315b2ebab6a6
       stremio-translations:
-        specifier: github:Stremio/stremio-translations#1b013aac421a48d1558980646744e3b53652b61a
-        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/1b013aac421a48d1558980646744e3b53652b61a
+        specifier: github:Stremio/stremio-translations#0f290a5e5d17c295083ab0162e0b9054c07b123b
+        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/0f290a5e5d17c295083ab0162e0b9054c07b123b
       url:
         specifier: 0.11.4
         version: 0.11.4
@@ -4457,9 +4457,9 @@ packages:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/1b013aac421a48d1558980646744e3b53652b61a:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/1b013aac421a48d1558980646744e3b53652b61a}
-    version: 1.53.1
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/0f290a5e5d17c295083ab0162e0b9054c07b123b:
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/0f290a5e5d17c295083ab0162e0b9054c07b123b}
+    version: 1.53.2
 
   string-length@4.0.2:
     resolution: {integrity: sha512-+l6rNN5fYHNhZZy41RXsYptCjA2Igmq4EG7kZAYFQI1E1VTXarr6ZPXBg6eq7Y6eK4FEhY6AJlyuFIb/v/S0VQ==}
@@ -10050,7 +10050,7 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/1b013aac421a48d1558980646744e3b53652b61a: {}
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/0f290a5e5d17c295083ab0162e0b9054c07b123b: {}
 
   string-length@4.0.2:
     dependencies:
