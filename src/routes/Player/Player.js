@@ -288,6 +288,37 @@ const Player = () => {
         return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
     }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
 
+    React.useEffect(() => {
+        if (!video.state.manifest?.props.includes('subtitlesOffsetAdjustment')) {
+            return;
+        }
+
+        const videoContainerElement = video.containerRef.current;
+        const controlBarElement = controlBarRef.current;
+        if (!videoContainerElement || !controlBarElement) {
+            return;
+        }
+
+        const updateSubtitlesOffsetAdjustment = () => {
+            const videoHeight = videoContainerElement.getBoundingClientRect().height;
+            const controlBarHeight = overlayHidden ? 0 : controlBarElement.getBoundingClientRect().height;
+            const offsetAdjustment = videoHeight > 0 ? Math.ceil(controlBarHeight / videoHeight * 100) : 0;
+            video.setSubtitlesOffsetAdjustment(offsetAdjustment);
+        };
+
+        updateSubtitlesOffsetAdjustment();
+
+        if (typeof ResizeObserver === 'undefined') {
+            window.addEventListener('resize', updateSubtitlesOffsetAdjustment);
+            return () => window.removeEventListener('resize', updateSubtitlesOffsetAdjustment);
+        }
+
+        const resizeObserver = new ResizeObserver(updateSubtitlesOffsetAdjustment);
+        resizeObserver.observe(videoContainerElement);
+        resizeObserver.observe(controlBarElement);
+        return () => resizeObserver.disconnect();
+    }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetAdjustment]);
+
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);
 
