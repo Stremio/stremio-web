@@ -15,17 +15,9 @@ type Props = {
     setSeeking: (seeking: boolean) => void,
 };
 
-type Hold = {
-    timeout: ReturnType<typeof setTimeout> | null,
-    interval: ReturnType<typeof setInterval> | null,
-    step: number,
-};
-
 const debounce = require('lodash.debounce') as (callback: () => void, wait: number) => DebouncedCallback;
 const DEBOUNCE_TIME = 300;
 const PREVIEW_TIME = 1500;
-const HOLD_DELAY = 300;
-const HOLD_INTERVAL = 100;
 const HOLD_ACCELERATION = 1.05;
 const MAX_HOLD_STEP = 0.1;
 
@@ -33,18 +25,14 @@ const useKeyboardSeek = ({ time, duration, onSeek, setSeeking }: Props) => {
     const [target, setTarget] = useState<number | null>(null);
     const targetRef = useRef<number | null>(null);
     const pendingRef = useRef(false);
-    const holdRef = useRef<Hold | null>(null);
+    const holdStepRef = useRef<number | null>(null);
     const timeRef = useLiveRef(time);
     const durationRef = useLiveRef(duration);
     const onSeekRef = useLiveRef(onSeek);
     const setSeekingRef = useLiveRef(setSeeking);
 
     const stopHold = useCallback(() => {
-        if (holdRef.current !== null) {
-            holdRef.current.timeout !== null && clearTimeout(holdRef.current.timeout);
-            holdRef.current.interval !== null && clearInterval(holdRef.current.interval);
-            holdRef.current = null;
-        }
+        holdStepRef.current = null;
     }, []);
     const move = useCallback((offset: number) => {
         if (timeRef.current === null) return;
@@ -105,32 +93,23 @@ const useKeyboardSeek = ({ time, duration, onSeek, setSeeking }: Props) => {
         onSeekRef.current(time);
     }, []);
     const seekBy = useCallback((offset: number) => {
-        if (timeRef.current === null || holdRef.current !== null) return;
+        if (timeRef.current === null) return;
 
         reset.cancel();
         commit.cancel();
-        move(offset);
 
-        const hold: Hold = {
-            timeout: null,
-            interval: null,
-            step: offset,
-        };
-        hold.timeout = setTimeout(() => {
-            hold.timeout = null;
-            const accelerate = () => {
-                const duration = durationRef.current;
-                if (duration !== null && !isNaN(duration) && duration > 0) {
-                    hold.step = Math.sign(hold.step) * Math.min(Math.abs(hold.step) * HOLD_ACCELERATION, duration * MAX_HOLD_STEP);
-                }
-            };
-            accelerate();
-            hold.interval = setInterval(() => {
-                move(hold.step);
-                accelerate();
-            }, HOLD_INTERVAL);
-        }, HOLD_DELAY);
-        holdRef.current = hold;
+        if (holdStepRef.current === null) {
+            holdStepRef.current = offset;
+        } else if (Math.sign(holdStepRef.current) === Math.sign(offset)) {
+            const duration = durationRef.current;
+            if (duration !== null && !isNaN(duration) && duration > 0) {
+                holdStepRef.current = Math.sign(holdStepRef.current) * Math.min(Math.abs(holdStepRef.current) * HOLD_ACCELERATION, duration * MAX_HOLD_STEP);
+            }
+        } else {
+            return;
+        }
+
+        move(holdStepRef.current);
     }, []);
 
     useLayoutEffect(() => {
