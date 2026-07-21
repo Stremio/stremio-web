@@ -4,8 +4,12 @@ import React from 'react';
 
 const RouteFocusedContext = React.createContext(true);
 
+export const useRouteActive = () => {
+    return React.useContext(RouteFocusedContext);
+};
+
 const useRouteFocused = () => {
-    const routeFocused = React.useContext(RouteFocusedContext);
+    const routeActive = useRouteActive();
     const [isFocused, setIsFocused] = React.useState(document.hasFocus());
 
     React.useEffect(() => {
@@ -24,7 +28,7 @@ const useRouteFocused = () => {
         };
     }, []);
 
-    return routeFocused && isFocused;
+    return routeActive && isFocused;
 };
 
 export const RouteFocusedProvider = RouteFocusedContext.Provider;
