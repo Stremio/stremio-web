@@ -6,11 +6,11 @@ const { deepEqual } = require('fast-equals');
 const intersection = require('lodash.intersection');
 const { useCore } = require('stremio/core');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
-const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
+const { useRouteActive } = require('stremio/common/useRouteFocused');
 
 const useModelState = ({ action, ...args }) => {
     const core = useCore();
-    const routeFocused = useRouteFocused();
+    const routeActive = useRouteActive();
     const mountedRef = React.useRef(false);
     const [model, timeout, map, deps] = React.useMemo(() => {
         return [args.model, args.timeout, args.map, args.deps];
@@ -53,7 +53,7 @@ const useModelState = ({ action, ...args }) => {
             }
         };
         const onNewStateThrottled = throttle(onNewState, timeout);
-        if (routeFocused) {
+        if (routeActive) {
             core.on('state', onNewStateThrottled);
             if (mountedRef.current) {
                 onNewState([model]);
@@ -63,7 +63,7 @@ const useModelState = ({ action, ...args }) => {
             onNewStateThrottled.cancel();
             core.off('state', onNewStateThrottled);
         };
-    }, [routeFocused]);
+    }, [routeActive]);
     React.useEffect(() => {
         mountedRef.current = true;
     }, []);
