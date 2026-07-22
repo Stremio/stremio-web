@@ -289,7 +289,7 @@ const Player = () => {
     }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
 
     React.useEffect(() => {
-        if (!video.state.manifest?.props.includes('subtitlesOffsetAdjustment')) {
+        if (!video.state.manifest?.props.includes('subtitlesOffsetMinimum')) {
             return;
         }
 
@@ -299,25 +299,25 @@ const Player = () => {
             return;
         }
 
-        const updateSubtitlesOffsetAdjustment = () => {
+        const updateSubtitlesOffsetMinimum = () => {
             const videoHeight = videoContainerElement.getBoundingClientRect().height;
             const controlBarHeight = overlayHidden ? 0 : controlBarElement.getBoundingClientRect().height;
-            const offsetAdjustment = videoHeight > 0 ? Math.ceil(controlBarHeight / videoHeight * 100) : 0;
-            video.setSubtitlesOffsetAdjustment(offsetAdjustment);
+            const offsetMinimum = videoHeight > 0 ? Math.ceil(controlBarHeight / videoHeight * 100) : 0;
+            video.setSubtitlesOffsetMinimum(offsetMinimum);
         };
 
-        updateSubtitlesOffsetAdjustment();
+        updateSubtitlesOffsetMinimum();
 
         if (typeof ResizeObserver === 'undefined') {
-            window.addEventListener('resize', updateSubtitlesOffsetAdjustment);
-            return () => window.removeEventListener('resize', updateSubtitlesOffsetAdjustment);
+            window.addEventListener('resize', updateSubtitlesOffsetMinimum);
+            return () => window.removeEventListener('resize', updateSubtitlesOffsetMinimum);
         }
 
-        const resizeObserver = new ResizeObserver(updateSubtitlesOffsetAdjustment);
+        const resizeObserver = new ResizeObserver(updateSubtitlesOffsetMinimum);
         resizeObserver.observe(videoContainerElement);
         resizeObserver.observe(controlBarElement);
         return () => resizeObserver.disconnect();
-    }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetAdjustment]);
+    }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetMinimum]);
 
     const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
         video.setPlaybackSpeed(rate);

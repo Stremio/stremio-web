@@ -23,7 +23,7 @@
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "0.59.0",
         "@stremio/stremio-icons": "5.10.0",
-        "@stremio/stremio-video": "github:Stremio/stremio-video#583658c0a75171bff6218793133726f1380da677",
+        "@stremio/stremio-video": "github:Stremio/stremio-video#ff405bc6b125bf44310076e460ad1563bd6e6770",
         "a-color-picker": "1.2.1",
         "bowser": "2.14.1",
         "buffer": "6.0.3",

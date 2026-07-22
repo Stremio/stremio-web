@@ -144,10 +144,10 @@ const useVideo = () => {
         setProp('extraSubtitlesOffset', offset);
     };
 
-    const setSubtitlesOffsetAdjustment = React.useCallback((offset) => {
+    const setSubtitlesOffsetMinimum = React.useCallback((offset) => {
         dispatch({
             type: 'setProp',
-            propName: 'subtitlesOffsetAdjustment',
+            propName: 'subtitlesOffsetMinimum',
             propValue: offset,
         });
     }, [dispatch]);
@@ -252,7 +252,7 @@ const useVideo = () => {
         setSubtitlesDelay,
         setSubtitlesSize,
         setSubtitlesOffset,
-        setSubtitlesOffsetAdjustment,
+        setSubtitlesOffsetMinimum,
         setSubtitlesTextColor,
         setSubtitlesBackgroundColor,
         setSubtitlesOutlineColor,

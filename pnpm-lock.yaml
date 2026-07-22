@@ -24,8 +24,8 @@ importers:
         specifier: 5.10.0
         version: 5.10.0
       '@stremio/stremio-video':
-        specifier: github:Stremio/stremio-video#583658c0a75171bff6218793133726f1380da677
-        version: https://codeload.github.com/Stremio/stremio-video/tar.gz/583658c0a75171bff6218793133726f1380da677
+        specifier: github:Stremio/stremio-video#ff405bc6b125bf44310076e460ad1563bd6e6770
+        version: https://codeload.github.com/Stremio/stremio-video/tar.gz/ff405bc6b125bf44310076e460ad1563bd6e6770
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1
@@ -1423,8 +1423,8 @@ packages:
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
 
-  '@stremio/stremio-video@https://codeload.github.com/Stremio/stremio-video/tar.gz/583658c0a75171bff6218793133726f1380da677':
-    resolution: {gitHosted: true, integrity: sha512-P1RuSOYYHhesj1DLUYbx64y6pcIJH/RxI7voA1W5aj9YZIvzfYTgHSlRsUBQhr6qeSbQ4VlfgZVk4XbWKWe2Qg==, tarball: https://codeload.github.com/Stremio/stremio-video/tar.gz/583658c0a75171bff6218793133726f1380da677}
+  '@stremio/stremio-video@https://codeload.github.com/Stremio/stremio-video/tar.gz/ff405bc6b125bf44310076e460ad1563bd6e6770':
+    resolution: {gitHosted: true, integrity: sha512-r4SOXgo3Xhs/3STfgM6gAh4BFURf0XmiuCluzbS45sE5a7EA8Z705giGb8axaYmFFDwTRO8j/HDKUlEXK7d7/g==, tarball: https://codeload.github.com/Stremio/stremio-video/tar.gz/ff405bc6b125bf44310076e460ad1563bd6e6770}
     version: 0.0.85
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
@@ -6489,7 +6489,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.10.0': {}
 
-  '@stremio/stremio-video@https://codeload.github.com/Stremio/stremio-video/tar.gz/583658c0a75171bff6218793133726f1380da677':
+  '@stremio/stremio-video@https://codeload.github.com/Stremio/stremio-video/tar.gz/ff405bc6b125bf44310076e460ad1563bd6e6770':
     dependencies:
       buffer: 6.0.3
       color: 4.2.3
