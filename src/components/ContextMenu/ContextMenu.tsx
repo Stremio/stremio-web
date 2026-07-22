@@ -75,15 +75,17 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
         return { top, left };
     }, [position, containerSize, lock, triggerRect]);
 
-    const close = () => {
+    const close = useCallback(() => {
         setActive(false);
-    };
+    }, []);
 
-    const stopPropagation = (event: React.MouseEvent | React.TouchEvent) => {
+    const stopPropagation = useCallback((event: React.MouseEvent | React.TouchEvent) => {
         event.stopPropagation();
-    };
+    }, []);
 
     const onContextMenu = useCallback((event: MouseEvent) => {
+        if (event.shiftKey) return;
+
         event.preventDefault();
 
         if (lock) {
@@ -95,11 +97,24 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
         setActive(true);
     }, [lock]);
 
-    const handleKeyDown = useCallback((event: KeyboardEvent) => event.key === 'Escape' && close(), []);
+    const containerOnMouseDown = useCallback((event: React.MouseEvent) => {
+        if (event.button !== 2 && !event.ctrlKey) close();
+    }, [close]);
+
+    const containerOnContextMenu = useCallback((event: React.MouseEvent) => {
+        if (event.shiftKey) return;
+
+        event.preventDefault();
+        if (!lock && event.target === event.currentTarget) {
+            setPosition([event.clientX, event.clientY]);
+        }
+    }, [lock]);
+
+    const handleKeyDown = useCallback((event: KeyboardEvent) => event.key === 'Escape' && close(), [close]);
 
     const onClick = useCallback(() => {
         autoClose && close();
-    }, [autoClose]);
+    }, [autoClose, close]);
 
     useEffect(() => {
         on.forEach((ref) => ref.current && ref.current.addEventListener('contextmenu', onContextMenu));
@@ -115,7 +130,8 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
         <Transition when={active} name={'fade'}>
             <div
                 className={styles['context-menu-container']}
-                onMouseDown={close}
+                onMouseDown={containerOnMouseDown}
+                onContextMenu={containerOnContextMenu}
                 onTouchStart={close}
             >
                 <div
