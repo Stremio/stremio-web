@@ -63,8 +63,8 @@ const Player = () => {
     const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
-    const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
+    const statistics = useStatistics(player, streamingServer, video);
     const routeFocused = useRouteFocused();
     const platform = usePlatform();
     const toast = useToast();

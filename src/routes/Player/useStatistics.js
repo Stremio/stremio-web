@@ -2,8 +2,9 @@
 
 const React = require('react');
 const { useCore } = require('stremio/core');
+const { bufferRunwaySeconds, isKeepingUp, deriveStreamQuality } = require('./streamQuality');
 
-const useStatistics = (player, streamingServer) => {
+const useStatistics = (player, streamingServer, video) => {
     const core = useCore();
 
     const [progress, setProgress] = React.useState(0);
@@ -50,6 +51,12 @@ const useStatistics = (player, streamingServer) => {
             :
             0;
     }, [statistics]);
+
+    const ready = `${statistics?.infoHash}`.toLowerCase() === `${infoHash}`.toLowerCase();
+    const cached = !!statistics && statistics.streamProgress >= 1;
+    const bufferRunway = bufferRunwaySeconds(video.state.buffered, video.state.time, video.state.playbackSpeed);
+    const keepingUp = isKeepingUp(statistics?.downloadSpeed, statistics?.streamLen, video.state.duration, video.state.playbackSpeed);
+    const quality = deriveStreamQuality({ ready, cached, bufferRunway, keepingUp });
 
     React.useEffect(() => {
         statistics && setProgress(() => {
@@ -99,6 +106,9 @@ const useStatistics = (player, streamingServer) => {
         speed,
         completed,
         progress,
+        quality,
+        bufferRunway,
+        keepingUp,
     };
 };
 
