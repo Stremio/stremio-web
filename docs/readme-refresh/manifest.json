@@ -43,7 +43,7 @@
     "screenshots": [
         {
             "src": "screenshots/board_wide.webp",
-            "sizes": "1440x900",
+            "sizes": "1440x948",
             "type": "image/webp",
             "form_factor": "wide",
             "label": "Homescreen of Stremio"
