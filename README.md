@@ -13,7 +13,7 @@
 
 **[🌐 Open the Web App](https://web.stremio.com)** · [Website](https://www.stremio.com) · [Report a bug](https://github.com/Stremio/stremio-web/issues/new/choose)
 
-<img src="https://raw.githubusercontent.com/Stremio/stremio-web/screenshots/board.webp" alt="Stremio board" width="100%">
+<img alt="Stremio board" width="100%" src="https://github.com/user-attachments/assets/b3597fcc-ee53-4c4c-82be-457844135230" />
 
 </div>
 
@@ -31,7 +31,7 @@
 
 | Discover | Meta Details |
 |:---:|:---:|
-| ![Discover](https://raw.githubusercontent.com/Stremio/stremio-web/screenshots/discover.webp) | ![Meta Details](https://raw.githubusercontent.com/Stremio/stremio-web/screenshots/metadetails.webp) |
+| ![Discover](https://github.com/user-attachments/assets/e89af0e8-8c53-4dac-a38a-464b5dfcf1a4) | ![Meta Details](https://github.com/user-attachments/assets/858a6946-d34a-4490-90c2-368b8714d501) |
 
 ## 🛠 How it works
 
