@@ -38,21 +38,30 @@ const Discover = () => {
 
     const metasContainerRef = React.useRef();
     const metaPreviewRef = React.useRef();
+    const previousCatalogSizeRef = React.useRef(0);
 
     React.useEffect(() => {
         if (discover.catalog?.content.type === 'Loading') {
             metasContainerRef.current.scrollTop = 0;
+            previousCatalogSizeRef.current = 0;
         }
     }, [discover.catalog]);
     React.useEffect(() => {
-        if (hasNextPage && metasContainerRef.current) {
+        if (discover.catalog?.content.type === 'Ready') {
+            const catalogSize = discover.catalog.content.content.length;
+            const hasNewItems = catalogSize > previousCatalogSizeRef.current;
+            previousCatalogSizeRef.current = catalogSize;
+            if (!hasNextPage || !hasNewItems || !metasContainerRef.current) {
+                return;
+            }
+
             const containerHeight = metasContainerRef.current.scrollHeight;
             const viewportHeight = metasContainerRef.current.clientHeight;
             if (containerHeight <= viewportHeight + SCROLL_TO_BOTTOM_THRESHOLD) {
                 loadNextPage();
             }
         }
-    }, [hasNextPage, loadNextPage]);
+    }, [discover.catalog, hasNextPage, loadNextPage]);
     const addToLibrary = React.useCallback(() => {
         if (selectedMetaItem === null) {
             return;
