@@ -94,7 +94,8 @@ const Player = () => {
     const getVideoElement = React.useCallback(() => {
         return video.containerRef.current?.querySelector('video') ?? null;
     }, []);
-    const pictureInPictureSupported = typeof document !== 'undefined' &&
+    const pictureInPictureSupported = getVideoElement() !== null &&
+        typeof document !== 'undefined' &&
         document.pictureInPictureEnabled === true &&
         typeof HTMLVideoElement !== 'undefined' &&
         typeof HTMLVideoElement.prototype.requestPictureInPicture === 'function';
@@ -137,8 +138,9 @@ const Player = () => {
                     console.error('Player PiP cleanup', error);
                 });
             }
+            video.setPictureInPicture(false);
         };
-    }, [getVideoElement, pictureInPictureSupported, video.setPictureInPicture, video.state.manifest]);
+    }, [getVideoElement, pictureInPictureSupported, video.setPictureInPicture, video.state.loaded, video.state.manifest]);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
