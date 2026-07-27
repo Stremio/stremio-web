@@ -91,6 +91,55 @@ const Player = () => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
 
+    const getVideoElement = React.useCallback(() => {
+        return video.containerRef.current?.querySelector('video') ?? null;
+    }, []);
+    const pictureInPictureSupported = typeof document !== 'undefined' &&
+        document.pictureInPictureEnabled === true &&
+        typeof HTMLVideoElement !== 'undefined' &&
+        typeof HTMLVideoElement.prototype.requestPictureInPicture === 'function';
+
+    const onPipEnableRequested = React.useCallback(() => {
+        const videoElement = getVideoElement();
+        if (!pictureInPictureSupported || !videoElement || document.pictureInPictureElement === videoElement) {
+            return;
+        }
+        videoElement.requestPictureInPicture().catch((error) => {
+            console.error('Player PiP', error);
+        });
+    }, [getVideoElement, pictureInPictureSupported]);
+
+    const onPipDisableRequested = React.useCallback(() => {
+        if (typeof document !== 'undefined' && document.pictureInPictureElement) {
+            document.exitPictureInPicture().catch((error) => {
+                console.error('Player PiP', error);
+            });
+        }
+    }, []);
+
+    React.useEffect(() => {
+        const videoElement = getVideoElement();
+        if (!pictureInPictureSupported || !videoElement) {
+            return undefined;
+        }
+
+        const onEnterPictureInPicture = () => video.setPictureInPicture(true);
+        const onLeavePictureInPicture = () => video.setPictureInPicture(false);
+
+        videoElement.addEventListener('enterpictureinpicture', onEnterPictureInPicture);
+        videoElement.addEventListener('leavepictureinpicture', onLeavePictureInPicture);
+
+        return () => {
+            videoElement.removeEventListener('enterpictureinpicture', onEnterPictureInPicture);
+            videoElement.removeEventListener('leavepictureinpicture', onLeavePictureInPicture);
+            if (document.pictureInPictureElement === videoElement) {
+                document.exitPictureInPicture().catch((error) => {
+                    console.error('Player PiP cleanup', error);
+                });
+            }
+        };
+    }, [getVideoElement, pictureInPictureSupported, video.setPictureInPicture, video.state.manifest]);
+
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
         setVideoElement(el || null);
@@ -1031,6 +1080,8 @@ const Player = () => {
                 volume={video.state.volume}
                 muted={video.state.muted}
                 playbackSpeed={video.state.playbackSpeed}
+                pictureInPicture={video.state.pictureInPicture}
+                pictureInPictureSupported={pictureInPictureSupported}
                 subtitlesTracks={allSubtitleTracks}
                 audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
@@ -1054,6 +1105,8 @@ const Player = () => {
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
+                onPipEnableRequested={onPipEnableRequested}
+                onPipDisableRequested={onPipDisableRequested}
                 onToggleSideDrawer={toggleSideDrawer}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}

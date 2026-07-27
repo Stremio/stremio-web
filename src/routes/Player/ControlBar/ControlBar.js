@@ -21,6 +21,8 @@ const ControlBar = React.forwardRef(({
     volume,
     muted,
     playbackSpeed,
+    pictureInPicture,
+    pictureInPictureSupported,
     subtitlesTracks,
     audioTracks,
     metaItem,
@@ -45,6 +47,8 @@ const ControlBar = React.forwardRef(({
     videoScaleLabel,
     onVideoScaleChanged,
     onToggleStatisticsMenu,
+    onPipEnableRequested,
+    onPipDisableRequested,
     onTouchEnd,
     ...props
 }, ref) => {
@@ -113,6 +117,13 @@ const ControlBar = React.forwardRef(({
         }
         chromecast.transport.requestSession();
     }, [castButtonDisabled, platform.shell.active, shellCastSupported, onToggleCastDevicesMenu]);
+    const onPictureInPictureButtonClick = React.useCallback(() => {
+        if (pictureInPicture) {
+            onPipDisableRequested?.();
+        } else {
+            onPipEnableRequested?.();
+        }
+    }, [pictureInPicture, onPipDisableRequested, onPipEnableRequested]);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -172,6 +183,18 @@ const ControlBar = React.forwardRef(({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                    {
+                        pictureInPictureSupported ?
+                            <Button
+                                className={classnames(styles['control-bar-button'], { 'disabled': typeof duration !== 'number' })}
+                                title={pictureInPicture ? 'Exit picture-in-picture' : 'Picture-in-picture'}
+                                tabIndex={-1}
+                                onClick={onPictureInPictureButtonClick}
+                            >
+                                <Icon className={styles['icon']} name={'open-in-browser'} />
+                            </Button>
+                            : null
+                    }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
@@ -216,6 +239,8 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     playbackSpeed: PropTypes.number,
+    pictureInPicture: PropTypes.bool,
+    pictureInPictureSupported: PropTypes.bool,
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
     onVideoScaleChanged: PropTypes.func,
@@ -240,6 +265,8 @@ ControlBar.propTypes = {
     shellCastSupported: PropTypes.bool,
     onToggleCastDevicesMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onPipEnableRequested: PropTypes.func,
+    onPipDisableRequested: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,
