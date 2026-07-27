@@ -94,33 +94,60 @@ const Player = () => {
     const getVideoElement = React.useCallback(() => {
         return video.containerRef.current?.querySelector('video') ?? null;
     }, []);
-    const pictureInPictureSupported = getVideoElement() !== null &&
+    const nativeShellPictureInPictureSupported = platform.shell.active && video.state.manifest?.name === 'ShellVideo';
+    const browserPictureInPictureSupported = getVideoElement() !== null &&
         typeof document !== 'undefined' &&
         document.pictureInPictureEnabled === true &&
         typeof HTMLVideoElement !== 'undefined' &&
         typeof HTMLVideoElement.prototype.requestPictureInPicture === 'function';
+    const pictureInPictureSupported = nativeShellPictureInPictureSupported || browserPictureInPictureSupported;
 
     const onPipEnableRequested = React.useCallback(() => {
+        if (nativeShellPictureInPictureSupported) {
+            platform.shell.send('win-set-pip', { enabled: true });
+            return;
+        }
         const videoElement = getVideoElement();
-        if (!pictureInPictureSupported || !videoElement || document.pictureInPictureElement === videoElement) {
+        if (!browserPictureInPictureSupported || !videoElement || document.pictureInPictureElement === videoElement) {
             return;
         }
         videoElement.requestPictureInPicture().catch((error) => {
             console.error('Player PiP', error);
         });
-    }, [getVideoElement, pictureInPictureSupported]);
+    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported, platform.shell]);
 
     const onPipDisableRequested = React.useCallback(() => {
+        if (nativeShellPictureInPictureSupported) {
+            platform.shell.send('win-set-pip', { enabled: false });
+            return;
+        }
         if (typeof document !== 'undefined' && document.pictureInPictureElement) {
             document.exitPictureInPicture().catch((error) => {
                 console.error('Player PiP', error);
             });
         }
-    }, []);
+    }, [nativeShellPictureInPictureSupported, platform.shell]);
+
+    React.useEffect(() => {
+        if (!nativeShellPictureInPictureSupported) {
+            return undefined;
+        }
+
+        const onShellPictureInPictureChanged = (data) => {
+            video.setPictureInPicture(data?.enabled === true);
+        };
+
+        platform.shell.on('win-pip-changed', onShellPictureInPictureChanged);
+        return () => {
+            platform.shell.off('win-pip-changed', onShellPictureInPictureChanged);
+            platform.shell.send('win-set-pip', { enabled: false });
+            video.setPictureInPicture(false);
+        };
+    }, [nativeShellPictureInPictureSupported, platform.shell, video.setPictureInPicture, video.state.loaded]);
 
     React.useEffect(() => {
         const videoElement = getVideoElement();
-        if (!pictureInPictureSupported || !videoElement) {
+        if (nativeShellPictureInPictureSupported || !browserPictureInPictureSupported || !videoElement) {
             return undefined;
         }
 
@@ -140,7 +167,7 @@ const Player = () => {
             }
             video.setPictureInPicture(false);
         };
-    }, [getVideoElement, pictureInPictureSupported, video.setPictureInPicture, video.state.loaded, video.state.manifest]);
+    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported, video.setPictureInPicture, video.state.loaded, video.state.manifest]);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
