@@ -177,6 +177,13 @@ const Player = () => {
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
+
+    React.useLayoutEffect(() => {
+        defaultAudioTrackSelected.current = false;
+        nextVideoPopupDismissed.current = false;
+        playingOnExternalDevice.current = false;
+    }, [video.state.stream]);
+
     const [error, setError] = React.useState(null);
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
@@ -570,11 +577,6 @@ const Player = () => {
         }
     }, [video.state.audioTracks, player.streamState]);
 
-    React.useEffect(() => {
-        defaultAudioTrackSelected.current = false;
-        nextVideoPopupDismissed.current = false;
-        playingOnExternalDevice.current = false;
-    }, [video.state.stream]);
 
     React.useEffect(() => {
         if (!Array.isArray(video.state.audioTracks) || video.state.audioTracks.length === 0) {
