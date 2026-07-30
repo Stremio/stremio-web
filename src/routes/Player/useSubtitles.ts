@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useLayoutEffect, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
 
@@ -51,9 +51,22 @@ const useSubtitles = ({
     const settingsRef = useRef(settings);
     const defaultTrackSelected = useRef(false);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
+    const appliedForStream = useRef<{ embeddedId: string | null; extraId: string | null }>({ embeddedId: null, extraId: null });
+    const lastStreamKey = useRef<string | null>(null);
 
     videoRef.current = video;
     settingsRef.current = settings;
+
+    const streamKey = video.state.stream?.url ?? video.state.stream?.ytId ?? null;
+
+    useLayoutEffect(() => {
+        if (streamKey !== null && streamKey !== lastStreamKey.current) {
+            lastStreamKey.current = streamKey;
+            defaultTrackSelected.current = false;
+            lastSelectedTrack.current = null;
+            appliedForStream.current = { embeddedId: null, extraId: null };
+        }
+    }, [streamKey]);
 
     const streamSubtitles = useMemo(() => {
         return withFallbackLabels(player.selected?.stream.subtitles);
@@ -185,11 +198,10 @@ const useSubtitles = ({
             findTrackById(video.state.extraSubtitlesTracks, savedTrackId)
             :
             findTrackByLanguage(video.state.extraSubtitlesTracks, savedLanguage ?? settings.subtitlesLanguage);
-
         if (embeddedTrack?.id) {
-            if (video.state.selectedSubtitlesTrackId !== embeddedTrack.id ||
-                video.state.selectedExtraSubtitlesTrackId !== null) {
+            if (appliedForStream.current.embeddedId !== embeddedTrack.id) {
                 video.setSubtitlesTrack(embeddedTrack.id);
+                appliedForStream.current.embeddedId = embeddedTrack.id;
             }
 
             defaultTrackSelected.current = true;
@@ -199,8 +211,9 @@ const useSubtitles = ({
         if (extraTrack?.id) {
             // Keep the first external match while waiting for an embedded track.
             // Add-on subtitle results can arrive in stages and reorder `extraTrack`.
-            if (video.state.selectedExtraSubtitlesTrackId === null) {
+            if (appliedForStream.current.extraId === null) {
                 video.setExtraSubtitlesTrack(extraTrack.id);
+                appliedForStream.current.extraId = extraTrack.id;
             }
 
             if (savedExternalTrack) {
@@ -236,11 +249,6 @@ const useSubtitles = ({
             video.setSubtitlesOffset(offset);
         }
     }, [player.streamState, video.state.stream]);
-
-    useEffect(() => {
-        defaultTrackSelected.current = false;
-        lastSelectedTrack.current = null;
-    }, [video.state.stream]);
 
     useEffect(() => {
         if (!hasTracks) {
