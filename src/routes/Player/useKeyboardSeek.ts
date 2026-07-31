@@ -86,6 +86,7 @@ const useKeyboardSeek = ({ time, duration, onSeek, setSeeking }: Props) => {
         stopHold();
         if (pendingRef.current) {
             commit();
+            commit.flush();
         }
     }, []);
     const seekTo = useCallback((time: number) => {
