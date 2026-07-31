@@ -577,7 +577,6 @@ const Player = () => {
         }
     }, [video.state.audioTracks, player.streamState]);
 
-
     React.useEffect(() => {
         if (!Array.isArray(video.state.audioTracks) || video.state.audioTracks.length === 0) {
             closeAudioMenu();
