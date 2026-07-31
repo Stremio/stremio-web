@@ -187,10 +187,7 @@ const useSubtitles = ({
             findTrackByLanguage(video.state.extraSubtitlesTracks, savedLanguage ?? settings.subtitlesLanguage);
 
         if (embeddedTrack?.id) {
-            if (video.state.selectedSubtitlesTrackId !== embeddedTrack.id ||
-                video.state.selectedExtraSubtitlesTrackId !== null) {
-                video.setSubtitlesTrack(embeddedTrack.id);
-            }
+            video.setSubtitlesTrack(embeddedTrack.id);
 
             defaultTrackSelected.current = true;
             return;
@@ -212,7 +209,6 @@ const useSubtitles = ({
         settings.subtitlesLanguage,
         video.state.extraSubtitlesTracks,
         video.state.selectedExtraSubtitlesTrackId,
-        video.state.selectedSubtitlesTrackId,
         video.state.subtitlesTracks,
     ]);
 
