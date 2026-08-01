@@ -174,9 +174,16 @@ const App = () => {
 
         onWindowFocus();
         window.addEventListener('focus', onWindowFocus);
+        const onVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                onWindowFocus();
+            }
+        };
+        document.addEventListener('visibilitychange', onVisibilityChange);
 
         return () => {
             window.removeEventListener('focus', onWindowFocus);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
         };
     }, []);
 

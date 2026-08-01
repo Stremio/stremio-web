@@ -23,7 +23,7 @@ const useInstalledAddons = (urlParams) => {
             };
         }
     }, [urlParams]);
-    return useModelState({ model: 'installed_addons', action });
+    return useModelState({ model: 'installed_addons', action, deps: ['ctx'] });
 };
 
 module.exports = useInstalledAddons;

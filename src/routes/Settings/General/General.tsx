@@ -31,6 +31,39 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         loadDataExport();
     }, []);
 
+    const onSyncWithAPI = useCallback(() => {
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'PullAddonsFromAPI'
+            }
+        });
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'PullUserFromAPI',
+                args: {}
+            }
+        });
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'SyncLibraryWithAPI'
+            }
+        });
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'PullNotifications'
+            }
+        });
+        toast.show({
+            type: 'success',
+            title: t('SETTINGS_SYNC_NOW_TOAST'),
+            timeout: 4000
+        });
+    }, []);
+
     const onCalendarSubscribe = useCallback(() => {
         if (!profile.auth) return;
 
@@ -107,6 +140,13 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     <Link
                         label={t('SETTINGS_DATA_EXPORT')}
                         onClick={onExportData}
+                    />
+            }
+            {
+                profile?.auth?.user &&
+                    <Link
+                        label={t('SETTINGS_SYNC_NOW')}
+                        onClick={onSyncWithAPI}
                     />
             }
             {
