@@ -35,7 +35,7 @@ type SeriesInfo = {
 type SubtitlesTrackState = {
     id: string,
     embedded: boolean,
-    lang?: string,
+    language?: string,
 };
 
 type AudioTrackState = {

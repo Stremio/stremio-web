@@ -87,7 +87,7 @@ const useSubtitles = ({
             subtitleTrack: {
                 id: track.id,
                 embedded,
-                lang: track.lang,
+                language: track.lang,
             },
         });
         subtitlePreferenceChanged({
@@ -201,7 +201,7 @@ const useSubtitles = ({
 
         const savedTrack = player.streamState?.subtitleTrack;
         const savedTrackId = savedTrack?.id;
-        const savedLanguage = savedTrack?.lang;
+        const savedLanguage = savedTrack?.language;
         const savedExternalTrack = Boolean(savedTrackId && savedTrack?.embedded === false);
         const findDefaultTrack = (tracks: SubtitleTrack[], embedded: boolean) => {
             if (savedTrackId && (preferredSource === undefined || savedTrack?.embedded === embedded)) {
