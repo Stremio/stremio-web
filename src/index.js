@@ -18,6 +18,7 @@ const i18n = require('i18next');
 const { initReactI18next } = require('react-i18next');
 const stremioTranslations = require('stremio-translations');
 const App = require('./App');
+const { default: WebUpdateScreen } = require('./App/WebUpdateScreen');
 const { CoreProvider } = require('./core');
 const { FileDropProvider, PlatformProvider } = require('./common');
 
@@ -48,19 +49,13 @@ root.render(
             <CoreProvider appInfo={appInfo}>
                 <FileDropProvider>
                     <HashRouter>
-                        <App />
+                        <>
+                            <WebUpdateScreen />
+                            <App />
+                        </>
                     </HashRouter>
                 </FileDropProvider>
             </CoreProvider>
         </PlatformProvider>
     </React.StrictMode>
 );
-
-if (process.env.NODE_ENV === 'production' && process.env.SERVICE_WORKER_DISABLED !== 'true' && process.env.SERVICE_WORKER_DISABLED !== true && 'serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-            .catch((registrationError) => {
-                console.error('SW registration failed: ', registrationError);
-            });
-    });
-}
