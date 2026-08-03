@@ -40,6 +40,7 @@ const useSubtitles = ({
     video,
     settings,
     streamStateChanged,
+    subtitlePreferenceChanged,
     menusOpen,
     closeMenus,
     closeSubtitlesMenu,
@@ -89,14 +90,30 @@ const useSubtitles = ({
                 lang: track.lang,
             },
         });
-    }, [streamStateChanged]);
+        subtitlePreferenceChanged({
+            enabled: true,
+            source: embedded ? 'embedded' : 'external',
+        });
+    }, [streamStateChanged, subtitlePreferenceChanged]);
 
     const disableSubtitles = useCallback(() => {
+        const source = video.state.selectedSubtitlesTrackId !== null ?
+            'embedded'
+            :
+            video.state.selectedExtraSubtitlesTrackId !== null ?
+                'external'
+                :
+                player.subtitlePreference?.source;
+
         defaultTrackSelected.current = true;
         video.setSubtitlesTrack(null);
         video.setExtraSubtitlesTrack(null);
         streamStateChanged({ subtitleTrack: null });
-    }, [streamStateChanged, video]);
+        subtitlePreferenceChanged({
+            enabled: false,
+            ...(source ? { source } : {}),
+        });
+    }, [player.subtitlePreference?.source, streamStateChanged, subtitlePreferenceChanged, video]);
 
     const selectEmbeddedTrack = useCallback((track: SubtitleTrack | null) => {
         if (!track) {
@@ -162,11 +179,20 @@ const useSubtitles = ({
     }, [externalSubtitles, video.state.stream]);
 
     useEffect(() => {
+        defaultTrackSelected.current = false;
+        lastSelectedTrack.current = null;
+    }, [video.state.stream]);
+
+    useEffect(() => {
         if (defaultTrackSelected.current) {
             return;
         }
 
-        if (settings.subtitlesLanguage === null) {
+        const sessionPreference = player.subtitlePreference;
+        const sessionEnabled = sessionPreference?.enabled === true;
+        const preferredSource = sessionEnabled ? sessionPreference.source : undefined;
+
+        if (sessionPreference?.enabled === false || (!sessionEnabled && settings.subtitlesLanguage === null)) {
             video.setSubtitlesTrack(null);
             video.setExtraSubtitlesTrack(null);
             defaultTrackSelected.current = true;
@@ -177,34 +203,53 @@ const useSubtitles = ({
         const savedTrackId = savedTrack?.id;
         const savedLanguage = savedTrack?.lang;
         const savedExternalTrack = Boolean(savedTrackId && savedTrack?.embedded === false);
-        const embeddedTrack = savedTrackId ?
-            findTrackById(video.state.subtitlesTracks, savedTrackId)
-            :
-            findTrackByLanguage(video.state.subtitlesTracks, savedLanguage ?? settings.subtitlesLanguage);
-        const extraTrack = savedTrackId ?
-            findTrackById(video.state.extraSubtitlesTracks, savedTrackId)
-            :
-            findTrackByLanguage(video.state.extraSubtitlesTracks, savedLanguage ?? settings.subtitlesLanguage);
+        const findDefaultTrack = (tracks: SubtitleTrack[], embedded: boolean) => {
+            if (savedTrackId && (preferredSource === undefined || savedTrack?.embedded === embedded)) {
+                return findTrackById(tracks, savedTrackId);
+            }
+
+            const language = savedLanguage ?? settings.subtitlesLanguage;
+            return findTrackByLanguage(tracks, language) ?? (sessionEnabled && !language ? tracks[0] : undefined);
+        };
+        const embeddedTrack = findDefaultTrack(video.state.subtitlesTracks, true);
+        const extraTrack = findDefaultTrack(video.state.extraSubtitlesTracks, false);
+
+        if (preferredSource === 'external') {
+            if (extraTrack?.id) {
+                video.setExtraSubtitlesTrack(extraTrack.id);
+                defaultTrackSelected.current = true;
+                return;
+            }
+
+            if (embeddedTrack?.id && (video.state.selectedSubtitlesTrackId !== embeddedTrack.id ||
+                video.state.selectedExtraSubtitlesTrackId !== null)) {
+                video.setSubtitlesTrack(embeddedTrack.id);
+            }
+
+            return;
+        }
 
         if (embeddedTrack?.id) {
             video.setSubtitlesTrack(embeddedTrack.id);
-
             defaultTrackSelected.current = true;
             return;
         }
 
         if (extraTrack?.id) {
+            if (savedExternalTrack && preferredSource === undefined) {
+                video.setExtraSubtitlesTrack(extraTrack.id);
+                defaultTrackSelected.current = true;
+                return;
+            }
+
             // Keep the first external match while waiting for an embedded track.
             // Add-on subtitle results can arrive in stages and reorder `extraTrack`.
             if (video.state.selectedExtraSubtitlesTrackId === null) {
                 video.setExtraSubtitlesTrack(extraTrack.id);
             }
-
-            if (savedExternalTrack) {
-                defaultTrackSelected.current = true;
-            }
         }
     }, [
+        player.subtitlePreference,
         player.streamState,
         settings.subtitlesLanguage,
         video.state.extraSubtitlesTracks,
@@ -232,11 +277,6 @@ const useSubtitles = ({
             video.setSubtitlesOffset(offset);
         }
     }, [player.streamState, video.state.stream]);
-
-    useEffect(() => {
-        defaultTrackSelected.current = false;
-        lastSelectedTrack.current = null;
-    }, [video.state.stream]);
 
     useEffect(() => {
         if (!hasTracks) {
@@ -313,20 +353,25 @@ const useSubtitles = ({
                 };
             }
 
-            video.setSubtitlesTrack(null);
-            video.setExtraSubtitlesTrack(null);
+            disableSubtitles();
             return;
         }
 
         const savedTrack = player.streamState?.subtitleTrack ?? lastSelectedTrack.current;
         if (savedTrack?.id) {
+            subtitlePreferenceChanged({
+                enabled: true,
+                source: savedTrack.embedded ? 'embedded' : 'external',
+            });
             savedTrack.embedded ?
                 video.setSubtitlesTrack(savedTrack.id)
                 :
                 video.setExtraSubtitlesTrack(savedTrack.id);
         }
     }, [
+        disableSubtitles,
         player.streamState,
+        subtitlePreferenceChanged,
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
     ], !menusOpen);

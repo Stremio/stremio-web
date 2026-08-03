@@ -42,6 +42,13 @@ type AudioTrackState = {
     id: string,
 };
 
+type SubtitleSource = 'embedded' | 'external';
+
+type SubtitlePreference = {
+    enabled: boolean,
+    source?: SubtitleSource,
+};
+
 type StreamState = {
     subtitleTrack?: SubtitlesTrackState | null,
     subtitleDelay?: number,
@@ -63,6 +70,7 @@ type Player = {
     } | null,
     seriesInfo: SeriesInfo | null,
     streamState: StreamState | null,
+    subtitlePreference: SubtitlePreference | null,
     subtitles: Subtitle[],
     title: string | null,
 };
