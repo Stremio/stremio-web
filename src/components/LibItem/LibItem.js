@@ -6,6 +6,7 @@ const { useNavigateWithOrigin } = require('stremio-router');
 const { default: toPath } = require('stremio-router/toPath');
 const PropTypes = require('prop-types');
 const { useCore } = require('stremio/core');
+const { usePlatform } = require('stremio/common/Platform');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const MetaItem = require('stremio/components/MetaItem');
 const { t } = require('i18next');
@@ -14,8 +15,34 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
     const navigate = useNavigate();
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const core = useCore();
+    const platform = usePlatform();
     const detailsHref = React.useMemo(() => getMetaDetailsHref(props.deepLinks, detailsVideosFirst), [props.deepLinks, detailsVideosFirst]);
-    const playerHref = props.deepLinks && typeof props.deepLinks.player === 'string' ? props.deepLinks.player : null;
+    const externalPlayer = props.deepLinks?.externalPlayer;
+    const playerHref = props.deepLinks ?
+        externalPlayer?.web || (externalPlayer?.openPlayer ? externalPlayer.openPlayer[platform.name] || externalPlayer.playlist : props.deepLinks.player)
+        :
+        null;
+    const playerDownload = playerHref === externalPlayer?.playlist ? externalPlayer.fileName : null;
+    const playerTarget = playerHref === externalPlayer?.web ? '_blank' : null;
+    const play = React.useCallback(() => {
+        if (typeof playerHref !== 'string') {
+            return;
+        }
+
+        if (playerHref === props.deepLinks?.player) {
+            navigate(toPath(playerHref));
+        } else {
+            const anchor = document.createElement('a');
+            anchor.href = playerHref;
+            if (typeof playerDownload === 'string') {
+                anchor.download = playerDownload;
+            }
+            if (typeof playerTarget === 'string') {
+                anchor.target = playerTarget;
+            }
+            anchor.click();
+        }
+    }, [navigate, playerDownload, playerHref, playerTarget, props.deepLinks]);
 
     const newVideos = React.useMemo(() => {
         const count = notifications.items?.[_id]?.length ?? 0;
@@ -56,9 +83,7 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
         if (!event.nativeEvent.optionSelectPrevented) {
             switch (event.value) {
                 case 'play': {
-                    if (typeof playerHref === 'string') {
-                        navigate(toPath(playerHref));
-                    }
+                    play();
 
                     break;
                 }
@@ -120,14 +145,12 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
                 }
             }
         }
-    }, [_id, detailsHref, navigate, navigateWithOrigin, playerHref, props.optionOnSelect, watched]);
+    }, [_id, detailsHref, navigateWithOrigin, play, props.optionOnSelect, watched]);
 
     const onPlayClick = React.useCallback((event) => {
         event.preventDefault();
-        if (typeof playerHref === 'string') {
-            navigate(toPath(playerHref));
-        }
-    }, [navigate, playerHref]);
+        play();
+    }, [play]);
 
     return (
         <MetaItem
@@ -152,7 +175,13 @@ LibItem.propTypes = {
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,
-        player: PropTypes.string
+        player: PropTypes.string,
+        externalPlayer: PropTypes.shape({
+            playlist: PropTypes.string,
+            fileName: PropTypes.string,
+            web: PropTypes.string,
+            openPlayer: PropTypes.object
+        })
     }),
     optionOnSelect: PropTypes.func
 };
