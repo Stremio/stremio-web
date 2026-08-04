@@ -122,7 +122,9 @@ const buildCandidates = (
         addLanguage(savedLanguage);
     }
     addLanguage(normalizeLanguage(globalLanguage));
-    addLanguage(normalizeLanguage(CONSTANTS.DEFAULT_SUBTITLES_LANGUAGE));
+    if (sessionEnabled) {
+        addLanguage(normalizeLanguage(CONSTANTS.DEFAULT_SUBTITLES_LANGUAGE));
+    }
 
     // Keep language ahead of source so the selected language can cross source types.
     languagesOrder.forEach((language) => {
@@ -374,7 +376,7 @@ const useSubtitles = ({
                 undefined;
 
         if (!bestCandidate) {
-            if (selectedTrack) {
+            if (sessionEnabled && selectedTrack) {
                 video.setSubtitlesTrack(null);
                 video.setExtraSubtitlesTrack(null);
             }
