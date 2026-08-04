@@ -30,15 +30,15 @@ jobs:
                   continue
               fi
 
-              keep_parent=false
+              keep_related=false
               for branch in "${branches[@]}"; do
-                  if [[ "$branch" == "$path/"* ]]; then
-                      keep_parent=true
+                  if [[ "$branch" == "$path/"* || "$path" == "$branch/"* ]]; then
+                      keep_related=true
                       break
                   fi
               done
 
-              if ! $keep_parent; then
+              if ! $keep_related; then
                   echo "Deleting $dir"
                   rm -rf "$dir"
               fi

@@ -8,9 +8,10 @@ const useAnimationFrame = require('stremio/common/useAnimationFrame');
 const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
-const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete, audioBoost }) => {
+const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete, audioBoost, stepValue }) => {
     const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
     const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
+    const stepValueRef = useLiveRef(stepValue !== null && !isNaN(stepValue) ? stepValue : null);
     const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
     const bufferedRef = useLiveRef(buffered !== null && !isNaN(buffered) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, buffered)) : 0);
     const onSlideRef = useLiveRef(onSlide);
@@ -26,7 +27,8 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
         const { x: sliderX, width: sliderWidth } = sliderContainerRef.current.getBoundingClientRect();
         const thumbStart = Math.min(Math.max(mouseX - sliderX, 0), sliderWidth);
         const value = (thumbStart / sliderWidth) * (maximumValueRef.current - minimumValueRef.current) + minimumValueRef.current;
-        return value;
+        const normalizedValue = stepValueRef.current ? parseFloat((Math.round(value / stepValueRef.current) * stepValueRef.current).toFixed(2)) : value;
+        return normalizedValue;
     }, []);
     const retainThumb = React.useCallback(() => {
         window.addEventListener('blur', onBlur);
@@ -158,6 +160,7 @@ Slider.propTypes = {
     buffered: PropTypes.number,
     minimumValue: PropTypes.number,
     maximumValue: PropTypes.number,
+    stepValue: PropTypes.number,
     disabled: PropTypes.bool,
     onSlide: PropTypes.func,
     onComplete: PropTypes.func,

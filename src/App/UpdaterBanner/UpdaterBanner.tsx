@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import { useTranslation } from 'react-i18next';
+import { useMatch } from 'react-router';
 import { useBinaryState, usePlatform } from 'stremio/common';
 import { Button, Transition } from 'stremio/components';
 import styles from './UpdaterBanner.less';
@@ -13,6 +14,7 @@ const UpdaterBanner = ({ className }: Props) => {
     const { t } = useTranslation();
     const { shell } = usePlatform();
     const [visible, show, hide] = useBinaryState(false);
+    const isPlayer = useMatch('/player/*');
 
     const onInstallClick = () => {
         shell.send('autoupdater-notif-clicked');
@@ -28,7 +30,7 @@ const UpdaterBanner = ({ className }: Props) => {
 
     return (
         <div className={className}>
-            <Transition when={visible} name={'slide-up'}>
+            <Transition when={visible && !isPlayer} name={'slide-up'}>
                 <div className={styles['updater-banner']}>
                     <div className={styles['label']}>
                         { t('UPDATER_TITLE') }

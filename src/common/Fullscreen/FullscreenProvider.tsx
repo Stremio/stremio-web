@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { withCoreSuspender } from '../CoreSuspender';
+import { getKeyboardShortcutKey } from '../Shortcuts';
 import onShortcut from '../Shortcuts/onShortcut';
 import useSettings from '../useSettings';
 import FullscreenContext, { type FullscreenContextValue } from './FullscreenContext';
@@ -80,11 +81,13 @@ const FullscreenProvider = ({ children }: Props) => {
         };
 
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.code === 'Escape' && escExitFullscreen) {
+            const keyboardKey = getKeyboardShortcutKey(event);
+
+            if (keyboardKey === 'Escape' && escExitFullscreen) {
                 exitFullscreen();
             }
 
-            if (event.code === 'F11' && shell.active) {
+            if (keyboardKey === 'F11' && shell.active) {
                 toggleFullscreen();
             }
         };
