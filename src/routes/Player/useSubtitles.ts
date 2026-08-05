@@ -323,7 +323,7 @@ const useSubtitles = ({
         appliedTrack.current = null;
         sessionPreferenceSeeded.current = false;
         lastSelectedTrack.current = null;
-    }, [video.state.stream]);
+    }, [player.selected, video.state.stream]);
 
     useEffect(() => {
         if (trackSelectionLocked.current) {
