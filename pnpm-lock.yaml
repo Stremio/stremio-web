@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-preference/stremio-stremio-core-web-0.60.2.tgz
-        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-preference/stremio-stremio-core-web-0.60.2.tgz
+        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz
+        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz
       '@stremio/stremio-icons':
         specifier: 5.10.0
         version: 5.10.0
@@ -1417,8 +1417,8 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-preference/stremio-stremio-core-web-0.60.2.tgz':
-    resolution: {integrity: sha512-ZIatR14rH7rB74EBR58qUb1f4z2M2PZk9S5jK0HBnr6dwLpcBIDbliN40S12IHn94GLixo4ixZgokvWRJyamHg==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-preference/stremio-stremio-core-web-0.60.2.tgz}
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz':
+    resolution: {integrity: sha512-xb+xjClbnv7Bg9YprXh8bbxcfFXVoC17pGh4a3oGqkKTVyUJMERhLavaRhL9JZ6b5qmXY7dpkHg0sHZrA0pu/g==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz}
     version: 0.60.2
 
   '@stremio/stremio-icons@5.10.0':
@@ -6483,7 +6483,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-preference/stremio-stremio-core-web-0.60.2.tgz':
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 
