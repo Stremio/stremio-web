@@ -20,6 +20,7 @@ type SelectedSubtitleTrack = {
 };
 
 type VideoSubtitleState = {
+    loaded?: boolean | null,
     stream: unknown | null,
     subtitlesTracks: SubtitleTrack[],
     selectedSubtitlesTrackId: string | null,

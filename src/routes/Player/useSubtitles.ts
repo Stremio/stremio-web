@@ -180,6 +180,10 @@ const useSubtitles = ({
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
     const sessionPreferenceSeeded = useRef(false);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
+    const debugState = useRef<{ current: unknown, trace: unknown[] }>({
+        current: null,
+        trace: [],
+    });
 
     videoRef.current = video;
     settingsRef.current = settings;
@@ -197,6 +201,21 @@ const useSubtitles = ({
     }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks]);
 
     const hasTracks = allTracks.length > 0;
+
+    useEffect(() => {
+        const debugWindow = window as typeof window & {
+            __stremioSubtitleDebug?: () => { current: unknown, trace: unknown[] },
+        };
+        const getDebugState = () => debugState.current;
+
+        debugWindow.__stremioSubtitleDebug = getDebugState;
+
+        return () => {
+            if (debugWindow.__stremioSubtitleDebug === getDebugState) {
+                delete debugWindow.__stremioSubtitleDebug;
+            }
+        };
+    }, []);
 
     const applySubtitleStyle = useCallback(() => {
         const currentSettings = settingsRef.current;
@@ -445,6 +464,69 @@ const useSubtitles = ({
         video.state.stream,
         video.state.subtitlesTracks,
         subtitlePreferenceChanged,
+    ]);
+
+    useEffect(() => {
+        const candidates = buildCandidates(
+            player.subtitlePreference,
+            player.streamState?.subtitleTrack,
+            settings.subtitlesLanguage,
+        );
+        const bestCandidate = resolveBestCandidate(
+            candidates,
+            video.state.subtitlesTracks,
+            video.state.extraSubtitlesTracks,
+        );
+        const summarizeTrack = ({ id, lang, origin, url, embedded }: SubtitleTrack) => ({
+            id,
+            lang,
+            origin,
+            url,
+            embedded,
+        });
+        const snapshot = {
+            at: new Date().toISOString(),
+            videoId: player.selected?.streamRequest?.path?.id ?? null,
+            globalLanguage: settings.subtitlesLanguage,
+            preference: player.subtitlePreference,
+            streamState: player.streamState,
+            selectionLock: trackSelectionLock.current,
+            appliedTrack: appliedTrack.current,
+            sessionPreferenceSeeded: sessionPreferenceSeeded.current,
+            controller: {
+                loaded: video.state.loaded,
+                stream: video.state.stream,
+                selectedEmbeddedId: video.state.selectedSubtitlesTrackId,
+                selectedExternalId: video.state.selectedExtraSubtitlesTrackId,
+                embeddedTracks: video.state.subtitlesTracks.map(summarizeTrack),
+                externalTracks: video.state.extraSubtitlesTracks.map(summarizeTrack),
+            },
+            coreExternalTracks: externalSubtitles.map(summarizeTrack),
+            streamTracks: streamSubtitles.map(summarizeTrack),
+            candidates,
+            bestCandidate: bestCandidate ? {
+                source: bestCandidate.source,
+                rank: bestCandidate.rank,
+                track: summarizeTrack(bestCandidate.track),
+            } : null,
+        };
+
+        debugState.current.current = snapshot;
+        debugState.current.trace.push(snapshot);
+        debugState.current.trace.splice(0, Math.max(0, debugState.current.trace.length - 100));
+    }, [
+        externalSubtitles,
+        player.selected,
+        player.streamState,
+        player.subtitlePreference,
+        settings.subtitlesLanguage,
+        streamSubtitles,
+        video.state.extraSubtitlesTracks,
+        video.state.loaded,
+        video.state.selectedExtraSubtitlesTrackId,
+        video.state.selectedSubtitlesTrackId,
+        video.state.stream,
+        video.state.subtitlesTracks,
     ]);
 
     useEffect(() => {
