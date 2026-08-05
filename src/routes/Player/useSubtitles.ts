@@ -484,6 +484,10 @@ const useSubtitles = ({
             url,
             embedded,
         });
+        const summarizeTrackSet = (tracks: SubtitleTrack[]) => ({
+            count: tracks.length,
+            languages: Array.from(new Set(tracks.map(({ lang }) => lang))),
+        });
         const snapshot = {
             at: new Date().toISOString(),
             videoId: player.selected?.streamRequest?.path?.id ?? null,
@@ -512,7 +516,28 @@ const useSubtitles = ({
         };
 
         debugState.current.current = snapshot;
-        debugState.current.trace.push(snapshot);
+        debugState.current.trace.push({
+            at: snapshot.at,
+            videoId: snapshot.videoId,
+            globalLanguage: snapshot.globalLanguage,
+            preference: snapshot.preference,
+            streamState: snapshot.streamState,
+            selectionLock: snapshot.selectionLock,
+            appliedTrack: snapshot.appliedTrack,
+            sessionPreferenceSeeded: snapshot.sessionPreferenceSeeded,
+            controller: {
+                loaded: snapshot.controller.loaded,
+                hasStream: snapshot.controller.stream !== null,
+                selectedEmbeddedId: snapshot.controller.selectedEmbeddedId,
+                selectedExternalId: snapshot.controller.selectedExternalId,
+                embeddedTracks: summarizeTrackSet(video.state.subtitlesTracks),
+                externalTracks: summarizeTrackSet(video.state.extraSubtitlesTracks),
+            },
+            coreExternalTracks: summarizeTrackSet(externalSubtitles),
+            streamTracks: summarizeTrackSet(streamSubtitles),
+            candidates: snapshot.candidates,
+            bestCandidate: snapshot.bestCandidate,
+        });
         debugState.current.trace.splice(0, Math.max(0, debugState.current.trace.length - 100));
     }, [
         externalSubtitles,
