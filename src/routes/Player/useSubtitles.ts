@@ -55,6 +55,10 @@ type ResolvedSubtitleCandidate = {
     track: SubtitleTrack,
 };
 
+type TrackSelectionLock =
+    | { enabled: false }
+    | { enabled: true, id: string, source: SubtitleSource };
+
 const candidateMatchesTrack = (
     candidate: SubtitleCandidate,
     source: SubtitleSource,
@@ -172,7 +176,7 @@ const useSubtitles = ({
     const toast = useToast();
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
-    const trackSelectionLocked = useRef(false);
+    const trackSelectionLock = useRef<TrackSelectionLock | null>(null);
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
     const sessionPreferenceSeeded = useRef(false);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
@@ -241,7 +245,7 @@ const useSubtitles = ({
         const source = player.subtitlePreference?.source ?? selectedSource;
         const language = player.subtitlePreference?.language ?? normalizeLanguage(selectedTrack?.lang);
 
-        trackSelectionLocked.current = true;
+        trackSelectionLock.current = { enabled: false };
         appliedTrack.current = null;
         video.setSubtitlesTrack(null);
         video.setExtraSubtitlesTrack(null);
@@ -259,7 +263,7 @@ const useSubtitles = ({
             return;
         }
 
-        trackSelectionLocked.current = true;
+        trackSelectionLock.current = { enabled: true, id: track.id, source: 'embedded' };
         appliedTrack.current = { id: track.id, source: 'embedded' };
         video.setSubtitlesTrack(track.id);
         rememberTrack(track, true);
@@ -271,7 +275,7 @@ const useSubtitles = ({
             return;
         }
 
-        trackSelectionLocked.current = true;
+        trackSelectionLock.current = { enabled: true, id: track.id, source: 'external' };
         appliedTrack.current = { id: track.id, source: 'external' };
         video.setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
@@ -319,15 +323,31 @@ const useSubtitles = ({
     }, [externalSubtitles, video.state.stream]);
 
     useEffect(() => {
-        trackSelectionLocked.current = false;
+        trackSelectionLock.current = null;
         appliedTrack.current = null;
         sessionPreferenceSeeded.current = false;
         lastSelectedTrack.current = null;
     }, [player.selected, video.state.stream]);
 
     useEffect(() => {
-        if (trackSelectionLocked.current) {
-            return;
+        const selectionLock = trackSelectionLock.current;
+        if (selectionLock) {
+            const selectionMatchesLock = selectionLock.enabled ?
+                selectionLock.source === 'embedded' ?
+                    video.state.selectedSubtitlesTrackId === selectionLock.id &&
+                        video.state.selectedExtraSubtitlesTrackId === null
+                    :
+                    video.state.selectedExtraSubtitlesTrackId === selectionLock.id &&
+                        video.state.selectedSubtitlesTrackId === null
+                :
+                video.state.selectedSubtitlesTrackId === null &&
+                    video.state.selectedExtraSubtitlesTrackId === null;
+
+            if (selectionMatchesLock) {
+                return;
+            }
+
+            trackSelectionLock.current = null;
         }
 
         const sessionPreference = player.subtitlePreference;
@@ -544,7 +564,7 @@ const useSubtitles = ({
             (savedTrack ? (savedTrack.embedded ? 'embedded' : 'external') : undefined);
         const language = player.subtitlePreference?.language ?? normalizeLanguage(savedTrack?.language);
 
-        trackSelectionLocked.current = false;
+        trackSelectionLock.current = null;
         appliedTrack.current = null;
         subtitlePreferenceChanged({
             enabled: true,
