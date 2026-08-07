@@ -1,0 +1,143 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.web-update-banner {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 101;
+}
+
+.web-update-screen {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 2rem;
+    background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
+    color: var(--primary-foreground-color);
+    text-align: center;
+    animation: 0.2s ease-out fade-in;
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 0.55;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes progress {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(250%);
+        }
+    }
+
+    .logo {
+        flex: none;
+        width: 8rem;
+        height: 8rem;
+        object-fit: contain;
+        object-position: center;
+        animation: 1s linear infinite alternate pulse;
+    }
+
+    .title {
+        max-width: 42rem;
+        margin-top: 0.5rem;
+        font-size: 1.875rem;
+        font-weight: 500;
+        line-height: 1.25;
+        color: var(--primary-foreground-color);
+        overflow-wrap: anywhere;
+    }
+
+    .progress {
+        position: relative;
+        width: 18rem;
+        max-width: 100%;
+        height: 0.4rem;
+        margin-top: 0.25rem;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: inherit;
+            background-color: var(--primary-foreground-color);
+            opacity: 0.2;
+        }
+    }
+
+    .progress-value {
+        position: relative;
+        z-index: 1;
+        width: 40%;
+        height: 100%;
+        border-radius: inherit;
+        background-color: var(--primary-accent-color);
+        animation: 1.2s ease-in-out infinite progress;
+    }
+
+    @media only screen and (max-width: 30rem) {
+        gap: 1rem;
+        padding: 1.5rem;
+
+        .logo {
+            width: 6.5rem;
+            height: 6.5rem;
+        }
+
+        .title {
+            font-size: 1.4rem;
+        }
+
+        .progress {
+            width: 15rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+
+        .logo {
+            animation: none;
+        }
+
+        .progress-value {
+            width: 100%;
+            opacity: 0.65;
+            animation: none;
+        }
+    }
+}
