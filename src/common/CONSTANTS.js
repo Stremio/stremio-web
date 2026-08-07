@@ -100,6 +100,11 @@ const EXTERNAL_PLAYERS = [
         platforms: ['visionos'],
     },
     {
+        label: 'CineUltra',
+        value: 'cineultra',
+        platforms: ['visionos'],
+    },
+    {
         label: 'Infuse',
         value: 'infuse',
         platforms: ['ios', 'visionos', 'macos'],
