@@ -23,16 +23,139 @@ const findTrackById = (tracks: SubtitleTrack[], id?: string | null) => {
     return tracks.find((track) => track.id === id);
 };
 
-const findTrackByLanguage = (tracks: SubtitleTrack[], language?: string | null) => {
+const normalizeLanguage = (language?: string | null) => {
     if (!language) {
         return undefined;
     }
 
-    const languageCode = languages.toCode(language);
+    const value = language.trim();
+    const normalized = languages.find(value) ?? languages.find(value.toLowerCase());
 
-    return tracks.find((track) => {
-        return track.lang === language || languages.toCode(track.lang) === languageCode;
+    return normalized?.code;
+};
+
+const findTrackByLanguage = (tracks: SubtitleTrack[], language?: string | null) => {
+    const languageCode = normalizeLanguage(language);
+    if (!languageCode) {
+        return undefined;
+    }
+
+    return tracks.find((track) => normalizeLanguage(track.lang) === languageCode);
+};
+
+type SubtitleCandidate = {
+    source: SubtitleSource,
+    id?: string,
+    language?: string,
+};
+
+type ResolvedSubtitleCandidate = {
+    source: SubtitleSource,
+    rank: number,
+    track: SubtitleTrack,
+};
+
+const candidateMatchesTrack = (
+    candidate: SubtitleCandidate,
+    source: SubtitleSource,
+    track: SubtitleTrack,
+) => {
+    if (candidate.source !== source || (candidate.id && candidate.id !== track.id)) {
+        return false;
+    }
+
+    return !candidate.language || normalizeLanguage(track.lang) === candidate.language;
+};
+
+const resolveCandidate = (
+    candidate: SubtitleCandidate,
+    subtitlesTracks: SubtitleTrack[],
+    extraSubtitlesTracks: SubtitleTrack[],
+) => {
+    const tracks = candidate.source === 'embedded' ? subtitlesTracks : extraSubtitlesTracks;
+    const track = candidate.id ?
+        findTrackById(tracks, candidate.id)
+        :
+        findTrackByLanguage(tracks, candidate.language);
+
+    return track && (!candidate.language || normalizeLanguage(track.lang) === candidate.language) ?
+        track
+        :
+        undefined;
+};
+
+const buildCandidates = (
+    sessionPreference: SubtitlePreference | null,
+    savedTrack: SubtitlesTrackState | null | undefined,
+    globalLanguage: string | null,
+) => {
+    const candidates: SubtitleCandidate[] = [];
+    const languagesOrder: string[] = [];
+    const sessionEnabled = sessionPreference?.enabled === true;
+    const sessionLanguage = normalizeLanguage(sessionPreference?.language);
+    const savedLanguage = normalizeLanguage(savedTrack?.language);
+    const savedSource = savedTrack ? (savedTrack.embedded ? 'embedded' : 'external') : undefined;
+    const preferredSource = sessionEnabled ? sessionPreference.source : savedSource;
+    const sources: SubtitleSource[] = preferredSource === 'external' ?
+        ['external', 'embedded']
+        :
+        ['embedded', 'external'];
+
+    const addLanguage = (language?: string) => {
+        if (language && !languagesOrder.includes(language)) {
+            languagesOrder.push(language);
+        }
+    };
+
+    if (savedTrack?.id && (!sessionEnabled ||
+        !sessionPreference.source || sessionPreference.source === savedSource)) {
+        candidates.push({
+            source: savedSource as SubtitleSource,
+            id: savedTrack.id,
+            ...(sessionLanguage ? { language: sessionLanguage } : {}),
+        });
+    }
+
+    if (sessionEnabled) {
+        addLanguage(sessionLanguage ?? savedLanguage);
+    } else {
+        addLanguage(savedLanguage);
+    }
+    addLanguage(normalizeLanguage(globalLanguage));
+    if (sessionEnabled) {
+        addLanguage(normalizeLanguage(CONSTANTS.DEFAULT_SUBTITLES_LANGUAGE));
+    }
+
+    // Keep language ahead of source so the selected language can cross source types.
+    languagesOrder.forEach((language) => {
+        sources.forEach((source) => candidates.push({ source, language }));
     });
+
+    return candidates;
+};
+
+const resolveBestCandidate = (
+    candidates: SubtitleCandidate[],
+    subtitlesTracks: SubtitleTrack[],
+    extraSubtitlesTracks: SubtitleTrack[],
+): ResolvedSubtitleCandidate | undefined => {
+    for (let rank = 0; rank < candidates.length; rank++) {
+        const candidate = candidates[rank];
+        const track = resolveCandidate(candidate, subtitlesTracks, extraSubtitlesTracks);
+        if (track) {
+            return { source: candidate.source, rank, track };
+        }
+    }
+
+    return undefined;
+};
+
+const findCandidateRank = (
+    candidates: SubtitleCandidate[],
+    source: SubtitleSource,
+    track: SubtitleTrack,
+) => {
+    return candidates.findIndex((candidate) => candidateMatchesTrack(candidate, source, track));
 };
 
 const useSubtitles = ({
@@ -50,7 +173,8 @@ const useSubtitles = ({
     const toast = useToast();
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
-    const defaultTrackSelected = useRef(false);
+    const trackSelectionLocked = useRef(false);
+    const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
 
     videoRef.current = video;
@@ -69,7 +193,6 @@ const useSubtitles = ({
     }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks]);
 
     const hasTracks = allTracks.length > 0;
-
     const applySubtitleStyle = useCallback(() => {
         const currentSettings = settingsRef.current;
         const currentVideo = videoRef.current;
@@ -82,7 +205,12 @@ const useSubtitles = ({
     }, []);
 
     const rememberTrack = useCallback((track: SubtitleTrack, embedded: boolean) => {
-        lastSelectedTrack.current = { id: track.id, embedded };
+        const language = normalizeLanguage(track.lang);
+        lastSelectedTrack.current = {
+            id: track.id,
+            embedded,
+            ...(language ? { language } : {}),
+        };
         streamStateChanged({
             subtitleTrack: {
                 id: track.id,
@@ -93,27 +221,36 @@ const useSubtitles = ({
         subtitlePreferenceChanged({
             enabled: true,
             source: embedded ? 'embedded' : 'external',
+            ...(language ? { language } : {}),
         });
     }, [streamStateChanged, subtitlePreferenceChanged]);
 
     const disableSubtitles = useCallback(() => {
-        const source = video.state.selectedSubtitlesTrackId !== null ?
+        const selectedTrack = video.state.selectedSubtitlesTrackId !== null ?
+            findTrackById(video.state.subtitlesTracks, video.state.selectedSubtitlesTrackId)
+            :
+            findTrackById(video.state.extraSubtitlesTracks, video.state.selectedExtraSubtitlesTrackId);
+        const selectedSource = video.state.selectedSubtitlesTrackId !== null ?
             'embedded'
             :
             video.state.selectedExtraSubtitlesTrackId !== null ?
                 'external'
                 :
-                player.subtitlePreference?.source;
+                undefined;
+        const source = player.subtitlePreference?.source ?? selectedSource;
+        const language = player.subtitlePreference?.language ?? normalizeLanguage(selectedTrack?.lang);
 
-        defaultTrackSelected.current = true;
+        trackSelectionLocked.current = true;
+        appliedTrack.current = null;
         video.setSubtitlesTrack(null);
         video.setExtraSubtitlesTrack(null);
         streamStateChanged({ subtitleTrack: null });
         subtitlePreferenceChanged({
             enabled: false,
             ...(source ? { source } : {}),
+            ...(language ? { language } : {}),
         });
-    }, [player.subtitlePreference?.source, streamStateChanged, subtitlePreferenceChanged, video]);
+    }, [player.subtitlePreference, streamStateChanged, subtitlePreferenceChanged, video]);
 
     const selectEmbeddedTrack = useCallback((track: SubtitleTrack | null) => {
         if (!track) {
@@ -121,7 +258,8 @@ const useSubtitles = ({
             return;
         }
 
-        defaultTrackSelected.current = true;
+        trackSelectionLocked.current = true;
+        appliedTrack.current = { id: track.id, source: 'embedded' };
         video.setSubtitlesTrack(track.id);
         rememberTrack(track, true);
     }, [disableSubtitles, rememberTrack, video]);
@@ -132,7 +270,8 @@ const useSubtitles = ({
             return;
         }
 
-        defaultTrackSelected.current = true;
+        trackSelectionLocked.current = true;
+        appliedTrack.current = { id: track.id, source: 'external' };
         video.setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
     }, [disableSubtitles, rememberTrack, video]);
@@ -179,81 +318,91 @@ const useSubtitles = ({
     }, [externalSubtitles, video.state.stream]);
 
     useEffect(() => {
-        defaultTrackSelected.current = false;
+        trackSelectionLocked.current = false;
+        appliedTrack.current = null;
         lastSelectedTrack.current = null;
     }, [video.state.stream]);
 
     useEffect(() => {
-        if (defaultTrackSelected.current) {
+        if (trackSelectionLocked.current) {
             return;
         }
 
         const sessionPreference = player.subtitlePreference;
         const sessionEnabled = sessionPreference?.enabled === true;
-        const preferredSource = sessionEnabled ? sessionPreference.source : undefined;
 
         if (sessionPreference?.enabled === false || (!sessionEnabled && settings.subtitlesLanguage === null)) {
-            video.setSubtitlesTrack(null);
-            video.setExtraSubtitlesTrack(null);
-            defaultTrackSelected.current = true;
+            if (video.state.selectedSubtitlesTrackId !== null ||
+                video.state.selectedExtraSubtitlesTrackId !== null) {
+                video.setSubtitlesTrack(null);
+                video.setExtraSubtitlesTrack(null);
+            }
+            appliedTrack.current = null;
             return;
         }
 
         const savedTrack = player.streamState?.subtitleTrack;
-        const savedTrackId = savedTrack?.id;
-        const savedLanguage = savedTrack?.language;
-        const savedExternalTrack = Boolean(savedTrackId && savedTrack?.embedded === false);
-        const findDefaultTrack = (tracks: SubtitleTrack[], embedded: boolean) => {
-            if (savedTrackId && (preferredSource === undefined || savedTrack?.embedded === embedded)) {
-                return findTrackById(tracks, savedTrackId);
-            }
+        const candidates = buildCandidates(sessionPreference, savedTrack, settings.subtitlesLanguage);
+        const bestCandidate = resolveBestCandidate(
+            candidates,
+            video.state.subtitlesTracks,
+            video.state.extraSubtitlesTracks,
+        );
+        const selectedSource = video.state.selectedSubtitlesTrackId !== null ?
+            'embedded'
+            :
+            video.state.selectedExtraSubtitlesTrackId !== null ?
+                'external'
+                :
+                undefined;
+        const selectedTrack = selectedSource === 'embedded' ?
+            findTrackById(video.state.subtitlesTracks, video.state.selectedSubtitlesTrackId)
+            :
+            selectedSource === 'external' ?
+                findTrackById(video.state.extraSubtitlesTracks, video.state.selectedExtraSubtitlesTrackId)
+                :
+                undefined;
 
-            const language = savedLanguage ?? settings.subtitlesLanguage;
-            return findTrackByLanguage(tracks, language) ?? (sessionEnabled && !language ? tracks[0] : undefined);
+        if (!bestCandidate) {
+            if (sessionEnabled && selectedTrack) {
+                video.setSubtitlesTrack(null);
+                video.setExtraSubtitlesTrack(null);
+            }
+            appliedTrack.current = null;
+            return;
+        }
+
+        const selectedRank = selectedTrack && selectedSource ?
+            findCandidateRank(candidates, selectedSource, selectedTrack)
+            :
+            -1;
+        const trackToApply = selectedRank === bestCandidate.rank && selectedTrack && selectedSource ?
+            { source: selectedSource, track: selectedTrack }
+            :
+            bestCandidate;
+
+        // Reapply once per stream even if the controller already reports the same track.
+        if (appliedTrack.current?.id === trackToApply.track.id &&
+            appliedTrack.current.source === trackToApply.source) {
+            return;
+        }
+
+        trackToApply.source === 'embedded' ?
+            video.setSubtitlesTrack(trackToApply.track.id)
+            :
+            video.setExtraSubtitlesTrack(trackToApply.track.id);
+        appliedTrack.current = {
+            id: trackToApply.track.id,
+            source: trackToApply.source,
         };
-        const embeddedTrack = findDefaultTrack(video.state.subtitlesTracks, true);
-        const extraTrack = findDefaultTrack(video.state.extraSubtitlesTracks, false);
-
-        if (preferredSource === 'external') {
-            if (extraTrack?.id) {
-                video.setExtraSubtitlesTrack(extraTrack.id);
-                defaultTrackSelected.current = true;
-                return;
-            }
-
-            if (embeddedTrack?.id && (video.state.selectedSubtitlesTrackId !== embeddedTrack.id ||
-                video.state.selectedExtraSubtitlesTrackId !== null)) {
-                video.setSubtitlesTrack(embeddedTrack.id);
-            }
-
-            return;
-        }
-
-        if (embeddedTrack?.id) {
-            video.setSubtitlesTrack(embeddedTrack.id);
-            defaultTrackSelected.current = true;
-            return;
-        }
-
-        if (extraTrack?.id) {
-            if (savedExternalTrack && preferredSource === undefined) {
-                video.setExtraSubtitlesTrack(extraTrack.id);
-                defaultTrackSelected.current = true;
-                return;
-            }
-
-            // Keep the first external match while waiting for an embedded track.
-            // Add-on subtitle results can arrive in stages and reorder `extraTrack`.
-            if (video.state.selectedExtraSubtitlesTrackId === null) {
-                video.setExtraSubtitlesTrack(extraTrack.id);
-            }
-        }
     }, [
         player.subtitlePreference,
         player.streamState,
         settings.subtitlesLanguage,
         video.state.extraSubtitlesTracks,
         video.state.selectedExtraSubtitlesTrackId,
+        video.state.selectedSubtitlesTrackId,
+        video.state.stream,
         video.state.subtitlesTracks,
     ]);
 
@@ -342,14 +491,26 @@ const useSubtitles = ({
 
         if (subtitlesEnabled) {
             if (video.state.selectedSubtitlesTrackId) {
+                const track = findTrackById(
+                    video.state.subtitlesTracks,
+                    video.state.selectedSubtitlesTrackId,
+                );
+                const language = normalizeLanguage(track?.lang);
                 lastSelectedTrack.current = {
                     id: video.state.selectedSubtitlesTrackId,
                     embedded: true,
+                    ...(language ? { language } : {}),
                 };
             } else if (video.state.selectedExtraSubtitlesTrackId) {
+                const track = findTrackById(
+                    video.state.extraSubtitlesTracks,
+                    video.state.selectedExtraSubtitlesTrackId,
+                );
+                const language = normalizeLanguage(track?.lang);
                 lastSelectedTrack.current = {
                     id: video.state.selectedExtraSubtitlesTrackId,
                     embedded: false,
+                    ...(language ? { language } : {}),
                 };
             }
 
@@ -358,22 +519,26 @@ const useSubtitles = ({
         }
 
         const savedTrack = player.streamState?.subtitleTrack ?? lastSelectedTrack.current;
-        if (savedTrack?.id) {
-            subtitlePreferenceChanged({
-                enabled: true,
-                source: savedTrack.embedded ? 'embedded' : 'external',
-            });
-            savedTrack.embedded ?
-                video.setSubtitlesTrack(savedTrack.id)
-                :
-                video.setExtraSubtitlesTrack(savedTrack.id);
-        }
+        const source = player.subtitlePreference?.source ??
+            (savedTrack ? (savedTrack.embedded ? 'embedded' : 'external') : undefined);
+        const language = player.subtitlePreference?.language ?? normalizeLanguage(savedTrack?.language);
+
+        trackSelectionLocked.current = false;
+        appliedTrack.current = null;
+        subtitlePreferenceChanged({
+            enabled: true,
+            ...(source ? { source } : {}),
+            ...(language ? { language } : {}),
+        });
     }, [
         disableSubtitles,
+        player.subtitlePreference,
         player.streamState,
         subtitlePreferenceChanged,
+        video.state.extraSubtitlesTracks,
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
+        video.state.subtitlesTracks,
     ], !menusOpen);
 
     onShortcut('subtitlesMenu', () => {

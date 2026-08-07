@@ -16,6 +16,7 @@ type SubtitleTrack = {
 type SelectedSubtitleTrack = {
     id: string,
     embedded: boolean,
+    language?: string,
 };
 
 type VideoSubtitleState = {

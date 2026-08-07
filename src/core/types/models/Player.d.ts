@@ -47,6 +47,7 @@ type SubtitleSource = 'embedded' | 'external';
 type SubtitlePreference = {
     enabled: boolean,
     source?: SubtitleSource,
+    language?: string,
 };
 
 type StreamState = {
