@@ -112,7 +112,8 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => event.key === 'Escape' && close(), [close]);
 
-    const onClick = useCallback(() => {
+    const onClick = useCallback((event: React.MouseEvent) => {
+        event.stopPropagation();
         autoClose && close();
     }, [autoClose, close]);
 
