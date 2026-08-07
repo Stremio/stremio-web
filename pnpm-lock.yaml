@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz
-        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz
+        specifier: 0.61.0
+        version: 0.61.0
       '@stremio/stremio-icons':
         specifier: 5.10.0
         version: 5.10.0
@@ -1420,9 +1420,8 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz':
-    resolution: {integrity: sha512-xb+xjClbnv7Bg9YprXh8bbxcfFXVoC17pGh4a3oGqkKTVyUJMERhLavaRhL9JZ6b5qmXY7dpkHg0sHZrA0pu/g==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz}
-    version: 0.60.2
+  '@stremio/stremio-core-web@0.61.0':
+    resolution: {integrity: sha512-Wx3lDU5221rjg5U/ATgSg/e9crAbB2+/l4inlvl+lCHY6AlhOrcw+Po9+LPa6eLVkd2afjHTkBnUcnS92e7dkg==}
 
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
@@ -6486,7 +6485,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/player-subtitle-language-preference/stremio-stremio-core-web-0.60.2.tgz':
+  '@stremio/stremio-core-web@0.61.0':
     dependencies:
       '@babel/runtime': 7.24.1
 
