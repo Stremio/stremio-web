@@ -10,36 +10,36 @@
     padding: 1.5rem;
 
     .label {
-        flex: none;
         font-weight: 500;
         color: var(--primary-foreground-color);
         opacity: 0.5;
     }
 
     .value {
-        flex: none;
         font-weight: 500;
         color: var(--primary-foreground-color);
     }
 
-    .header {
-        flex: none;
+    .header,
+    .signal-head,
+    .detail-row {
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        align-items: baseline;
         justify-content: space-between;
         gap: 0.5rem;
+    }
+
+    .header {
+        align-items: center;
 
         .title {
-            flex: none;
             font-weight: 700;
             color: var(--primary-foreground-color);
         }
 
         .status-label {
-            flex: none;
-            font-weight: 600;
             font-size: 0.9rem;
+            font-weight: 600;
             color: var(--primary-foreground-color);
 
             &.tone-neutral {
@@ -61,7 +61,6 @@
     }
 
     .verdict {
-        flex: none;
         font-size: 1.1rem;
         font-weight: 500;
         line-height: 1.4;
@@ -69,143 +68,58 @@
     }
 
     .divider {
-        flex: none;
         height: 1px;
         background-color: @color-surface-light5-10;
     }
 
-    .signals {
-        flex: none;
+    .signals,
+    .signal,
+    .technical-content,
+    .info-hash {
         display: flex;
         flex-direction: column;
+    }
+
+    .signals {
         gap: 1rem;
+    }
 
-        .signal {
-            flex: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
+    .signal {
+        gap: 0.15rem;
+    }
 
-            .signal-head {
-                flex: none;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: baseline;
-                gap: 0.5rem;
-            }
-
-            .meaning {
-                flex: none;
-                font-size: 0.85rem;
-                color: var(--primary-foreground-color);
-                opacity: 0.5;
-            }
-        }
+    .meaning {
+        font-size: 0.85rem;
+        color: var(--primary-foreground-color);
+        opacity: 0.5;
     }
 
     .technical {
-        flex: none;
-        display: flex;
-        flex-direction: column;
-
         .technical-toggle {
-            flex: none;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0.5rem;
-
-            .chevron {
-                flex: none;
-                width: 1rem;
-                height: 1rem;
-                color: var(--primary-foreground-color);
-                opacity: 0.5;
-                transition: transform 0.2s ease-out;
-
-                &.open {
-                    transform: rotate(180deg);
-                }
-            }
-
-            .technical-label {
-                flex: none;
-                font-weight: 500;
-                color: var(--primary-foreground-color);
-                opacity: 0.5;
-            }
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+            opacity: 0.5;
 
             &:hover {
-                .chevron,
-                .technical-label {
-                    opacity: 1;
-                }
-            }
-        }
-
-        .collapsible {
-            flex: none;
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.25s ease-out;
-
-            &.open {
-                grid-template-rows: 1fr;
-            }
-
-            .collapsible-inner {
-                overflow: hidden;
-                min-height: 0;
-                opacity: 0;
-                transition: opacity 0.25s ease-out;
-            }
-
-            &.open .collapsible-inner {
                 opacity: 1;
             }
         }
 
         .technical-content {
-            flex: none;
-            display: flex;
-            flex-direction: column;
             gap: 1.25rem;
             padding-top: 0.75rem;
-
-            .detail-row {
-                flex: none;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: baseline;
-                gap: 0.5rem;
-            }
-
-            .info-hash {
-                flex: none;
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-
-                .info-hash-value {
-                    flex: none;
-                    font-family: monospace;
-                    font-size: 0.85rem;
-                    color: var(--primary-foreground-color);
-                    word-break: break-all;
-                }
-            }
         }
-    }
-}
 
-@media (prefers-reduced-motion: reduce) {
-    .statistics-menu-container {
-        .chevron,
-        .collapsible,
-        .collapsible-inner {
-            transition: none;
+        .info-hash {
+            gap: 0.25rem;
+
+            .info-hash-value {
+                font-family: monospace;
+                font-size: 0.85rem;
+                color: var(--primary-foreground-color);
+                word-break: break-all;
+            }
         }
     }
 }
