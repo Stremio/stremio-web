@@ -1,16 +1,5 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const LOW_BUFFER_RUNWAY_SECONDS = 10;
-
-export type StreamQuality = 'checking' | 'no-buffer-data' | 'cached' | 'keeping-up' | 'buffer-healthy' | 'draining' | 'buffer-low';
-
-type StreamQualityInput = {
-    ready: boolean,
-    cached: boolean,
-    bufferRunway: number | null,
-    keepingUp: boolean | null,
-};
-
 const isFiniteNumber = (value: unknown): value is number => Number.isFinite(value);
 
 const isPositiveNumber = (value: unknown): value is number => isFiniteNumber(value) && value > 0;
@@ -28,23 +17,4 @@ export const isDownloadKeepingUp = (downloadSpeed: unknown, streamLen: unknown, 
     }
     const requiredDownloadSpeed = (streamLen / (duration / 1000)) * playbackSpeed;
     return downloadSpeed >= requiredDownloadSpeed;
-};
-
-export const deriveStreamQuality = ({ ready, cached, bufferRunway, keepingUp }: StreamQualityInput): StreamQuality => {
-    if (!ready) {
-        return 'checking';
-    }
-    if (cached) {
-        return 'cached';
-    }
-    if (bufferRunway === null) {
-        return 'no-buffer-data';
-    }
-    if (bufferRunway < LOW_BUFFER_RUNWAY_SECONDS) {
-        return 'buffer-low';
-    }
-    if (keepingUp) {
-        return 'keeping-up';
-    }
-    return keepingUp === false ? 'draining' : 'buffer-healthy';
 };

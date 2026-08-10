@@ -7,16 +7,6 @@ const PropTypes = require('prop-types');
 const formatTime = require('../ControlBar/SeekBar/formatTime');
 const styles = require('./styles.less');
 
-const QUALITY_DETAILS = {
-    'checking': { tone: 'neutral', labelKey: 'PLAYER_QUALITY_CHECKING', verdictKey: 'PLAYER_QUALITY_VERDICT_CHECKING' },
-    'no-buffer-data': { tone: 'neutral', labelKey: 'PLAYER_QUALITY_LIMITED', verdictKey: 'PLAYER_QUALITY_VERDICT_LIMITED' },
-    'cached': { tone: 'good', labelKey: 'PLAYER_QUALITY_GOOD', verdictKey: 'PLAYER_QUALITY_VERDICT_CACHED' },
-    'keeping-up': { tone: 'good', labelKey: 'PLAYER_QUALITY_GOOD', verdictKey: 'PLAYER_QUALITY_VERDICT_KEEPING_UP' },
-    'buffer-healthy': { tone: 'good', labelKey: 'PLAYER_QUALITY_GOOD', verdictKey: 'PLAYER_QUALITY_VERDICT_BUFFER_HEALTHY' },
-    'draining': { tone: 'fair', labelKey: 'PLAYER_QUALITY_FAIR', verdictKey: 'PLAYER_QUALITY_VERDICT_DRAINING' },
-    'buffer-low': { tone: 'poor', labelKey: 'PLAYER_QUALITY_POOR', verdictKey: 'PLAYER_QUALITY_VERDICT_BUFFER_LOW' },
-};
-
 const formatBufferValue = (t, isCached, bufferRunway) => {
     if (isCached) {
         return t('PLAYER_SIGNAL_BUFFER_VALUE_CACHED');
@@ -34,10 +24,8 @@ const getSpeedMeaningKey = (isCached, keepingUp) => {
     return keepingUp ? 'PLAYER_SIGNAL_SPEED_MEANING_OK' : 'PLAYER_SIGNAL_SPEED_MEANING_SLOW';
 };
 
-const StatisticsMenu = React.memo(React.forwardRef(({ className, quality, bufferRunway, keepingUp, peers, speed, completed, infoHash }, ref) => {
+const StatisticsMenu = React.memo(React.forwardRef(({ className, ready, cached, bufferRunway, keepingUp, peers, speed, completed, infoHash }, ref) => {
     const { t } = useTranslation();
-    const { tone, labelKey: qualityLabelKey, verdictKey } = QUALITY_DETAILS[quality];
-    const isCached = quality === 'cached';
 
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.statisticsMenuClosePrevented = true;
@@ -51,32 +39,23 @@ const StatisticsMenu = React.memo(React.forwardRef(({ className, quality, buffer
         },
         {
             labelKey: 'PLAYER_SIGNAL_BUFFER',
-            value: formatBufferValue(t, isCached, bufferRunway),
-            meaningKey: !isCached && bufferRunway !== null ? 'PLAYER_SIGNAL_BUFFER_MEANING' : null,
+            value: formatBufferValue(t, cached, bufferRunway),
+            meaningKey: !cached && bufferRunway !== null ? 'PLAYER_SIGNAL_BUFFER_MEANING' : null,
         },
         {
             labelKey: 'PLAYER_SPEED',
             value: `${speed} ${t('MB_S')}`,
-            meaningKey: getSpeedMeaningKey(isCached, keepingUp),
+            meaningKey: getSpeedMeaningKey(cached, keepingUp),
         },
     ];
 
     return (
         <div ref={ref} className={classNames(className, styles['statistics-menu-container'])} onMouseDown={onMouseDown}>
-            <div className={styles['header']}>
-                <div className={styles['title']}>
-                    {t('PLAYER_STREAM_QUALITY')}
-                </div>
-                <div className={classNames(styles['status-label'], styles[`tone-${tone}`])}>
-                    {t(qualityLabelKey)}
-                </div>
+            <div className={styles['title']}>
+                {t('PLAYER_STREAM_QUALITY')}
             </div>
-            <div className={styles['verdict']}>
-                {t(verdictKey)}
-            </div>
-            {quality !== 'checking' && (
+            {ready ? (
                 <React.Fragment>
-                    <div className={styles['divider']} />
                     <div className={styles['signals']}>
                         {signals.map(({ labelKey, value, meaningKey }) => (
                             <div key={labelKey} className={styles['signal']}>
@@ -121,6 +100,10 @@ const StatisticsMenu = React.memo(React.forwardRef(({ className, quality, buffer
                         </div>
                     </details>
                 </React.Fragment>
+            ) : (
+                <div className={styles['checking']}>
+                    {t('PLAYER_QUALITY_VERDICT_CHECKING')}
+                </div>
             )}
         </div>
     );
@@ -128,7 +111,8 @@ const StatisticsMenu = React.memo(React.forwardRef(({ className, quality, buffer
 
 StatisticsMenu.propTypes = {
     className: PropTypes.string,
-    quality: PropTypes.oneOf(Object.keys(QUALITY_DETAILS)).isRequired,
+    ready: PropTypes.bool,
+    cached: PropTypes.bool,
     bufferRunway: PropTypes.number,
     keepingUp: PropTypes.bool,
     peers: PropTypes.number,

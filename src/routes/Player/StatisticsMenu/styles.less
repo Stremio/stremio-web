@@ -20,51 +20,22 @@
         color: var(--primary-foreground-color);
     }
 
-    .header,
+    .title {
+        font-weight: 700;
+        color: var(--primary-foreground-color);
+    }
+
+    .checking {
+        color: var(--primary-foreground-color);
+        opacity: 0.5;
+    }
+
     .signal-head,
     .detail-row {
         display: flex;
         align-items: baseline;
         justify-content: space-between;
         gap: 0.5rem;
-    }
-
-    .header {
-        align-items: center;
-
-        .title {
-            font-weight: 700;
-            color: var(--primary-foreground-color);
-        }
-
-        .status-label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary-foreground-color);
-
-            &.tone-neutral {
-                opacity: 0.6;
-            }
-
-            &.tone-good {
-                color: @color-accent3;
-            }
-
-            &.tone-fair {
-                color: @color-accent5;
-            }
-
-            &.tone-poor {
-                color: @color-accent1;
-            }
-        }
-    }
-
-    .verdict {
-        font-size: 1.1rem;
-        font-weight: 500;
-        line-height: 1.4;
-        color: var(--primary-foreground-color);
     }
 
     .divider {
