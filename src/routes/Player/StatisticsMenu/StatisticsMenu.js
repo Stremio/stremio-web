@@ -4,166 +4,115 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const classNames = require('classnames');
 const PropTypes = require('prop-types');
-const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button } = require('stremio/components');
 const formatTime = require('../ControlBar/SeekBar/formatTime');
 const styles = require('./styles.less');
 
-const QUALITY = {
-    'checking': { tone: 'neutral', label: 'PLAYER_QUALITY_CHECKING', verdict: 'PLAYER_QUALITY_VERDICT_CHECKING' },
-    'no-buffer-data': { tone: 'neutral', label: 'PLAYER_QUALITY_LIMITED', verdict: 'PLAYER_QUALITY_VERDICT_LIMITED' },
-    'cached': { tone: 'good', label: 'PLAYER_QUALITY_GOOD', verdict: 'PLAYER_QUALITY_VERDICT_CACHED' },
-    'keeping-up': { tone: 'good', label: 'PLAYER_QUALITY_GOOD', verdict: 'PLAYER_QUALITY_VERDICT_KEEPING_UP' },
-    'buffer-healthy': { tone: 'good', label: 'PLAYER_QUALITY_GOOD', verdict: 'PLAYER_QUALITY_VERDICT_BUFFER_HEALTHY' },
-    'draining': { tone: 'fair', label: 'PLAYER_QUALITY_FAIR', verdict: 'PLAYER_QUALITY_VERDICT_DRAINING' },
-    'buffer-low': { tone: 'poor', label: 'PLAYER_QUALITY_POOR', verdict: 'PLAYER_QUALITY_VERDICT_BUFFER_LOW' },
-};
-
-const formatBufferValue = (t, cached, bufferKnown, bufferRunway) => {
-    if (cached) {
+const formatBufferValue = (t, isCached, bufferRunway) => {
+    if (isCached) {
         return t('PLAYER_SIGNAL_BUFFER_VALUE_CACHED');
     }
-    if (!bufferKnown) {
+    if (bufferRunway === null) {
         return t('PLAYER_SIGNAL_BUFFER_VALUE_UNKNOWN');
     }
     return formatTime(bufferRunway * 1000);
 };
 
-const formatSpeedMeaning = (t, cached, keepingUp) => {
-    if (cached || typeof keepingUp !== 'boolean') {
+const getSpeedMeaningKey = (isCached, keepingUp) => {
+    if (isCached || keepingUp === null) {
         return null;
     }
-    return t(keepingUp ? 'PLAYER_SIGNAL_SPEED_MEANING_OK' : 'PLAYER_SIGNAL_SPEED_MEANING_SLOW');
+    return keepingUp ? 'PLAYER_SIGNAL_SPEED_MEANING_OK' : 'PLAYER_SIGNAL_SPEED_MEANING_SLOW';
 };
 
-const StatisticsMenu = React.memo(React.forwardRef(({ className, quality, bufferRunway, keepingUp, peers, speed, completed, infoHash }, ref) => {
+const StatisticsMenu = React.memo(React.forwardRef(({ className, ready, cached, bufferRunway, keepingUp, peers, speed, completed, infoHash }, ref) => {
     const { t } = useTranslation();
-    const [detailsOpen, setDetailsOpen] = React.useState(false);
-    const status = QUALITY[quality] ? quality : 'checking';
-    const { tone, label, verdict } = QUALITY[status];
-    const cached = status === 'cached';
-    const bufferKnown = Number.isFinite(bufferRunway);
 
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.statisticsMenuClosePrevented = true;
     }, []);
-    const toggleDetails = React.useCallback(() => {
-        setDetailsOpen((open) => !open);
-    }, []);
 
-    const bufferValue = formatBufferValue(t, cached, bufferKnown, bufferRunway);
-    const speedMeaning = formatSpeedMeaning(t, cached, keepingUp);
+    const signals = [
+        {
+            labelKey: 'PLAYER_SIGNAL_SOURCES',
+            value: peers,
+            meaningKey: 'PLAYER_SIGNAL_SOURCES_MEANING',
+        },
+        {
+            labelKey: 'PLAYER_SIGNAL_BUFFER',
+            value: formatBufferValue(t, cached, bufferRunway),
+            meaningKey: !cached && bufferRunway !== null ? 'PLAYER_SIGNAL_BUFFER_MEANING' : null,
+        },
+        {
+            labelKey: 'PLAYER_SPEED',
+            value: `${speed} ${t('MB_S')}`,
+            meaningKey: getSpeedMeaningKey(cached, keepingUp),
+        },
+    ];
 
     return (
         <div ref={ref} className={classNames(className, styles['statistics-menu-container'])} onMouseDown={onMouseDown}>
-            <div className={styles['header']}>
-                <div className={styles['title']}>
-                    {t('PLAYER_STREAM_QUALITY')}
-                </div>
-                <div className={classNames(styles['status-label'], styles[`tone-${tone}`])}>
-                    {t(label)}
-                </div>
+            <div className={styles['title']}>
+                {t('PLAYER_STREAM_QUALITY')}
             </div>
-            <div className={styles['verdict']}>
-                {t(verdict)}
-            </div>
-            {
-                status !== 'checking' ?
-                    <React.Fragment>
-                        <div className={styles['divider']} />
-                        <div className={styles['signals']}>
-                            <div className={styles['signal']}>
+            {ready ? (
+                <React.Fragment>
+                    <div className={styles['signals']}>
+                        {signals.map(({ labelKey, value, meaningKey }) => (
+                            <div key={labelKey} className={styles['signal']}>
                                 <div className={styles['signal-head']}>
                                     <div className={styles['label']}>
-                                        {t('PLAYER_SIGNAL_SOURCES')}
+                                        {t(labelKey)}
                                     </div>
                                     <div className={styles['value']}>
-                                        { peers }
+                                        { value }
                                     </div>
                                 </div>
-                                <div className={styles['meaning']}>
-                                    {t('PLAYER_SIGNAL_SOURCES_MEANING')}
+                                {meaningKey && (
+                                    <div className={styles['meaning']}>
+                                        {t(meaningKey)}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles['divider']} />
+                    <details className={styles['technical']}>
+                        <summary className={styles['technical-toggle']}>
+                            {t('PLAYER_MORE_DETAILS')}
+                        </summary>
+                        <div className={styles['technical-content']}>
+                            <div className={styles['detail-row']}>
+                                <div className={styles['label']}>
+                                    {t('PLAYER_COMPLETED')}
+                                </div>
+                                <div className={styles['value']}>
+                                    { Math.min(completed, 100) } %
                                 </div>
                             </div>
-                            <div className={styles['signal']}>
-                                <div className={styles['signal-head']}>
-                                    <div className={styles['label']}>
-                                        {t('PLAYER_SIGNAL_BUFFER')}
-                                    </div>
-                                    <div className={styles['value']}>
-                                        { bufferValue }
-                                    </div>
+                            <div className={styles['info-hash']}>
+                                <div className={styles['label']}>
+                                    {t('PLAYER_INFO_HASH')}
                                 </div>
-                                {
-                                    !cached && bufferKnown ?
-                                        <div className={styles['meaning']}>
-                                            {t('PLAYER_SIGNAL_BUFFER_MEANING')}
-                                        </div>
-                                        :
-                                        null
-                                }
-                            </div>
-                            <div className={styles['signal']}>
-                                <div className={styles['signal-head']}>
-                                    <div className={styles['label']}>
-                                        {t('PLAYER_SPEED')}
-                                    </div>
-                                    <div className={styles['value']}>
-                                        {`${speed} ${t('MB_S')}`}
-                                    </div>
-                                </div>
-                                {
-                                    speedMeaning ?
-                                        <div className={styles['meaning']}>
-                                            { speedMeaning }
-                                        </div>
-                                        :
-                                        null
-                                }
-                            </div>
-                        </div>
-                        <div className={styles['divider']} />
-                        <div className={styles['technical']}>
-                            <Button className={styles['technical-toggle']} onClick={toggleDetails} aria-expanded={detailsOpen} aria-controls={'statistics-technical-details'}>
-                                <Icon className={classNames(styles['chevron'], { [styles['open']]: detailsOpen })} name={'caret-down'} aria-hidden={true} />
-                                <div className={styles['technical-label']}>
-                                    {t('PLAYER_MORE_DETAILS')}
-                                </div>
-                            </Button>
-                            <div className={classNames(styles['collapsible'], { [styles['open']]: detailsOpen })}>
-                                <div className={styles['collapsible-inner']}>
-                                    <div className={styles['technical-content']} id={'statistics-technical-details'} aria-hidden={!detailsOpen}>
-                                        <div className={styles['detail-row']}>
-                                            <div className={styles['label']}>
-                                                {t('PLAYER_COMPLETED')}
-                                            </div>
-                                            <div className={styles['value']}>
-                                                { Math.min(completed, 100) } %
-                                            </div>
-                                        </div>
-                                        <div className={styles['info-hash']}>
-                                            <div className={styles['label']}>
-                                                {t('PLAYER_INFO_HASH')}
-                                            </div>
-                                            <div className={styles['info-hash-value']}>
-                                                { infoHash }
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div className={styles['info-hash-value']}>
+                                    { infoHash }
                                 </div>
                             </div>
                         </div>
-                    </React.Fragment>
-                    :
-                    null
-            }
+                    </details>
+                </React.Fragment>
+            ) : (
+                <div className={styles['checking']}>
+                    {t('PLAYER_QUALITY_VERDICT_CHECKING')}
+                </div>
+            )}
         </div>
     );
 }));
 
 StatisticsMenu.propTypes = {
     className: PropTypes.string,
-    quality: PropTypes.string,
+    ready: PropTypes.bool,
+    cached: PropTypes.bool,
     bufferRunway: PropTypes.number,
     keepingUp: PropTypes.bool,
     peers: PropTypes.number,
