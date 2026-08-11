@@ -55,8 +55,7 @@ const Discover = () => {
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
     const isEpgLayout = React.useMemo(() => {
-        const selectedAddon = discover.selectable.catalogs.find(({ selected }) => selected)?.addon ?? null;
-        return selectedAddon?.manifest?.behaviorHints?.epgProvider === true;
+        return discover.selectable.catalogs.find(({ selected }) => selected)?.isEpgGuide === true;
     }, [discover.selectable.catalogs]);
     // Load the core LiveTvGuide model for the selected guide catalog.
     // `date` is the user's local date (null defaults to the local today);

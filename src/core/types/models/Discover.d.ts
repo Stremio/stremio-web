@@ -10,6 +10,7 @@ type MetaItemPreviewDiscover = MetaItemPreview & {
 type DiscoverCatalogOption<T> = SelectableCatalog<T> & {
     id: string,
     addon: Addon,
+    isEpgGuide: boolean,
 };
 
 type Discover = {
