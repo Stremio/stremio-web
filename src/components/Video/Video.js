@@ -46,18 +46,18 @@ const Video = ({
     const platform = usePlatform();
     const { t } = useTranslation();
 
-    const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
+    const [menuOpen, openMenu, closeMenu, toggleMenu] = useBinaryState(false);
 
     const popupLabelOnMouseUp = React.useCallback((event) => {
         if (!event.nativeEvent.togglePopupPrevented) {
             if (event.nativeEvent.ctrlKey || event.nativeEvent.button === 2) {
                 event.preventDefault();
-                toggleMenu();
+                openMenu();
             }
         }
-    }, []);
+    }, [openMenu]);
     const popupLabelOnContextMenu = React.useCallback((event) => {
-        if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey) {
+        if (!event.nativeEvent.togglePopupPrevented && !event.nativeEvent.ctrlKey && !event.nativeEvent.shiftKey) {
             event.preventDefault();
         }
     }, [toggleMenu]);
@@ -71,6 +71,9 @@ const Video = ({
     }, []);
     const popupMenuOnContextMenu = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;
+        if (!event.nativeEvent.ctrlKey && !event.nativeEvent.shiftKey) {
+            event.preventDefault();
+        }
     }, []);
     const popupMenuOnClick = React.useCallback((event) => {
         event.nativeEvent.togglePopupPrevented = true;

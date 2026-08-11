@@ -197,8 +197,9 @@ const useSubtitles = ({
         }
 
         if (extraTrack?.id) {
-            if (video.state.selectedExtraSubtitlesTrackId !== extraTrack.id ||
-                video.state.selectedSubtitlesTrackId !== null) {
+            // Keep the first external match while waiting for an embedded track.
+            // Add-on subtitle results can arrive in stages and reorder `extraTrack`.
+            if (video.state.selectedExtraSubtitlesTrackId === null) {
                 video.setExtraSubtitlesTrack(extraTrack.id);
             }
 

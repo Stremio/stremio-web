@@ -2,24 +2,103 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
+:import('~stremio/components/Slider/styles.less') {
+    slider-track-after: track-after;
+    slider-thumb: thumb;
+}
+
 .speed-menu-container {
-    width: 14rem;
+    width: 30rem;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
 
     .title {
         flex: none;
         align-self: stretch;
         font-weight: 700;
         color: var(--primary-foreground-color);
-        padding: 1.5rem 2rem;
+        padding: 1rem;
+        text-align: center;
     }
 
-    .options-container {
-        flex: 0 1 auto;
-        max-height: calc(3.2rem * 10);
-        padding: 0 1rem 0.5rem;
-        
-        .option {
-            height: 3.2rem;
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding-bottom: 1rem;
+
+        .options-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0 1rem;
+
+            .speed-button {
+                flex: 1 0 3rem;
+                color: var(--primary-foreground-color);
+                padding: 0.2rem 0.25rem;
+                border-radius: var(--border-radius);
+                text-align: center;
+                font-variant-numeric: tabular-nums;
+                transition: background-color 150ms ease, color 150ms ease;
+
+                &:hover, &:focus {
+                    background-color: var(--overlay-color);
+                }
+
+                &.active {
+                    background-color: var(--overlay-color);
+                    color: @color-secondaryvariant1-light4;
+                }
+            }
+        }
+
+        .top-container {
+            display: flex;
+            flex-direction: column;
+            flex: none;
+            min-height: 3rem;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+
+            .speed-title {
+                font-weight: 700;
+                color: var(--primary-foreground-color);
+                text-align: center;
+            }
+        }
+
+        .slider {
+            --track-size: 0.35rem;
+            --thumb-size: 1rem;
+
+            flex: none;
+            min-height: calc(var(--thumb-size) * 2);
+            align-self: stretch;
+            margin: 0.5rem var(--thumb-size) 0;
+            position: relative;
+
+            .slider-thumb {
+                background-color: @color-secondaryvariant1-light4;
+                transition: transform 150ms ease;
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    border-radius: 100%;
+                    box-shadow: 0 0 0 0.25rem white inset;
+                }
+            }
+
+            &:hover .slider-thumb {
+                transform: translateX(-50%) scale(1.2);
+            }
         }
     }
 }

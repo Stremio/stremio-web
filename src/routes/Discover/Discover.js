@@ -51,6 +51,7 @@ const Discover = () => {
 
     const metasContainerRef = React.useRef();
     const metaPreviewRef = React.useRef();
+    const previousCatalogSizeRef = React.useRef(0);
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
     const isEpgLayout = React.useMemo(() => {
@@ -172,18 +173,25 @@ const Discover = () => {
     React.useEffect(() => {
         if (!isEpgLayout && discover.catalog?.content.type === 'Loading' && metasContainerRef.current) {
             metasContainerRef.current.scrollTop = 0;
+            previousCatalogSizeRef.current = 0;
         }
     }, [discover.catalog, isEpgLayout]);
     React.useEffect(() => {
-        if (!isEpgLayout && hasNextPage && metasContainerRef.current) {
+        if (!isEpgLayout && discover.catalog?.content.type === 'Ready') {
+            const catalogSize = discover.catalog.content.content.length;
+            const hasNewItems = catalogSize > previousCatalogSizeRef.current;
+            previousCatalogSizeRef.current = catalogSize;
+            if (!hasNextPage || !hasNewItems || !metasContainerRef.current) {
+                return;
+            }
+
             const containerHeight = metasContainerRef.current.scrollHeight;
             const viewportHeight = metasContainerRef.current.clientHeight;
             if (containerHeight <= viewportHeight + SCROLL_TO_BOTTOM_THRESHOLD) {
                 loadNextPage();
             }
         }
-    }, [isEpgLayout, hasNextPage, loadNextPage]);
-
+    }, [discover.catalog, isEpgLayout, hasNextPage, loadNextPage]);
     const addToLibrary = React.useCallback(() => {
         if (selectedMetaItem === null) {
             return;

@@ -9,12 +9,11 @@ const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigat
 const { withCoreSuspender } = require('stremio/common');
 const { getEpgValue, getNonEmptyString, hasEpgProgramTimes } = require('stremio/common/EPG');
 const { useNavigateWithOrigin } = require('stremio-router');
-const { VerticalNavBar, HorizontalNavBar, DelayedRenderer, Image, MetaPreview, ModalDialog } = require('stremio/components');
+const { HorizontalNavBar, DelayedRenderer, Image, MetaPreview } = require('stremio/components');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
 const useSeason = require('./useSeason');
-const useMetaExtensionTabs = require('./useMetaExtensionTabs');
 const styles = require('./styles');
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
@@ -34,7 +33,6 @@ const MetaDetails = () => {
     }), [type, id, videoId]);
     const metaDetails = useMetaDetails(urlParams);
     const [season, setSeason] = useSeason(urlParams);
-    const [tabs, metaExtension, clearMetaExtension] = useMetaExtensionTabs(metaDetails.metaExtensions);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
             [metaDetails.selected.metaPath, metaDetails.selected.streamPath]
@@ -158,16 +156,6 @@ const MetaDetails = () => {
             />
             <div ref={contentRef} className={styles['metadetails-content']}>
                 {
-                    tabs.length > 0 ?
-                        <VerticalNavBar
-                            className={styles['vertical-nav-bar']}
-                            tabs={tabs}
-                            selected={metaExtension !== null ? metaExtension.url : null}
-                        />
-                        :
-                        null
-                }
-                {
                     metaPath === null ?
                         <DelayedRenderer delay={500}>
                             <div className={styles['meta-message-container']}>
@@ -242,21 +230,6 @@ const MetaDetails = () => {
                             null
                 }
             </div>
-            {
-                metaExtension !== null ?
-                    <ModalDialog
-                        className={styles['meta-extension-modal-container']}
-                        title={metaExtension.name}
-                        onCloseRequest={clearMetaExtension}>
-                        <iframe
-                            className={styles['meta-extension-modal-iframe']}
-                            sandbox={'allow-forms allow-scripts allow-same-origin'}
-                            src={metaExtension.url}
-                        />
-                    </ModalDialog>
-                    :
-                    null
-            }
         </div>
     );
 };
