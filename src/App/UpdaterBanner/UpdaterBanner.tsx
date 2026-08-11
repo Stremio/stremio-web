@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
-import Icon from '@stremio/stremio-icons/react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMatch } from 'react-router';
 import { useBinaryState, usePlatform } from 'stremio/common';
-import { Button, Transition } from 'stremio/components';
-import styles from './UpdaterBanner.less';
+import { UpdateBanner } from 'stremio/components';
 
 type Props = {
     className: string,
@@ -16,9 +14,9 @@ const UpdaterBanner = ({ className }: Props) => {
     const [visible, show, hide] = useBinaryState(false);
     const isPlayer = useMatch('/player/*');
 
-    const onInstallClick = () => {
+    const onInstallClick = useCallback(() => {
         shell.send('autoupdater-notif-clicked');
-    };
+    }, [shell]);
 
     useEffect(() => {
         shell.on('autoupdater-show-notif', show);
@@ -29,21 +27,15 @@ const UpdaterBanner = ({ className }: Props) => {
     }, []);
 
     return (
-        <div className={className}>
-            <Transition when={visible && !isPlayer} name={'slide-up'}>
-                <div className={styles['updater-banner']}>
-                    <div className={styles['label']}>
-                        { t('UPDATER_TITLE') }
-                    </div>
-                    <Button className={styles['button']} onClick={onInstallClick}>
-                        { t('UPDATER_INSTALL_BUTTON') }
-                    </Button>
-                    <Button className={styles['close']} onClick={hide}>
-                        <Icon className={styles['icon']} name={'close'} />
-                    </Button>
-                </div>
-            </Transition>
-        </div>
+        <UpdateBanner
+            className={className}
+            visible={visible && isPlayer === null}
+            label={t('UPDATER_TITLE')}
+            actionLabel={t('UPDATER_INSTALL_BUTTON')}
+            closeLabel={t('BUTTON_CLOSE')}
+            onAction={onInstallClick}
+            onClose={hide}
+        />
     );
 };
 

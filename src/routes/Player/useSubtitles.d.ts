@@ -16,6 +16,7 @@ type SubtitleTrack = {
 type SelectedSubtitleTrack = {
     id: string,
     embedded: boolean,
+    language?: string,
 };
 
 type VideoSubtitleState = {
@@ -56,6 +57,7 @@ type UseSubtitlesArgs = {
     video: VideoController,
     settings: Settings,
     streamStateChanged: (state: Partial<StreamState>) => void,
+    subtitlePreferenceChanged: (preference: SubtitlePreference) => void,
     menusOpen: boolean,
     closeMenus: () => void,
     closeSubtitlesMenu: () => void,

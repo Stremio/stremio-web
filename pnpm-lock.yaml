@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/stremio-stremio-core-web-0.60.2.tgz
-        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/stremio-stremio-core-web-0.60.2.tgz
+        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz
+        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz
       '@stremio/stremio-icons':
         specifier: 5.10.0
         version: 5.10.0
@@ -104,6 +104,9 @@ importers:
       use-long-press:
         specifier: ^3.3.0
         version: 3.3.0(react@18.3.1)
+      workbox-window:
+        specifier: 7.4.1
+        version: 7.4.1
     devDependencies:
       '@babel/core':
         specifier: 7.29.0
@@ -1424,9 +1427,9 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/stremio-stremio-core-web-0.60.2.tgz':
-    resolution: {integrity: sha512-KYR7MUh6D4HIjhFwJwonqo337Wnha98BpEKHxcmhTYMGI3qcFxonAZ3yW7Fy+fudPOcd71dL4edu57HY32uQNw==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/stremio-stremio-core-web-0.60.2.tgz}
-    version: 0.60.2
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz':
+    resolution: {integrity: sha512-swMPrdIwPK5oeK96VWLENCGrolmJQLCy4QzT/fHddw6hK/0ZLZqlm6VqPSlUHDU20vHcnZ6Nt6LYxqsA8ZHW6g==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz}
+    version: 0.61.0
 
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
@@ -6493,7 +6496,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/stremio-stremio-core-web-0.60.2.tgz':
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 
