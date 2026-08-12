@@ -7491,14 +7491,30 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
   flex-direction: column;
   gap: 0.25rem;
 }
+.variant-option-RT1Op .info-B5NXN .variant-title-K2KH7 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
 .variant-option-RT1Op .info-B5NXN .variant-label-J6D51 {
   flex: 1;
+  min-width: 0;
   font-size: 1.1rem;
   line-height: 1.5rem;
   color: var(--primary-foreground-color);
   text-wrap: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.variant-option-RT1Op .info-B5NXN .ass-badge-xOKBk {
+  flex: none;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid var(--color-placeholder-text);
+  border-radius: 0.25rem;
+  font-size: 0.65rem;
+  line-height: 0.8rem;
+  color: var(--color-placeholder-text);
 }
 .variant-option-RT1Op .info-B5NXN .variant-origin-tr6Os {
   font-size: 0.9rem;
