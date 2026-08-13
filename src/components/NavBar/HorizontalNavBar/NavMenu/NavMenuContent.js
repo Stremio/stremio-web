@@ -15,6 +15,7 @@ const { default: usePlayUrl } = require('stremio/common/usePlayUrl');
 const useToast = require('stremio/common/Toast/useToast');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const useStreamingServer = require('stremio/common/useStreamingServer');
+const { default: getStreamingServerWarning } = require('stremio/common/getStreamingServerWarning');
 const styles = require('./styles');
 
 const NavMenuContent = ({ onClick }) => {
@@ -27,16 +28,10 @@ const NavMenuContent = ({ onClick }) => {
     const toast = useToast();
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const [, isAndroidPWA] = usePWA();
-    const showStreamingServerWarning = React.useMemo(() => {
-        return streamingServer.state === null ||
-            streamingServer.state.type === 'Err' ||
-            (streamingServer.state.type === 'Ready' && streamingServer.state.content === 'notRunning') ?
-            (
-                isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
-                profile.settings.streamingServerWarningDismissed.getTime() < Date.now()
-            )
-            : false;
-    }, [profile.settings, streamingServer.state]);
+    const showStreamingServerWarning = React.useMemo(
+        () => getStreamingServerWarning(streamingServer, profile),
+        [profile.settings, streamingServer.state]
+    );
     const logoutButtonOnClick = React.useCallback(() => {
         core.transport.dispatch({
             action: 'Ctx',

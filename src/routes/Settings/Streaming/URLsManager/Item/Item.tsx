@@ -23,8 +23,8 @@ const Item = ({ url }: Props) => {
 
     const selected = useMemo(() => profile.settings.streamingServerUrl === url, [url, profile.settings]);
     const defaultUrl = useMemo(() => url === DEFAULT_STREAMING_SERVER_URL, [url]);
-    const serverReady = useMemo(() => streamingServer.state?.type === 'Ready' && streamingServer.state.content === 'running', [streamingServer]);
-    const serverError = useMemo(() => streamingServer.state?.type === 'Err' || (streamingServer.state?.type === 'Ready' && streamingServer.state.content === 'notRunning'), [streamingServer]);
+    const serverReady = useMemo(() => streamingServer.state?.type === 'Ready' && streamingServer.state.content === 'running', [streamingServer.state]);
+    const serverError = useMemo(() => streamingServer.state?.type === 'Err' || (streamingServer.state?.type === 'Ready' && streamingServer.state.content === 'notRunning'), [streamingServer.state]);
 
     const handleDelete = useCallback(() => {
         deleteServerUrl(url);

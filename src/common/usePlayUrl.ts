@@ -48,8 +48,9 @@ const usePlayUrl = () => {
 
         const parsed = magnet.decode(trimmed);
         if (parsed && typeof parsed.infoHash === 'string') {
-            const serverReady = streamingServer.settings !== null
-                && streamingServer.settings.type === 'Ready';
+            const serverReady = streamingServer.state !== null
+                && streamingServer.state.type === 'Ready'
+                && streamingServer.state.content === 'running';
             if (!serverReady) {
                 toast.show({
                     type: 'error',
@@ -63,7 +64,7 @@ const usePlayUrl = () => {
         }
 
         return false;
-    }, [streamingServer.settings, createTorrentFromMagnet]);
+    }, [streamingServer.state, createTorrentFromMagnet]);
 
     return { handlePlayUrl };
 };
