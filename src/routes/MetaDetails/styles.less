@@ -3,11 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/ModalDialog/styles.less') {
-    modal-dialog-container: modal-dialog-container;
-    title-modal-container: title-container;
-}
-
 .metadetails-container {
     display: flex;
     flex-direction: column;
@@ -32,7 +27,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top left;
+            object-position: right;
             opacity: 0.3;
         }
     }
@@ -53,9 +48,6 @@
         margin-top: calc(var(--top-overlay-size) * -1);
         padding-top: var(--top-overlay-size);
         padding-bottom: var(--safe-area-inset-bottom, 0rem);
-        .vertical-nav-bar {
-            flex: none;
-        }
 
         .meta-message-container {
             align-self: stretch;
@@ -109,22 +101,6 @@
     }
 }
 
-.meta-extension-modal-container {
-    .modal-dialog-container {
-        width: 80%;
-        height: 80%;
-
-        .title-modal-container {
-            max-height: 1.2em;
-        }
-
-        .meta-extension-modal-iframe {
-            width: 100%;
-            height: 100%;
-        }
-    }
-}
-
 @media @phone-landscape {
     .metadetails-container {
         .metadetails-content {
@@ -137,9 +113,16 @@
 
 @media only screen and (max-width: @minimum) {
     .metadetails-container {
+        .background-image-layer {
+            .background-image {
+                object-position: center;
+            }
+        }
+
         .metadetails-content {
             display: block;
             overflow-y: auto;
+            padding-top: calc(var(--top-overlay-size) + var(--safe-area-inset-top));
 
             .spacing {
                 display: none;

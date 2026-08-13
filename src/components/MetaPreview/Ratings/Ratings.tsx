@@ -1,10 +1,9 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import useRating from './useRating';
-import styles from './Ratings.less';
-import Icon from '@stremio/stremio-icons/react';
-import classNames from 'classnames';
+import { ActionsGroup } from 'stremio/components';
 
 type Props = {
     metaId?: string;
@@ -13,18 +12,27 @@ type Props = {
 };
 
 const Ratings = ({ ratingInfo, className }: Props) => {
+    const { t } = useTranslation();
     const { onLiked, onLoved, liked, loved } = useRating(ratingInfo);
     const disabled = useMemo(() => ratingInfo?.type !== 'Ready', [ratingInfo]);
 
+    const items = useMemo(() => [
+        {
+            icon: liked ? 'thumbs-up' : 'thumbs-up-outline',
+            label: liked ? t('RATING_UNLIKE') : t('RATING_LIKE'),
+            disabled,
+            onClick: onLiked,
+        },
+        {
+            icon: loved ? 'heart' : 'heart-outline',
+            label: loved ? t('RATING_UNLOVE') : t('RATING_LOVE'),
+            disabled,
+            onClick: onLoved,
+        },
+    ], [liked, loved, disabled]);
+
     return (
-        <div className={classNames(styles['ratings-container'], className)}>
-            <div className={classNames(styles['icon-container'], { [styles['disabled']]: disabled })} onClick={onLiked}>
-                <Icon name={liked ? 'thumbs-up' : 'thumbs-up-outline'} className={styles['icon']} />
-            </div>
-            <div className={classNames(styles['icon-container'], { [styles['disabled']]: disabled })} onClick={onLoved}>
-                <Icon name={loved ? 'heart' : 'heart-outline'} className={styles['icon']} />
-            </div>
-        </div>
+        <ActionsGroup items={items} className={className} />
     );
 };
 

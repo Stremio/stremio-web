@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useServices } from 'stremio/services';
+import { usePlatform } from 'stremio/common';
 import { Button } from 'stremio/components';
 import { SECTIONS } from '../constants';
 import styles from './Menu.less';
@@ -14,7 +14,8 @@ type Props = {
 
 const Menu = ({ selected, streamingServer, onSelect }: Props) => {
     const { t } = useTranslation();
-    const { shell } = useServices();
+    const { shell } = usePlatform();
+    const platform = usePlatform();
 
     const settings = useMemo(() => (
         streamingServer?.settings?.type === 'Ready' ?
@@ -26,15 +27,18 @@ const Menu = ({ selected, streamingServer, onSelect }: Props) => {
             <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.GENERAL })} title={t('SETTINGS_NAV_GENERAL')} data-section={SECTIONS.GENERAL} onClick={onSelect}>
                 { t('SETTINGS_NAV_GENERAL') }
             </Button>
+            <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.INTERFACE })} title={t('INTERFACE')} data-section={SECTIONS.INTERFACE} onClick={onSelect}>
+                { t('INTERFACE') }
+            </Button>
             <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.PLAYER })} title={t('SETTINGS_NAV_PLAYER')} data-section={SECTIONS.PLAYER} onClick={onSelect}>
                 { t('SETTINGS_NAV_PLAYER') }
             </Button>
             <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.STREAMING })} title={t('SETTINGS_NAV_STREAMING')} data-section={SECTIONS.STREAMING} onClick={onSelect}>
                 { t('SETTINGS_NAV_STREAMING') }
             </Button>
-            <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.SHORTCUTS })} title={t('SETTINGS_NAV_SHORTCUTS')} data-section={SECTIONS.SHORTCUTS} onClick={onSelect}>
+            { !platform.isMobile && <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.SHORTCUTS })} title={t('SETTINGS_NAV_SHORTCUTS')} data-section={SECTIONS.SHORTCUTS} onClick={onSelect}>
                 { t('SETTINGS_NAV_SHORTCUTS') }
-            </Button>
+            </Button> }
 
             <div className={styles['spacing']} />
             <div className={styles['version-info-label']} title={process.env.VERSION}>
@@ -50,9 +54,9 @@ const Menu = ({ selected, streamingServer, onSelect }: Props) => {
                     </div>
             }
             {
-                typeof shell?.transport?.props?.shellVersion === 'string' &&
-                    <div className={styles['version-info-label']} title={shell.transport.props.shellVersion}>
-                        {t('SETTINGS_SHELL_VERSION')}: {shell.transport.props.shellVersion}
+                typeof shell.state.version === 'string' &&
+                    <div className={styles['version-info-label']} title={shell.state.version}>
+                        {t('SETTINGS_SHELL_VERSION')}: {shell.state.version}
                     </div>
             }
         </div>

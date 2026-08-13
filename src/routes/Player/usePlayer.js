@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const { useModelState, useCoreSuspender } = require('stremio/common');
 
 const map = (player) => ({
@@ -33,7 +33,7 @@ const map = (player) => ({
 });
 
 const usePlayer = (urlParams) => {
-    const { core } = useServices();
+    const core = useCore();
     const { decodeStream } = useCoreSuspender();
     const stream = decodeStream(urlParams.stream);
     const action = React.useMemo(() => {
@@ -86,6 +86,9 @@ const usePlayer = (urlParams) => {
             };
         }
     }, [urlParams]);
+
+    const player = useModelState({ model: 'player', action, map });
+
     const videoParamsChanged = React.useCallback((videoParams) => {
         core.transport.dispatch({
             action: 'Player',
@@ -153,8 +156,32 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
 
-    const player = useModelState({ model: 'player', action, map });
-    return [player, videoParamsChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
+    const streamStateChanged = React.useCallback((partialStreamState) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'StreamStateChanged',
+                args: {
+                    state: {
+                        ...player.streamState,
+                        ...partialStreamState,
+                    },
+                },
+            },
+        }, 'player');
+    }, [player.streamState]);
+
+    const subtitlePreferenceChanged = React.useCallback((preference) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'SubtitlePreferenceChanged',
+                args: { preference },
+            },
+        }, 'player');
+    }, []);
+
+    return [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;

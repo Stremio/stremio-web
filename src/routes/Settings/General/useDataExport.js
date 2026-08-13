@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const { useModelState } = require('stremio/common');
 
 const map = (dataExport) => ({
@@ -13,7 +13,7 @@ const map = (dataExport) => ({
 });
 
 const useDataExport = () => {
-    const { core } = useServices();
+    const core = useCore();
     const loadDataExport = React.useCallback(() => {
         core.transport.dispatch({
             action: 'Load',

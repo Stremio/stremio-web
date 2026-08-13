@@ -14,7 +14,7 @@ const MetaLinks = ({ className, label, links }) => {
             {
                 typeof label === 'string' && label.length > 0 ?
                     <div className={styles['label-container']}>
-                        { stringWithPrefix(label.toUpperCase(), 'LINKS') }
+                        { stringWithPrefix(label.toUpperCase(), 'LINKS_') }
                     </div>
                     :
                     null

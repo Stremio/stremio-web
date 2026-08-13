@@ -17,7 +17,7 @@ const Placeholder = () => {
             <div className={styles['image-container']}>
                 <Image
                     className={styles['image']}
-                    src={require('/images/calendar_placeholder.png')}
+                    src={require('/assets/images/calendar_placeholder.png')}
                     alt={' '}
                 />
             </div>

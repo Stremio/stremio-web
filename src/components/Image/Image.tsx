@@ -7,7 +7,7 @@ type Props = {
     src: string,
     alt: string,
     fallbackSrc: string,
-    renderFallback: () => void,
+    renderFallback: () => React.ReactNode,
     onError: (event: React.SyntheticEvent<HTMLImageElement>) => void,
 };
 

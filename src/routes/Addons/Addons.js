@@ -1,13 +1,15 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const PropTypes = require('prop-types');
+const { useParams } = require('react-router');
+const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
+const { useCore } = require('stremio/core');
 const { usePlatform, useBinaryState, withCoreSuspender } = require('stremio/common');
 const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, SharePrompt, TextInput, MultiselectMenu } = require('stremio/components');
-const { useServices } = require('stremio/services');
+const useToast = require('stremio/common/Toast/useToast');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
@@ -16,20 +18,38 @@ const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
 const { AddonPlaceholder } = require('./AddonPlaceholder');
 
-const Addons = ({ urlParams, queryParams }) => {
+const Addons = () => {
+    const { type, transportUrl, catalogId } = useParams();
+    const [queryParams] = useSearchParams();
+    const urlParams = React.useMemo(() => ({
+        type,
+        transportUrl,
+        catalogId
+    }), [type, transportUrl, catalogId]);
     const { t } = useTranslation();
     const platform = usePlatform();
-    const { core } = useServices();
+    const core = useCore();
+    const toast = useToast();
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
-    const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
+    const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams);
     const selectInputs = useSelectableInputs(installedAddons, remoteAddons);
     const [filtersModalOpen, openFiltersModal, closeFiltersModal] = useBinaryState(false);
     const [addAddonModalOpen, openAddAddonModal, closeAddAddonModal] = useBinaryState(false);
     const addAddonUrlInputRef = React.useRef(null);
     const addAddonOnSubmit = React.useCallback(() => {
         if (addAddonUrlInputRef.current !== null) {
-            setAddonDetailsTransportUrl(addAddonUrlInputRef.current.value);
+            try {
+                let url = new URL(addAddonUrlInputRef.current.value).toString();
+                setAddonDetailsTransportUrl(url);
+            } catch (e) {
+                toast.show({
+                    type: 'error',
+                    title: `Failed to parse addon url: ${addAddonUrlInputRef.current.value}`,
+                    timeout: 10000
+                });
+                console.error('Failed to parse addon url:', e);
+            }
         }
     }, [setAddonDetailsTransportUrl]);
     const addAddonModalButtons = React.useMemo(() => {
@@ -290,16 +310,6 @@ const Addons = ({ urlParams, queryParams }) => {
             }
         </MainNavBars>
     );
-};
-
-Addons.propTypes = {
-    urlParams: PropTypes.shape({
-        path: PropTypes.string,
-        transportUrl: PropTypes.string,
-        catalogId: PropTypes.string,
-        type: PropTypes.string
-    }),
-    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 const AddonsFallback = () => (

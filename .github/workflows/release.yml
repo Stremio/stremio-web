@@ -9,12 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6.0.10
         with:
-          version: 10
+          version: 11.8.0
           run_install: false
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Build
@@ -24,7 +29,7 @@ jobs:
       - name: Zip build artifact
         run: zip -r stremio-web.zip ./build
       - name: Upload build artifact to GitHub release assets
-        uses: svenstaro/upload-release-action@2.11.3
+        uses: svenstaro/upload-release-action@2.11.5
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: stremio-web.zip

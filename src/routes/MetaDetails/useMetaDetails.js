@@ -48,7 +48,7 @@ const useMetaDetails = (urlParams) => {
                             id: urlParams.id,
                             extra: []
                         },
-                        streamPath: typeof urlParams.videoId === 'string' ?
+                        streamPath: typeof urlParams.videoId === 'string' && urlParams.videoId !== '' ?
                             {
                                 resource: 'stream',
                                 type: urlParams.type,

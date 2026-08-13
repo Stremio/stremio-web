@@ -6,7 +6,6 @@ const onFileDrop = (types: FileType[], listener: FileDropListener) => {
 
     useEffect(() => {
         types.forEach((type) => on(type, listener));
-
         return () => types.forEach((type) => off(type, listener));
     }, []);
 };

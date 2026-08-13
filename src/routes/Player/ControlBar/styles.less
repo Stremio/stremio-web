@@ -4,11 +4,11 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .control-bar-container {
-    padding: 0 1.5rem;
+    padding: 0 2rem;
 
     .seek-bar {
-        --track-size: 0.5rem;
-        --thumb-size: 1.3rem;
+        --track-size: 0.4rem;
+        --thumb-size: 1.2rem;
 
         height: 2.5rem;
     }
@@ -17,26 +17,34 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        gap: 0.25rem;
 
         .control-bar-button {
             flex: none;
             width: 4rem;
-            height: 5rem;
+            height: 4rem;
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 0.75rem;
+            transition: background-color 150ms ease;
+
+            &:hover:not(:global(.disabled)) {
+                background-color: var(--overlay-color);
+            }
 
             &:global(.disabled) {
                 .icon {
-                    opacity: 0.5;
+                    opacity: 0.4;
                 }
             }
 
             .icon {
                 flex: none;
-                width: 2.5rem;
-                height: 2.5rem;
+                width: 2.2rem;
+                height: 2.2rem;
                 color: var(--primary-foreground-color);
+                transition: transform 100ms ease;
             }
         }
 
@@ -46,7 +54,7 @@
 
             flex: 0 1 10rem;
             height: 4rem;
-            margin: 0 1rem;
+            margin: 0 0.5rem;
         }
 
         .spacing {
@@ -60,11 +68,17 @@
             display: none;
             justify-content: center;
             align-items: center;
+            border-radius: 0.75rem;
+            transition: background-color 150ms ease;
+
+            &:hover {
+                background-color: var(--overlay-color);
+            }
 
             .icon {
                 flex: none;
-                width: 2.5rem;
-                height: 2.5rem;
+                width: 2.2rem;
+                height: 2.2rem;
                 color: var(--primary-foreground-color);
             }
         }
@@ -73,6 +87,7 @@
             flex: none;
             display: flex;
             flex-direction: row;
+            gap: 0.25rem;
         }
     }
 }
@@ -89,6 +104,7 @@
             position: relative;
             padding: 0 0.5rem;
             overflow: visible;
+            gap: 0.15rem;
 
             .volume-slider {
                 display: none;
@@ -104,6 +120,7 @@
                 bottom: 4.5rem;
                 padding: 0.5rem;
                 margin: 0.5rem;
+                gap: 0.15rem;
                 max-width: calc(100dvw - 1rem);
                 border-radius: var(--border-radius);
                 background-color: var(--modal-background-color);

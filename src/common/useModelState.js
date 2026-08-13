@@ -2,15 +2,15 @@
 
 const React = require('react');
 const throttle = require('lodash.throttle');
-const isEqual = require('lodash.isequal');
+const { deepEqual } = require('fast-equals');
 const intersection = require('lodash.intersection');
+const { useCore } = require('stremio/core');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
-const { useRouteFocused } = require('stremio-router');
-const { useServices } = require('stremio/services');
+const { useRouteActive } = require('stremio/common/useRouteFocused');
 
 const useModelState = ({ action, ...args }) => {
-    const { core } = useServices();
-    const routeFocused = useRouteFocused();
+    const core = useCore();
+    const routeActive = useRouteActive();
     const mountedRef = React.useRef(false);
     const [model, timeout, map, deps] = React.useMemo(() => {
         return [args.model, args.timeout, args.map, args.deps];
@@ -19,30 +19,27 @@ const useModelState = ({ action, ...args }) => {
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
             return Object.keys(prevState).reduce((result, key) => {
-                result[key] = isEqual(prevState[key], nextState[key]) ? prevState[key] : nextState[key];
+                result[key] = deepEqual(prevState[key], nextState[key]) ? prevState[key] : nextState[key];
                 return result;
             }, {});
         },
         undefined,
         () => {
-            if (typeof map === 'function') {
-                return map(getState(model));
-            } else {
-                return getState(model);
-            }
+            const state = getState(model);
+            return typeof map === 'function' ? map(state) : state;
         }
     );
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         if (action) {
             core.transport.dispatch(action, model);
         }
     }, [action]);
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         return () => {
             core.transport.dispatch({ action: 'Unload' }, model);
         };
     }, []);
-    React.useInsertionEffect(() => {
+    React.useEffect(() => {
         const onNewState = async (models) => {
             if (models.indexOf(model) === -1 && (!Array.isArray(deps) || intersection(deps, models).length === 0)) {
                 return;
@@ -56,18 +53,18 @@ const useModelState = ({ action, ...args }) => {
             }
         };
         const onNewStateThrottled = throttle(onNewState, timeout);
-        if (routeFocused) {
-            core.transport.on('NewState', onNewStateThrottled);
+        if (routeActive) {
+            core.on('state', onNewStateThrottled);
             if (mountedRef.current) {
                 onNewState([model]);
             }
         }
         return () => {
             onNewStateThrottled.cancel();
-            core.transport.off('NewState', onNewStateThrottled);
+            core.off('state', onNewStateThrottled);
         };
-    }, [routeFocused]);
-    React.useInsertionEffect(() => {
+    }, [routeActive]);
+    React.useEffect(() => {
         mountedRef.current = true;
     }, []);
     return state;

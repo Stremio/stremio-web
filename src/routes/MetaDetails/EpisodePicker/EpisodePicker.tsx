@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
 import React, { useCallback, useMemo, useState, ChangeEvent } from 'react';
+import { useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Button, NumberInput } from 'stremio/components';
 import styles from './EpisodePicker.less';
@@ -13,9 +14,13 @@ type Props = {
 
 const EpisodePicker = ({ className, onSubmit }: Props) => {
     const { t } = useTranslation();
+    const location = useLocation();
 
     const { initialSeason, initialEpisode } = useMemo(() => {
-        const splitPath = window.location.hash.split('/');
+        const splitPath = location.pathname.split('/');
+        if (splitPath[splitPath.length - 1] === '') {
+            splitPath.pop();
+        }
         const videoId = decodeURIComponent(splitPath[splitPath.length - 1]);
         const [, pathSeason, pathEpisode] = videoId ? videoId.split(':') : [];
         return {

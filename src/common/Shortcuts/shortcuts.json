@@ -14,19 +14,24 @@
                 "combos": [["0"]]
             },
             {
+                "name": "navigateHistory",
+                "label": "SETTINGS_SHORTCUT_NAVIGATE_HISTORY",
+                "combos": [["Backspace"], ["Ctrl", "Backspace"]]
+            },
+            {
                 "name": "fullscreen",
                 "label": "SETTINGS_SHORTCUT_FULLSCREEN",
                 "combos": [["F"]]
             },
             {
-                "name": "exit",
-                "label": "SETTINGS_SHORTCUT_EXIT_BACK",
-                "combos": [["Escape"]]
-            },
-            {
                 "name": "shortcuts",
                 "label": "SETTINGS_SHORTCUT_SHORTCUTS",
                 "combos": [["Ctrl", "/"]]
+            },
+            {
+                "name": "gamepadGuide",
+                "label": "GAMEPAD_ACTION_GUIDE",
+                "combos": [["Ctrl", "G"]]
             }
         ]
     },
@@ -50,14 +55,14 @@
                 "combos": [["ArrowLeft"], ["Shift", "ArrowLeft"]]
             },
             {
-                "name": "volumeUp",
-                "label": "SETTINGS_SHORTCUT_VOLUME_UP",
-                "combos": [["ArrowUp"]]
+                "name": "volume",
+                "label": "SETTINGS_SHORTCUT_VOLUME",
+                "combos": [["ArrowUp"], ["ArrowDown"]]
             },
             {
-                "name": "volumeDown",
-                "label": "SETTINGS_SHORTCUT_VOLUME_DOWN",
-                "combos": [["ArrowDown"]]
+                "name": "mute",
+                "label": "SETTINGS_SHORTCUT_MUTE",
+                "combos": [["M"]]
             },
             {
                 "name": "subtitlesSize",
@@ -68,6 +73,16 @@
                 "name": "subtitlesDelay",
                 "label": "SETTINGS_SHORTCUT_SUBTITLES_DELAY",
                 "combos": [["G"], ["H"]]
+            },
+            {
+                "name": "speed",
+                "label": "SETTINGS_SHORTCUT_PLAYBACK_SPEED",
+                "combos": [["["], ["]"]]
+            },
+            {
+                "name": "toggleSubtitles",
+                "label": "SETTINGS_SHORTCUT_TOGGLE_SUBTITLES",
+                "combos": [["C"]]
             },
             {
                 "name": "subtitlesMenu",
@@ -83,6 +98,26 @@
                 "name": "infoMenu",
                 "label": "SETTINGS_SHORTCUT_MENU_INFO",
                 "combos": [["I"]]
+            },
+            {
+                "name": "speedMenu",
+                "label": "SETTINGS_SHORTCUT_MENU_PLAYBACK_SPEED",
+                "combos": [["R"]]
+            },
+            {
+                "name": "statisticsMenu",
+                "label": "SETTINGS_SHORTCUT_MENU_STATISTICS",
+                "combos": [["D"]]
+            },
+            {
+                "name": "playNext",
+                "label": "SETTINGS_SHORTCUT_PLAY_NEXT",
+                "combos": [["Shift", "N"]]
+            },
+            {
+                "name": "exit",
+                "label": "SETTINGS_SHORTCUT_EXIT_BACK",
+                "combos": [["Escape"]]
             }
         ]
     }

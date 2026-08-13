@@ -57,8 +57,28 @@
     .buttons-container {
         display: flex;
         flex-direction: row;
+        align-items: center;
         gap: 0.5rem;
         overflow: visible;
+    }
+
+    .hdr-indicator {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 3.5rem;
+        padding: 0 0.5rem;
+        opacity: 0.6;
+        user-select: none;
+
+        .icon {
+            flex: none;
+            width: 3rem;
+            height: 1.5rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+        }
     }
 
     .button-container {

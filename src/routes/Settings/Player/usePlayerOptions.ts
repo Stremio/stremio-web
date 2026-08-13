@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useServices } from 'stremio/services';
-import { CONSTANTS, languageNames, usePlatform, useLanguageSorting } from 'stremio/common';
+import { useCore } from 'stremio/core';
+import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
 
 const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
     const platform = usePlatform();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
@@ -86,6 +86,22 @@ const usePlayerOptions = (profile: Profile) => {
                     args: {
                         ...profile.settings,
                         subtitlesBackgroundColor: value
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
+    const assSubtitlesStylingToggle = useMemo(() => ({
+        checked: profile.settings.assSubtitlesStyling,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        assSubtitlesStyling: !profile.settings.assSubtitlesStyling
                     }
                 }
             });
@@ -216,12 +232,12 @@ const usePlayerOptions = (profile: Profile) => {
     const nextVideoPopupDurationSelect = useMemo(() => ({
         options: CONSTANTS.NEXT_VIDEO_POPUP_DURATIONS.map((duration) => ({
             value: `${duration}`,
-            label: duration === 0 ? 'Disabled' : `${duration / 1000} ${t('SECONDS')}`
+            label: duration === 0 ? t('SETTINGS_DISABLED') : `${duration / 1000} ${t('SECONDS')}`
         })),
         value: `${profile.settings.nextVideoNotificationDuration}`,
         title: () => {
             return profile.settings.nextVideoNotificationDuration === 0 ?
-                'Disabled'
+                t('SETTINGS_DISABLED')
                 :
                 `${profile.settings.nextVideoNotificationDuration / 1000} ${t('SECONDS')}`;
         },
@@ -287,6 +303,22 @@ const usePlayerOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
+    const gpuVideoProcessingToggle = useMemo(() => ({
+        checked: profile.settings.gpuVideoProcessing,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        gpuVideoProcessing: !profile.settings.gpuVideoProcessing
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
     const videoModeSelect = useMemo(() => ({
         options: [
             {
@@ -341,6 +373,7 @@ const usePlayerOptions = (profile: Profile) => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        assSubtitlesStylingToggle,
         audioLanguageSelect,
         surroundSoundToggle,
         seekTimeDurationSelect,
@@ -350,6 +383,7 @@ const usePlayerOptions = (profile: Profile) => {
         bingeWatchingToggle,
         playInBackgroundToggle,
         hardwareDecodingToggle,
+        gpuVideoProcessingToggle,
         videoModeSelect,
         pauseOnMinimizeToggle,
     };

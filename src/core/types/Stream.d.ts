@@ -1,0 +1,19 @@
+
+type StreamDeepLinks = {
+    player: string | null,
+    externalPlayer: ExternalPlayerLinks,
+};
+
+type Stream = {
+    ytId?: string,
+    name: string,
+    description: string,
+    infoHash?: string,
+    fileIdx?: string,
+    url?: string,
+    externalUrl?: string,
+    deepLinks?: {
+        player: string,
+        externalPlayer: ExternalPlayerLinks,
+    },
+};

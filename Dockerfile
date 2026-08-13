@@ -1,6 +1,5 @@
-# Stremio Node 20.x
 # the node version for running Stremio Web
-ARG NODE_VERSION=20-alpine
+ARG NODE_VERSION=22-alpine
 FROM node:$NODE_VERSION AS base
 
 # Setup pnpm
@@ -19,7 +18,7 @@ WORKDIR /var/www/stremio-web
 # Setup app
 FROM base AS app
 
-COPY package.json pnpm-lock.yaml /var/www/stremio-web
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /var/www/stremio-web
 RUN pnpm i --frozen-lockfile
 
 COPY . /var/www/stremio-web

@@ -4,17 +4,18 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const { useProfile } = require('stremio/common');
 const { Image, SearchBar, Toggle, Video } = require('stremio/components');
 const SeasonsBar = require('./SeasonsBar');
 const { default: EpisodePicker } = require('../EpisodePicker');
 const styles = require('./styles');
 
-const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, selectedVideoId, toggleNotifications }) => {
-    const { core } = useServices();
-    const profile = useProfile();
+let savedScrollTop = 0;
 
+const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, selectedVideoId, toggleNotifications }) => {
+    const core = useCore();
+    const profile = useProfile();
     const showNotificationsToggle = React.useMemo(() => {
         return metaItem?.content?.content?.inLibrary && metaItem?.content?.content?.videos?.length;
     }, [metaItem]);
@@ -71,6 +72,33 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
         return videosForSeason.every((video) => video.watched);
     }, [videosForSeason]);
 
+    const videosContainerRef = React.useRef(null);
+    const isMountedRef = React.useRef(false);
+
+    const saveScrollPosition = React.useCallback(() => {
+        savedScrollTop = videosContainerRef.current?.scrollTop ?? 0;
+    }, []);
+
+    // Restore scroll on mount (before paint), consume immediately
+    React.useLayoutEffect(() => {
+        if (savedScrollTop > 0 && videosContainerRef.current) {
+            videosContainerRef.current.scrollTop = savedScrollTop;
+            savedScrollTop = 0;
+        }
+    }, []);
+
+    // Scroll to top when the season changes (skip on initial mount to respect restored scroll position)
+    React.useEffect(() => {
+        if (!isMountedRef.current) {
+            isMountedRef.current = true;
+            return;
+        }
+        const hasSelectedVideo = videosForSeason.some((v) => v.id === selectedVideoId);
+        if (!hasSelectedVideo && videosContainerRef.current) {
+            videosContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [selectedSeason]);
+
     const [search, setSearch] = React.useState('');
     const searchInputOnChange = React.useCallback((event) => {
         setSearch(event.currentTarget.value);
@@ -124,7 +152,7 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                     metaItem.content.type === 'Err' || videosForSeason.length === 0 ?
                         <div className={styles['message-container']}>
                             <EpisodePicker className={styles['episode-picker']} onSubmit={onSeasonSearch} />
-                            <Image className={styles['image']} src={require('/images/empty.png')} alt={' '} />
+                            <Image className={styles['image']} src={require('/assets/images/empty.png')} alt={' '} />
                             <div className={styles['label']}>{t('ERR_NO_VIDEOS_FOR_META')}</div>
                         </div>
                         :
@@ -154,7 +182,7 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                 value={search}
                                 onChange={searchInputOnChange}
                             />
-                            <div className={styles['videos-container']}>
+                            <div ref={videosContainerRef} className={styles['videos-container']}>
                                 {
                                     videosForSeason
                                         .filter((video) => {
@@ -180,6 +208,7 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                                 scheduled={video.scheduled}
                                                 seasonWatched={seasonWatched}
                                                 selected={video.id === selectedVideoId}
+                                                onSelect={saveScrollPosition}
                                                 onMarkVideoAsWatched={onMarkVideoAsWatched}
                                                 onMarkSeasonAsWatched={onMarkSeasonAsWatched}
                                             />

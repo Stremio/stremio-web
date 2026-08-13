@@ -1,0 +1,4 @@
+minimumReleaseAgeExclude:
+  - '@stremio/*'
+
+blockExoticSubdeps: false

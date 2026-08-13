@@ -1,9 +1,9 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useMemo, useCallback, useState, forwardRef, memo } from 'react';
+import React, { useMemo, useCallback, useState, useRef, forwardRef, memo } from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
-import { useServices } from 'stremio/services';
+import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
 import { MetaPreview, Video } from 'stremio/components';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
@@ -19,9 +19,10 @@ type Props = {
 };
 
 const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, ...props }: Props, ref) => {
-    const { core } = useServices();
+    const core = useCore();
     const [season, setSeason] = useState<number>(seriesInfo?.season);
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+    const videosRef = useRef<HTMLDivElement>(null);
 
     const metaItem = useMemo(() => {
         return seriesInfo ?
@@ -47,8 +48,9 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
             .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
     }, [props.metaItem.videos]);
 
-    const seasonOnSelect = useCallback((event: { value: string }) => {
-        setSeason(parseInt(event.value));
+    const seasonOnSelect = useCallback((event: { value: string | number }) => {
+        setSeason(parseInt(String(event.value), 10));
+        videosRef.current?.scrollTo({ top: 0, left: 0 });
     }, []);
 
     const seasonWatched = React.useMemo(() => {
@@ -109,7 +111,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
                             seasons={seasons}
                             onSelect={seasonOnSelect}
                         />
-                        <div className={styles['videos']}>
+                        <div ref={videosRef} className={styles['videos']}>
                             {videos.map((video, index) => (
                                 <Video
                                     key={index}

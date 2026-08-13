@@ -11,13 +11,21 @@ const APPLE_MOBILE_DEVICES = [
 
 const { userAgent, platform, maxTouchPoints } = globalThis.navigator;
 
-// this detects ipad properly in safari
-// while bowser does not
-const isIOS = APPLE_MOBILE_DEVICES.includes(platform) || (userAgent.includes('Mac') && 'ontouchend' in document);
+// Vision Pro uniquely supports the WebXR Device API (navigator.xr),
+// while iPads and iPhones do not — this is the most reliable discriminator.
+// Both Vision Pro and iPads (iPadOS 13+) report 'Macintosh' in the UA
+// and have maxTouchPoints > 1, so we cannot rely on those alone.
+const isMacLikeWithTouch = userAgent.includes('Macintosh') && maxTouchPoints > 1;
+const isVisionOS = isMacLikeWithTouch && 'xr' in globalThis.navigator;
 
-// Edge case: iPad is included in this function
-// Keep in mind maxTouchPoints for Vision Pro might change in the future
-const isVisionOS = userAgent.includes('Macintosh') && maxTouchPoints === 5;
+// Detect iOS/iPadOS devices:
+// - Older iPads expose 'iPad' in navigator.platform
+// - iPadOS 13+ exposes 'MacIntel' but has touch support ('ontouchend' in document)
+// - Exclude Vision OS devices which also pass the touch check
+const isIOS = !isVisionOS && (
+    APPLE_MOBILE_DEVICES.includes(platform) ||
+    (userAgent.includes('Mac') && 'ontouchend' in document)
+);
 
 const bowser = Bowser.getParser(userAgent);
 const os = bowser.getOSName().toLowerCase();

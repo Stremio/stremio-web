@@ -1,9 +1,11 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useNavigate } = require('react-router');
 const { useTranslate } = require('stremio/common');
+const { default: toPath } = require('stremio-router/toPath');
 
-const mapSelectableInputs = (installedAddons, remoteAddons, t) => {
+const mapSelectableInputs = (installedAddons, remoteAddons, t, navigate) => {
     const selectedCatalog = remoteAddons.selectable.catalogs.concat(installedAddons.selectable.catalogs).find(({ selected }) => selected);
     const catalogSelect = {
         options: remoteAddons.selectable.catalogs
@@ -18,11 +20,12 @@ const mapSelectableInputs = (installedAddons, remoteAddons, t) => {
             () => {
                 const selectableCatalog = remoteAddons.selectable.catalogs
                     .find(({ id }) => id === remoteAddons.selected.request.path.id);
-                return selectableCatalog ? t.stringWithPrefix(selectableCatalog.name, 'ADDON_') : remoteAddons.selected.request.path.id;
+                return selectableCatalog ? t.stringWithPrefix(selectableCatalog.name.toUpperCase(), 'ADDON_') : remoteAddons.selected.request.path.id;
             }
-            : null,
+            :
+            null,
         onSelect: (value) => {
-            window.location = value;
+            navigate(toPath(value));
         }
     };
     const selectedType = installedAddons.selected !== null
@@ -53,7 +56,7 @@ const mapSelectableInputs = (installedAddons, remoteAddons, t) => {
                     t.string('SELECT_TYPE');
         },
         onSelect: (value) => {
-            window.location = value;
+            navigate(toPath(value));
         }
     };
     return [catalogSelect, typeSelect];
@@ -61,8 +64,9 @@ const mapSelectableInputs = (installedAddons, remoteAddons, t) => {
 
 const useSelectableInputs = (installedAddons, remoteAddons) => {
     const t = useTranslate();
+    const navigate = useNavigate();
     const selectableInputs = React.useMemo(() => {
-        return mapSelectableInputs(installedAddons, remoteAddons, t);
+        return mapSelectableInputs(installedAddons, remoteAddons, t, navigate);
     }, [installedAddons, remoteAddons]);
     return selectableInputs;
 };

@@ -1,9 +1,10 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React from 'react';
+import { Params } from 'react-router';
 import { useModelState } from 'stremio/common';
 
-const useCalendar = (urlParams: UrlParams) => {
+const useCalendar = (urlParams: Readonly<Params<string>>) => {
     const action = React.useMemo(() => {
         const args = urlParams.year && urlParams.month ? {
             year: parseInt(urlParams.year),

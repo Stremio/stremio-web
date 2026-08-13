@@ -55,6 +55,8 @@ html:not(.active-slider-within) {
         }
 
         &.nav-bar-layer {
+            left: var(--safe-area-inset-left);
+            right: var(--safe-area-inset-right);
             bottom: initial;
             background: transparent;
             overflow: visible;
@@ -64,9 +66,11 @@ html:not(.active-slider-within) {
                 right: 0;
                 top: 0;
                 left: 0;
+                height: 8rem;
                 z-index: -1;
-                box-shadow: 0 0 8rem 6rem @color-background-dark5;
                 content: "";
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, transparent 100%);
+                pointer-events: none;
             }
 
             .nav-bar-button-container {
@@ -93,17 +97,22 @@ html:not(.active-slider-within) {
         }
 
         &.control-bar-layer {
+            left: var(--safe-area-inset-left);
+            right: var(--safe-area-inset-right);
             top: initial;
             overflow: visible;
+            padding-bottom: calc(0.5rem + var(--safe-area-inset-bottom));
 
             &::before {
                 position: absolute;
                 right: 0;
                 bottom: 0;
                 left: 0;
+                height: 10rem;
                 z-index: -1;
-                box-shadow: 0 0 8rem 8rem @color-background-dark5;
                 content: "";
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, transparent 100%);
+                pointer-events: none;
             }
         }
 
@@ -118,8 +127,8 @@ html:not(.active-slider-within) {
             top: initial;
             left: initial;
             right: 4rem;
-            bottom: 8rem;
-            max-height: calc(100% - 13.5rem);
+            bottom: 7.5rem;
+            max-height: calc(100% - 13rem);
             max-width: calc(100% - 4rem);
             border-radius: var(--border-radius);
             background-color: var(--modal-background-color);
