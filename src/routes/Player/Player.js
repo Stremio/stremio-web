@@ -29,6 +29,7 @@ const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
+const { default: useCastDevice } = require('./useCastDevice');
 const { default: useKeyboardSeek } = require('./useKeyboardSeek');
 const useStatistics = require('./useStatistics');
 const useVideo = require('./useVideo');
@@ -139,10 +140,18 @@ const Player = () => {
             });
         }
     }, [platform.shell.active]);
+    const castSubtitlesUrl = React.useRef(null);
+    const { castStarted, setSubtitles: setCastSubtitles } = useCastDevice(streamingServer.baseUrl ?? null);
     const onCastDeviceSelected = React.useCallback((deviceId) => {
         playOnDevice(deviceId, video.state.time);
+        castStarted(deviceId);
+        // Stop the local playback right away, otherwise it keeps running until
+        // the PlayingOnDevice event arrives and the stream plays on both ends.
+        playingOnExternalDevice.current = true;
+        video.setPaused(true);
+        setCastSubtitles(castSubtitlesUrl.current);
         closeCastDevicesMenu();
-    }, [playOnDevice, video.state.time]);
+    }, [playOnDevice, castStarted, setCastSubtitles, video.state.time]);
     React.useEffect(() => {
         if (castDevicesMenuOpen && platform.shell.active) {
             setCastDevicesSearching(true);
@@ -174,6 +183,14 @@ const Player = () => {
         closeSubtitlesMenu,
         toggleSubtitlesMenu,
     });
+
+    React.useEffect(() => {
+        const track = extraSubtitleTracks.find(({ id }) => id === selectedExtraSubtitleTrackId);
+        castSubtitlesUrl.current = track?.fallbackUrl ?? track?.url ?? null;
+        if (playingOnExternalDevice.current) {
+            setCastSubtitles(castSubtitlesUrl.current);
+        }
+    }, [extraSubtitleTracks, selectedExtraSubtitleTrackId, setCastSubtitles]);
 
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
