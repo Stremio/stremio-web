@@ -789,8 +789,14 @@ const Player = () => {
 
     onShortcut('exit', () => {
         closeMenus();
-        !settings.escExitFullscreen && navigate(-1);
-    }, [settings.escExitFullscreen]);
+        // When escExitFullscreen is enabled, FullscreenProvider handles the first
+        // Escape press by leaving fullscreen. Only skip navigating back in that case,
+        // otherwise Escape would never exit the player in windowed mode.
+        if (settings.escExitFullscreen && fullscreen) {
+            return;
+        }
+        navigate(-1);
+    }, [settings.escExitFullscreen, fullscreen]);
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {
