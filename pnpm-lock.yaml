@@ -24,8 +24,8 @@ importers:
         specifier: 5.10.0
         version: 5.10.0
       '@stremio/stremio-video':
-        specifier: 0.0.90
-        version: 0.0.90
+        specifier: 0.0.93
+        version: 0.0.93
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1
@@ -1424,6 +1424,10 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
+  '@stremio/libass-wasm@https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.6/stremio-libass-wasm-4.2.6.tgz':
+    resolution: {integrity: sha512-oHIud2ukVu4/tfrQNrd8vzd6Su0zV8FCatLjuEznf533AW+hj59Eg1g9y2mllpd+GmXrSzf/DNr9jJhYQAg5Gg==, tarball: https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.6/stremio-libass-wasm-4.2.6.tgz}
+    version: 4.2.6
+
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
@@ -1434,8 +1438,8 @@ packages:
   '@stremio/stremio-icons@5.10.0':
     resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
 
-  '@stremio/stremio-video@0.0.90':
-    resolution: {integrity: sha512-5I4T6GRFaK9fbPwz98bBNScBNpWBSrczkFt+qmhEJ8Tq9INdaah5OQd+hsZTEJIs7dR28M5nvMHpB4owx1UWDg==}
+  '@stremio/stremio-video@0.0.93':
+    resolution: {integrity: sha512-/R6rHh/lekHK4ZjCeMb4O27iOXQo36jek0kfzbbpYw/3yXf9yWxX+LWK5hajBFeZWitOm8GMSnDlkb31LIeIeg==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6494,6 +6498,8 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
+  '@stremio/libass-wasm@https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.6/stremio-libass-wasm-4.2.6.tgz': {}
+
   '@stremio/stremio-colors@5.2.0': {}
 
   '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz':
@@ -6502,8 +6508,9 @@ snapshots:
 
   '@stremio/stremio-icons@5.10.0': {}
 
-  '@stremio/stremio-video@0.0.90':
+  '@stremio/stremio-video@0.0.93':
     dependencies:
+      '@stremio/libass-wasm': https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.6/stremio-libass-wasm-4.2.6.tgz
       buffer: 6.0.3
       color: 4.2.3
       deep-freeze: 0.0.1

@@ -226,7 +226,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         step={25}
                         min={SUBTITLES_SIZES[0]}
                         max={SUBTITLES_SIZES[SUBTITLES_SIZES.length - 1]}
-                        disabled={(props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
+                        disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
                         onChange={onSubtitlesSizeChanged}
                     />
                     <Stepper
@@ -237,7 +237,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         step={1}
                         min={0}
                         max={100}
-                        disabled={(props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
+                        disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
                         onChange={onSubtitlesOffsetChanged}
                     />
                 </div>
@@ -255,7 +255,8 @@ SubtitlesMenu.propTypes = {
     subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
-        origin: PropTypes.string.isRequired
+        origin: PropTypes.string.isRequired,
+        ass: PropTypes.bool
     })),
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesOffset: PropTypes.number,
@@ -268,12 +269,14 @@ SubtitlesMenu.propTypes = {
         url: PropTypes.string,
         embedded: PropTypes.bool,
         local: PropTypes.bool,
-        exclusive: PropTypes.bool
+        exclusive: PropTypes.bool,
+        ass: PropTypes.bool
     })),
     selectedExtraSubtitlesTrackId: PropTypes.string,
     extraSubtitlesOffset: PropTypes.number,
     extraSubtitlesDelay: PropTypes.number,
     extraSubtitlesSize: PropTypes.number,
+    assSubtitlesStylingActive: PropTypes.bool,
     onSubtitlesTrackSelected: PropTypes.func,
     onExtraSubtitlesTrackSelected: PropTypes.func,
     onSubtitlesOffsetChanged: PropTypes.func,

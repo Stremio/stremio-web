@@ -40,6 +40,7 @@ const useVideo = () => {
         extraSubtitlesTextColor: null,
         extraSubtitlesBackgroundColor: null,
         extraSubtitlesOutlineColor: null,
+        assSubtitlesStylingActive: false,
         fullscreen: null,
     });
 
