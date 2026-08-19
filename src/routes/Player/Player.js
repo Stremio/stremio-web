@@ -141,7 +141,7 @@ const Player = () => {
         }
     }, [platform.shell.active]);
     const castSubtitlesUrl = React.useRef(null);
-    const { castStarted, setSubtitles: setCastSubtitles } = useCastDevice(streamingServer.baseUrl ?? null);
+    const { castStarted, setSubtitles: setCastSubtitles } = useCastDevice();
     const onCastDeviceSelected = React.useCallback((deviceId) => {
         playOnDevice(deviceId, video.state.time);
         castStarted(deviceId);

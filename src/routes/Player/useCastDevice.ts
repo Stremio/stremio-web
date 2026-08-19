@@ -1,36 +1,11 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useCallback, useEffect, useRef } from 'react';
+import { useCore } from 'stremio/core';
 
-type PlayerState = {
-    source?: string | null,
-    subtitlesSrc?: string | null,
-    time?: number,
-    paused?: boolean,
-};
-
-// The streaming server exposes the stremio-cast protocol on
-// /casting/{deviceId}/player: a POST sets any of the player properties and
-// returns the full state of the remote player. Setting `source` to null stops
-// playback on the device.
-const playerUrl = (baseUrl: string, deviceId: string) => new URL(`casting/${deviceId}/player`, baseUrl).toString();
-
-const useCastDevice = (baseUrl: string | null) => {
+const useCastDevice = () => {
+    const core = useCore();
     const deviceId = useRef<string | null>(null);
-
-    const setPlayerState = useCallback((device: string, state: PlayerState) => {
-        if (!baseUrl) {
-            return Promise.resolve();
-        }
-
-        return fetch(playerUrl(baseUrl, device), {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(state),
-        }).then(() => undefined).catch((error) => {
-            console.error('CastDevice:', error);
-        });
-    }, [baseUrl]);
 
     const castStarted = useCallback((device: string) => {
         deviceId.current = device;
@@ -41,8 +16,17 @@ const useCastDevice = (baseUrl: string | null) => {
             return;
         }
 
-        setPlayerState(deviceId.current, { subtitlesSrc });
-    }, [setPlayerState]);
+        core.transport.dispatch({
+            action: 'StreamingServer',
+            args: {
+                action: 'SetDeviceSubtitles',
+                args: {
+                    device: deviceId.current,
+                    subtitlesSrc,
+                },
+            },
+        });
+    }, []);
 
     const stopCasting = useCallback(() => {
         const device = deviceId.current;
@@ -51,8 +35,16 @@ const useCastDevice = (baseUrl: string | null) => {
         }
 
         deviceId.current = null;
-        setPlayerState(device, { source: null });
-    }, [setPlayerState]);
+        core.transport.dispatch({
+            action: 'StreamingServer',
+            args: {
+                action: 'StopOnDevice',
+                args: {
+                    device,
+                },
+            },
+        });
+    }, []);
 
     useEffect(() => {
         return () => {
