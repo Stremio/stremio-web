@@ -69,6 +69,7 @@ type Player = {
         streamRequest: ResourceRequest,
         subtitlesPath: ResourceRequestPath,
     } | null,
+    stream: Loadable<SelectedStream> | null,
     seriesInfo: SeriesInfo | null,
     streamState: StreamState | null,
     subtitlePreference: SubtitlePreference | null,
