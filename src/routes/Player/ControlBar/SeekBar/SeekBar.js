@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
@@ -13,7 +14,9 @@ const styles = require('./styles');
 const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
+    const sliderRef = React.useRef(null);
     const [seekTime, setSeekTime] = React.useState(null);
+    const [hover, setHover] = React.useState(null);
 
     const [remainingTimeMode,,, toggleRemainingTimeMode] = useBinaryState(false);
     const resetTimeDebounced = React.useCallback(debounce(() => {
@@ -21,7 +24,20 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
     }, 1500), []);
     const onSlide = React.useCallback((time) => {
         resetTimeDebounced.cancel();
+        setHover(null);
         setSeekTime(time);
+    }, []);
+    const onMouseMove = React.useCallback((event) => {
+        if (disabled || sliderRef.current === null) {
+            return;
+        }
+
+        const { x, y, width } = sliderRef.current.getBoundingClientRect();
+        const position = Math.min(Math.max((event.clientX - x) / width, 0), 1);
+        setHover({ time: position * duration, x: x + position * width, y });
+    }, [disabled, duration]);
+    const onMouseLeave = React.useCallback(() => {
+        setHover(null);
     }, []);
     const onComplete = React.useCallback((time) => {
         resetTimeDebounced();
@@ -34,6 +50,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
         if (!routeFocused || disabled) {
             resetTimeDebounced.cancel();
             setSeekTime(null);
+            setHover(null);
         }
     }, [routeFocused, disabled]);
     React.useEffect(() => {
@@ -44,21 +61,34 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
     return (
         <div className={classnames(className, styles['seek-bar-container'], { 'active': seekTime !== null })}>
             <div className={styles['label']}>{formatTime(seekTime !== null ? seekTime : time)}</div>
-            <Slider
-                className={classnames(styles['slider'], { 'active': seekTime !== null })}
-                value={
-                    !disabled ?
-                        seekTime !== null ? seekTime : time
+            <div ref={sliderRef} className={styles['slider-wrapper']} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
+                <Slider
+                    className={classnames(styles['slider'], { 'active': seekTime !== null })}
+                    value={
+                        !disabled ?
+                            seekTime !== null ? seekTime : time
+                            :
+                            0
+                    }
+                    buffered={buffered}
+                    minimumValue={0}
+                    maximumValue={duration}
+                    disabled={disabled}
+                    onSlide={onSlide}
+                    onComplete={onComplete}
+                />
+                {
+                    hover !== null && seekTime === null && !disabled ?
+                        ReactDOM.createPortal(
+                            <div className={styles['seek-tooltip']} style={{ left: `${hover.x}px`, top: `${hover.y}px` }}>
+                                {formatTime(hover.time)}
+                            </div>,
+                            document.body
+                        )
                         :
-                        0
+                        null
                 }
-                buffered={buffered}
-                minimumValue={0}
-                maximumValue={duration}
-                disabled={disabled}
-                onSlide={onSlide}
-                onComplete={onComplete}
-            />
+            </div>
             <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
                 <div className={styles['label']}>
                     {remainingTimeMode && duration !== null && !isNaN(duration)
