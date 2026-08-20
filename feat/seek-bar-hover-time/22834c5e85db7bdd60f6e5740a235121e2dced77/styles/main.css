@@ -6986,7 +6986,7 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
   color: var(--primary-foreground-color);
   border-radius: var(--border-radius);
   background-color: var(--modal-background-color);
-  box-shadow: var(--outer-glow);
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
 @media (hover: none) {
