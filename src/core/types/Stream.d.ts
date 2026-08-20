@@ -9,7 +9,7 @@ type Stream = {
     name: string,
     description: string,
     infoHash?: string,
-    fileIdx?: string,
+    fileIdx?: number,
     url?: string,
     externalUrl?: string,
     deepLinks?: {
