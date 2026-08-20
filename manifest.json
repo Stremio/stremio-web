@@ -2,7 +2,7 @@
     "name": "Stremio Web",
     "short_name": "Stremio",
     "description": "Freedom To Stream",
-    "background_color": "#161523",
+    "background_color": "#0c0b11",
     "theme_color": "#2a2843",
     "orientation": "any",
     "display": "standalone",
