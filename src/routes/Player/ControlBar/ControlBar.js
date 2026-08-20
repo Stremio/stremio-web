@@ -196,7 +196,7 @@ const ControlBar = React.forwardRef(({
                             null
                     }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
-                        <Icon className={styles['icon']} name={'scale'} />
+                        <Icon className={styles['icon']} name={'aspect-ratio'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
