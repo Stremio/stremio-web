@@ -19,6 +19,7 @@ const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
+const SkipIntroButton = require('./SkipIntroButton');
 const StatisticsMenu = require('./StatisticsMenu');
 const OptionsMenu = require('./OptionsMenu');
 const { default: CastDevicesMenu } = require('./CastDevicesMenu');
@@ -28,6 +29,7 @@ const SpeedMenu = require('./SpeedMenu');
 const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
+const useIntroTimestamps = require('./useIntroTimestamps');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
 const { default: useKeyboardSeek } = require('./useKeyboardSeek');
 const useStatistics = require('./useStatistics');
@@ -70,6 +72,7 @@ const Player = () => {
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
+    const introTimestamps = useIntroTimestamps(player, video.state.duration);
     const routeFocused = useRouteFocused();
     const platform = usePlatform();
     const toast = useToast();
@@ -267,6 +270,14 @@ const Player = () => {
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
     }, [video.state.duration, video.state.manifest]);
+
+    const onSkipIntro = React.useCallback(() => {
+        if (introTimestamps && introTimestamps.endMs !== null) {
+            video.setTime(introTimestamps.endMs);
+            seek(introTimestamps.endMs, video.state.duration, video.state.manifest?.name);
+        }
+    }, [introTimestamps, video.state.duration, video.state.manifest]);
+
     const {
         time: keyboardSeekTime,
         seekBy: seekByKeyboard,
@@ -288,6 +299,12 @@ const Player = () => {
     const overlayHidden = React.useMemo(() => {
         return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
     }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
+
+    const showSkipIntro = React.useMemo(() => {
+        if (!introTimestamps || video.state.time === null) return false;
+        const timeMs = video.state.time;
+        return timeMs >= introTimestamps.startMs && timeMs <= introTimestamps.endMs;
+    }, [introTimestamps, video.state.time]);
 
     React.useEffect(() => {
         if (!video.state.manifest?.props.includes('subtitlesOffsetMinimum')) {
@@ -1071,6 +1088,15 @@ const Player = () => {
                 videoState={video.state}
                 disabled={subtitlesMenuOpen}
             />
+            {
+                showSkipIntro ?
+                    <SkipIntroButton
+                        className={classnames(styles['layer'], styles['skip-intro-layer'])}
+                        onClick={onSkipIntro}
+                    />
+                    :
+                    null
+            }
             {
                 nextVideoPopupOpen ?
                     <NextVideoPopup
