@@ -6950,6 +6950,7 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
   flex: 1;
   align-self: stretch;
   margin: 0 var(--thumb-size);
+  overflow: visible;
 }
 .seek-bar-container-JGGTa .slider-hBDOf {
   height: 100%;
@@ -6985,7 +6986,7 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
   color: var(--primary-foreground-color);
   border-radius: var(--border-radius);
   background-color: var(--modal-background-color);
-  box-shadow: 0 1.35rem 2.7rem hsla(0, 0%, 0%, 0.4), 0 1.1rem 0.85rem hsla(0, 0%, 0%, 0.2);
+  box-shadow: var(--outer-glow);
   pointer-events: none;
 }
 @media (hover: none) {
