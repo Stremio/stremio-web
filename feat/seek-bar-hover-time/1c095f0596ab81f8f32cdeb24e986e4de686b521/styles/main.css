@@ -6949,23 +6949,7 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
 .seek-bar-container-JGGTa .slider-wrapper-ITGnj {
   flex: 1;
   align-self: stretch;
-  position: relative;
   margin: 0 var(--thumb-size);
-}
-.seek-bar-container-JGGTa .hover-label-Ufrku {
-  position: absolute;
-  bottom: calc(100% + 0.5rem);
-  transform: translateX(-50%);
-  padding: 0.4rem 0.8rem;
-  font-size: 1.1rem;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  color: var(--primary-foreground-color);
-  border-radius: var(--border-radius);
-  background-color: var(--modal-background-color);
-  box-shadow: 0 1.35rem 2.7rem hsla(0, 0%, 0%, 0.4), 0 1.1rem 0.85rem hsla(0, 0%, 0%, 0.2);
-  backdrop-filter: blur(15px);
-  pointer-events: none;
 }
 .seek-bar-container-JGGTa .slider-hBDOf {
   height: 100%;
@@ -6990,6 +6974,24 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
 }
 .seek-bar-container-JGGTa .slider-hBDOf:hover .thumb-PiTF5 {
   transform: translateX(-50%) scale(1.2);
+}
+.seek-tooltip-S1FKs {
+  position: fixed;
+  transform: translate(-50%, calc(-100% - 1rem));
+  padding: 0.4rem 0.8rem;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--primary-foreground-color);
+  border-radius: var(--border-radius);
+  background-color: var(--modal-background-color);
+  box-shadow: 0 1.35rem 2.7rem hsla(0, 0%, 0%, 0.4), 0 1.1rem 0.85rem hsla(0, 0%, 0%, 0.2);
+  pointer-events: none;
+}
+@media (hover: none) {
+  .seek-tooltip-S1FKs {
+    display: none;
+  }
 }
 
 .control-bar-container-xsWA7 {
