@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=0,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Stremio"><meta name="theme-color" content="#2a2843"><link rel="icon" type="image/x-icon" href="favicons/favicon.ico"><link rel="apple-touch-icon" href="images/icon_196x196.png"><link rel="manifest" href="manifest.json"/><title>Stremio - Freedom to Stream</title><style>#launch-screen {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 32px;
+            background: linear-gradient(41deg, rgba(12, 11, 17, 1) 0%, rgba(26, 23, 62, 1) 100%);
+            transition: opacity 0.25s ease-out;
+        }
+
+        #launch-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #launch-screen .logo {
+            flex: none;
+            width: 128px;
+            height: 128px;
+            object-fit: contain;
+            object-position: center;
+            animation: 1s linear infinite alternate launch-screen-pulse;
+        }
+
+        #launch-screen .progress {
+            position: relative;
+            width: 288px;
+            max-width: 100%;
+            height: 6px;
+            margin-top: 4px;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        #launch-screen .progress-value {
+            width: 40%;
+            height: 100%;
+            border-radius: inherit;
+            background-color: rgb(123, 91, 245);
+            animation: 1.2s ease-in-out infinite launch-screen-progress;
+        }
+
+        @keyframes launch-screen-pulse {
+            0% {
+                opacity: 0.55;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes launch-screen-progress {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(250%);
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            #launch-screen {
+                gap: 16px;
+                padding: 24px;
+            }
+
+            #launch-screen .logo {
+                width: 104px;
+                height: 104px;
+            }
+
+            #launch-screen .progress {
+                width: 240px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #launch-screen .logo {
+                animation: none;
+            }
+
+            #launch-screen .progress-value {
+                width: 100%;
+                opacity: 0.65;
+                animation: none;
+            }
+        }</style><link href="ca3c0f1f7f5f07bea26f848f981a14abb5fe9299/styles/main.css" rel="stylesheet"></head><body><div id="launch-screen" role="status" aria-label="Loading"><img class="logo" src="images/stremio_symbol.png" alt=""><div class="progress"><div class="progress-value"></div></div></div><div id="app"></div><script src="ca3c0f1f7f5f07bea26f848f981a14abb5fe9299/scripts/main.js"></script><script src="ca3c0f1f7f5f07bea26f848f981a14abb5fe9299/scripts/worker.js"></script><script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script><script async src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script></body></html>
