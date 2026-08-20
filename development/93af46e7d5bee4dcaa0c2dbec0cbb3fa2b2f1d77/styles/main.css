@@ -7226,6 +7226,7 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
   flex-direction: column;
   gap: 1.5rem;
   width: 30rem;
+  max-width: 100%;
   padding: 1.5rem;
 }
 .statistics-menu-container-DhiHn .title-NCwWH {
@@ -7241,28 +7242,60 @@ html.active-slider-within-NcgYf{cursor:grabbing}html.active-slider-within-NcgYf 
 }
 .statistics-menu-container-DhiHn .value-E8Ftb {
   flex: none;
-  font-weight: 500;
+  margin-top: 0.25rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: var(--primary-foreground-color);
 }
 .statistics-menu-container-DhiHn .stats-Tr37t {
   flex: auto;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 1.5rem;
 }
 .statistics-menu-container-DhiHn .stats-Tr37t .stat-zoq5A {
-  flex: auto;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
+  min-width: 0;
 }
-.statistics-menu-container-DhiHn .info-hash-GT1Cv {
+.statistics-menu-container-DhiHn .detail-IxuFV {
   flex: auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  text-align: left;
+  transition: background-color 150ms ease;
+}
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA:hover,
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA:focus {
+  background-color: var(--overlay-color);
+}
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA .hash-nCEji {
+  flex: 1;
+  min-width: 0;
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--primary-foreground-color);
+  overflow-wrap: anywhere;
+}
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA .copy-label-dEFMV {
+  flex: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-foreground-color);
+  opacity: 0.5;
+  transition: opacity 150ms ease;
+}
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA:hover .copy-label-dEFMV,
+.statistics-menu-container-DhiHn .detail-IxuFV .copyable-value-qxrBA:focus .copy-label-dEFMV {
+  opacity: 1;
 }
 
 .option-container-m_jZq {
