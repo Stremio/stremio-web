@@ -17,3 +17,17 @@
         opacity: 0.5;
     }
 }
+
+@media (pointer: coarse) {
+    .button-container {
+        transition: scale 100ms ease-out;
+
+        &:active:not(:global(.active)) {
+            scale: 0.97;
+        }
+
+        &:global(.active) {
+            transition: none;
+        }
+    }
+}
