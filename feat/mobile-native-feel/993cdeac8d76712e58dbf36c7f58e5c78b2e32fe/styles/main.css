@@ -13,10 +13,10 @@
 }
 @media (pointer: coarse) {
   .button-container-zVLH6 {
-    transition: transform 100ms ease-out;
+    transition: scale 100ms ease-out;
   }
   .button-container-zVLH6:active {
-    transform: scale(0.97);
+    scale: 0.97;
   }
 }
 
