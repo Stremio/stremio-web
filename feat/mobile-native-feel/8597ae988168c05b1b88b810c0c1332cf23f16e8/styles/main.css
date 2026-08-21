@@ -3989,6 +3989,12 @@ kbd {
   .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .board-row-CoJrZ {
     margin-bottom: 1.5rem;
   }
+  .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .board-row-poster-QPQqC .meta-item-QFHCh:not(:empty),
+  .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .board-row-square-pgaZ3 .meta-item-QFHCh:not(:empty),
+  .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .continue-watching-row-ZiNSa .meta-item-QFHCh:not(:empty),
+  .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .board-row-landscape-FRGXx .meta-item-QFHCh:not(:empty) {
+    display: block;
+  }
   .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .board-row-poster-QPQqC .meta-item-iOgzp:nth-child(n+4),
   .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .board-row-square-pgaZ3 .meta-item-iOgzp:nth-child(n+4),
   .board-container-DTN_b .board-content-container-ToQTz .board-content-nPWv1 .continue-watching-row-ZiNSa .meta-item-iOgzp:nth-child(n+4) {
@@ -6152,6 +6158,11 @@ kbd {
 @media only screen and (max-width: 640px) {
   .search-container-uXEFf .search-content-LX6un .search-row-EQLaD {
     margin-bottom: 1.5rem;
+  }
+  .search-container-uXEFf .search-content-LX6un .search-row-poster-m7CUE .meta-item-QFHCh:not(:empty),
+  .search-container-uXEFf .search-content-LX6un .search-row-square-VesJA .meta-item-QFHCh:not(:empty),
+  .search-container-uXEFf .search-content-LX6un .search-row-landscape-o3Lfv .meta-item-QFHCh:not(:empty) {
+    display: block;
   }
   .search-container-uXEFf .search-content-LX6un .search-row-poster-m7CUE .meta-item-iOgzp:nth-child(n+4),
   .search-container-uXEFf .search-content-LX6un .search-row-square-VesJA .meta-item-iOgzp:nth-child(n+4) {
