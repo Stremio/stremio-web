@@ -8955,6 +8955,10 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
 svg {
   overflow: visible;
 }
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.15s;
+}
 html {
   width: calc(max(var(--small-viewport-width), var(--dynamic-viewport-width)));
   height: calc(max(var(--small-viewport-height), var(--dynamic-viewport-height)));
