@@ -282,11 +282,11 @@ const useSubtitles = ({
     }, [streamStateChanged, video]);
 
     const increaseDelay = useCallback(() => {
-        changeDelay((video.state.extraSubtitlesDelay ?? 0) + 250);
+        changeDelay((video.state.extraSubtitlesDelay ?? 0) + 100);
     }, [changeDelay, video.state.extraSubtitlesDelay]);
 
     const decreaseDelay = useCallback(() => {
-        changeDelay((video.state.extraSubtitlesDelay ?? 0) - 250);
+        changeDelay((video.state.extraSubtitlesDelay ?? 0) - 100);
     }, [changeDelay, video.state.extraSubtitlesDelay]);
 
     const changeSize = useCallback((size: number) => {

@@ -118,7 +118,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
         if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay)) {
                 if (typeof props.onExtraSubtitlesDelayChanged === 'function') {
-                    props.onExtraSubtitlesDelayChanged(value * 1000);
+                    props.onExtraSubtitlesDelayChanged(Math.round(value * 1000));
                 }
             }
         }
@@ -214,7 +214,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         label={'DELAY'}
                         value={props.extraSubtitlesDelay / 1000}
                         unit={'s'}
-                        step={0.25}
+                        step={0.1}
                         disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
