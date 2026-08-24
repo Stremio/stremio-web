@@ -163,12 +163,14 @@ const Player = () => {
         extraSubtitleTracks,
         selectedExtraSubtitleTrackId,
         subtitlesMenuProps,
+        cancelSubtitleSync,
     } = useSubtitles({
         player,
         video,
         settings,
         streamStateChanged,
         subtitlePreferenceChanged,
+        seeking,
         menusOpen,
         closeMenus,
         closeSubtitlesMenu,
@@ -264,9 +266,10 @@ const Player = () => {
     }, []);
 
     const commitSeek = React.useCallback((time) => {
+        cancelSubtitleSync();
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
-    }, [video.state.duration, video.state.manifest]);
+    }, [cancelSubtitleSync, video.state.duration, video.state.manifest]);
     const {
         time: keyboardSeekTime,
         seekBy: seekByKeyboard,

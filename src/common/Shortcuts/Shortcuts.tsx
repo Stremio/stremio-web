@@ -47,7 +47,9 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
             lastRepeatTime.current.set(repeatKey, now);
         }
 
-        SHORTCUTS.forEach(({ name, combos }) => combos.forEach((keys) => {
+        SHORTCUTS.forEach(({ name, combos, repeat = true }) => combos.forEach((keys) => {
+            if (event.repeat && !repeat) return;
+
             const modifers = (keys.includes('Ctrl') === ctrlKey)
                 && (keys.includes('Shift') === shiftKey)
                 && !altKey

@@ -6,6 +6,7 @@ const classnames = require('classnames');
 const { languages } = require('stremio/common');
 const { SUBTITLES_SIZES, DEFAULT_SUBTITLES_LANGUAGE, LOCAL_SUBTITLES_LANGUAGE } = require('stremio/common/CONSTANTS');
 const { Button } = require('stremio/components');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const styles = require('./styles');
 const { t } = require('i18next');
 const { default: Stepper } = require('./Stepper');
@@ -79,6 +80,10 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
         const tracks = allSubtitles.filter(({ lang }) => lang === selectedSubtitlesLanguage);
         return sortByValues(tracks, ORIGIN_PRIORITIES);
     }, [allSubtitles, selectedSubtitlesLanguage]);
+    const subtitleSyncResetDisabled = typeof props.selectedExtraSubtitlesTrackId !== 'string' ||
+        props.extraSubtitlesDelay === null ||
+        isNaN(props.extraSubtitlesDelay) ||
+        (props.extraSubtitlesDelay === 0 && props.subtitleSyncMark === null);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -218,6 +223,48 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
+                    <div className={styles['live-sync']}>
+                        <div className={styles['live-sync-header']}>
+                            <div className={styles['live-sync-label']}>{t('SUBTITLES_LIVE_SYNC_SHORT')}</div>
+                            <Button
+                                className={classnames(styles['live-sync-reset'], { 'disabled': subtitleSyncResetDisabled })}
+                                title={t('SUBTITLES_LIVE_SYNC_RESET')}
+                                aria-label={t('SUBTITLES_LIVE_SYNC_RESET')}
+                                disabled={subtitleSyncResetDisabled}
+                                onClick={props.onSubtitleSyncReset}
+                            >
+                                <Icon className={styles['live-sync-reset-icon']} name={'reset'} />
+                            </Button>
+                        </div>
+                        <div className={styles['live-sync-buttons']}>
+                            <Button
+                                className={classnames(styles['live-sync-button'], {
+                                    'disabled': !props.subtitleSyncAvailable,
+                                    [styles['selected']]: props.subtitleSyncMark === 'audio',
+                                })}
+                                role={'button'}
+                                aria-pressed={props.subtitleSyncMark === 'audio'}
+                                disabled={!props.subtitleSyncAvailable}
+                                onClick={props.onSubtitleSyncAudioMarked}
+                            >
+                                <Icon className={styles['live-sync-button-icon']} name={'volume-high'} />
+                                <span className={styles['live-sync-button-label']}>{t('SUBTITLES_LIVE_SYNC_AUDIO_HEARD')}</span>
+                            </Button>
+                            <Button
+                                className={classnames(styles['live-sync-button'], {
+                                    'disabled': !props.subtitleSyncAvailable,
+                                    [styles['selected']]: props.subtitleSyncMark === 'subtitle',
+                                })}
+                                role={'button'}
+                                aria-pressed={props.subtitleSyncMark === 'subtitle'}
+                                disabled={!props.subtitleSyncAvailable}
+                                onClick={props.onSubtitleSyncSubtitleMarked}
+                            >
+                                <Icon className={styles['live-sync-button-icon']} name={'subtitles'} />
+                                <span className={styles['live-sync-button-label']}>{t('SUBTITLES_LIVE_SYNC_SUBTITLE_SEEN')}</span>
+                            </Button>
+                        </div>
+                    </div>
                     <Stepper
                         className={styles['stepper']}
                         label={'SIZE'}
@@ -277,13 +324,18 @@ SubtitlesMenu.propTypes = {
     extraSubtitlesDelay: PropTypes.number,
     extraSubtitlesSize: PropTypes.number,
     assSubtitlesStylingActive: PropTypes.bool,
+    subtitleSyncAvailable: PropTypes.bool,
+    subtitleSyncMark: PropTypes.oneOf(['audio', 'subtitle']),
     onSubtitlesTrackSelected: PropTypes.func,
     onExtraSubtitlesTrackSelected: PropTypes.func,
     onSubtitlesOffsetChanged: PropTypes.func,
     onSubtitlesSizeChanged: PropTypes.func,
     onExtraSubtitlesOffsetChanged: PropTypes.func,
     onExtraSubtitlesDelayChanged: PropTypes.func,
-    onExtraSubtitlesSizeChanged: PropTypes.func
+    onExtraSubtitlesSizeChanged: PropTypes.func,
+    onSubtitleSyncAudioMarked: PropTypes.func,
+    onSubtitleSyncSubtitleMarked: PropTypes.func,
+    onSubtitleSyncReset: PropTypes.func
 };
 
 module.exports = SubtitlesMenu;

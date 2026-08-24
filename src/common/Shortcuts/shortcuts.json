@@ -75,6 +75,18 @@
                 "combos": [["G"], ["H"]]
             },
             {
+                "name": "subtitlesSyncAudio",
+                "label": "SUBTITLES_LIVE_SYNC_AUDIO_HEARD",
+                "combos": [["Shift", "H"]],
+                "repeat": false
+            },
+            {
+                "name": "subtitlesSyncSubtitle",
+                "label": "SUBTITLES_LIVE_SYNC_SUBTITLE_SEEN",
+                "combos": [["Shift", "J"]],
+                "repeat": false
+            },
+            {
                 "name": "speed",
                 "label": "SETTINGS_SHORTCUT_PLAYBACK_SPEED",
                 "combos": [["["], ["]"]]

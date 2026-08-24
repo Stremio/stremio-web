@@ -2,6 +2,7 @@ type Shortcut = {
     name: string,
     label: string,
     combos: string[][],
+    repeat?: boolean,
 };
 
 type ShortcutGroup = {

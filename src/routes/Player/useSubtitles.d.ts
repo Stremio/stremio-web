@@ -22,6 +22,9 @@ type SelectedSubtitleTrack = {
 
 type VideoSubtitleState = {
     stream: unknown | null,
+    paused: boolean | null,
+    buffering: boolean | null,
+    playbackSpeed: number | null,
     subtitlesTracks: SubtitleTrack[],
     selectedSubtitlesTrackId: string | null,
     subtitlesOffset: number | null,
@@ -60,6 +63,7 @@ type UseSubtitlesArgs = {
     settings: Settings,
     streamStateChanged: (state: Partial<StreamState>) => void,
     subtitlePreferenceChanged: (preference: SubtitlePreference) => void,
+    seeking: boolean,
     menusOpen: boolean,
     closeMenus: () => void,
     closeSubtitlesMenu: () => void,
@@ -79,6 +83,8 @@ type SubtitlesMenuProps = {
     extraSubtitlesDelay: number | null,
     extraSubtitlesSize: number | null,
     assSubtitlesStylingActive: boolean,
+    subtitleSyncAvailable: boolean,
+    subtitleSyncMark: 'audio' | 'subtitle' | null,
     onSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
     onExtraSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
     onSubtitlesOffsetChanged: (offset: number) => void,
@@ -86,6 +92,9 @@ type SubtitlesMenuProps = {
     onExtraSubtitlesOffsetChanged: (offset: number) => void,
     onExtraSubtitlesDelayChanged: (delay: number) => void,
     onExtraSubtitlesSizeChanged: (size: number) => void,
+    onSubtitleSyncAudioMarked: () => void,
+    onSubtitleSyncSubtitleMarked: () => void,
+    onSubtitleSyncReset: () => void,
 };
 
 type UseSubtitlesResult = {
@@ -94,4 +103,5 @@ type UseSubtitlesResult = {
     extraSubtitleTracks: SubtitleTrack[],
     selectedExtraSubtitleTrackId: string | null,
     subtitlesMenuProps: SubtitlesMenuProps,
+    cancelSubtitleSync: () => void,
 };

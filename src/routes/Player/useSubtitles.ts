@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
 
@@ -54,6 +54,16 @@ type ResolvedSubtitleCandidate = {
     rank: number,
     track: SubtitleTrack,
 };
+
+type SubtitleSync = {
+    audioHeardAt: number | null,
+    subtitleSeenAt: number | null,
+    baseDelay: number,
+    playbackSpeed: number,
+    trackId: string,
+};
+
+type SubtitleSyncMark = 'audio' | 'subtitle';
 
 const candidateMatchesTrack = (
     candidate: SubtitleCandidate,
@@ -164,6 +174,7 @@ const useSubtitles = ({
     settings,
     streamStateChanged,
     subtitlePreferenceChanged,
+    seeking,
     menusOpen,
     closeMenus,
     closeSubtitlesMenu,
@@ -176,9 +187,16 @@ const useSubtitles = ({
     const trackSelectionLocked = useRef(false);
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
+    const subtitleSync = useRef<SubtitleSync | null>(null);
+    const [subtitleSyncMark, setSubtitleSyncMark] = useState<SubtitleSyncMark | null>(null);
 
     videoRef.current = video;
     settingsRef.current = settings;
+
+    const cancelSubtitleSync = useCallback(() => {
+        subtitleSync.current = null;
+        setSubtitleSyncMark(null);
+    }, []);
 
     const streamSubtitles = useMemo(() => {
         return withFallbackLabels(player.selected?.stream.subtitles);
@@ -277,9 +295,70 @@ const useSubtitles = ({
     }, [disableSubtitles, rememberTrack, video]);
 
     const changeDelay = useCallback((delay: number) => {
+        cancelSubtitleSync();
         video.setSubtitlesDelay(delay);
         streamStateChanged({ subtitleDelay: delay });
-    }, [streamStateChanged, video]);
+    }, [cancelSubtitleSync, streamStateChanged, video]);
+
+    const subtitleSyncAvailable = typeof video.state.selectedExtraSubtitlesTrackId === 'string' &&
+        typeof video.state.extraSubtitlesDelay === 'number' &&
+        Number.isFinite(video.state.extraSubtitlesDelay) &&
+        video.state.paused === false &&
+        video.state.buffering === false &&
+        typeof video.state.playbackSpeed === 'number' &&
+        Number.isFinite(video.state.playbackSpeed) &&
+        video.state.playbackSpeed > 0 &&
+        !seeking;
+
+    const markSubtitleSync = useCallback((mark: SubtitleSyncMark) => {
+        if (!subtitleSyncAvailable) return;
+
+        const baseDelay = video.state.extraSubtitlesDelay as number;
+        const playbackSpeed = video.state.playbackSpeed as number;
+        const trackId = video.state.selectedExtraSubtitlesTrackId as string;
+        const current = subtitleSync.current;
+        const sync = current &&
+            current.baseDelay === baseDelay &&
+            current.playbackSpeed === playbackSpeed &&
+            current.trackId === trackId ?
+            current
+            :
+            {
+                audioHeardAt: null,
+                subtitleSeenAt: null,
+                baseDelay,
+                playbackSpeed,
+                trackId,
+            };
+        const markedAt = performance.now();
+        const next = mark === 'audio' ?
+            { ...sync, audioHeardAt: markedAt }
+            :
+            { ...sync, subtitleSeenAt: markedAt };
+
+        if (next.audioHeardAt !== null && next.subtitleSeenAt !== null) {
+            changeDelay(Math.round(
+                next.baseDelay +
+                (next.audioHeardAt - next.subtitleSeenAt) * next.playbackSpeed,
+            ));
+            return;
+        }
+
+        subtitleSync.current = next;
+        setSubtitleSyncMark(mark);
+    }, [changeDelay, subtitleSyncAvailable, video.state.extraSubtitlesDelay, video.state.playbackSpeed, video.state.selectedExtraSubtitlesTrackId]);
+
+    const markSubtitleSyncAudio = useCallback(() => {
+        markSubtitleSync('audio');
+    }, [markSubtitleSync]);
+
+    const markSubtitleSyncSubtitle = useCallback(() => {
+        markSubtitleSync('subtitle');
+    }, [markSubtitleSync]);
+
+    const resetSubtitleSync = useCallback(() => {
+        changeDelay(0);
+    }, [changeDelay]);
 
     const increaseDelay = useCallback(() => {
         changeDelay((video.state.extraSubtitlesDelay ?? 0) + 250);
@@ -310,6 +389,20 @@ const useSubtitles = ({
     onFileDrop(CONSTANTS.SUPPORTED_LOCAL_SUBTITLES, (file: File, buffer: ArrayBuffer) => {
         videoRef.current.addLocalSubtitles(file.name, buffer);
     });
+
+    useEffect(() => {
+        cancelSubtitleSync();
+    }, [
+        cancelSubtitleSync,
+        seeking,
+        video.state.buffering,
+        video.state.extraSubtitlesDelay,
+        video.state.paused,
+        video.state.playbackSpeed,
+        video.state.selectedExtraSubtitlesTrackId,
+        video.state.selectedSubtitlesTrackId,
+        video.state.stream,
+    ]);
 
     useEffect(() => {
         if (video.state.stream !== null) {
@@ -481,6 +574,10 @@ const useSubtitles = ({
         combo === 1 ? increaseDelay() : decreaseDelay();
     }, [increaseDelay, decreaseDelay], !menusOpen);
 
+    onShortcut('subtitlesSyncAudio', markSubtitleSyncAudio, [markSubtitleSyncAudio], !menusOpen && subtitleSyncAvailable);
+
+    onShortcut('subtitlesSyncSubtitle', markSubtitleSyncSubtitle, [markSubtitleSyncSubtitle], !menusOpen && subtitleSyncAvailable);
+
     onShortcut('subtitlesSize', (combo) => {
         combo === 1 ? updateSize(1) : updateSize(-1);
     }, [updateSize], !menusOpen);
@@ -561,6 +658,8 @@ const useSubtitles = ({
         extraSubtitlesDelay: video.state.extraSubtitlesDelay,
         extraSubtitlesSize: video.state.extraSubtitlesSize,
         assSubtitlesStylingActive: video.state.assSubtitlesStylingActive,
+        subtitleSyncAvailable,
+        subtitleSyncMark,
         onSubtitlesTrackSelected: selectEmbeddedTrack,
         onExtraSubtitlesTrackSelected: selectExtraTrack,
         onSubtitlesOffsetChanged: changeOffset,
@@ -568,10 +667,16 @@ const useSubtitles = ({
         onExtraSubtitlesOffsetChanged: changeOffset,
         onExtraSubtitlesDelayChanged: changeDelay,
         onExtraSubtitlesSizeChanged: changeSize,
+        onSubtitleSyncAudioMarked: markSubtitleSyncAudio,
+        onSubtitleSyncSubtitleMarked: markSubtitleSyncSubtitle,
+        onSubtitleSyncReset: resetSubtitleSync,
     }), [
         changeDelay,
         changeOffset,
         changeSize,
+        markSubtitleSyncAudio,
+        markSubtitleSyncSubtitle,
+        resetSubtitleSync,
         selectEmbeddedTrack,
         selectExtraTrack,
         settings.interfaceLanguage,
@@ -586,6 +691,8 @@ const useSubtitles = ({
         video.state.subtitlesOffset,
         video.state.subtitlesSize,
         video.state.subtitlesTracks,
+        subtitleSyncAvailable,
+        subtitleSyncMark,
     ]);
 
     return {
@@ -594,6 +701,7 @@ const useSubtitles = ({
         extraSubtitleTracks: video.state.extraSubtitlesTracks,
         selectedExtraSubtitleTrackId: video.state.selectedExtraSubtitlesTrackId,
         subtitlesMenuProps: menuProps,
+        cancelSubtitleSync,
     };
 };
 
