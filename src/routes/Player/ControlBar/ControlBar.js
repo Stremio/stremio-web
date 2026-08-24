@@ -12,6 +12,12 @@ const styles = require('./styles');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
+const VIDEO_SCALE_ICONS = {
+    contain: 'video-scale-fit',
+    cover: 'video-scale-crop',
+    fill: 'video-scale-stretch'
+};
+
 const ControlBar = React.forwardRef(({
     className,
     paused,
@@ -199,7 +205,7 @@ const ControlBar = React.forwardRef(({
                             null
                     }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
-                        <Icon className={styles['icon']} name={'aspect-ratio'} />
+                        <Icon className={styles['icon']} name={VIDEO_SCALE_ICONS[videoScale || 'contain']} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
