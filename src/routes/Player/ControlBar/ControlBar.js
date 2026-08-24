@@ -12,10 +12,10 @@ const styles = require('./styles');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
-const VIDEO_SCALE_RATIOS = {
-    contain: '16:9',
-    cover: '4:3',
-    fill: '1:1'
+const VIDEO_SCALE_ICONS = {
+    contain: 'video-scale-fit',
+    cover: 'video-scale-crop',
+    fill: 'video-scale-stretch'
 };
 
 const ControlBar = React.forwardRef(({
@@ -205,12 +205,7 @@ const ControlBar = React.forwardRef(({
                             null
                     }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
-                        <svg className={styles['icon']} viewBox={'0 0 512 512'} aria-hidden={true}>
-                            <rect x={'48'} y={'100'} width={'416'} height={'312'} rx={'40'} fill={'none'} stroke={'currentColor'} strokeWidth={'32'} />
-                            <text className={styles['video-scale-ratio']} x={'256'} y={'256'} fill={'currentColor'} fontWeight={'600'} textAnchor={'middle'} dominantBaseline={'central'}>
-                                {VIDEO_SCALE_RATIOS[videoScale || 'contain']}
-                            </text>
-                        </svg>
+                        <Icon className={styles['icon']} name={VIDEO_SCALE_ICONS[videoScale || 'contain']} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
