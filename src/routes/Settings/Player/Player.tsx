@@ -66,6 +66,12 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         {...subtitlesOutlineColorInput}
                     />
                 </Option>
+                <Option label={'SETTINGS_ASS_SUBTITLES_STYLING'}>
+                    <Toggle
+                        tabIndex={-1}
+                        {...assSubtitlesStylingToggle}
+                    />
+                </Option>
             </Category>
             <Category icon={'volume-medium'} label={'SETTINGS_SECTION_AUDIO'}>
                 <Option label={'SETTINGS_DEFAULT_AUDIO_TRACK'}>
@@ -156,15 +162,6 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                             <Toggle
                                 tabIndex={-1}
                                 {...pauseOnMinimizeToggle}
-                            />
-                        </Option>
-                }
-                {
-                    shell.active &&
-                        <Option label={'SETTINGS_ASS_SUBTITLES_STYLING'}>
-                            <Toggle
-                                tabIndex={-1}
-                                {...assSubtitlesStylingToggle}
                             />
                         </Option>
                 }

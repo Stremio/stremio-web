@@ -30,7 +30,7 @@ const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
 const { default: useKeyboardSeek } = require('./useKeyboardSeek');
-const useStatistics = require('./useStatistics');
+const { default: useStatistics } = require('./useStatistics');
 const useVideo = require('./useVideo');
 const { default: useSubtitles } = require('./useSubtitles');
 const styles = require('./styles');
@@ -65,7 +65,7 @@ const Player = () => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const profile = useProfile();
-    const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
+    const [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
@@ -250,6 +250,7 @@ const Player = () => {
         video,
         settings,
         streamStateChanged,
+        subtitlePreferenceChanged,
         menusOpen,
         closeMenus,
         closeSubtitlesMenu,
@@ -870,8 +871,14 @@ const Player = () => {
 
     onShortcut('exit', () => {
         closeMenus();
-        !settings.escExitFullscreen && navigate(-1);
-    }, [settings.escExitFullscreen]);
+        // When escExitFullscreen is enabled, FullscreenProvider handles the first
+        // Escape press by leaving fullscreen. Only skip navigating back in that case,
+        // otherwise Escape would never exit the player in windowed mode.
+        if (settings.escExitFullscreen && fullscreen) {
+            return;
+        }
+        navigate(-1);
+    }, [settings.escExitFullscreen, fullscreen]);
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {
@@ -1120,7 +1127,7 @@ const Player = () => {
                 metaItem={player.metaItem}
                 nextVideo={player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
-                statistics={statistics}
+                statisticsAvailable={statisticsMenuAvailable}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onNextVideoRequested={onNextVideoRequested}

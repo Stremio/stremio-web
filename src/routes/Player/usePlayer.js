@@ -171,7 +171,17 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, [player.streamState]);
 
-    return [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
+    const subtitlePreferenceChanged = React.useCallback((preference) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'SubtitlePreferenceChanged',
+                args: { preference },
+            },
+        }, 'player');
+    }, []);
+
+    return [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;
