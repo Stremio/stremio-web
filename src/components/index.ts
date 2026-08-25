@@ -11,6 +11,7 @@ import EventModal from './EventModal';
 import HorizontalScroll from './HorizontalScroll';
 import Image from './Image';
 import LibItem from './LibItem';
+import LiveTvContinueWatchingItem from './LiveTvContinueWatchingItem';
 import MainNavBars from './MainNavBars';
 import MetaItem from './MetaItem';
 import MetaPreview from './MetaPreview';
@@ -47,6 +48,7 @@ export {
     HorizontalScroll,
     Image,
     LibItem,
+    LiveTvContinueWatchingItem,
     MainNavBars,
     MetaItem,
     MetaPreview,

@@ -192,6 +192,25 @@
                     color: #fff;
                 }
             }
+
+            .logo-layer {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                max-width: 40%;
+                height: 3rem;
+
+                .logo {
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: contain;
+                    object-position: right center;
+                    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+                }
+            }
         }
 
         .play-icon-layer {

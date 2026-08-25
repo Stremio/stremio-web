@@ -15,7 +15,7 @@ const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHr
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, logo, ...props }) => {
     const { t } = useTranslation();
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
@@ -96,6 +96,19 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                         live ?
                             <div className={styles['live-badge-layer']}>
                                 <div className={styles['live-badge-label']}>{t('PLAYER_LIVE', { defaultValue: 'Live' })}</div>
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        typeof logo === 'string' && logo.length > 0 ?
+                            <div className={styles['logo-layer']}>
+                                <Image
+                                    className={styles['logo']}
+                                    src={logo}
+                                    alt={' '}
+                                    renderFallback={() => null}
+                                />
                             </div>
                             :
                             null
@@ -189,7 +202,8 @@ MetaItem.propTypes = {
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
     watched: PropTypes.bool,
-    live: PropTypes.bool
+    live: PropTypes.bool,
+    logo: PropTypes.string
 };
 
 module.exports = MetaItem;
