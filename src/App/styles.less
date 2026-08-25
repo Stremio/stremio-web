@@ -220,6 +220,12 @@ html {
                 left: 0;
                 right: 0;
                 bottom: 0;
+
+                @media only screen and (max-width: @minimum) {
+                    left: 0.5rem;
+                    right: 0.5rem;
+                    bottom: calc(var(--vertical-nav-bar-size) + var(--safe-area-inset-bottom) + 0.5rem);
+                }
             }
         }
     }
