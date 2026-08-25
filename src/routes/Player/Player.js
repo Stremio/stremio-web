@@ -94,7 +94,10 @@ const Player = () => {
     const getVideoElement = React.useCallback(() => {
         return video.containerRef.current?.querySelector('video') ?? null;
     }, []);
-    const nativeShellPictureInPictureSupported = platform.shell.active && video.state.manifest?.name === 'ShellVideo';
+    const shell = platform.shell;
+    const shellRef = React.useRef(shell);
+    shellRef.current = shell;
+    const nativeShellPictureInPictureSupported = shell.active && video.state.manifest?.name?.startsWith('ShellVideo') === true;
     const browserPictureInPictureSupported = getVideoElement() !== null &&
         typeof document !== 'undefined' &&
         document.pictureInPictureEnabled === true &&
@@ -104,7 +107,7 @@ const Player = () => {
 
     const onPipEnableRequested = React.useCallback(() => {
         if (nativeShellPictureInPictureSupported) {
-            platform.shell.send('win-set-pip', { enabled: true });
+            shellRef.current.send('win-set-pip', { enabled: true });
             return;
         }
         const videoElement = getVideoElement();
@@ -114,11 +117,11 @@ const Player = () => {
         videoElement.requestPictureInPicture().catch((error) => {
             console.error('Player PiP', error);
         });
-    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported, platform.shell]);
+    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported]);
 
     const onPipDisableRequested = React.useCallback(() => {
         if (nativeShellPictureInPictureSupported) {
-            platform.shell.send('win-set-pip', { enabled: false });
+            shellRef.current.send('win-set-pip', { enabled: false });
             return;
         }
         if (typeof document !== 'undefined' && document.pictureInPictureElement) {
@@ -126,7 +129,7 @@ const Player = () => {
                 console.error('Player PiP', error);
             });
         }
-    }, [nativeShellPictureInPictureSupported, platform.shell]);
+    }, [nativeShellPictureInPictureSupported]);
 
     React.useEffect(() => {
         if (!nativeShellPictureInPictureSupported) {
@@ -137,13 +140,14 @@ const Player = () => {
             video.setPictureInPicture(data?.enabled === true);
         };
 
-        platform.shell.on('win-pip-changed', onShellPictureInPictureChanged);
+        const activeShell = shellRef.current;
+        activeShell.on('win-pip-changed', onShellPictureInPictureChanged);
         return () => {
-            platform.shell.off('win-pip-changed', onShellPictureInPictureChanged);
-            platform.shell.send('win-set-pip', { enabled: false });
+            activeShell.off('win-pip-changed', onShellPictureInPictureChanged);
+            activeShell.send('win-set-pip', { enabled: false });
             video.setPictureInPicture(false);
         };
-    }, [nativeShellPictureInPictureSupported, platform.shell, video.setPictureInPicture, video.state.loaded]);
+    }, [nativeShellPictureInPictureSupported, video.setPictureInPicture, video.state.loaded]);
 
     React.useEffect(() => {
         const videoElement = getVideoElement();
