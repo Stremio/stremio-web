@@ -1,0 +1,26 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": [
+          "9EWRZ4QP3J.com.stremio.one"
+        ],
+        "appID": "9EWRZ4QP3J.com.stremio.one",
+        "paths": [
+          "*"
+        ]
+      }
+    ]
+  },
+  "activitycontinuation": {
+    "apps": [
+      "9EWRZ4QP3J.com.stremio.one"
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "9EWRZ4QP3J.com.stremio.one"
+    ]
+  }
+}
