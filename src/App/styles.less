@@ -154,6 +154,11 @@ svg {
     overflow: visible;
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.15s;
+}
+
 html {
     width: @html-width;
     height: @html-height;
