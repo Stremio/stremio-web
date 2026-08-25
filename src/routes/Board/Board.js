@@ -74,7 +74,7 @@ const Board = () => {
                         liveTvCatalog.items.length > 0 ?
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['board-row-landscape'], 'animation-fade-in')}
-                                title={t.string('BOARD_CONTINUE_WATCHING_LIVE', { defaultValue: 'Live TV continue watching' })}
+                                title={t.string('BOARD_CONTINUE_WATCHING_LIVE')}
                                 catalog={liveTvCatalog}
                                 itemComponent={LiveTvContinueWatchingItem}
                                 notifications={notifications}
