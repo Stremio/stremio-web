@@ -10,12 +10,14 @@ const { default: Button } = require('stremio/components/Button');
 const { default: Image } = require('stremio/components/Image');
 const Multiselect = require('stremio/components/Multiselect');
 const useBinaryState = require('stremio/common/useBinaryState');
+const { usePlatform } = require('stremio/common/Platform');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
     const { t } = useTranslation();
+    const platform = usePlatform();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return typeof customHref === 'string' ? customHref : getMetaDetailsHref(deepLinks);
@@ -133,6 +135,8 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                             Array.isArray(options) && options.length > 0 ?
                                 <Multiselect
                                     className={styles['menu-label-container']}
+                                    mode={platform.isMobile ? 'modal' : 'popup'}
+                                    title={name}
                                     renderLabelContent={renderMenuLabelContent}
                                     options={options}
                                     onOpen={onMenuOpen}
