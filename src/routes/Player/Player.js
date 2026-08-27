@@ -98,9 +98,12 @@ const Player = () => {
     const shellRef = React.useRef(shell);
     shellRef.current = shell;
     const nativeShellPictureInPictureSupported = shell.active && video.state.manifest?.name?.startsWith('ShellVideo') === true;
-    const browserPictureInPictureSupported = getVideoElement() !== null &&
+    const browserVideoElement = getVideoElement();
+    const browserPictureInPictureSupported = browserVideoElement !== null &&
+        browserVideoElement.disablePictureInPicture !== true &&
         typeof document !== 'undefined' &&
         document.pictureInPictureEnabled === true &&
+        typeof document.exitPictureInPicture === 'function' &&
         typeof HTMLVideoElement !== 'undefined' &&
         typeof HTMLVideoElement.prototype.requestPictureInPicture === 'function';
     const pictureInPictureSupported = nativeShellPictureInPictureSupported || browserPictureInPictureSupported;
@@ -124,7 +127,9 @@ const Player = () => {
             shellRef.current.send('win-set-pip', { enabled: false });
             return;
         }
-        if (typeof document !== 'undefined' && document.pictureInPictureElement) {
+        if (typeof document !== 'undefined' &&
+            typeof document.exitPictureInPicture === 'function' &&
+            document.pictureInPictureElement) {
             document.exitPictureInPicture().catch((error) => {
                 console.error('Player PiP', error);
             });
