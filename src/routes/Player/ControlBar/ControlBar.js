@@ -9,6 +9,7 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
+const PictureInPictureIcon = require('./PictureInPictureIcon');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
@@ -197,7 +198,7 @@ const ControlBar = React.forwardRef(({
                                 tabIndex={-1}
                                 onClick={onPictureInPictureButtonClick}
                             >
-                                <Icon className={styles['icon']} name={'open-in-browser'} />
+                                <PictureInPictureIcon className={styles['icon']} active={pictureInPicture} />
                             </Button>
                             : null
                     }
