@@ -193,7 +193,7 @@ const ControlBar = React.forwardRef(({
                         pictureInPictureSupported ?
                             <Button
                                 className={classnames(styles['control-bar-button'], { 'disabled': typeof duration !== 'number' })}
-                                title={pictureInPicture ? 'Exit picture-in-picture' : 'Picture-in-picture'}
+                                title={t(pictureInPicture ? 'PLAYER_EXIT_PICTURE_IN_PICTURE' : 'PLAYER_PICTURE_IN_PICTURE')}
                                 tabIndex={-1}
                                 onClick={onPictureInPictureButtonClick}
                             >
