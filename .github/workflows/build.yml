@@ -39,16 +39,13 @@ jobs:
         run: pnpm test
       - name: Lint
         run: pnpm lint
-      # Create recursively the destination dir with
-      # "--parrents where no error if existing, make parent directories as needed."
-      - run: mkdir -p ./build/${{ github.head_ref || github.ref_name }}
       - name: Deploy to GitHub Pages
         if: github.event.pull_request.head.repo.fork == false && github.actor != 'dependabot[bot]'
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          # in stremio, we use `feat/features-name` or `fix/this-bug`
-          # so we need a recursive creation of the destination dir
-          destination_dir: ${{ github.head_ref || github.ref_name }}
-          allow_empty_commit: true
+          folder: build
+          target-folder: ${{ github.head_ref || github.ref_name }}
+          # rebase and retry instead of force pushing, so concurrent
+          # runs (e.g. stacked PRs) don't reject each other's push
+          force: false
+          attempt-limit: 10

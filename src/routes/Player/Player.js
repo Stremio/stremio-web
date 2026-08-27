@@ -30,7 +30,7 @@ const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
 const { default: useKeyboardSeek } = require('./useKeyboardSeek');
-const useStatistics = require('./useStatistics');
+const { default: useStatistics } = require('./useStatistics');
 const useVideo = require('./useVideo');
 const { default: useSubtitles } = require('./useSubtitles');
 const styles = require('./styles');
@@ -881,8 +881,14 @@ const Player = () => {
 
     onShortcut('exit', () => {
         closeMenus();
-        !settings.escExitFullscreen && navigate(-1);
-    }, [settings.escExitFullscreen]);
+        // When escExitFullscreen is enabled, FullscreenProvider handles the first
+        // Escape press by leaving fullscreen. Only skip navigating back in that case,
+        // otherwise Escape would never exit the player in windowed mode.
+        if (settings.escExitFullscreen && fullscreen) {
+            return;
+        }
+        navigate(-1);
+    }, [settings.escExitFullscreen, fullscreen]);
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {
@@ -1129,7 +1135,7 @@ const Player = () => {
                 metaItem={player.metaItem}
                 nextVideo={isEpg ? null : player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
-                statistics={statistics}
+                statisticsAvailable={statisticsMenuAvailable}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onNextVideoRequested={onNextVideoRequested}

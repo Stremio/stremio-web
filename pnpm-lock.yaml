@@ -18,11 +18,11 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz
-        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz
+        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz
+        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz
       '@stremio/stremio-icons':
-        specifier: 5.10.0
-        version: 5.10.0
+        specifier: 5.15.0
+        version: 5.15.0
       '@stremio/stremio-video':
         specifier: 0.0.93
         version: 0.0.93
@@ -1441,12 +1441,12 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz':
-    resolution: {integrity: sha512-ZDJCZUFq+kkqsw3eFMiiJ+D9hlTOzIm2B8ldO5OngXc5EX8yAbN2ux1IMN3mlfBerAL5XVRqaZRZAK8GYovAEQ==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz}
-    version: 0.61.0
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz':
+    resolution: {integrity: sha512-1hviV6nfymupSWz/Rs9gpGJa/ynBiYN7YAC/TKVH8IahWkOzUkwS/uMZb7GU78VlulFoA62sHR+BFHVQfVHqAw==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz}
+    version: 0.61.1
 
-  '@stremio/stremio-icons@5.10.0':
-    resolution: {integrity: sha512-Zw/vGC3D2yeQfk8xv/tfMJTDvbCPOI91tBg4XpR2+EgbZSX8Xvm7Vz457PIhFPhTAwdOPHp0VX0M3gzjbt0zOg==}
+  '@stremio/stremio-icons@5.15.0':
+    resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
 
   '@stremio/stremio-video@0.0.93':
     resolution: {integrity: sha512-/R6rHh/lekHK4ZjCeMb4O27iOXQo36jek0kfzbbpYw/3yXf9yWxX+LWK5hajBFeZWitOm8GMSnDlkb31LIeIeg==}
@@ -4492,7 +4492,7 @@ packages:
     engines: {node: '>= 0.4'}
 
   stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/5d4edb6a00d664f38575a181bf65608c9062036d:
-    resolution: {gitHosted: true, integrity: sha512-CCJ6ytJ8x3d0Cv/TW6VpMQd0YMJmBShu0i6cHE9mzHeITu/IP9bZCjPfOI3ZF1+zstoaP0r/7366pis3Q5zZuQ==, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/5d4edb6a00d664f38575a181bf65608c9062036d}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/5d4edb6a00d664f38575a181bf65608c9062036d}
     version: 1.53.2
 
   string-length@4.0.2:
@@ -6517,11 +6517,11 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.0.tgz':
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 
-  '@stremio/stremio-icons@5.10.0': {}
+  '@stremio/stremio-icons@5.15.0': {}
 
   '@stremio/stremio-video@0.0.93':
     dependencies:

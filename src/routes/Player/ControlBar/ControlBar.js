@@ -12,6 +12,12 @@ const styles = require('./styles');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
+const VIDEO_SCALE_ICONS = {
+    contain: 'video-scale-fit',
+    cover: 'video-scale-crop',
+    fill: 'video-scale-stretch'
+};
+
 const ControlBar = React.forwardRef(({
     className,
     paused,
@@ -26,7 +32,7 @@ const ControlBar = React.forwardRef(({
     metaItem,
     nextVideo,
     stream,
-    statistics,
+    statisticsAvailable,
     onPlayRequested,
     onPauseRequested,
     onNextVideoRequested,
@@ -176,9 +182,12 @@ const ControlBar = React.forwardRef(({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
-                        <Icon className={styles['icon']} name={'network'} />
-                    </Button>
+                    {
+                        statisticsAvailable &&
+                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
+                                <Icon className={styles['icon']} name={'network'} />
+                            </Button>
+                    }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
                         <Icon className={styles['icon']} name={'speed'} />
                     </Button>
@@ -200,7 +209,7 @@ const ControlBar = React.forwardRef(({
                             null
                     }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
-                        <Icon className={styles['icon']} name={'scale'} />
+                        <Icon className={styles['icon']} name={VIDEO_SCALE_ICONS[videoScale || 'contain']} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
@@ -230,7 +239,7 @@ ControlBar.propTypes = {
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
     stream: PropTypes.object,
-    statistics: PropTypes.object,
+    statisticsAvailable: PropTypes.bool,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onNextVideoRequested: PropTypes.func,

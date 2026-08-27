@@ -3,6 +3,10 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/components/MetaItem/styles.less') {
+    poster-container: poster-container;
+}
+
 .meta-row-container {
     overflow: visible;
 
@@ -99,9 +103,45 @@
         }
 
         .meta-items-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            overscroll-behavior-x: contain;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
             .meta-item {
+                scroll-snap-align: start;
+
+                .poster-container {
+                    transition: scale 100ms ease-out;
+                }
+
+                &:active {
+                    scale: none;
+
+                    .poster-container {
+                        scale: 0.95;
+                    }
+                }
+
                 &:not(:first-child) {
                     margin-left: 0;
+                }
+
+                &:empty {
+                    display: none;
+                }
+
+                &.poster-shape-poster, &.poster-shape-square {
+                    flex: 0 0 31%;
+                }
+
+                &.poster-shape-landscape {
+                    flex: 0 0 46%;
                 }
             }
         }

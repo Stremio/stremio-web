@@ -6,18 +6,18 @@ const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { useNavigateWithOrigin } = require('stremio-router');
 const { default: Button } = require('stremio/components/Button');
 const { default: Image } = require('stremio/components/Image');
 const Multiselect = require('stremio/components/Multiselect');
 const useBinaryState = require('stremio/common/useBinaryState');
+const { usePlatform } = require('stremio/common/Platform');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, logo, ...props }) => {
     const { t } = useTranslation();
-    const { navigateWithOrigin } = useNavigateWithOrigin();
+    const platform = usePlatform();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return typeof customHref === 'string' ? customHref : getMetaDetailsHref(deepLinks);
@@ -25,13 +25,10 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const metaItemOnClick = React.useCallback((event) => {
         if (event.nativeEvent.selectPrevented) {
             event.preventDefault();
-        } else if (typeof href === 'string') {
-            event.preventDefault();
-            navigateWithOrigin(href);
         } else if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [href, navigateWithOrigin, props.onClick]);
+    }, [props.onClick]);
     const menuOnClick = React.useCallback((event) => {
         event.nativeEvent.selectPrevented = true;
     }, []);
@@ -159,6 +156,8 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                             Array.isArray(options) && options.length > 0 ?
                                 <Multiselect
                                     className={styles['menu-label-container']}
+                                    mode={platform.isMobile ? 'modal' : 'popup'}
+                                    title={name}
                                     renderLabelContent={renderMenuLabelContent}
                                     options={options}
                                     onOpen={onMenuOpen}

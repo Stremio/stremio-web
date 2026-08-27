@@ -136,7 +136,7 @@ const Video = ({
         }, [selected]);
 
         return (
-            <Button {...props} ref={ref} className={classnames(className, styles['video-container'], { [styles['selected']]: selected })} title={title}>
+            <Button {...props} ref={ref} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
                         <div className={styles['thumbnail-container']}>
@@ -235,7 +235,7 @@ const Video = ({
                 {children}
             </Button>
         );
-    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected]);
+    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
