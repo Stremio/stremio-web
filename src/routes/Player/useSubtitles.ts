@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
+import { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } from './subtitleDelay';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
     if (!Array.isArray(tracks)) {
@@ -282,11 +283,13 @@ const useSubtitles = ({
     }, [streamStateChanged, video]);
 
     const increaseDelay = useCallback(() => {
-        changeDelay(Math.floor((video.state.extraSubtitlesDelay ?? 0) / 100) * 100 + 100);
+        const delay = (video.state.extraSubtitlesDelay ?? 0) + SUBTITLES_DELAY_STEP_MS;
+        changeDelay(snapSubtitleDelay(delay, 1));
     }, [changeDelay, video.state.extraSubtitlesDelay]);
 
     const decreaseDelay = useCallback(() => {
-        changeDelay(Math.ceil((video.state.extraSubtitlesDelay ?? 0) / 100) * 100 - 100);
+        const delay = (video.state.extraSubtitlesDelay ?? 0) - SUBTITLES_DELAY_STEP_MS;
+        changeDelay(snapSubtitleDelay(delay, -1));
     }, [changeDelay, video.state.extraSubtitlesDelay]);
 
     const changeSize = useCallback((size: number) => {
