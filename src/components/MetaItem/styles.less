@@ -71,11 +71,20 @@
         }
     }
 
+    &:active:not(:global(.active)) {
+        scale: none;
+
+        .poster-container {
+            scale: 0.95;
+        }
+    }
+
     .poster-container {
         position: relative;
         z-index: 0;
         background-color: var(--overlay-color);
         border-radius: var(--border-radius);
+        transition: scale 100ms ease-out;
 
         &:global(.poster-change-cursor) {
             .poster-image-layer {
