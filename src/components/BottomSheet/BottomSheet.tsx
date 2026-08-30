@@ -198,22 +198,22 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
                 aria-label={title}
                 onTransitionEnd={onTransitionEnd}
             >
-                <div className={styles['heading']}>
-                    <div
-                        className={styles['handle']}
-                        onTouchStart={onTouchStart}
-                        onTouchMove={onTouchMove}
-                        onTouchEnd={onTouchEnd}
-                    />
-                    {
-                        typeof title === 'string' && title.length > 0 ?
+                <div
+                    className={styles['handle']}
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                />
+                {
+                    typeof title === 'string' && title.length > 0 ?
+                        <div className={styles['heading']}>
                             <div className={styles['title']}>
                                 {title}
                             </div>
-                            :
-                            null
-                    }
-                </div>
+                        </div>
+                        :
+                        null
+                }
                 <div className={styles['content']} onClick={closeOnContentClick ? onContentClick : undefined}>
                     {children}
                 </div>
