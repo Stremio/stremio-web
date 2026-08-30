@@ -11,6 +11,11 @@
     right: 0;
     display: flex;
     justify-content: center;
+    pointer-events: none;
+
+    &.open {
+        pointer-events: auto;
+    }
 
     .backdrop {
         z-index: 0;
@@ -19,10 +24,19 @@
         bottom: 0;
         left: 0;
         right: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: 0;
         background-color: var(--primary-background-color);
-        opacity: 0.8;
-        transition: opacity 0.1s ease-out;
+        opacity: 0;
+        transition: opacity 0.25s ease-out;
         cursor: pointer;
+        pointer-events: auto;
+    }
+
+    &.open .backdrop {
+        opacity: 0.8;
     }
 
     .container {
@@ -39,13 +53,15 @@
         background-color: var(--modal-background-color);
         box-shadow: var(--outer-glow);
         overflow: hidden;
+        pointer-events: auto;
 
         &:not(.dragging) {
-            transition: transform 0.1s ease-out;
+            transition: transform 0.25s ease-out;
         }
 
         .heading {
             position: relative;
+            flex: none;
 
             .handle {
                 position: relative;
@@ -54,6 +70,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                touch-action: none;
         
                 &::after {
                     content: "";

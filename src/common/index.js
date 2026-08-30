@@ -28,6 +28,7 @@ const { default: usePlayUrl } = require('./usePlayUrl');
 const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
 const { default: useOrientation } = require('./useOrientation');
+const { default: useMediaQuery } = require('./useMediaQuery');
 const { default: useLanguageSorting } = require('./useLanguageSorting');
 
 module.exports = {
@@ -68,5 +69,6 @@ module.exports = {
     useTorrent,
     useTranslate,
     useOrientation,
+    useMediaQuery,
     useLanguageSorting,
 };

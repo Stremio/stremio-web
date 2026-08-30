@@ -6,8 +6,8 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
-const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
+const { CONSTANTS, useBinaryState, useMediaQuery, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
@@ -21,7 +21,9 @@ const Discover = ({ urlParams, queryParams }) => {
     const [selectInputs, hasNextPage] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
+    const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
+    const isMobile = useMediaQuery('(max-width: 1000px)');
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -29,7 +31,6 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [discover.catalog, selectedMetaItemIndex]);
 
     const metasContainerRef = React.useRef();
-    const metaPreviewRef = React.useRef();
 
     React.useEffect(() => {
         if (discover.catalog?.content.type === 'Loading') {
@@ -93,12 +94,23 @@ const Discover = ({ urlParams, queryParams }) => {
         }
     }, []);
     const metaItemOnClick = React.useCallback((event) => {
-        const visible = window.getComputedStyle(metaPreviewRef.current).display !== 'none';
-        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString() && visible) {
+        const index = Number(event.currentTarget.dataset.index);
+        if (!Number.isInteger(index)) {
+            return;
+        }
+
+        if (isMobile) {
+            event.preventDefault();
+            setSelectedMetaItemIndex(index);
+            openMobilePreview();
+            return;
+        }
+
+        if (index !== selectedMetaItemIndex) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [selectedMetaItemIndex]);
+    }, [isMobile, selectedMetaItemIndex, openMobilePreview]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -108,8 +120,14 @@ const Discover = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();
+        closeMobilePreview();
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
+    React.useEffect(() => {
+        if (!isMobile) {
+            closeMobilePreview();
+        }
+    }, [isMobile]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -193,7 +211,6 @@ const Discover = ({ urlParams, queryParams }) => {
                         <MetaPreview
                             className={styles['meta-preview-container']}
                             compact={true}
-                            ref={metaPreviewRef}
                             name={selectedMetaItem.name}
                             logo={selectedMetaItem.logo}
                             background={selectedMetaItem.poster}
@@ -218,6 +235,38 @@ const Discover = ({ urlParams, queryParams }) => {
                             null
                 }
             </div>
+            {
+                selectedMetaItem !== null ?
+                    <BottomSheet
+                        className={styles['mobile-bottom-sheet']}
+                        show={isMobile && mobilePreviewOpen}
+                        onClose={closeMobilePreview}
+                        closeOnContentClick={false}
+                    >
+                        <MetaPreview
+                            className={styles['mobile-preview']}
+                            compact={true}
+                            name={selectedMetaItem.name}
+                            logo={selectedMetaItem.logo}
+                            background={selectedMetaItem.poster}
+                            runtime={selectedMetaItem.runtime}
+                            releaseInfo={selectedMetaItem.releaseInfo}
+                            released={selectedMetaItem.released}
+                            description={selectedMetaItem.description}
+                            links={selectedMetaItem.links}
+                            deepLinks={selectedMetaItem.deepLinks}
+                            trailerStreams={selectedMetaItem.trailerStreams}
+                            inLibrary={selectedMetaItem.inLibrary}
+                            toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
+                            watched={selectedMetaItem.watched}
+                            toggleWatched={toggleWatched}
+                            metaId={selectedMetaItem.id}
+                            like={selectedMetaItem.like}
+                        />
+                    </BottomSheet>
+                    :
+                    null
+            }
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
