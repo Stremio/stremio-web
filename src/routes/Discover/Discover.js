@@ -6,7 +6,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useMediaQuery, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { CONSTANTS, useBinaryState, useMediaQuery, useOrientation, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -24,6 +24,8 @@ const Discover = ({ urlParams, queryParams }) => {
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
     const isMobile = useMediaQuery('(max-width: 1000px)');
+    const orientation = useOrientation();
+    const useMobilePreview = isMobile && orientation === 'portrait';
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -99,18 +101,18 @@ const Discover = ({ urlParams, queryParams }) => {
             return;
         }
 
-        if (isMobile) {
+        if (useMobilePreview) {
             event.preventDefault();
             setSelectedMetaItemIndex(index);
             openMobilePreview();
             return;
         }
 
-        if (index !== selectedMetaItemIndex) {
+        if (!isMobile && index !== selectedMetaItemIndex) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [isMobile, selectedMetaItemIndex, openMobilePreview]);
+    }, [isMobile, useMobilePreview, selectedMetaItemIndex, openMobilePreview]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -124,10 +126,10 @@ const Discover = ({ urlParams, queryParams }) => {
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
     React.useEffect(() => {
-        if (!isMobile) {
+        if (!useMobilePreview) {
             closeMobilePreview();
         }
-    }, [isMobile]);
+    }, [useMobilePreview]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -239,7 +241,7 @@ const Discover = ({ urlParams, queryParams }) => {
                 selectedMetaItem !== null ?
                     <BottomSheet
                         className={styles['mobile-bottom-sheet']}
-                        show={isMobile && mobilePreviewOpen}
+                        show={useMobilePreview && mobilePreviewOpen}
                         onClose={closeMobilePreview}
                         closeOnContentClick={false}
                     >
