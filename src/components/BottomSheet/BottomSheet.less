@@ -53,6 +53,10 @@
         overflow: hidden;
         pointer-events: auto;
 
+        &.flush {
+            padding-bottom: 0;
+        }
+
         &:not(.dragging) {
             transition: transform 0.25s ease-out;
         }

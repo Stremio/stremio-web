@@ -244,6 +244,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         show={useMobilePreview && mobilePreviewOpen}
                         onClose={closeMobilePreview}
                         closeOnContentClick={false}
+                        flush={true}
                     >
                         <MetaPreview
                             className={styles['mobile-preview']}

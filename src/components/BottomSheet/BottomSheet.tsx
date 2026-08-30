@@ -16,9 +16,10 @@ type Props = {
     show: boolean,
     onClose: () => void,
     closeOnContentClick?: boolean,
+    flush?: boolean,
 };
 
-const BottomSheet = ({ children, className, title, show, onClose, closeOnContentClick = true }: Props) => {
+const BottomSheet = ({ children, className, title, show, onClose, closeOnContentClick = true, flush = false }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const onCloseRef = useRef(onClose);
     const closingRef = useRef(false);
@@ -191,7 +192,10 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
             />
             <div
                 ref={containerRef}
-                className={classNames(styles['container'], { [styles['dragging']]: dragging })}
+                className={classNames(styles['container'], {
+                    [styles['dragging']]: dragging,
+                    [styles['flush']]: flush,
+                })}
                 style={containerStyle}
                 role={'dialog'}
                 aria-modal={'true'}
