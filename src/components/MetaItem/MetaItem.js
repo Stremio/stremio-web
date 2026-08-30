@@ -15,7 +15,7 @@ const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHr
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, releaseInfo, links, ...props }) => {
     const { t } = useTranslation();
     const platform = usePlatform();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
@@ -62,6 +62,15 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const renderMenuLabelContent = React.useCallback(() => (
         <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
+    const imdbRating = React.useMemo(() => {
+        if (Array.isArray(links)) {
+            const imdbLink = links.find((link) => link.category === 'imdb');
+            if (imdbLink && imdbLink.name) {
+                return imdbLink.name;
+            }
+        }
+        return null;
+    }, [links]);
     return (
         <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
             <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
@@ -105,6 +114,29 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                         <div className={styles['progress-bar-layer']}>
                             <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
                             <div className={styles['progress-bar-background']} />
+                        </div>
+                        :
+                        null
+                }
+                {
+                    (typeof releaseInfo === 'string' && releaseInfo.length > 0) || imdbRating ?
+                        <div className={styles['info-layer']}>
+                            <div className={styles['info-layer-background']} />
+                            <div className={styles['info-layer-content']}>
+                                {
+                                    typeof releaseInfo === 'string' && releaseInfo.length > 0 ?
+                                        <div className={styles['release-info']}>{releaseInfo}</div>
+                                        : null
+                                }
+                                {
+                                    imdbRating ?
+                                        <div className={styles['imdb-rating']}>
+                                            <Icon className={styles['imdb-icon']} name={'imdb'} />
+                                            <span>{imdbRating}</span>
+                                        </div>
+                                        : null
+                                }
+                            </div>
                         </div>
                         :
                         null
@@ -179,7 +211,9 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
-    watched: PropTypes.bool
+    watched: PropTypes.bool,
+    releaseInfo: PropTypes.string,
+    links: PropTypes.array
 };
 
 module.exports = MetaItem;

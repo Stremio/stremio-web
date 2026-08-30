@@ -44,6 +44,11 @@
                     opacity: 1;
                 }
             }
+
+            .info-layer {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .title-bar-container {
@@ -252,6 +257,66 @@
             }
         }
 
+        .info-layer {
+            z-index: -2;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2.5rem 0.5rem 0.5rem 0.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.2s ease-out;
+            pointer-events: none;
+
+            .info-layer-background {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: 0;
+                background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
+                z-index: -1;
+                border-bottom-left-radius: var(--border-radius);
+                border-bottom-right-radius: var(--border-radius);
+            }
+
+            .info-layer-content {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                color: var(--primary-foreground-color);
+
+                .release-info {
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    opacity: 0.9;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .imdb-rating {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: var(--color-imdb);
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                    margin-left: 0.25rem;
+
+                    .imdb-icon {
+                        width: 1.8rem;
+                        height: 0.9rem;
+                        margin-right: 0.2rem;
+                    }
+                }
+            }
+        }
+
         .new-videos {
             z-index: -1;
             position: absolute;
@@ -318,6 +383,7 @@
             color: var(--primary-foreground-color);
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
 
