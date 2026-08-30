@@ -16,6 +16,11 @@
     selectable-inputs-modal-content: modal-dialog-content;
 }
 
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    mobile-sheet-container: container;
+    mobile-sheet-content: content;
+}
+
 .discover-container {
     height: calc(100% - var(--safe-area-inset-bottom));
     background-color: transparent;
@@ -222,12 +227,23 @@
 
 .mobile-preview {
     padding: 1.75rem 1.5rem 1rem;
+    flex: 1;
     min-height: 0;
+    height: 100%;
     background-color: transparent;
 }
 
 .mobile-bottom-sheet {
     display: flex !important;
+
+    .mobile-sheet-container {
+        height: 100%;
+    }
+
+    .mobile-sheet-content {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .selectable-inputs-modal {
