@@ -36,9 +36,14 @@ type ShellMessage = {
 
 const useShell = (): Shell => {
     const [state, setState] = useState<ShellState>({
+        initialized: false,
         version: null,
         windowClosed: false,
         windowHidden: false,
+    });
+    const [capabilities, setCapabilities] = useState<ShellCapabilities>({
+        gpuVideoProcessing: false,
+        nativeAssSubtitles: false,
     });
 
     const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
@@ -81,21 +86,25 @@ const useShell = (): Shell => {
     }, []);
 
     useEffect(() => {
-        IPC?.postMessage(JSON.stringify({
-            id: 0,
-            type: ShellEventType.INIT,
-        }));
-
         const onMessage = (message: ShellMessage) => {
             try {
                 const event = JSON.parse(message.data) as ShellEvent;
 
                 if (event.type === ShellEventType.INIT) {
                     const { data } = event as ShellEventInit;
-                    const [, [,,, version]] = data.transport.properties;
+                    const shellProperties = Object.fromEntries(data.transport.properties
+                        .filter((property) => property.length >= 4 && property[1])
+                        .map(([, name,, value]) => [name, value]));
 
-                    setState((state) => ({ ...state, version }));
-                    send('app-ready');
+                    setState((state) => ({
+                        ...state,
+                        initialized: true,
+                        version: shellProperties.shellVersion ?? null,
+                    }));
+                    setCapabilities({
+                        gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
+                        nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
+                    });
                 }
 
                 if (event.type === ShellEventType.SIGNAL) {
@@ -109,6 +118,11 @@ const useShell = (): Shell => {
         };
 
         IPC?.addEventListener('message', onMessage);
+        IPC?.postMessage(JSON.stringify({
+            id: 0,
+            type: ShellEventType.INIT,
+        }));
+
         return () => IPC?.removeEventListener('message', onMessage);
     }, []);
 
@@ -118,6 +132,7 @@ const useShell = (): Shell => {
         on,
         off,
         state,
+        capabilities,
     };
 };
 

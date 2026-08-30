@@ -103,7 +103,7 @@ module.exports = (env, argv) => ({
                         options: {
                             postcssOptions: {
                                 plugins: [
-                                    require('cssnano')({
+                                    ['cssnano', {
                                         preset: [
                                             'advanced',
                                             {
@@ -133,7 +133,7 @@ module.exports = (env, argv) => ({
                                                 zindex: false
                                             }
                                         ]
-                                    })
+                                    }]
                                 ]
                             }
                         }

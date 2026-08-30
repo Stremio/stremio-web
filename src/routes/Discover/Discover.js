@@ -2,7 +2,8 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const PropTypes = require('prop-types');
+const { useParams } = require('react-router');
+const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
@@ -14,7 +15,14 @@ const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
 
-const Discover = ({ urlParams, queryParams }) => {
+const Discover = () => {
+    const { type, transportUrl, catalogId } = useParams();
+    const urlParams = React.useMemo(() => ({
+        type,
+        transportUrl,
+        catalogId
+    }), [type, transportUrl, catalogId]);
+    const [queryParams] = useSearchParams();
     const { t } = useTranslation();
     const core = useCore();
     const [discover, loadNextPage] = useDiscover(urlParams, queryParams);
@@ -33,21 +41,31 @@ const Discover = ({ urlParams, queryParams }) => {
     }, [discover.catalog, selectedMetaItemIndex]);
 
     const metasContainerRef = React.useRef();
+    const metaPreviewRef = React.useRef();
+    const previousCatalogSizeRef = React.useRef(0);
 
     React.useEffect(() => {
         if (discover.catalog?.content.type === 'Loading') {
             metasContainerRef.current.scrollTop = 0;
+            previousCatalogSizeRef.current = 0;
         }
     }, [discover.catalog]);
     React.useEffect(() => {
-        if (hasNextPage && metasContainerRef.current) {
+        if (discover.catalog?.content.type === 'Ready') {
+            const catalogSize = discover.catalog.content.content.length;
+            const hasNewItems = catalogSize > previousCatalogSizeRef.current;
+            previousCatalogSizeRef.current = catalogSize;
+            if (!hasNextPage || !hasNewItems || !metasContainerRef.current) {
+                return;
+            }
+
             const containerHeight = metasContainerRef.current.scrollHeight;
             const viewportHeight = metasContainerRef.current.clientHeight;
             if (containerHeight <= viewportHeight + SCROLL_TO_BOTTOM_THRESHOLD) {
                 loadNextPage();
             }
         }
-    }, [hasNextPage, loadNextPage]);
+    }, [discover.catalog, hasNextPage, loadNextPage]);
     const addToLibrary = React.useCallback(() => {
         if (selectedMetaItem === null) {
             return;
@@ -108,11 +126,12 @@ const Discover = ({ urlParams, queryParams }) => {
             return;
         }
 
-        if (!isMobile && index !== selectedMetaItemIndex) {
+        const visible = metaPreviewRef.current && window.getComputedStyle(metaPreviewRef.current).display !== 'none';
+        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString() && visible) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [isMobile, useMobilePreview, selectedMetaItemIndex, openMobilePreview]);
+    }, [useMobilePreview, selectedMetaItemIndex, openMobilePreview]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -213,6 +232,7 @@ const Discover = ({ urlParams, queryParams }) => {
                         <MetaPreview
                             className={styles['meta-preview-container']}
                             compact={true}
+                            ref={metaPreviewRef}
                             name={selectedMetaItem.name}
                             logo={selectedMetaItem.logo}
                             background={selectedMetaItem.poster}
@@ -295,15 +315,6 @@ const Discover = ({ urlParams, queryParams }) => {
             }
         </MainNavBars>
     );
-};
-
-Discover.propTypes = {
-    urlParams: PropTypes.shape({
-        transportUrl: PropTypes.string,
-        type: PropTypes.string,
-        catalogId: PropTypes.string
-    }),
-    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 const DiscoverFallback = () => (

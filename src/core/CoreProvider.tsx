@@ -89,7 +89,7 @@ const Core = (props: Props) => {
 
     return (
         <CoreContext.Provider value={{ transport, on, off }}>
-            { error && !ready && <Error /> }
+            { error && !ready && <Error message={error.message} /> }
             { ready && !error && props.children }
         </CoreContext.Provider>
     );

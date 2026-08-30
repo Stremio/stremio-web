@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import { getKeyboardShortcutKey, getKeyboardShortcutKeys } from './keyboard';
 import shortcuts from './shortcuts.json';
 
 const SHORTCUTS = shortcuts.map(({ shortcuts }) => shortcuts).flat();
 
 export type ShortcutName = string;
-export type ShortcutListener = (combo: number) => void;
+export type ShortcutListener = (combo: number, key: string) => void;
 
 interface ShortcutsContext {
     grouped: ShortcutGroup[],
@@ -33,14 +34,17 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
     const listeners = useRef<Map<ShortcutName, Set<ShortcutListener>>>(new Map());
     const lastRepeatTime = useRef<Map<string, number>>(new Map());
 
-    const onKeyDown = useCallback(({ ctrlKey, shiftKey, altKey, metaKey, code, key, repeat }: KeyboardEvent) => {
+    const onKeyDown = useCallback((event: KeyboardEvent) => {
+        const { ctrlKey, shiftKey, altKey, metaKey, key, repeat } = event;
         if (isInputFocused()) return;
 
+        const shortcutKeys = getKeyboardShortcutKeys(event);
+        const repeatKey = getKeyboardShortcutKey(event);
         if (repeat) {
             const now = Date.now();
-            const last = lastRepeatTime.current.get(code) ?? 0;
+            const last = lastRepeatTime.current.get(repeatKey) ?? 0;
             if (now - last < REPEAT_THROTTLE_MS) return;
-            lastRepeatTime.current.set(code, now);
+            lastRepeatTime.current.set(repeatKey, now);
         }
 
         SHORTCUTS.forEach(({ name, combos }) => combos.forEach((keys) => {
@@ -48,10 +52,15 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
                 && (keys.includes('Shift') === shiftKey)
                 && !altKey
                 && !metaKey;
+            const keyMatched = keys.some((shortcutKey) => (
+                shortcutKey !== 'Ctrl'
+                && shortcutKey !== 'Shift'
+                && shortcutKeys.includes(shortcutKey)
+            ));
 
-            if (modifers && (keys.includes(code) || keys.includes(key.toUpperCase()))) {
+            if (modifers && keyMatched) {
                 const combo = combos.indexOf(keys);
-                listeners.current.get(name)?.forEach((listener) => listener(combo));
+                listeners.current.get(name)?.forEach((listener) => listener(combo, key));
 
                 onShortcut(name as ShortcutName, combo, key);
             }

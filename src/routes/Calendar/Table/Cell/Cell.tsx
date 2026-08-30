@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
+import { useNavigateWithOrigin } from 'stremio-router';
 import { Button, HorizontalScroll, Image } from 'stremio/components';
 import styles from './Cell.less';
 
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const [active, today] = useMemo(() => [
         date.day === selected?.day,
         date.day === monthInfo.today,
@@ -24,9 +26,11 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
         onClick && onClick(date);
     };
 
-    const onPosterClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+    const onPosterClick = useCallback((event: MouseEvent<HTMLDivElement>, target: string) => {
+        event.preventDefault();
         event.stopPropagation();
-    }, []);
+        navigateWithOrigin(target);
+    }, [navigateWithOrigin]);
 
     return (
         <Button
@@ -41,7 +45,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
             <HorizontalScroll className={styles['items']}>
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
-                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams} tabIndex={-1} onClick={onPosterClick}>
+                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams} tabIndex={-1} onClick={(event) => onPosterClick(event, deepLinks.metaDetailsStreams)}>
                             <Icon className={styles['icon']} name={'play'} />
                             <Image
                                 className={styles['poster']}

@@ -154,6 +154,11 @@ svg {
     overflow: visible;
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.15s;
+}
+
 html {
     width: @html-width;
     height: @html-height;
@@ -168,6 +173,7 @@ html {
     @media (display-mode: standalone) {
         width: @html-standalone-width;
         height: @html-standalone-height;
+        -webkit-touch-callout: none;
     }
 
     body {
@@ -219,11 +225,12 @@ html {
                 left: 0;
                 right: 0;
                 bottom: 0;
-            }
 
-            .router {
-                width: 100%;
-                height: 100%;
+                @media only screen and (max-width: @minimum) {
+                    left: 0.5rem;
+                    right: 0.5rem;
+                    bottom: calc(var(--vertical-nav-bar-size) + var(--safe-area-inset-bottom) + 0.5rem);
+                }
             }
         }
     }

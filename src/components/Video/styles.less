@@ -177,6 +177,29 @@
         }
     }
 
+    .play-button-container {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 3rem;
+        margin-right: 0.5rem;
+        border-radius: 50%;
+        color: var(--primary-foreground-color);
+        background-color: var(--overlay-color);
+
+        &:hover,
+        &:focus {
+            background-color: var(--secondary-accent-color);
+        }
+
+        .play-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    }
+
     &.selected {
         animation: border 3s ease-in-out forwards;
     }

@@ -40,10 +40,11 @@ const useVideo = () => {
         extraSubtitlesTextColor: null,
         extraSubtitlesBackgroundColor: null,
         extraSubtitlesOutlineColor: null,
+        assSubtitlesStylingActive: false,
         fullscreen: null,
     });
 
-    const dispatch = (action, options) => {
+    const dispatch = React.useCallback((action, options) => {
         if (video.current && containerRef.current) {
             try {
                 video.current.dispatch(action, {
@@ -54,7 +55,7 @@ const useVideo = () => {
                 console.error('Video:', error);
             }
         }
-    };
+    }, []);
 
     const load = (args, options) => {
         dispatch({
@@ -143,6 +144,14 @@ const useVideo = () => {
         setProp('subtitlesOffset', offset);
         setProp('extraSubtitlesOffset', offset);
     };
+
+    const setSubtitlesOffsetMinimum = React.useCallback((offset) => {
+        dispatch({
+            type: 'setProp',
+            propName: 'subtitlesOffsetMinimum',
+            propValue: offset,
+        });
+    }, [dispatch]);
 
     const setVideoScale = (scale) => {
         setProp('videoScale', scale);
@@ -244,6 +253,7 @@ const useVideo = () => {
         setSubtitlesDelay,
         setSubtitlesSize,
         setSubtitlesOffset,
+        setSubtitlesOffsetMinimum,
         setSubtitlesTextColor,
         setSubtitlesBackgroundColor,
         setSubtitlesOutlineColor,

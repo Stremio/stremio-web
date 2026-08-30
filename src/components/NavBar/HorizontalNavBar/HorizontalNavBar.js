@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useNavigate } = require('react-router');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -12,10 +13,15 @@ const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 const { t } = require('i18next');
 
-const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, hdrInfo, ...props }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, ...props }) => {
+    const navigate = useNavigate();
     const backButtonOnClick = React.useCallback(() => {
-        window.history.back();
-    }, []);
+        if (originPath) {
+            navigate(originPath, { replace: true });
+        } else {
+            navigate(-1);
+        }
+    }, [originPath, navigate]);
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
@@ -91,6 +97,7 @@ HorizontalNavBar.propTypes = {
     searchBar: PropTypes.bool,
     fullscreenButton: PropTypes.bool,
     navMenu: PropTypes.bool,
+    originPath: PropTypes.string,
     hdrInfo: PropTypes.shape({
         gamma: PropTypes.string,
     }),

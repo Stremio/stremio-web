@@ -14,13 +14,20 @@ type MediaStatus = {
 
 interface Shell {
     active: boolean,
+    capabilities: ShellCapabilities,
     state: ShellState,
     on: (name: string, listener: (arg: any) => void) => void;
     off: (name: string, listener: (arg: any) => void) => void;
     send: (method: string, ...args: (string | number | object)[]) => void;
 }
 
+type ShellCapabilities = {
+    gpuVideoProcessing: boolean;
+    nativeAssSubtitles: boolean;
+};
+
 type ShellState = {
+    initialized: boolean;
     version: string | null;
     windowClosed: boolean;
     windowHidden: boolean;
