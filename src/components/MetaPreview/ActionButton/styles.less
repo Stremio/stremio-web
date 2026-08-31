@@ -56,6 +56,12 @@
         .label-container {
             display: none;
         }
+
+        &:global(.wide) {
+            .label-container {
+                display: flex;
+            }
+        }
     }
 }
 
@@ -75,6 +81,14 @@
 
         .label-container {
             display: none;
+        }
+
+        &:global(.wide) {
+            padding: 0 1.5rem;
+
+            .label-container {
+                display: flex;
+            }
         }
     }
 }
