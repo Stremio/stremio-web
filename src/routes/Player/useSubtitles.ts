@@ -391,6 +391,12 @@ const useSubtitles = ({
             video.setSubtitlesTrack(trackToApply.track.id)
             :
             video.setExtraSubtitlesTrack(trackToApply.track.id);
+
+        const delay = player.streamState?.subtitleDelay;
+        // Selecting an external track resets its delay in stremio-video.
+        if (trackToApply.source === 'external' && typeof delay === 'number') {
+            video.setSubtitlesDelay(delay);
+        }
         appliedTrack.current = {
             id: trackToApply.track.id,
             source: trackToApply.source,
