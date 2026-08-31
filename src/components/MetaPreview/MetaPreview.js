@@ -26,7 +26,7 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.metadetails.regexp
 ];
 
-const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo }, ref) => {
+const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, onShowClick }, ref) => {
     const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const linksGroups = React.useMemo(() => {
@@ -234,6 +234,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                             label={t('SHOW')}
                             tabIndex={0}
                             href={showHref}
+                            onClick={onShowClick}
                         />
                         :
                         null
@@ -306,6 +307,7 @@ MetaPreview.propTypes = {
     watched: PropTypes.bool,
     toggleWatched: PropTypes.func,
     ratingInfo: PropTypes.object,
+    onShowClick: PropTypes.func,
 };
 
 module.exports = MetaPreview;

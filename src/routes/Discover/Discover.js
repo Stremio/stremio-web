@@ -8,6 +8,9 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
 const { CONSTANTS, useBinaryState, useMediaQuery, useOrientation, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
+const { useRouteActive } = require('stremio/common/useRouteFocused');
+const { useNavigateWithOrigin } = require('stremio-router');
 const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
@@ -25,6 +28,8 @@ const Discover = () => {
     const [queryParams] = useSearchParams();
     const { t } = useTranslation();
     const core = useCore();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
+    const routeActive = useRouteActive();
     const [discover, loadNextPage] = useDiscover(urlParams, queryParams);
     const [selectInputs, hasNextPage] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
@@ -149,6 +154,19 @@ const Discover = () => {
             closeMobilePreview();
         }
     }, [useMobilePreview]);
+    React.useEffect(() => {
+        if (!routeActive) {
+            closeMobilePreview();
+        }
+    }, [routeActive]);
+    const onMobileShowClick = React.useCallback((event) => {
+        event.preventDefault();
+        const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
+        closeMobilePreview();
+        if (typeof href === 'string') {
+            navigateWithOrigin(href);
+        }
+    }, [selectedMetaItem, closeMobilePreview, navigateWithOrigin]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -285,6 +303,7 @@ const Discover = () => {
                             toggleWatched={toggleWatched}
                             metaId={selectedMetaItem.id}
                             like={selectedMetaItem.like}
+                            onShowClick={onMobileShowClick}
                         />
                     </BottomSheet>
                     :
