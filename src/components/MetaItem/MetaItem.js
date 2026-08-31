@@ -6,32 +6,26 @@ const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const { default: Icon } = require('@stremio/stremio-icons/react');
+const { default: ActionMenu } = require('stremio/components/ActionMenu');
 const { default: Button } = require('stremio/components/Button');
 const { default: Image } = require('stremio/components/Image');
 const Multiselect = require('stremio/components/Multiselect');
 const useBinaryState = require('stremio/common/useBinaryState');
-const { usePlatform } = require('stremio/common/Platform');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
     const { t } = useTranslation();
-    const platform = usePlatform();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return typeof customHref === 'string' ? customHref : getMetaDetailsHref(deepLinks);
     }, [customHref, deepLinks]);
     const metaItemOnClick = React.useCallback((event) => {
-        if (event.nativeEvent.selectPrevented) {
-            event.preventDefault();
-        } else if (typeof props.onClick === 'function') {
+        if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
     }, [props.onClick]);
-    const menuOnClick = React.useCallback((event) => {
-        event.nativeEvent.selectPrevented = true;
-    }, []);
     const dismissOnClick = React.useCallback((event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -62,97 +56,110 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const renderMenuLabelContent = React.useCallback(() => (
         <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
+    const hasOptions = Array.isArray(options) && options.length > 0;
     return (
-        <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })} onClick={metaItemOnClick}>
-            <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
-                {
-                    onDismissClick ?
-                        <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={dismissOnClick}>
-                            <Icon className={styles['dismiss-icon']} name={'close'} />
-                            <div className={styles['dismiss-icon-backdrop']} />
-                        </div>
-                        :
-                        null
-                }
-                {
-                    watched ?
-                        <div className={styles['watched-icon-layer']}>
-                            <Icon className={styles['watched-icon']} name={'checkmark'} />
-                        </div>
-                        :
-                        null
-                }
-                <div className={styles['poster-image-layer']}>
-                    <Image
-                        className={styles['poster-image']}
-                        src={poster}
-                        alt={' '}
-                        renderFallback={renderPosterFallback}
-                    />
+        <div className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })}>
+            <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick}>
+                <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
+                    {
+                        onDismissClick ?
+                            <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={dismissOnClick}>
+                                <Icon className={styles['dismiss-icon']} name={'close'} />
+                                <div className={styles['dismiss-icon-backdrop']} />
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        watched ?
+                            <div className={styles['watched-icon-layer']}>
+                                <Icon className={styles['watched-icon']} name={'checkmark'} />
+                            </div>
+                            :
+                            null
+                    }
+                    <div className={styles['poster-image-layer']}>
+                        <Image
+                            className={styles['poster-image']}
+                            src={poster}
+                            alt={' '}
+                            renderFallback={renderPosterFallback}
+                        />
+                    </div>
+                    {
+                        onPlayClick ?
+                            <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={playOnClick}>
+                                <Icon className={styles['play-icon']} name={'play'} />
+                                <div className={styles['play-icon-outer']} />
+                                <div className={styles['play-icon-background']} />
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        progress > 0 ?
+                            <div className={styles['progress-bar-layer']}>
+                                <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
+                                <div className={styles['progress-bar-background']} />
+                            </div>
+                            :
+                            null
+                    }
+                    {
+                        newVideos > 0 ?
+                            <div className={styles['new-videos']}>
+                                <div className={styles['layer']} />
+                                <div className={styles['layer']} />
+                                <div className={styles['layer']}>
+                                    <Icon className={styles['icon']} name={'add'} />
+                                    <div className={styles['label']}>
+                                        {newVideos}
+                                    </div>
+                                </div>
+                            </div>
+                            :
+                            null
+                    }
                 </div>
                 {
-                    onPlayClick ?
-                        <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={playOnClick}>
-                            <Icon className={styles['play-icon']} name={'play'} />
-                            <div className={styles['play-icon-outer']} />
-                            <div className={styles['play-icon-background']} />
-                        </div>
-                        :
-                        null
-                }
-                {
-                    progress > 0 ?
-                        <div className={styles['progress-bar-layer']}>
-                            <div className={styles['progress-bar']} style={{ width: `${progress}%` }} />
-                            <div className={styles['progress-bar-background']} />
-                        </div>
-                        :
-                        null
-                }
-                {
-                    newVideos > 0 ?
-                        <div className={styles['new-videos']}>
-                            <div className={styles['layer']} />
-                            <div className={styles['layer']} />
-                            <div className={styles['layer']}>
-                                <Icon className={styles['icon']} name={'add'} />
-                                <div className={styles['label']}>
-                                    {newVideos}
-                                </div>
+                    (typeof name === 'string' && name.length > 0) || hasOptions ?
+                        <div className={classnames(styles['title-bar-container'], { [styles['has-menu']]: hasOptions })}>
+                            <div className={styles['title-label']}>
+                                {typeof name === 'string' && name.length > 0 ? name : ''}
                             </div>
                         </div>
                         :
                         null
                 }
-            </div>
+            </Button>
             {
-                (typeof name === 'string' && name.length > 0) || (Array.isArray(options) && options.length > 0) ?
-                    <div className={styles['title-bar-container']}>
-                        <div className={styles['title-label']}>
-                            {typeof name === 'string' && name.length > 0 ? name : ''}
-                        </div>
-                        {
-                            Array.isArray(options) && options.length > 0 ?
-                                <Multiselect
-                                    className={styles['menu-label-container']}
-                                    mode={platform.isMobile ? 'modal' : 'popup'}
-                                    title={name}
-                                    renderLabelContent={renderMenuLabelContent}
-                                    options={options}
-                                    onOpen={onMenuOpen}
-                                    onClose={onMenuClose}
-                                    onSelect={menuOnSelect}
-                                    tabIndex={-1}
-                                    onClick={menuOnClick}
-                                />
-                                :
-                                null
-                        }
-                    </div>
+                hasOptions ?
+                    actionMenu ?
+                        <ActionMenu
+                            className={styles['menu-label-container']}
+                            title={name}
+                            options={options}
+                            onOpen={onMenuOpen}
+                            onClose={onMenuClose}
+                            onSelect={menuOnSelect}
+                            tabIndex={-1}
+                        >
+                            <Icon className={styles['icon']} name={'more-vertical'} />
+                        </ActionMenu>
+                        :
+                        <Multiselect
+                            className={styles['menu-label-container']}
+                            renderLabelContent={renderMenuLabelContent}
+                            options={options}
+                            onOpen={onMenuOpen}
+                            onClose={onMenuClose}
+                            onSelect={menuOnSelect}
+                            tabIndex={-1}
+                        />
                     :
                     null
             }
-        </Button>
+        </div>
     );
 });
 
@@ -168,6 +175,7 @@ MetaItem.propTypes = {
     progress: PropTypes.number,
     newVideos: PropTypes.number,
     options: PropTypes.array,
+    actionMenu: PropTypes.bool,
     href: PropTypes.string,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,

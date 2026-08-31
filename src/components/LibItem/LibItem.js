@@ -149,6 +149,7 @@ LibItem.propTypes = {
     notifications: PropTypes.object,
     watched: PropTypes.bool,
     detailsVideosFirst: PropTypes.bool,
+    actionMenu: PropTypes.bool,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,
