@@ -3,6 +3,14 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('./ActionButton/styles.less') {
+    action-label: label-container;
+}
+
+:import('../ActionsGroup/ActionsGroup.less') {
+    grouped-action: icon-container;
+}
+
 .meta-preview-container {
     position: relative;
     z-index: 0;
@@ -247,6 +255,77 @@
                 margin-right: 0rem !important;
                 height: 3rem;
                 border-radius: 2rem;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) and (orientation: landscape) {
+    .meta-preview-container.compact {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 2rem;
+
+        .meta-info-container {
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
+
+            .logo, .logo-placeholder {
+                height: 5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .action-buttons-container {
+            flex: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            width: auto;
+            padding-top: 0;
+            margin-top: 0;
+            gap: 0.75rem;
+
+            .action-button, .group-container {
+                flex: none;
+                width: 4rem;
+                min-width: 4rem;
+                height: 4rem;
+                padding: 0 !important;
+                margin: 0;
+                border-radius: 100%;
+            }
+
+            .action-button {
+                &:global(.wide) {
+                    width: 4rem;
+                    padding: 0 !important;
+                    border-radius: 100%;
+                }
+
+                .action-label {
+                    display: none;
+                }
+            }
+
+            .group-container {
+                flex-direction: column;
+                justify-content: flex-end;
+                height: auto;
+                background-color: transparent;
+                backdrop-filter: none;
+                gap: 0.75rem;
+                border-radius: 0;
+
+                .grouped-action {
+                    width: 4rem;
+                    height: 4rem;
+                    padding: 0;
+                    border-radius: 100%;
+                    background-color: var(--overlay-color);
+                    backdrop-filter: blur(5px);
+                }
             }
         }
     }

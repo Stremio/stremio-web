@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
-import useOrientation from 'stremio/common/useOrientation';
 import styles from './BottomSheet.less';
 
 const CLOSE_THRESHOLD = 100;
@@ -68,8 +67,6 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
     const closingRef = useRef(false);
     const wasShownRef = useRef(false);
     const dragRef = useRef<DragState>(createDragState());
-    const orientation = useOrientation();
-    const previousOrientationRef = useRef(orientation);
     const [offset, setOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -185,14 +182,6 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
         document.addEventListener('keydown', onKeyDown);
         return () => document.removeEventListener('keydown', onKeyDown);
     }, [mounted, requestClose]);
-
-    useEffect(() => {
-        if (previousOrientationRef.current !== orientation && wasShownRef.current) {
-            requestClose();
-        }
-
-        previousOrientationRef.current = orientation;
-    }, [orientation, requestClose]);
 
     useEffect(() => {
         const node = containerRef.current;

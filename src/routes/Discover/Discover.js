@@ -7,7 +7,7 @@ const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useMediaQuery, useOrientation, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { CONSTANTS, useBinaryState, useMediaQuery, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { useNavigateWithOrigin } = require('stremio-router');
@@ -37,8 +37,7 @@ const Discover = () => {
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
     const isMobile = useMediaQuery('(max-width: 1000px)');
-    const orientation = useOrientation();
-    const useMobilePreview = isMobile && orientation === 'portrait';
+    const useMobilePreview = isMobile;
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
