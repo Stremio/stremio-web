@@ -51,6 +51,9 @@
         border-radius: 2rem 2rem 0 0;
         background-color: var(--modal-background-color);
         overflow: hidden;
+        isolation: isolate;
+        -webkit-clip-path: inset(0 round 2rem 2rem 0 0);
+        clip-path: inset(0 round 2rem 2rem 0 0);
         pointer-events: auto;
 
         &.flush {
@@ -110,6 +113,7 @@
             overflow-y: auto;
             overscroll-behavior: contain;
             touch-action: pan-y;
+            border-radius: 2rem 2rem 0 0;
         }
     }
 }
