@@ -1107,7 +1107,7 @@ const Player = () => {
             <Indicator
                 className={classnames(styles['layer'], styles['indicator-layer'])}
                 videoState={video.state}
-                disabled={subtitlesMenuOpen}
+                disabled={subtitlesMenuOpen || speedMenuOpen}
             />
             {
                 nextVideoPopupOpen ?
