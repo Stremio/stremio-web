@@ -5,6 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
+const { useNavigateWithOrigin } = require('stremio-router');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { default: ActionMenu } = require('stremio/components/ActionMenu');
 const { default: Button } = require('stremio/components/Button');
@@ -17,6 +18,7 @@ const styles = require('./styles');
 
 const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
     const { t } = useTranslation();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
         return typeof customHref === 'string' ? customHref : getMetaDetailsHref(deepLinks);
@@ -25,7 +27,21 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick]);
+
+        if (
+            !event.defaultPrevented &&
+            event.button === 0 &&
+            !event.altKey &&
+            !event.ctrlKey &&
+            !event.metaKey &&
+            !event.shiftKey &&
+            (!event.currentTarget.target || event.currentTarget.target === '_self') &&
+            typeof href === 'string'
+        ) {
+            event.preventDefault();
+            navigateWithOrigin(href);
+        }
+    }, [href, navigateWithOrigin, props.onClick]);
     const dismissOnClick = React.useCallback((event) => {
         event.preventDefault();
         event.stopPropagation();
