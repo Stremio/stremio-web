@@ -24,8 +24,8 @@ importers:
         specifier: 5.15.0
         version: 5.15.0
       '@stremio/stremio-video':
-        specifier: 0.0.95
-        version: 0.0.95
+        specifier: github:Stremio/stremio-video#0f742458d70786662ef5a3c6542872d61b92b96d
+        version: https://codeload.github.com/Stremio/stremio-video/tar.gz/0f742458d70786662ef5a3c6542872d61b92b96d
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1
@@ -1430,8 +1430,9 @@ packages:
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
 
-  '@stremio/stremio-video@0.0.95':
-    resolution: {integrity: sha512-l1LEVQvH24ce5D0i1HWf/Mid+YQz3itnD4yyIDJulg33io6/KL32bSMh792oCe8jBsDqOJjjOCMTc9aE/cjJBg==}
+  '@stremio/stremio-video@https://codeload.github.com/Stremio/stremio-video/tar.gz/0f742458d70786662ef5a3c6542872d61b92b96d':
+    resolution: {gitHosted: true, integrity: sha512-DBB8Va+TaRmZOpitV+y1t00RlExIpnFsCcEEAtTIKmqRfBYi2x1Sfc9p6wMv/xATIr13pICyTENityLn0iYUAQ==, tarball: https://codeload.github.com/Stremio/stremio-video/tar.gz/0f742458d70786662ef5a3c6542872d61b92b96d}
+    version: 0.0.95
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6497,7 +6498,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.15.0': {}
 
-  '@stremio/stremio-video@0.0.95':
+  '@stremio/stremio-video@https://codeload.github.com/Stremio/stremio-video/tar.gz/0f742458d70786662ef5a3c6542872d61b92b96d':
     dependencies:
       '@stremio/libass-wasm': https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.6/stremio-libass-wasm-4.2.6.tgz
       buffer: 6.0.3
