@@ -1,0 +1,96 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.streaming-server-url-modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .backdrop {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: @color-background-dark5-40;
+        cursor: pointer;
+    }
+
+    .container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 40rem;
+        padding: 2.5rem;
+        border-radius: var(--border-radius);
+        background-color: var(--modal-background-color);
+        box-shadow: var(--outer-glow);
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+        }
+
+        .message {
+            font-size: 1rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.8;
+        }
+
+        .url {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+            direction: ltr;
+            unicode-bidi: isolate-override;
+            overflow-wrap: anywhere;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            margin-top: 1rem;
+
+            .cancel-button, .confirm-button {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 3.5rem;
+                padding: 1.2rem;
+                border-radius: 3.5rem;
+                background-color: var(--secondary-accent-color);
+
+                &:hover {
+                    background-color: transparent;
+                    outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                }
+
+                &:focus {
+                    outline-color: var(--primary-foreground-color);
+                }
+
+                .label {
+                    color: var(--primary-foreground-color);
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+            }
+
+            .cancel-button {
+                background-color: transparent;
+                outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+            }
+        }
+    }
+}
