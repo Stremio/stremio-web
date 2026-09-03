@@ -3,9 +3,9 @@ import { useEffect, useRef } from 'react';
 const useTimeout = (duration: number) => {
     const timeout = useRef<NodeJS.Timeout | null>(null);
 
-    const start = (callback: () => void) => {
+    const start = (callback: () => void, delay = duration) => {
         cancel();
-        timeout.current = setTimeout(callback, duration);
+        timeout.current = setTimeout(callback, delay);
     };
 
     const cancel = () => {

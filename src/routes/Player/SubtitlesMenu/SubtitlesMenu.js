@@ -11,6 +11,7 @@ const { t } = require('i18next');
 const { default: Stepper } = require('./Stepper');
 const { default: SubtitleVariant } = require('./SubtitleVariant');
 const { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } = require('../subtitleDelay');
+const { SUBTITLES_DELAY_REPEAT_STEP_MS } = require('../subtitleDelayAcceleration');
 
 const ORIGIN_PRIORITIES = [
     'LOCAL',
@@ -212,6 +213,8 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                 <div className={styles['settings-header']}>{t('PLAYER_SUBTITLES_SETTINGS')}</div>
                 <div className={styles['settings-list']}>
                     <Stepper
+                        repeatStep={SUBTITLES_DELAY_REPEAT_STEP_MS / 1000}
+                        accelerate
                         className={styles['stepper']}
                         label={'DELAY'}
                         value={props.extraSubtitlesDelay / 1000}

@@ -3,8 +3,16 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
-import { useInterval, useTimeout } from 'stremio/common';
+import { useTimeout } from 'stremio/common';
+import {
+    getAcceleratedInterval,
+    getAcceleratedStep,
+    SUBTITLES_DELAY_REPEAT_INTERVAL_MS,
+} from '../../subtitleDelayAcceleration';
+import { snapSubtitleDelay } from '../../subtitleDelay';
 import styles from './Stepper.less';
+
+const REPEAT_DELAY_MS = 350;
 
 const clamp = (value: number, min?: number, max?: number) => {
     const minClamped = typeof min === 'number' ? Math.max(value, min) : value;
@@ -18,22 +26,23 @@ type Props = {
     value: number,
     unit?: string,
     step: number,
+    repeatStep?: number,
+    accelerate?: boolean,
     min?: number,
     max?: number,
     disabled?: boolean,
     onChange: (value: number) => void,
 };
 
-const Stepper = ({ className, label, value, unit, step, min, max, disabled, onChange }: Props) => {
+const Stepper = ({ className, label, value, unit, step, repeatStep = step, accelerate = false, min, max, disabled, onChange }: Props) => {
     const { t } = useTranslation();
 
     const localValue = useRef(value);
+    const holdStartedAt = useRef(0);
 
-    const interval = useInterval(100);
-    const timeout = useTimeout(250);
+    const timeout = useTimeout(REPEAT_DELAY_MS);
 
     const cancel = () => {
-        interval.cancel();
         timeout.cancel();
     };
 
@@ -53,25 +62,48 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
         onChange(clamp(localValue.current + delta, min, max));
     }, [onChange]);
 
-    const onDecrementMouseDown = useCallback(() => {
+    const startRepeating = useCallback((direction: number) => {
         cancel();
-        timeout.start(() => interval.start(() => updateValue(-step)));
-    }, [updateValue]);
+        holdStartedAt.current = performance.now();
+        let repeatValue = localValue.current;
+
+        const repeat = () => {
+            const heldFor = performance.now() - holdStartedAt.current;
+            const delta = accelerate ? getAcceleratedStep(repeatStep, heldFor) : repeatStep;
+            const interval = accelerate ?
+                getAcceleratedInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS, heldFor)
+                :
+                SUBTITLES_DELAY_REPEAT_INTERVAL_MS;
+            repeatValue += direction * delta;
+            const snappedValue = snapSubtitleDelay(
+                Math.round(repeatValue * 1000),
+                direction,
+                Math.round(step * 1000),
+            ) / 1000;
+            onChange(clamp(snappedValue, min, max));
+            timeout.start(repeat, interval);
+        };
+
+        timeout.start(repeat);
+    }, [accelerate, max, min, onChange, repeatStep, step]);
+
+    const onDecrementMouseDown = useCallback(() => {
+        startRepeating(-1);
+    }, [startRepeating]);
 
     const onDecrementMouseUp = useCallback(() => {
         cancel();
         updateValue(-step);
-    }, [updateValue]);
+    }, [step, updateValue]);
 
     const onIncrementMouseDown = useCallback(() => {
-        cancel();
-        timeout.start(() => interval.start(() => updateValue(step)));
-    }, [updateValue]);
+        startRepeating(1);
+    }, [startRepeating]);
 
     const onIncrementMouseUp = useCallback(() => {
         cancel();
         updateValue(step);
-    }, [updateValue]);
+    }, [step, updateValue]);
 
     useEffect(() => {
         localValue.current = value;
