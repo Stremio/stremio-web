@@ -10,6 +10,7 @@ const styles = require('./styles');
 const { t } = require('i18next');
 const { default: Stepper } = require('./Stepper');
 const { default: SubtitleVariant } = require('./SubtitleVariant');
+const { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } = require('../subtitleDelay');
 
 const ORIGIN_PRIORITIES = [
     'LOCAL',
@@ -118,7 +119,8 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
         if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay)) {
                 if (typeof props.onExtraSubtitlesDelayChanged === 'function') {
-                    props.onExtraSubtitlesDelayChanged(value * 1000);
+                    const delay = Math.round(value * 1000);
+                    props.onExtraSubtitlesDelayChanged(snapSubtitleDelay(delay, delay - props.extraSubtitlesDelay));
                 }
             }
         }
@@ -214,7 +216,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         label={'DELAY'}
                         value={props.extraSubtitlesDelay / 1000}
                         unit={'s'}
-                        step={0.25}
+                        step={SUBTITLES_DELAY_STEP_MS / 1000}
                         disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
