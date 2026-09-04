@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { withCoreSuspender } from '../CoreSuspender';
 import { getKeyboardShortcutKey } from '../Shortcuts';
-import onShortcut from '../Shortcuts/onShortcut';
+import useShortcut from '../Shortcuts/useShortcut';
 import useSettings from '../useSettings';
 import FullscreenContext, { type FullscreenContextValue } from './FullscreenContext';
 import { usePlatform } from '../Platform';
@@ -63,7 +63,7 @@ const FullscreenProvider = ({ children }: Props) => {
         fullscreen ? exitFullscreen() : requestFullscreen();
     }, [fullscreen, exitFullscreen, requestFullscreen]);
 
-    onShortcut('fullscreen', toggleFullscreen, [toggleFullscreen]);
+    useShortcut('fullscreen', toggleFullscreen);
 
     useEffect(() => {
         const videoElement = videoElementRef.current;
