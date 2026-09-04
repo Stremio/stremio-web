@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const { FileDropProvider, useFileDrop, onFileDrop } = require('./FileDrop');
+const { FileDropProvider, useFileDrop, useFileDropListener } = require('./FileDrop');
 const { FullscreenProvider, useFullscreen } = require('./Fullscreen');
 const { PlatformProvider, usePlatform } = require('./Platform');
 const { ToastProvider, useToast } = require('./Toast');
@@ -35,7 +35,7 @@ const { default: useLanguageSorting } = require('./useLanguageSorting');
 module.exports = {
     FileDropProvider,
     useFileDrop,
-    onFileDrop,
+    useFileDropListener,
     FullscreenProvider,
     PlatformProvider,
     usePlatform,
