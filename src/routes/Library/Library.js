@@ -18,7 +18,7 @@ const styles = require('./styles');
 const SCROLL_TO_BOTTOM_TRESHOLD = 400;
 
 function withModel(Library) {
-    const withModel = () => {
+    const LibraryWithModel = () => {
         const location = useLocation();
         const model = React.useMemo(() => {
             return typeof location.pathname === 'string' ?
@@ -37,8 +37,8 @@ function withModel(Library) {
 
         return <Library model={model} />;
     };
-    withModel.displayName = 'withModel';
-    return withModel;
+    LibraryWithModel.displayName = 'LibraryWithModel';
+    return LibraryWithModel;
 }
 
 const Library = ({ model }) => {
