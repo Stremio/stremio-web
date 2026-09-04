@@ -120,20 +120,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
             setDragging(false);
             setOffset(0);
             setPhaseState('entering');
-
-            let secondFrame = 0;
-            const firstFrame = requestAnimationFrame(() => {
-                secondFrame = requestAnimationFrame(() => {
-                    if (phaseRef.current === 'entering') {
-                        setPhaseState('entered');
-                    }
-                });
-            });
-
-            return () => {
-                cancelAnimationFrame(firstFrame);
-                cancelAnimationFrame(secondFrame);
-            };
+            return undefined;
         }
 
         if (phaseRef.current === 'idle') {
@@ -146,6 +133,25 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
         setPhaseState('exiting');
         return undefined;
     }, [show, setPhaseState]);
+
+    useEffect(() => {
+        if (phase !== 'entering') {
+            return undefined;
+        }
+
+        const node = containerRef.current;
+        if (node !== null) {
+            node.getBoundingClientRect();
+        }
+
+        const frame = requestAnimationFrame(() => {
+            if (phaseRef.current === 'entering') {
+                setPhaseState('entered');
+            }
+        });
+
+        return () => window.cancelAnimationFrame(frame);
+    }, [phase, setPhaseState]);
 
     useEffect(() => {
         if (phase !== 'exiting') {
