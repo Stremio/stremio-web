@@ -11,7 +11,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
@@ -715,54 +715,54 @@ const Player = () => {
         return () => platform.shell.off('media-key', onMediaKey);
     }, [video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
-    onShortcut('seekForward', (combo) => {
+    useShortcut('seekForward', React.useCallback((combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested]), !menusOpen);
 
-    onShortcut('seekBackward', (combo) => {
+    useShortcut('seekBackward', React.useCallback((combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(-seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested]), !menusOpen);
 
-    onShortcut('mute', () => {
+    useShortcut('mute', React.useCallback(() => {
         video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
-    }, [video.state.muted], !menusOpen);
+    }, [onMuteRequested, onUnmuteRequested, video.state.muted]), !menusOpen);
 
-    onShortcut('volume', (combo) => {
+    useShortcut('volume', React.useCallback((combo) => {
         if (video.state.volume !== null) {
             const volume = combo === 0 ? Math.min(video.state.volume + 5, 200) : Math.max(video.state.volume - 5, 0);
             onVolumeChangeRequested(volume);
         }
-    }, [video.state.volume], !menusOpen);
+    }, [onVolumeChangeRequested, video.state.volume]), !menusOpen);
 
-    onShortcut('audioMenu', () => {
+    useShortcut('audioMenu', React.useCallback(() => {
         closeMenus();
         if (video.state?.audioTracks?.length > 0) {
             toggleAudioMenu();
         }
-    }, [video.state.audioTracks, toggleAudioMenu]);
+    }, [closeMenus, video.state?.audioTracks?.length, toggleAudioMenu]));
 
-    onShortcut('infoMenu', () => {
+    useShortcut('infoMenu', React.useCallback(() => {
         closeMenus();
         if (player.metaItem?.type === 'Ready') {
             toggleSideDrawer();
         }
-    }, [player.metaItem, toggleSideDrawer]);
+    }, [closeMenus, player.metaItem?.type, toggleSideDrawer]));
 
-    onShortcut('speedMenu', () => {
+    useShortcut('speedMenu', React.useCallback(() => {
         closeMenus();
         if (video.state.playbackSpeed !== null) {
             toggleSpeedMenu();
         }
-    }, [video.state.playbackSpeed, toggleSpeedMenu]);
+    }, [closeMenus, video.state.playbackSpeed, toggleSpeedMenu]));
 
-    onShortcut('speed', (combo) => {
+    useShortcut('speed', React.useCallback((combo) => {
         if (video.state.playbackSpeed !== null) {
             const speed = combo === 0 ? Math.max(video.state.playbackSpeed - 0.25, 0.25) : Math.min(video.state.playbackSpeed + 0.25, 2);
             onPlaybackSpeedChanged(speed);
         }
-    }, [video.state.playbackSpeed, onPlaybackSpeedChanged], !menusOpen);
+    }, [video.state.playbackSpeed, onPlaybackSpeedChanged]), !menusOpen);
 
     const selectedStream = player.selected?.stream;
     const statisticsMenuAvailable = streamingServer?.statistics?.type !== 'Err'
@@ -791,7 +791,7 @@ const Player = () => {
         }
     }, [finishDetailsHold, closeMenus, statisticsMenuAvailable, toggleStatisticsMenu]);
 
-    onShortcut('statisticsMenu', () => {
+    useShortcut('statisticsMenu', React.useCallback(() => {
         if (detailsHold.current !== null || isPlaybackSpeedHoldActive()) return;
 
         const hold = { phase: 'pending', timer: null };
@@ -804,18 +804,18 @@ const Player = () => {
             }
         }, HOLD_DELAY);
         detailsHold.current = hold;
-    }, [statisticsMenuAvailable, closeMenus, openStatisticsMenu, isPlaybackSpeedHoldActive], routeFocused);
+    }, [statisticsMenuAvailable, closeMenus, openStatisticsMenu, isPlaybackSpeedHoldActive]), routeFocused);
 
-    onShortcut('playNext', () => {
+    useShortcut('playNext', React.useCallback(() => {
         closeMenus();
         if (player.nextVideo !== null) {
             nextVideo();
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, false, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation]);
+    }, [closeMenus, player.nextVideo, nextVideo, handleNextVideoNavigation]));
 
-    onShortcut('exit', () => {
+    useShortcut('exit', React.useCallback(() => {
         closeMenus();
         // When escExitFullscreen is enabled, FullscreenProvider handles the first
         // Escape press by leaving fullscreen. Only skip navigating back in that case,
@@ -824,7 +824,7 @@ const Player = () => {
             return;
         }
         navigate(-1);
-    }, [settings.escExitFullscreen, fullscreen]);
+    }, [closeMenus, settings.escExitFullscreen, fullscreen, navigate]));
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {
