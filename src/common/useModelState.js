@@ -11,7 +11,6 @@ const { useRouteActive } = require('stremio/common/useRouteFocused');
 const useModelState = ({ action, ...args }) => {
     const core = useCore();
     const routeActive = useRouteActive();
-    const mountedRef = React.useRef(false);
     const [model, timeout, map, deps] = React.useMemo(() => {
         return [args.model, args.timeout, args.map, args.deps];
     }, []);
@@ -40,12 +39,20 @@ const useModelState = ({ action, ...args }) => {
         };
     }, []);
     React.useEffect(() => {
+        let active = true;
+        let request = 0;
+        let appliedRequest = 0;
         const onNewState = async (models) => {
             if (models.indexOf(model) === -1 && (!Array.isArray(deps) || intersection(deps, models).length === 0)) {
                 return;
             }
 
+            const currentRequest = ++request;
             const state = await core.transport.getState(model);
+            if (!active || currentRequest < appliedRequest) {
+                return;
+            }
+            appliedRequest = currentRequest;
             if (typeof map === 'function') {
                 setState(map(state));
             } else {
@@ -55,18 +62,14 @@ const useModelState = ({ action, ...args }) => {
         const onNewStateThrottled = throttle(onNewState, timeout);
         if (routeActive) {
             core.on('state', onNewStateThrottled);
-            if (mountedRef.current) {
-                onNewState([model]);
-            }
+            onNewState([model]);
         }
         return () => {
+            active = false;
             onNewStateThrottled.cancel();
             core.off('state', onNewStateThrottled);
         };
     }, [routeActive]);
-    React.useEffect(() => {
-        mountedRef.current = true;
-    }, []);
     return state;
 };
 
