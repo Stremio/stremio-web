@@ -8,7 +8,7 @@ const TooltipItem = require('./TooltipItem');
 const TooltipProvider = ({ children, className }) => {
     const [tooltips, setTooltips] = React.useState([]);
 
-    const add = (options) => {
+    const add = React.useCallback((options) => {
         const tooltip = {
             ...options,
             active: false,
@@ -18,15 +18,15 @@ const TooltipProvider = ({ children, className }) => {
             ...tooltips,
             tooltip,
         ]));
-    };
+    }, []);
 
-    const remove = (id) => {
+    const remove = React.useCallback((id) => {
         setTooltips((tooltips) => (
             tooltips.filter((tooltip) => tooltip.id !== id)
         ));
-    };
+    }, []);
 
-    const update = (id, state) => {
+    const update = React.useCallback((id, state) => {
         setTooltips((tooltips) => (
             tooltips.map((tooltip) => {
                 if (tooltip.id === id) {
@@ -38,10 +38,12 @@ const TooltipProvider = ({ children, className }) => {
                 return tooltip;
             })
         ));
-    };
+    }, []);
+
+    const commands = React.useMemo(() => ({ add, remove, update }), [add, remove, update]);
 
     return (
-        <TooltipContext.Provider value={{ add, remove, update }}>
+        <TooltipContext.Provider value={commands}>
             { children }
             <div className={'tooltips-items-container'}>
                 {
