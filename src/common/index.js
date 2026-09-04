@@ -10,6 +10,7 @@ const { DiscordProvider, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscor
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
+const { default: getStreamingServerWarning } = require('./getStreamingServerWarning');
 const interfaceLanguages = require('./interfaceLanguages.json');
 const languageNames = require('./languageNames.json');
 const languages = require('./languages');
@@ -56,6 +57,7 @@ module.exports = {
     withCoreSuspender,
     useCoreSuspender,
     getVisibleChildrenRange,
+    getStreamingServerWarning,
     interfaceLanguages,
     languageNames,
     languages,

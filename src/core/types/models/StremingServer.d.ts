@@ -127,4 +127,5 @@ type StreamingServer = {
     playbackDevices: Loadable<PlaybackDevice[]> | null,
     networkInfo: Loadable<NetworkInfo> | null,
     deviceInfo: Loadable<DeviceInfo> | null,
+    state: Loadable<string> | null
 };

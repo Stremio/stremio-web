@@ -23,6 +23,8 @@ const Item = ({ url }: Props) => {
 
     const selected = useMemo(() => profile.settings.streamingServerUrl === url, [url, profile.settings]);
     const defaultUrl = useMemo(() => url === DEFAULT_STREAMING_SERVER_URL, [url]);
+    const serverReady = useMemo(() => streamingServer.state?.type === 'Ready' && streamingServer.state.content === 'running', [streamingServer.state]);
+    const serverError = useMemo(() => streamingServer.state?.type === 'Err' || (streamingServer.state?.type === 'Ready' && streamingServer.state.content === 'notRunning'), [streamingServer.state]);
 
     const handleDelete = useCallback(() => {
         deleteServerUrl(url);
@@ -43,19 +45,19 @@ const Item = ({ url }: Props) => {
                 {
                     selected ?
                         <div className={styles['status']}>
-                            <div className={classNames(styles['icon'], { [styles['ready']]: streamingServer.settings?.type === 'Ready' }, { [styles['error']]: streamingServer.settings?.type === 'Err' })} />
+                            <div className={classNames(styles['icon'], { [styles['ready']]: serverReady }, { [styles['error']]: serverError })} />
                             <div className={styles['label']}>
                                 {
-                                    streamingServer.settings === null ?
+                                    streamingServer.state === null ?
                                         'NotLoaded'
                                         :
-                                        streamingServer.settings.type === 'Ready' ?
+                                        serverReady ?
                                             t('SETTINGS_SERVER_STATUS_ONLINE')
                                             :
-                                            streamingServer.settings.type === 'Err' ?
+                                            serverError ?
                                                 t('SETTINGS_SERVER_STATUS_ERROR')
                                                 :
-                                                streamingServer.settings.type
+                                                streamingServer.state.type
                                 }
                             </div>
                         </div>
