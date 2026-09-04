@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CONSTANTS, languages, useFileDropListener, onShortcut, useToast } from 'stremio/common';
+import { CONSTANTS, languages, useFileDropListener, useShortcut, useToast } from 'stremio/common';
 import { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } from './subtitleDelay';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
@@ -502,15 +502,15 @@ const useSubtitles = ({
         };
     }, [applySubtitleStyle, t, toast, video.events]);
 
-    onShortcut('subtitlesDelay', (combo) => {
+    useShortcut('subtitlesDelay', useCallback((combo) => {
         combo === 1 ? increaseDelay() : decreaseDelay();
-    }, [increaseDelay, decreaseDelay], !menusOpen);
+    }, [increaseDelay, decreaseDelay]), !menusOpen);
 
-    onShortcut('subtitlesSize', (combo) => {
+    useShortcut('subtitlesSize', useCallback((combo) => {
         combo === 1 ? updateSize(1) : updateSize(-1);
-    }, [updateSize], !menusOpen);
+    }, [updateSize]), !menusOpen);
 
-    onShortcut('toggleSubtitles', () => {
+    useShortcut('toggleSubtitles', useCallback(() => {
         const subtitlesEnabled = video.state.selectedSubtitlesTrackId !== null ||
             video.state.selectedExtraSubtitlesTrackId !== null;
 
@@ -564,14 +564,14 @@ const useSubtitles = ({
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
         video.state.subtitlesTracks,
-    ], !menusOpen);
+    ]), !menusOpen);
 
-    onShortcut('subtitlesMenu', () => {
+    useShortcut('subtitlesMenu', useCallback(() => {
         closeMenus();
         if (hasTracks) {
             toggleSubtitlesMenu();
         }
-    }, [closeMenus, hasTracks, toggleSubtitlesMenu]);
+    }, [closeMenus, hasTracks, toggleSubtitlesMenu]));
 
     const menuProps = useMemo(() => ({
         subtitlesLanguage: settings.subtitlesLanguage,
