@@ -1,8 +1,11 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import { Modal, useModalsContainer } from 'stremio-router';
+import { useRouteFocused } from 'stremio/common';
+import useOrientation from 'stremio/common/useOrientation';
 import styles from './BottomSheet.less';
 
 const CLOSE_THRESHOLD = 100;
@@ -17,6 +20,7 @@ type DragState = {
     offset: number,
     dismissing: boolean,
     locked: boolean,
+    scroller: Element | null,
 };
 
 const createDragState = (): DragState => ({
@@ -26,6 +30,7 @@ const createDragState = (): DragState => ({
     offset: 0,
     dismissing: false,
     locked: false,
+    scroller: null,
 });
 
 const isVerticallyScrollable = (element: Element) => {
@@ -37,36 +42,44 @@ const isVerticallyScrollable = (element: Element) => {
     return element.scrollHeight > element.clientHeight + 1;
 };
 
-const isScrolledToTop = (target: EventTarget | null, container: HTMLElement | null) => {
+const findScrolledAncestor = (target: EventTarget | null, container: HTMLElement | null) => {
     let element = target instanceof Element ? target : null;
 
     while (element && element !== container) {
         if (isVerticallyScrollable(element) && element.scrollTop > 1) {
-            return false;
+            return element;
         }
 
         element = element.parentElement;
     }
 
-    return true;
+    return null;
 };
 
 type Props = {
     children: React.ReactNode,
     className?: string,
     title?: string,
+    ariaLabel?: string,
     show: boolean,
     onClose: () => void,
     closeOnContentClick?: boolean,
+    closeOnOrientationChange?: boolean,
     flush?: boolean,
 };
 
-const BottomSheet = ({ children, className, title, show, onClose, closeOnContentClick = true, flush = false }: Props) => {
+const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
+    const { t } = useTranslation();
+    const routeFocused = useRouteFocused();
+    const modalsContainer = useModalsContainer();
+    const modalRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const onCloseRef = useRef(onClose);
     const closingRef = useRef(false);
     const wasShownRef = useRef(false);
     const dragRef = useRef<DragState>(createDragState());
+    const orientation = useOrientation();
+    const previousOrientationRef = useRef(orientation);
     const [offset, setOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -74,6 +87,8 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
     const [closing, setClosing] = useState(false);
 
     onCloseRef.current = onClose;
+
+    const labelledBy = typeof title === 'string' && title.length > 0 ? title : ariaLabel;
 
     const containerStyle = useMemo(() => ({
         transform: open ? `translateY(${offset}px)` : 'translateY(100%)',
@@ -169,19 +184,39 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
     }, [closing, finishClose]);
 
     useEffect(() => {
-        if (!mounted) {
+        if (!mounted || !routeFocused || !(modalsContainer instanceof HTMLElement)) {
             return undefined;
         }
 
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                requestClose();
+            if (event.code !== 'Escape') {
+                return;
             }
+
+            if (modalsContainer.childNodes[modalsContainer.childElementCount - 2] !== modalRef.current) {
+                return;
+            }
+
+            requestClose();
         };
 
-        document.addEventListener('keydown', onKeyDown);
-        return () => document.removeEventListener('keydown', onKeyDown);
-    }, [mounted, requestClose]);
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [mounted, routeFocused, modalsContainer, requestClose]);
+
+    useEffect(() => {
+        if (!closeOnOrientationChange) {
+            previousOrientationRef.current = orientation;
+            return undefined;
+        }
+
+        if (previousOrientationRef.current !== orientation && wasShownRef.current) {
+            requestClose();
+        }
+
+        previousOrientationRef.current = orientation;
+        return undefined;
+    }, [orientation, closeOnOrientationChange, requestClose]);
 
     useEffect(() => {
         const node = containerRef.current;
@@ -208,6 +243,7 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
                 offset: 0,
                 dismissing: false,
                 locked: false,
+                scroller: findScrolledAncestor(event.target, node),
             };
         };
 
@@ -231,7 +267,7 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
                     return;
                 }
 
-                if (!isScrolledToTop(event.target, node)) {
+                if (drag.scroller !== null && drag.scroller.scrollTop > 1) {
                     return;
                 }
 
@@ -285,11 +321,15 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
         return null;
     }
 
-    return createPortal((
-        <div className={classNames(styles['bottom-sheet'], className, { [styles['open']]: open })}>
+    return (
+        <Modal
+            ref={modalRef}
+            className={classNames(styles['bottom-sheet'], className, { [styles['open']]: open })}
+            autoFocus
+        >
             <button
                 className={styles['backdrop']}
-                aria-label={'Close'}
+                aria-label={t('BUTTON_CLOSE')}
                 onClick={requestClose}
             />
             <div
@@ -301,7 +341,7 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
                 style={containerStyle}
                 role={'dialog'}
                 aria-modal={'true'}
-                aria-label={title}
+                aria-label={labelledBy}
                 onTransitionEnd={onTransitionEnd}
             >
                 <div className={styles['handle']} />
@@ -319,8 +359,8 @@ const BottomSheet = ({ children, className, title, show, onClose, closeOnContent
                     {children}
                 </div>
             </div>
-        </div>
-    ), document.body);
+        </Modal>
+    );
 };
 
 export default BottomSheet;

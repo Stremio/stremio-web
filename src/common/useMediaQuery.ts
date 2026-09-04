@@ -3,9 +3,7 @@
 import { useEffect, useState } from 'react';
 
 const useMediaQuery = (query: string): boolean => {
-    const [matches, setMatches] = useState(() => (
-        typeof window !== 'undefined' && window.matchMedia(query).matches
-    ));
+    const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia(query);
@@ -13,7 +11,7 @@ const useMediaQuery = (query: string): boolean => {
             setMatches(mediaQuery.matches);
         };
 
-        onChange();
+        setMatches(mediaQuery.matches);
         mediaQuery.addEventListener('change', onChange);
 
         return () => {

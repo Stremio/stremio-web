@@ -36,7 +36,7 @@ const Discover = () => {
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
-    const isMobile = useMediaQuery('(max-width: 1000px)');
+    const isMobile = useMediaQuery(`(max-width: ${CONSTANTS.XSMALL_WIDTH}px)`);
     const useMobilePreview = isMobile;
 
     const selectedMetaItem = React.useMemo(() => {
@@ -119,14 +119,16 @@ const Discover = () => {
     }, []);
     const metaItemOnClick = React.useCallback((event) => {
         const index = Number(event.currentTarget.dataset.index);
-        if (!Number.isInteger(index)) {
-            return;
-        }
+        const hasIndex = Number.isInteger(index);
 
-        if (useMobilePreview) {
+        if (useMobilePreview && hasIndex) {
             event.preventDefault();
             setSelectedMetaItemIndex(index);
             openMobilePreview();
+            return;
+        }
+
+        if (!hasIndex) {
             return;
         }
 
@@ -281,7 +283,9 @@ const Discover = () => {
                         show={useMobilePreview && mobilePreviewOpen}
                         onClose={closeMobilePreview}
                         closeOnContentClick={false}
+                        closeOnOrientationChange={false}
                         flush={true}
+                        ariaLabel={selectedMetaItem.name}
                     >
                         <MetaPreview
                             className={styles['mobile-preview']}

@@ -56,6 +56,11 @@
         clip-path: inset(0 round 2rem 2rem 0 0);
         pointer-events: auto;
 
+        &:not(.flush) {
+            gap: 1.5rem;
+            box-shadow: var(--outer-glow);
+        }
+
         &.flush {
             padding-bottom: 0;
         }
