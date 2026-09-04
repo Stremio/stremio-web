@@ -2,6 +2,12 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
+@animation-duration-ms: 250;
+
+:export {
+    animationDurationMs: @animation-duration-ms;
+}
+
 .bottom-sheet {
     z-index: 99;
     position: fixed;
@@ -30,7 +36,7 @@
         border: 0;
         background-color: var(--primary-background-color);
         opacity: 0;
-        transition: opacity 0.25s ease-out;
+        transition: opacity (@animation-duration-ms * 1ms) ease-out;
         cursor: pointer;
         pointer-events: auto;
     }
@@ -66,7 +72,7 @@
         }
 
         &:not(.dragging) {
-            transition: transform 0.25s ease-out;
+            transition: transform (@animation-duration-ms * 1ms) ease-out;
         }
 
         .handle {

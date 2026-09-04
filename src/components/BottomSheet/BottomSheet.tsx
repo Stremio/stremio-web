@@ -4,14 +4,16 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { Modal, useModalsContainer } from 'stremio-router';
-import { useRouteFocused } from 'stremio/common';
+import useRouteFocused from 'stremio/common/useRouteFocused';
 import useOrientation from 'stremio/common/useOrientation';
 import styles from './BottomSheet.less';
 
 const CLOSE_THRESHOLD = 100;
 const CLOSE_THRESHOLD_RATIO = 0.12;
-const ANIMATION_DURATION = 250;
+const ANIMATION_DURATION = Number.parseInt(styles.animationDurationMs, 10) || 250;
 const DISMISS_START_DELTA = 8;
+
+type Phase = 'idle' | 'entering' | 'entered' | 'exiting';
 
 type DragState = {
     id: number | null,
@@ -62,64 +64,48 @@ type Props = {
     title?: string,
     ariaLabel?: string,
     show: boolean,
-    onClose: () => void,
+    onCloseRequest: () => void,
     closeOnContentClick?: boolean,
     closeOnOrientationChange?: boolean,
     flush?: boolean,
 };
 
-const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
+const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const modalsContainer = useModalsContainer();
     const modalRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const onCloseRef = useRef(onClose);
-    const closingRef = useRef(false);
-    const wasShownRef = useRef(false);
+    const onCloseRequestRef = useRef(onCloseRequest);
+    const phaseRef = useRef<Phase>('idle');
     const dragRef = useRef<DragState>(createDragState());
     const orientation = useOrientation();
     const previousOrientationRef = useRef(orientation);
+    const [phase, setPhase] = useState<Phase>('idle');
     const [offset, setOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
-    const [mounted, setMounted] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [closing, setClosing] = useState(false);
 
-    onCloseRef.current = onClose;
+    onCloseRequestRef.current = onCloseRequest;
+
+    const setPhaseState = useCallback((next: Phase) => {
+        phaseRef.current = next;
+        setPhase(next);
+    }, []);
 
     const labelledBy = typeof title === 'string' && title.length > 0 ? title : ariaLabel;
+    const open = phase === 'entered';
+    const mounted = phase !== 'idle';
 
     const containerStyle = useMemo(() => ({
         transform: open ? `translateY(${offset}px)` : 'translateY(100%)',
     }), [open, offset]);
 
-    const finishClose = useCallback(() => {
-        if (!closingRef.current) {
-            return;
-        }
-
-        closingRef.current = false;
-        wasShownRef.current = false;
-        dragRef.current = createDragState();
-        setClosing(false);
-        setDragging(false);
-        setMounted(false);
-        setOffset(0);
-        onCloseRef.current();
-    }, []);
-
     const requestClose = useCallback(() => {
-        if (!wasShownRef.current || closingRef.current) {
+        if (phaseRef.current === 'idle' || phaseRef.current === 'exiting') {
             return;
         }
 
-        closingRef.current = true;
-        dragRef.current = createDragState();
-        setClosing(true);
-        setDragging(false);
-        setOpen(false);
-        setOffset(0);
+        onCloseRequestRef.current();
     }, []);
 
     const onContentClick = useCallback(() => {
@@ -128,31 +114,18 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
         }
     }, [closeOnContentClick, requestClose]);
 
-    const onTransitionEnd = useCallback((event: React.TransitionEvent<HTMLDivElement>) => {
-        if (event.target !== containerRef.current || event.propertyName !== 'transform') {
-            return;
-        }
-
-        if (closingRef.current) {
-            finishClose();
-        }
-    }, [finishClose]);
-
     useEffect(() => {
         if (show) {
-            closingRef.current = false;
-            wasShownRef.current = true;
             dragRef.current = createDragState();
-            setClosing(false);
             setDragging(false);
-            setMounted(true);
             setOffset(0);
+            setPhaseState('entering');
 
             let secondFrame = 0;
             const firstFrame = requestAnimationFrame(() => {
                 secondFrame = requestAnimationFrame(() => {
-                    if (!closingRef.current) {
-                        setOpen(true);
+                    if (phaseRef.current === 'entering') {
+                        setPhaseState('entered');
                     }
                 });
             });
@@ -163,25 +136,30 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
             };
         }
 
-        if (!wasShownRef.current) {
+        if (phaseRef.current === 'idle') {
             return undefined;
         }
 
-        requestClose();
+        dragRef.current = createDragState();
+        setDragging(false);
+        setOffset(0);
+        setPhaseState('exiting');
         return undefined;
-    }, [show, requestClose]);
+    }, [show, setPhaseState]);
 
     useEffect(() => {
-        if (!closing) {
+        if (phase !== 'exiting') {
             return undefined;
         }
 
         const timeout = window.setTimeout(() => {
-            finishClose();
-        }, ANIMATION_DURATION + 50);
+            setPhaseState('idle');
+            setDragging(false);
+            setOffset(0);
+        }, ANIMATION_DURATION);
 
         return () => window.clearTimeout(timeout);
-    }, [closing, finishClose]);
+    }, [phase, setPhaseState]);
 
     useEffect(() => {
         if (!mounted || !routeFocused || !(modalsContainer instanceof HTMLElement)) {
@@ -210,7 +188,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
             return undefined;
         }
 
-        if (previousOrientationRef.current !== orientation && wasShownRef.current) {
+        if (previousOrientationRef.current !== orientation && phaseRef.current !== 'idle') {
             requestClose();
         }
 
@@ -231,7 +209,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
         };
 
         const onTouchStart = (event: TouchEvent) => {
-            if (closingRef.current || event.touches.length !== 1) {
+            if (phaseRef.current === 'exiting' || event.touches.length !== 1) {
                 return;
             }
 
@@ -250,7 +228,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
         const onTouchMove = (event: TouchEvent) => {
             const drag = dragRef.current;
             const touch = Array.from(event.touches).find(({ identifier }) => identifier === drag.id);
-            if (!touch || closingRef.current || drag.locked) {
+            if (!touch || phaseRef.current === 'exiting' || drag.locked) {
                 return;
             }
 
@@ -317,7 +295,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
         };
     }, [mounted, requestClose]);
 
-    if (!mounted) {
+    if (phase === 'idle') {
         return null;
     }
 
@@ -342,7 +320,6 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onClose, clo
                 role={'dialog'}
                 aria-modal={'true'}
                 aria-label={labelledBy}
-                onTransitionEnd={onTransitionEnd}
             >
                 <div className={styles['handle']} />
                 {

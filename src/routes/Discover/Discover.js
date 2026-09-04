@@ -281,7 +281,7 @@ const Discover = () => {
                     <BottomSheet
                         className={styles['mobile-bottom-sheet']}
                         show={isMobile && mobilePreviewOpen}
-                        onClose={closeMobilePreview}
+                        onCloseRequest={closeMobilePreview}
                         closeOnContentClick={false}
                         closeOnOrientationChange={false}
                         flush={true}
