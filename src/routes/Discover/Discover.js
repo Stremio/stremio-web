@@ -8,6 +8,7 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
 const { CONSTANTS, useBinaryState, useMediaQuery, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { XSMALL_WIDTH } = require('stremio/common/screenSizes');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { useNavigateWithOrigin } = require('stremio-router');
@@ -36,8 +37,7 @@ const Discover = () => {
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
-    const isMobile = useMediaQuery(`(max-width: ${CONSTANTS.XSMALL_WIDTH}px)`);
-    const useMobilePreview = isMobile;
+    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -121,7 +121,7 @@ const Discover = () => {
         const index = Number(event.currentTarget.dataset.index);
         const hasIndex = Number.isInteger(index);
 
-        if (useMobilePreview && hasIndex) {
+        if (isMobile && hasIndex) {
             event.preventDefault();
             setSelectedMetaItemIndex(index);
             openMobilePreview();
@@ -137,7 +137,7 @@ const Discover = () => {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [useMobilePreview, selectedMetaItemIndex, openMobilePreview]);
+    }, [isMobile, selectedMetaItemIndex, openMobilePreview]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -151,10 +151,10 @@ const Discover = () => {
         setSelectedMetaItemIndex(0);
     }, [discover.selected]);
     React.useEffect(() => {
-        if (!useMobilePreview) {
+        if (!isMobile) {
             closeMobilePreview();
         }
-    }, [useMobilePreview]);
+    }, [isMobile]);
     React.useEffect(() => {
         if (!routeActive) {
             closeMobilePreview();
@@ -280,7 +280,7 @@ const Discover = () => {
                 selectedMetaItem !== null ?
                     <BottomSheet
                         className={styles['mobile-bottom-sheet']}
-                        show={useMobilePreview && mobilePreviewOpen}
+                        show={isMobile && mobilePreviewOpen}
                         onClose={closeMobilePreview}
                         closeOnContentClick={false}
                         closeOnOrientationChange={false}
