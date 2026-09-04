@@ -12,6 +12,8 @@ const { default: ActionsGroup } = require('stremio/components/ActionsGroup');
 const ModalDialog = require('stremio/components/ModalDialog');
 const SharePrompt = require('stremio/components/SharePrompt');
 const CONSTANTS = require('stremio/common/CONSTANTS');
+const { default: useMediaQuery } = require('stremio/common/useMediaQuery');
+const { XSMALL_WIDTH } = require('stremio/common/screenSizes');
 const routesRegexp = require('stremio/common/routesRegexp');
 const useBinaryState = require('stremio/common/useBinaryState');
 const ActionButton = require('./ActionButton');
@@ -29,6 +31,8 @@ const ALLOWED_LINK_REDIRECTS = [
 const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, onShowClick }, ref) => {
     const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
+    const isMobileLandscape = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px) and (orientation: landscape)`);
+    const iconActions = compact && isMobileLandscape;
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
             links
@@ -232,6 +236,8 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                             className={classnames(styles['action-button'], styles['show-button'])}
                             icon={'play'}
                             label={t('SHOW')}
+                            variant={iconActions ? 'icon' : 'wide'}
+                            tooltip={iconActions}
                             tabIndex={0}
                             href={showHref}
                             onClick={onShowClick}

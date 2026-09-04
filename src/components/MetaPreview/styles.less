@@ -194,15 +194,7 @@
     
         .action-button {
             flex: none;
-            width: 4rem;
-            height: 4rem;
             margin-bottom: 1rem;
-
-            &:global(.wide) {
-                width: auto;
-                padding: 0 2rem;
-                border-radius: 4rem;
-            }
 
             &:not(:last-child) {
                 margin-right: 1rem;
@@ -251,10 +243,16 @@
             gap: 0.5rem;
 
             .action-button, .group-container {
-                padding: 0 1.5rem !important;
-                margin-right: 0rem !important;
-                height: 3rem;
-                border-radius: 2rem;
+                margin-right: 0;
+            }
+        }
+
+        &:not(.compact) {
+            .action-buttons-container {
+                .action-button, .group-container {
+                    height: 3rem;
+                    border-radius: 2rem;
+                }
             }
         }
     }
@@ -289,21 +287,10 @@
 
             .action-button, .group-container {
                 flex: none;
-                width: 4rem;
-                min-width: 4rem;
-                height: 4rem;
-                padding: 0 !important;
                 margin: 0;
-                border-radius: 100%;
             }
 
             .action-button {
-                &:global(.wide) {
-                    width: 4rem;
-                    padding: 0 !important;
-                    border-radius: 100%;
-                }
-
                 .action-label {
                     display: none;
                 }
@@ -355,14 +342,6 @@
 
             &::-webkit-scrollbar {
                 display: none;
-            }
-
-            .action-button {
-                padding: 0 1rem !important;
-
-                &:global(.wide) {
-                    padding: 0 2rem !important;
-                }
             }
         }
     }
