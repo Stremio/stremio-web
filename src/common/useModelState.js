@@ -17,10 +17,15 @@ const useModelState = ({ action, ...args }) => {
     const { getState } = useCoreSuspender();
     const [state, setState] = React.useReducer(
         (prevState, nextState) => {
-            return Object.keys(prevState).reduce((result, key) => {
-                result[key] = deepEqual(prevState[key], nextState[key]) ? prevState[key] : nextState[key];
+            const keys = Object.keys(nextState);
+            let changed = keys.length !== Object.keys(prevState).length;
+            const state = keys.reduce((result, key) => {
+                const equal = Object.prototype.hasOwnProperty.call(prevState, key) && deepEqual(prevState[key], nextState[key]);
+                changed = changed || !equal;
+                result[key] = equal ? prevState[key] : nextState[key];
                 return result;
             }, {});
+            return changed ? state : prevState;
         },
         undefined,
         () => {
