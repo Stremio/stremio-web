@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useCore } from 'stremio/core';
 
 const useRating = (ratingInfo?: Loadable<RatingInfo>) => {
@@ -16,18 +16,10 @@ const useRating = (ratingInfo?: Loadable<RatingInfo>) => {
         });
     }, []);
 
-    const status = useMemo(() => {
-        const content = ratingInfo?.type === 'Ready' ? ratingInfo.content as RatingInfo : null;
-        return content?.status;
-    }, [ratingInfo]);
-
-    const liked = useMemo(() => {
-        return status === 'liked';
-    }, [status]);
-
-    const loved = useMemo(() => {
-        return status === 'loved';
-    }, [status]);
+    const content = ratingInfo?.type === 'Ready' ? ratingInfo.content as RatingInfo : null;
+    const status = content?.status;
+    const liked = status === 'liked';
+    const loved = status === 'loved';
 
     const onLiked = useCallback(() => {
         setRating(status === 'liked' ? null : 'liked');
