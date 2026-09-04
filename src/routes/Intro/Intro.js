@@ -107,11 +107,7 @@ const Intro = () => {
                 closeLoaderModal();
                 dispatch({ type: 'error', error: error.message });
             });
-    }, []);
-    const cancelLoginWithFacebook = React.useCallback(() => {
-        stopFacebookLogin();
-        closeLoaderModal();
-    }, []);
+    }, [startFacebookLogin, openLoaderModal, closeLoaderModal]);
     const loginWithApple = React.useCallback(() => {
         openLoaderModal();
         startAppleLogin()
@@ -134,11 +130,12 @@ const Intro = () => {
                 closeLoaderModal();
                 dispatch({ type: 'error', error: error.message });
             });
-    }, []);
-    const cancelLoginWithApple = React.useCallback(() => {
+    }, [startAppleLogin, openLoaderModal, closeLoaderModal]);
+    const cancelSocialLogin = React.useCallback(() => {
+        stopFacebookLogin();
         stopAppleLogin();
         closeLoaderModal();
-    }, []);
+    }, [stopFacebookLogin, stopAppleLogin, closeLoaderModal]);
     const loginWithEmail = React.useCallback(() => {
         if (typeof state.email !== 'string' || state.email.length === 0 || !emailRef.current.validity.valid) {
             dispatch({ type: 'error', error: t('INVALID_EMAIL') });
@@ -422,7 +419,7 @@ const Intro = () => {
                         <div className={styles['loader-container']}>
                             <Icon className={styles['icon']} name={'person'} />
                             <div className={styles['label']}>{t('AUTHENTICATING')}</div>
-                            <Button className={styles['button']} onClick={cancelLoginWithFacebook && cancelLoginWithApple}>
+                            <Button className={styles['button']} onClick={cancelSocialLogin}>
                                 {t('BUTTON_CANCEL')}
                             </Button>
                         </div>
