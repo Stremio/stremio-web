@@ -104,7 +104,12 @@ const Player = () => {
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
-    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+    const [nextVideoPopupDismissal, setNextVideoPopupDismissal] = React.useState(null);
+    const nextVideoPopupOpen = player.nextVideo !== null &&
+        nextVideoPopupDismissal?.stream !== video.state.stream &&
+        video.state.time !== null && video.state.duration !== null &&
+        video.state.time < video.state.duration &&
+        video.state.duration - video.state.time <= settings.nextVideoNotificationDuration;
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
 
     const menusOpen = React.useMemo(() => {
@@ -176,7 +181,6 @@ const Player = () => {
         toggleSubtitlesMenu,
     });
 
-    const nextVideoPopupDismissed = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
     const requestedVideoScale = React.useRef(null);
@@ -352,9 +356,8 @@ const Player = () => {
     }, [streamStateChanged]);
 
     const onDismissNextVideoPopup = React.useCallback(() => {
-        closeNextVideoPopup();
-        nextVideoPopupDismissed.current = true;
-    }, []);
+        setNextVideoPopupDismissal({ stream: video.state.stream });
+    }, [video.state.stream]);
 
     const onNextVideoRequested = React.useCallback(() => {
         if (player.nextVideo !== null) {
@@ -553,16 +556,6 @@ const Player = () => {
         videoParamsChanged(video.state.videoParams);
     }, [video.state.videoParams]);
 
-    React.useEffect(() => {
-        if (player.nextVideo !== null && !nextVideoPopupDismissed.current) {
-            if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
-                openNextVideoPopup();
-            } else {
-                closeNextVideoPopup();
-            }
-        }
-    }, [player.nextVideo, video.state.time, video.state.duration]);
-
     // Auto audio track selection
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
@@ -579,7 +572,6 @@ const Player = () => {
 
     React.useEffect(() => {
         defaultAudioTrackSelected.current = false;
-        nextVideoPopupDismissed.current = false;
         playingOnExternalDevice.current = false;
     }, [video.state.stream]);
 
