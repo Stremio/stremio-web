@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
+import { CONSTANTS, languages, useFileDropListener, onShortcut, useToast } from 'stremio/common';
 import { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } from './subtitleDelay';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
@@ -321,9 +321,11 @@ const useSubtitles = ({
         streamStateChanged({ subtitleOffset: offset });
     }, [streamStateChanged, setSubtitlesOffset]);
 
-    onFileDrop(CONSTANTS.SUPPORTED_LOCAL_SUBTITLES, (file: File, buffer: ArrayBuffer) => {
+    const onSubtitlesDrop = useCallback((file: File, buffer: ArrayBuffer) => {
         videoRef.current.addLocalSubtitles(file.name, buffer);
-    });
+    }, []);
+
+    useFileDropListener(CONSTANTS.SUPPORTED_LOCAL_SUBTITLES, onSubtitlesDrop);
 
     useEffect(() => {
         if (video.state.stream !== null) {
