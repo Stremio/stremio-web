@@ -3,25 +3,37 @@
 const React = require('react');
 const { deepEqual } = require('fast-equals');
 const { useCore } = require('stremio/core');
-const { withCoreSuspender, useProfile, useToast } = require('stremio/common');
+const { CONSTANTS, withCoreSuspender, useModelState, useProfile, useToast } = require('stremio/common');
 const { default: StreamingServerUrlModal } = require('./StreamingServerUrlModal');
 
-const isValidStreamingServerUrl = (url) => {
+const DEFAULT_STREAMING_SERVER_URLS = new Set([
+    new URL(CONSTANTS.DEFAULT_STREAMING_SERVER_URL).href,
+    new URL('http://localhost:11470').href,
+]);
+const LOOPBACK_HOSTNAMES = new Set(['127.0.0.1', 'localhost']);
+
+const parse = (value) => {
     try {
-        const { protocol } = new URL(url);
-        return protocol === 'http:' || protocol === 'https:';
+        const url = new URL(value);
+        return url.protocol === 'http:' || url.protocol === 'https:' ? url : null;
     } catch (_) {
-        return false;
+        return null;
     }
 };
+
+const normalize = (value) => parse(value)?.href ?? null;
+const loopback = (url) => url.protocol === 'http:' && LOOPBACK_HOSTNAMES.has(url.hostname);
+const map = ({ streamingServerUrls }) => ({ streamingServerUrls });
 
 const SearchParamsHandler = () => {
     const core = useCore();
     const profile = useProfile();
     const toast = useToast();
+    const { streamingServerUrls } = useModelState({ model: 'ctx', map: map });
 
     const [searchParams, setSearchParams] = React.useState({});
-    const [requestedStreamingServerUrl, setRequestedStreamingServerUrl] = React.useState(null);
+    const [requested, set] = React.useState(null);
+    const handledStreamingServerUrlRef = React.useRef(null);
 
     const onLocationChange = () => {
         const { origin, hash, search } = window.location;
@@ -33,43 +45,86 @@ const SearchParamsHandler = () => {
         });
     };
 
-    const onStreamingServerUrlConfirm = React.useCallback(() => {
+    const apply = React.useCallback((url, { save, notify }) => {
+        if (save) {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'AddServerUrl',
+                    args: url,
+                },
+            });
+        }
+
         core.transport.dispatch({
             action: 'Ctx',
             args: {
                 action: 'UpdateSettings',
                 args: {
                     ...profile.settings,
-                    streamingServerUrl: requestedStreamingServerUrl,
+                    streamingServerUrl: url,
                 },
             },
         });
-        core.transport.dispatch({
-            action: 'Ctx',
-            args: {
-                action: 'AddServerUrl',
-                args: requestedStreamingServerUrl,
-            },
-        });
-        toast.show({
-            type: 'success',
-            title: `Using streaming server at ${requestedStreamingServerUrl}`,
-            timeout: 4000,
-        });
-        setRequestedStreamingServerUrl(null);
-    }, [requestedStreamingServerUrl, profile.settings]);
 
-    const onStreamingServerUrlCancel = React.useCallback(() => {
-        setRequestedStreamingServerUrl(null);
+        if (notify) {
+            toast.show({
+                type: 'success',
+                title: `Using streaming server at ${url}`,
+                timeout: 4000,
+            });
+        }
+    }, [core, profile.settings, toast]);
+
+    const onConfirm = React.useCallback(() => {
+        apply(requested, { save: true, notify: false });
+        set(null);
+    }, [apply, requested]);
+
+    const onCancel = React.useCallback(() => {
+        set(null);
     }, []);
 
     React.useEffect(() => {
         const { streamingServerUrl } = searchParams;
 
-        if (streamingServerUrl && isValidStreamingServerUrl(streamingServerUrl)) {
-            setRequestedStreamingServerUrl(streamingServerUrl);
+        if (handledStreamingServerUrlRef.current === streamingServerUrl) {
+            return;
         }
-    }, [searchParams]);
+        handledStreamingServerUrlRef.current = streamingServerUrl ?? null;
+        set(null);
+
+        const parsed = parse(streamingServerUrl);
+        if (parsed === null) {
+            return;
+        }
+
+        const normalized = parsed.href;
+        const selected = normalize(profile.settings.streamingServerUrl);
+        if (normalized === selected) {
+            return;
+        }
+
+        if (DEFAULT_STREAMING_SERVER_URLS.has(normalized)) {
+            apply(normalized, { save: true, notify: false });
+            return;
+        }
+
+        const saved = streamingServerUrls.some(({ url }) => (
+            normalize(url) === normalized
+        ));
+        if (saved) {
+            apply(normalized, { save: false, notify: true });
+            return;
+        }
+
+        if (loopback(parsed)) {
+            apply(normalized, { save: true, notify: true });
+            return;
+        }
+
+        set(normalized);
+    }, [apply, profile.settings.streamingServerUrl, searchParams, streamingServerUrls]);
 
     React.useEffect(() => {
         onLocationChange();
@@ -77,11 +132,11 @@ const SearchParamsHandler = () => {
         return () => window.removeEventListener('hashchange', onLocationChange);
     }, []);
 
-    return requestedStreamingServerUrl !== null ?
+    return requested !== null ?
         <StreamingServerUrlModal
-            url={requestedStreamingServerUrl}
-            onConfirm={onStreamingServerUrlConfirm}
-            onCancel={onStreamingServerUrlCancel}
+            url={requested}
+            onConfirm={onConfirm}
+            onCancel={onCancel}
         />
         :
         null;
