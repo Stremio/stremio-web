@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  a-color-picker@1.2.1: 3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af
+
 importers:
 
   .:
@@ -28,7 +31,7 @@ importers:
         version: 0.0.96
       a-color-picker:
         specifier: 1.2.1
-        version: 1.2.1
+        version: 1.2.1(patch_hash=3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af)
       bowser:
         specifier: 2.14.1
         version: 2.14.1
@@ -6871,7 +6874,7 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  a-color-picker@1.2.1:
+  a-color-picker@1.2.1(patch_hash=3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af):
     dependencies:
       is-plain-object: 2.0.4
 
