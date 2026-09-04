@@ -224,7 +224,7 @@ module.exports = (env, argv) => ({
             new WorkboxPlugin.GenerateSW({
                 maximumFileSizeToCacheInBytes: 20000000,
                 clientsClaim: true,
-                skipWaiting: true
+                skipWaiting: false
             }),
         new CopyWebpackPlugin({
             patterns: [
