@@ -1,25 +1,21 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
+
+const getServerSnapshot = () => false;
 
 const useMediaQuery = (query: string): boolean => {
-    const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
-
-    useEffect(() => {
+    const subscribe = useCallback((onStoreChange: () => void) => {
         const mediaQuery = window.matchMedia(query);
-        const onChange = () => {
-            setMatches(mediaQuery.matches);
-        };
-
-        setMatches(mediaQuery.matches);
-        mediaQuery.addEventListener('change', onChange);
-
+        mediaQuery.addEventListener('change', onStoreChange);
         return () => {
-            mediaQuery.removeEventListener('change', onChange);
+            mediaQuery.removeEventListener('change', onStoreChange);
         };
     }, [query]);
 
-    return matches;
+    const getSnapshot = useCallback(() => window.matchMedia(query).matches, [query]);
+
+    return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 };
 
 export default useMediaQuery;
