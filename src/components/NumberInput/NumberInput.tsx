@@ -63,9 +63,9 @@ const NumberInput = forwardRef<HTMLInputElement, Props>(({ defaultValue = 0, sho
         return value;
     };
 
-    const handleInputChange = useCallback(({ target: { valueAsNumber }}: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = ({ target: { valueAsNumber }}: ChangeEvent<HTMLInputElement>) => {
         handleValueChange(clampValueToRange(valueAsNumber || 0));
-    }, []);
+    };
 
     return (
         <div className={classnames(props.containerClassName, styles['number-input'])}>
