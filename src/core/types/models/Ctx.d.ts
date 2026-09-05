@@ -24,6 +24,7 @@ type Settings = {
     videoMode: string | null,
     escExitFullscreen: boolean,
     interfaceLanguage: string,
+    interfaceScale: number,
     quitOnClose: boolean,
     hideSpoilers: boolean,
     gamepadSupport: boolean,

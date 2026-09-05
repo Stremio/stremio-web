@@ -44,6 +44,7 @@ const useShell = (): Shell => {
     const [capabilities, setCapabilities] = useState<ShellCapabilities>({
         gpuVideoProcessing: false,
         nativeAssSubtitles: false,
+        nativeInterfaceScale: false,
     });
 
     const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
@@ -104,6 +105,7 @@ const useShell = (): Shell => {
                     setCapabilities({
                         gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
                         nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
+                        nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
                     });
                 }
 

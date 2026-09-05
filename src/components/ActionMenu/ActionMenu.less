@@ -17,8 +17,8 @@
 .menu-container {
     position: fixed;
     min-width: 9rem;
-    max-width: min(14rem, calc(100vw - 1rem));
-    max-height: min(calc(3rem * 7), calc(100vh - 1rem));
+    max-width: min(14rem, calc(var(--dynamic-viewport-width) - 1rem));
+    max-height: min(calc(3rem * 7), calc(var(--dynamic-viewport-height) - 1rem));
     overflow-y: auto;
     border-radius: var(--border-radius);
     background-color: var(--modal-background-color);
