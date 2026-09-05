@@ -24,7 +24,7 @@
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz",
         "@stremio/stremio-icons": "5.15.0",
-        "@stremio/stremio-video": "0.0.93",
+        "@stremio/stremio-video": "0.0.96",
         "a-color-picker": "1.2.1",
         "bowser": "2.14.1",
         "buffer": "6.0.3",
@@ -48,7 +48,7 @@
         "react-router": "6.30.0",
         "react-router-dom": "6.30.0",
         "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "github:Stremio/stremio-translations#5d4edb6a00d664f38575a181bf65608c9062036d",
+        "stremio-translations": "github:Stremio/stremio-translations#ac0671c3bf483a21bb94a419ab1ee474293b7c06",
         "url": "0.11.4",
         "use-long-press": "^3.3.0",
         "workbox-window": "7.4.1"

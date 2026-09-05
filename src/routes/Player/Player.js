@@ -66,7 +66,7 @@ const Player = () => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const profile = useProfile();
-    const [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
+    const [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
@@ -179,6 +179,8 @@ const Player = () => {
     const nextVideoPopupDismissed = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
+    const requestedVideoScale = React.useRef(null);
+    const persistedVideoScale = React.useRef({ stream: null, scale: null });
     const [error, setError] = React.useState(null);
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
@@ -385,8 +387,14 @@ const Player = () => {
         const currentScale = video.state.videoScale || 'contain';
         const currentIndex = VIDEO_SCALES.indexOf(currentScale);
         const nextScale = VIDEO_SCALES[(currentIndex + 1) % VIDEO_SCALES.length];
+        requestedVideoScale.current = nextScale;
+        persistedVideoScale.current = { stream: video.state.stream, scale: nextScale };
         video.setVideoScale(nextScale);
-    }, [video.state.videoScale]);
+        if (player.videoScale !== undefined) {
+            videoScaleChanged(nextScale);
+        }
+        streamStateChanged({ videoScale: nextScale });
+    }, [player.videoScale, video.state.stream, video.state.videoScale, streamStateChanged, videoScaleChanged]);
 
     const onAudioTrackSelected = React.useCallback((id) => {
         video.setAudioTrack(id);
@@ -669,6 +677,36 @@ const Player = () => {
         nextVideoPopupDismissed.current = false;
         playingOnExternalDevice.current = false;
     }, [video.state.stream]);
+
+    React.useEffect(() => {
+        if (requestedVideoScale.current === player.videoScale) {
+            requestedVideoScale.current = null;
+        }
+        if (player.selected === null) {
+            requestedVideoScale.current = null;
+            persistedVideoScale.current = { stream: null, scale: null };
+            return;
+        }
+        if (!video.state.manifest?.props.includes('videoScale') || video.state.stream === null) {
+            return;
+        }
+        if (persistedVideoScale.current.stream !== video.state.stream) {
+            persistedVideoScale.current = { stream: video.state.stream, scale: null };
+        }
+
+        const sessionScale = requestedVideoScale.current ?? player.videoScale;
+        const scale = sessionScale ?? player.streamState?.videoScale ?? 'contain';
+
+        if (video.state.videoScale !== scale) {
+            video.setVideoScale(scale);
+        }
+        if (sessionScale &&
+            player.streamState?.videoScale !== sessionScale &&
+            persistedVideoScale.current.scale !== sessionScale) {
+            persistedVideoScale.current.scale = sessionScale;
+            streamStateChanged({ videoScale: sessionScale });
+        }
+    }, [player.selected, player.streamState?.videoScale, player.videoScale, video.state.manifest, video.state.stream, video.state.videoScale, streamStateChanged]);
 
     React.useEffect(() => {
         if (!Array.isArray(video.state.audioTracks) || video.state.audioTracks.length === 0) {
@@ -1163,7 +1201,7 @@ const Player = () => {
             <Indicator
                 className={classnames(styles['layer'], styles['indicator-layer'])}
                 videoState={video.state}
-                disabled={subtitlesMenuOpen}
+                disabled={subtitlesMenuOpen || speedMenuOpen}
             />
             {
                 nextVideoPopupOpen && player.nextVideo !== null ?

@@ -16,10 +16,11 @@
 @play-icon-size: 4rem;
 
 .meta-item-container {
+    position: relative;
     padding: 1rem;
     overflow: visible;
 
-    &:hover, &:focus, &:global(.active), &:global(.selected) {
+    &:hover, &:focus-within, &:global(.active), &:global(.selected) {
         outline-style: none;
         transition: background-color 100ms ease-out;
 
@@ -46,9 +47,22 @@
             }
         }
 
-        .title-bar-container {
-            .menu-label-container {
-                opacity: 1;
+        .menu-label-container {
+            opacity: 1;
+        }
+    }
+
+    .meta-item-link {
+        display: block;
+        overflow: visible;
+
+        &:focus {
+            outline-style: none;
+        }
+
+        @media (pointer: coarse) {
+            &:active:not(:global(.active)) {
+                scale: none;
             }
         }
     }
@@ -71,11 +85,20 @@
         }
     }
 
+    &:active:not(:global(.active)) {
+        scale: none;
+
+        .poster-container {
+            scale: 0.95;
+        }
+    }
+
     .poster-container {
         position: relative;
         z-index: 0;
         background-color: var(--overlay-color);
         border-radius: var(--border-radius);
+        transition: scale 100ms ease-out;
 
         &:global(.poster-change-cursor) {
             .poster-image-layer {
@@ -351,6 +374,13 @@
         height: 4rem;
         overflow: visible;
 
+        &.has-menu {
+            .title-label {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
         .title-label {
             flex: 1;
             padding-left: 1.5rem;
@@ -366,46 +396,49 @@
                 padding: 0 0.5rem;
             }
         }
+    }
 
-        .menu-label-container {
-            z-index: 1;
-            flex: none;
-            width: 1.5rem;
-            height: 4rem;
-            padding: 1rem 0;
-            background-color: transparent;
-            opacity: 0;
-            transform: translateX(1rem);
-            transition: opacity 0.1s ease-out;
+    .menu-label-container {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 1;
+        flex: none;
+        width: 1.5rem;
+        height: 4rem;
+        padding: 1rem 0;
+        background-color: transparent;
+        opacity: 0;
+        transform: translateX(1rem);
+        transition: opacity 0.1s ease-out;
 
-            .icon {
-                display: block;
-                width: 100%;
-                height: 100%;
-                color: var(--primary-foreground-color);
-                opacity: 0.6;
-            }
+        .icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+        }
 
-            .popup-menu-container {
-                width: auto;
+        .popup-menu-container {
+            width: auto;
 
-                .multiselect-menu-container {
-                    min-width: 9rem;
-                    max-width: 14rem;
+            .multiselect-menu-container {
+                min-width: 9rem;
+                max-width: 14rem;
 
-                    .multiselect-option-container {
-                        padding: 1rem 1.5rem;
+                .multiselect-option-container {
+                    padding: 1rem 1.5rem;
 
-                        &:hover, &:focus {
-                            outline: none;
-                            background-color: var(--overlay-color);
-                        }
+                    &:hover, &:focus {
+                        outline: none;
+                        background-color: var(--overlay-color);
+                    }
 
-                        .multiselect-option-label {
-                            font-weight: 500;
-                            color: var(--primary-foreground-color);
-                            opacity: 0.8;
-                        }
+                    .multiselect-option-label {
+                        font-weight: 500;
+                        color: var(--primary-foreground-color);
+                        opacity: 0.8;
                     }
                 }
             }
@@ -416,6 +449,11 @@
 @media only screen and (max-width: @minimum) {
     .meta-item-container {
         padding: 0.5rem;
+
+        .menu-label-container {
+            right: 0.5rem;
+            bottom: 0.5rem;
+        }
 
         .title-bar-container {
             margin-top: 0.5rem;
