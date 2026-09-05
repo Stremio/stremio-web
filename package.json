@@ -21,7 +21,7 @@
         "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
-        "@stremio/stremio-core-web": "0.62.1",
+        "@stremio/stremio-core-web": "https://raw.githubusercontent.com/Stremio/stremio-core/6373c605307a7003f46ec55443b5ab5284c7e379/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz",
         "@stremio/stremio-icons": "5.15.0",
         "@stremio/stremio-video": "0.0.96",
         "a-color-picker": "1.2.1",
