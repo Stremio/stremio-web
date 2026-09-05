@@ -3,7 +3,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router');
 const { useTranslate } = require('stremio/common');
-const { default: toPath } = require('stremio/common/toPath');
+const { default: toPath } = require('stremio-router/toPath');
 
 const mapSelectableInputs = (discover, t, navigate) => {
     const selectedType = discover.selectable.types.find(({ selected }) => selected);
@@ -23,6 +23,7 @@ const mapSelectableInputs = (discover, t, navigate) => {
             navigate(toPath(value));
         }
     };
+    const selectedCatalog = discover.selectable.catalogs.find(({ selected }) => selected);
     const catalogSelect = {
         options: discover.selectable.catalogs
             .map(({ id, name, addon, deepLinks }) => ({
@@ -30,9 +31,9 @@ const mapSelectableInputs = (discover, t, navigate) => {
                 label: t.catalogTitle({ addon, id, name }),
                 title: `${name} (${addon.manifest.name})`
             })),
-        value: discover.selectable.catalogs
-            .filter(({ selected }) => selected)
-            .map(({ deepLinks }) => deepLinks.discover),
+        value: selectedCatalog ?
+            selectedCatalog.deepLinks.discover
+            : undefined,
         title: discover.selected !== null
             ? () => {
                 const selectableCatalog = discover.selectable.catalogs

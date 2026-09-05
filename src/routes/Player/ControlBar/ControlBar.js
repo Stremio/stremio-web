@@ -12,6 +12,12 @@ const styles = require('./styles');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
+const VIDEO_SCALE_ICONS = {
+    contain: 'video-scale-fit',
+    cover: 'video-scale-crop',
+    fill: 'video-scale-stretch'
+};
+
 const ControlBar = React.forwardRef(({
     className,
     paused,
@@ -26,7 +32,7 @@ const ControlBar = React.forwardRef(({
     metaItem,
     nextVideo,
     stream,
-    statistics,
+    statisticsAvailable,
     onPlayRequested,
     onPauseRequested,
     onNextVideoRequested,
@@ -39,6 +45,8 @@ const ControlBar = React.forwardRef(({
     onToggleSpeedMenu,
     onToggleSideDrawer,
     onToggleOptionsMenu,
+    shellCastSupported,
+    onToggleCastDevicesMenu,
     videoScale,
     videoScaleLabel,
     onVideoScaleChanged,
@@ -68,6 +76,9 @@ const ControlBar = React.forwardRef(({
     const onStatisticsButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.statisticsMenuClosePrevented = true;
     }, []);
+    const onCastDevicesButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.castDevicesMenuClosePrevented = true;
+    }, []);
     const onPlayPauseButtonClick = React.useCallback(() => {
         if (paused) {
             if (typeof onPlayRequested === 'function') {
@@ -95,9 +106,19 @@ const ControlBar = React.forwardRef(({
             }
         }
     }, [muted, onMuteRequested, onUnmuteRequested]);
+    const castButtonDisabled = platform.shell.active ? !shellCastSupported : !chromecastServiceActive;
     const onChromecastButtonClick = React.useCallback(() => {
+        if (platform.shell.active) {
+            if (shellCastSupported && typeof onToggleCastDevicesMenu === 'function') {
+                onToggleCastDevicesMenu();
+            }
+            return;
+        }
+        if (castButtonDisabled) {
+            return;
+        }
         chromecast.transport.requestSession();
-    }, []);
+    }, [castButtonDisabled, platform.shell.active, shellCastSupported, onToggleCastDevicesMenu]);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -115,6 +136,7 @@ const ControlBar = React.forwardRef(({
                 duration={duration}
                 buffered={buffered}
                 onSeekRequested={onSeekRequested}
+                playbackSpeed={playbackSpeed}
             />
             <div className={styles['control-bar-buttons-container']}>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
@@ -156,13 +178,16 @@ const ControlBar = React.forwardRef(({
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
-                        <Icon className={styles['icon']} name={'network'} />
-                    </Button>
+                    {
+                        statisticsAvailable &&
+                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
+                                <Icon className={styles['icon']} name={'network'} />
+                            </Button>
+                    }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
                         <Icon className={styles['icon']} name={'speed'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': castButtonDisabled })} tabIndex={-1} onMouseDown={onCastDevicesButtonMouseDown} onClick={onChromecastButtonClick}>
                         <Icon className={styles['icon']} name={'cast'} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
@@ -180,7 +205,7 @@ const ControlBar = React.forwardRef(({
                             null
                     }
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
-                        <Icon className={styles['icon']} name={'scale'} />
+                        <Icon className={styles['icon']} name={VIDEO_SCALE_ICONS[videoScale || 'contain']} />
                     </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
@@ -208,7 +233,7 @@ ControlBar.propTypes = {
     metaItem: PropTypes.object,
     nextVideo: PropTypes.object,
     stream: PropTypes.object,
-    statistics: PropTypes.object,
+    statisticsAvailable: PropTypes.bool,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onNextVideoRequested: PropTypes.func,
@@ -221,6 +246,8 @@ ControlBar.propTypes = {
     onToggleSpeedMenu: PropTypes.func,
     onToggleSideDrawer: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
+    shellCastSupported: PropTypes.bool,
+    onToggleCastDevicesMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,

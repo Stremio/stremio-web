@@ -3,7 +3,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router');
 const { withCoreSuspender, useStreamingServer } = require('stremio/common');
-const { default: toPath } = require('stremio/common/toPath');
+const { default: toPath } = require('stremio-router/toPath');
 
 const DeepLinkHandler = () => {
     const navigate = useNavigate();

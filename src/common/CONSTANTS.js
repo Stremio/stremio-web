@@ -12,7 +12,6 @@ const CATALOG_PREVIEW_SIZE = 10;
 const CATALOG_PAGE_SIZE = 100;
 const NONE_EXTRA_VALUE = 'None';
 const SKIP_EXTRA_NAME = 'skip';
-const META_LINK_CATEGORY = 'meta';
 const IMDB_LINK_CATEGORY = 'imdb';
 const SHARE_LINK_CATEGORY = 'share';
 const WRITERS_LINK_CATEGORY = 'Writers';
@@ -68,7 +67,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'VLC',
         value: 'vlc',
-        platforms: ['ios', 'visionos', 'android'],
+        platforms: ['ios', 'visionos', 'android', 'windows'],
     },
     {
         label: 'MPV',
@@ -98,6 +97,11 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'Moonplayer (VisionOS)',
         value: 'moonplayer',
+        platforms: ['visionos'],
+    },
+    {
+        label: 'CineUltra',
+        value: 'cineultra',
         platforms: ['visionos'],
     },
     {
@@ -134,7 +138,6 @@ module.exports = {
     CATALOG_PAGE_SIZE,
     NONE_EXTRA_VALUE,
     SKIP_EXTRA_NAME,
-    META_LINK_CATEGORY,
     IMDB_LINK_CATEGORY,
     SHARE_LINK_CATEGORY,
     WRITERS_LINK_CATEGORY,

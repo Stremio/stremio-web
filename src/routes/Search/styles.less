@@ -277,8 +277,16 @@
                 margin-bottom: 1.5rem;
             }
 
+            .search-row-poster, .search-row-square, .search-row-landscape {
+                .meta-item {
+                    &:not(:empty) {
+                        display: block;
+                    }
+                }
+            }
+
             .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
+                .meta-item-placeholder {
                     &:nth-child(n+4) {
                         display: none;
                     }

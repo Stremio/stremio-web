@@ -3,7 +3,7 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
-import { useNavigateWithOrigin } from 'stremio/common/useNavigateWithOrigin';
+import { useNavigateWithOrigin } from 'stremio-router';
 import { Button, HorizontalScroll, Image } from 'stremio/components';
 import styles from './Cell.less';
 

@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const NotFound = require('stremio/routes/NotFound');
 const { useProfile, useNotifications, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
-const { default: toPath } = require('stremio/common/toPath');
+const { default: toPath } = require('stremio-router/toPath');
 const { DelayedRenderer, Chips, Image, MainNavBars, LibItem, MultiselectMenu } = require('stremio/components');
 const { default: Placeholder } = require('./Placeholder');
 const useLibrary = require('./useLibrary');
@@ -105,7 +105,13 @@ const Library = ({ model }) => {
                                     <div ref={scrollContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll}>
                                         {
                                             library.catalog.map((libItem, index) => (
-                                                <LibItem {...libItem} notifications={notifications} removable={model === 'library'} key={index} />
+                                                <LibItem
+                                                    {...libItem}
+                                                    key={index}
+                                                    notifications={notifications}
+                                                    removable={model === 'library'}
+                                                    detailsVideosFirst={model === 'library'}
+                                                />
                                             ))
                                         }
                                     </div>

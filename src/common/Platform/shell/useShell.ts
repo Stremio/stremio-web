@@ -41,6 +41,10 @@ const useShell = (): Shell => {
         windowClosed: false,
         windowHidden: false,
     });
+    const [capabilities, setCapabilities] = useState<ShellCapabilities>({
+        gpuVideoProcessing: false,
+        nativeAssSubtitles: false,
+    });
 
     const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
     const off = (name: string, listener: (arg: any) => void) => events.off(name, listener);
@@ -88,9 +92,19 @@ const useShell = (): Shell => {
 
                 if (event.type === ShellEventType.INIT) {
                     const { data } = event as ShellEventInit;
-                    const [, [,,, version]] = data.transport.properties;
+                    const shellProperties = Object.fromEntries(data.transport.properties
+                        .filter((property) => property.length >= 4 && property[1])
+                        .map(([, name,, value]) => [name, value]));
 
-                    setState((state) => ({ ...state, initialized: true, version }));
+                    setState((state) => ({
+                        ...state,
+                        initialized: true,
+                        version: shellProperties.shellVersion ?? null,
+                    }));
+                    setCapabilities({
+                        gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
+                        nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
+                    });
                 }
 
                 if (event.type === ShellEventType.SIGNAL) {
@@ -118,6 +132,7 @@ const useShell = (): Shell => {
         on,
         off,
         state,
+        capabilities,
     };
 };
 

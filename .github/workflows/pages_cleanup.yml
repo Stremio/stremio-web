@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: gh-pages
           fetch-depth: 0
@@ -30,15 +30,15 @@ jobs:
                   continue
               fi
 
-              keep_parent=false
+              keep_related=false
               for branch in "${branches[@]}"; do
-                  if [[ "$branch" == "$path/"* ]]; then
-                      keep_parent=true
+                  if [[ "$branch" == "$path/"* || "$path" == "$branch/"* ]]; then
+                      keep_related=true
                       break
                   fi
               done
 
-              if ! $keep_parent; then
+              if ! $keep_related; then
                   echo "Deleting $dir"
                   rm -rf "$dir"
               fi

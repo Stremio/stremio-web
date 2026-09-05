@@ -2,15 +2,20 @@
 
 const React = require('react');
 const { useNavigate } = require('react-router');
-const { default: toPath } = require('stremio/common/toPath');
+const { useNavigateWithOrigin } = require('stremio-router');
+const { default: toPath } = require('stremio-router/toPath');
 const PropTypes = require('prop-types');
 const { useCore } = require('stremio/core');
+const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const MetaItem = require('stremio/components/MetaItem');
 const { t } = require('i18next');
 
-const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
+const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, ...props }) => {
     const navigate = useNavigate();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
     const core = useCore();
+    const detailsHref = React.useMemo(() => getMetaDetailsHref(props.deepLinks, detailsVideosFirst), [props.deepLinks, detailsVideosFirst]);
+    const playerHref = props.deepLinks && typeof props.deepLinks.player === 'string' ? props.deepLinks.player : null;
 
     const newVideos = React.useMemo(() => {
         const count = notifications.items?.[_id]?.length ?? 0;
@@ -27,11 +32,11 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
         ].filter(({ value }) => {
             switch (value) {
                 case 'play':
-                    return props.deepLinks && typeof props.deepLinks.player === 'string';
+                    return typeof playerHref === 'string';
                 case 'details':
-                    return props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
+                    return typeof detailsHref === 'string';
                 case 'watched':
-                    return typeof watched !== 'undefined' && props.deepLinks && (typeof props.deepLinks.metaDetailsVideos === 'string' || typeof props.deepLinks.metaDetailsStreams === 'string');
+                    return typeof watched !== 'undefined' && typeof detailsHref === 'string';
                 case 'dismiss':
                     return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress) && props.progress > 0;
                 case 'remove':
@@ -41,7 +46,7 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
             ...option,
             label: t(option.label)
         }));
-    }, [_id, removable, props.progress, props.deepLinks, watched]);
+    }, [_id, removable, props.progress, playerHref, detailsHref, watched]);
 
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
@@ -51,19 +56,15 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
         if (!event.nativeEvent.optionSelectPrevented) {
             switch (event.value) {
                 case 'play': {
-                    if (props.deepLinks && typeof props.deepLinks.player === 'string') {
-                        navigate(toPath(props.deepLinks.player));
+                    if (typeof playerHref === 'string') {
+                        navigate(toPath(playerHref));
                     }
 
                     break;
                 }
                 case 'details': {
-                    if (props.deepLinks) {
-                        if (typeof props.deepLinks.metaDetailsVideos === 'string') {
-                            navigate(toPath(props.deepLinks.metaDetailsVideos));
-                        } else if (typeof props.deepLinks.metaDetailsStreams === 'string') {
-                            navigate(toPath(props.deepLinks.metaDetailsStreams));
-                        }
+                    if (typeof detailsHref === 'string') {
+                        navigateWithOrigin(detailsHref);
                     }
 
                     break;
@@ -119,26 +120,24 @@ const LibItem = ({ _id, removable, notifications, watched, ...props }) => {
                 }
             }
         }
-    }, [_id, props.deepLinks, props.optionOnSelect]);
+    }, [_id, detailsHref, navigate, navigateWithOrigin, playerHref, props.optionOnSelect, watched]);
 
-    const onPlayClick = React.useMemo(() => {
-        if (props.deepLinks && typeof props.deepLinks.player === 'string') {
-            return (event) => {
-                event.preventDefault();
-                navigate(toPath(props.deepLinks.player));
-            };
+    const onPlayClick = React.useCallback((event) => {
+        event.preventDefault();
+        if (typeof playerHref === 'string') {
+            navigate(toPath(playerHref));
         }
-        return null;
-    }, [props.deepLinks]);
+    }, [navigate, playerHref]);
 
     return (
         <MetaItem
             {...props}
+            href={detailsHref}
             watched={watched}
             newVideos={newVideos}
             options={options}
             optionOnSelect={optionOnSelect}
-            onPlayClick={onPlayClick}
+            onPlayClick={typeof playerHref === 'string' ? onPlayClick : null}
         />
     );
 };
@@ -149,6 +148,8 @@ LibItem.propTypes = {
     progress: PropTypes.number,
     notifications: PropTypes.object,
     watched: PropTypes.bool,
+    detailsVideosFirst: PropTypes.bool,
+    actionMenu: PropTypes.bool,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,

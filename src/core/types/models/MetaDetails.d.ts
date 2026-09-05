@@ -5,11 +5,6 @@ type MetaItemMetaDetails = MetaItem & {
 };
 
 type MetaDetails = {
-    metaExtensions: {
-        url: string,
-        name: string,
-        addon: Addon,
-    }[],
     metaItem: {
         addon: Addon,
         content: Loadable<MetaItemMetaDetails>,

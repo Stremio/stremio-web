@@ -10,12 +10,14 @@ type SubtitleTrack = {
     embedded?: boolean,
     local?: boolean,
     exclusive?: boolean,
+    ass?: boolean,
     buffer?: ArrayBuffer,
 };
 
 type SelectedSubtitleTrack = {
     id: string,
     embedded: boolean,
+    language?: string,
 };
 
 type VideoSubtitleState = {
@@ -29,6 +31,7 @@ type VideoSubtitleState = {
     extraSubtitlesOffset: number | null,
     extraSubtitlesDelay: number | null,
     extraSubtitlesSize: number | null,
+    assSubtitlesStylingActive: boolean,
 };
 
 type VideoEvents = {
@@ -56,6 +59,7 @@ type UseSubtitlesArgs = {
     video: VideoController,
     settings: Settings,
     streamStateChanged: (state: Partial<StreamState>) => void,
+    subtitlePreferenceChanged: (preference: SubtitlePreference) => void,
     menusOpen: boolean,
     closeMenus: () => void,
     closeSubtitlesMenu: () => void,
@@ -74,6 +78,7 @@ type SubtitlesMenuProps = {
     extraSubtitlesOffset: number | null,
     extraSubtitlesDelay: number | null,
     extraSubtitlesSize: number | null,
+    assSubtitlesStylingActive: boolean,
     onSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
     onExtraSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
     onSubtitlesOffsetChanged: (offset: number) => void,

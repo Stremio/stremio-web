@@ -3,24 +3,28 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { useTranslation } = require('react-i18next');
+const { useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Router } = require('stremio-router');
+const { Routes } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
+const DeepLinkHandler = require('./DeepLinkHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
 const styles = require('./styles');
 
-const RouterWithProtectedRoutes = withCoreSuspender(Router);
+const ProtectedRoutes = withCoreSuspender(Routes);
+const NAVIGATE_TABS_ROUTES = ['/', '/discover', '/library', '/calendar', '/addons', '/settings'];
 
 const App = () => {
     const core = useCore();
     const profile = useProfile();
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
+    const navigate = useNavigate();
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -30,13 +34,25 @@ const App = () => {
     const [shortcutModalOpen,, closeShortcutsModal, toggleShortcutModal] = useBinaryState(false);
     const [gamepadModalOpen,, closeGamepadModal, toggleGamepadModal] = useBinaryState(false);
 
-    const onShortcut = React.useCallback((name) => {
+    const onShortcut = React.useCallback((name, combo, key) => {
         switch (name) {
             case 'shortcuts':
                 toggleShortcutModal();
                 break;
             case 'gamepadGuide':
                 toggleGamepadModal();
+                break;
+            case 'navigateSearch':
+                navigate('/search');
+                break;
+            case 'navigateTabs': {
+                const index = Number(key) - 1;
+                if (index >= 0 && index < NAVIGATE_TABS_ROUTES.length)
+                    navigate(NAVIGATE_TABS_ROUTES[index]);
+                break;
+            }
+            case 'navigateHistory':
+                navigate(combo === 0 ? -1 : 1);
                 break;
         }
     }, [toggleShortcutModal, toggleGamepadModal]);
@@ -80,12 +96,38 @@ const App = () => {
         };
         services.chromecast.on('stateChanged', onChromecastStateChange);
         services.chromecast.start();
+
         window.services = services;
         return () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
         };
     }, []);
+
+    React.useEffect(() => {
+        const onOpenMedia = (data) => {
+            try {
+                const { protocol, hostname, pathname, searchParams } = new URL(data);
+                if (protocol === CONSTANTS.PROTOCOL) {
+                    if (hostname.length) {
+                        const transportUrl = `https://${hostname}${pathname}`;
+                        navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
+                    } else {
+                        navigate(`${pathname}?${searchParams.toString()}`);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to open media:', e);
+            }
+        };
+
+        shell.on('open-media', onOpenMedia);
+        if (shell.state.initialized) {
+            shell.send('app-ready');
+        }
+
+        return () => shell.off('open-media', onOpenMedia);
+    }, [shell.state.initialized]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
@@ -145,18 +187,19 @@ const App = () => {
                     <GamepadProvider enabled={gamepadSupportEnabled} onGuide={toggleGamepadModal}>
                         <ShortcutsProvider onShortcut={onShortcut}>
                             <FullscreenProvider>
-                                {
-                                    shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
-                                }
-                                {
-                                    gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
-                                }
-                                <ServicesToaster />
-                                <SearchParamsHandler />
-                                <UpdaterBanner className={styles['updater-banner-container']} />
-                                <RouterWithProtectedRoutes
-                                    className={styles['router']}
-                                />
+                                <DiscordProvider>
+                                    {
+                                        shortcutModalOpen && <ShortcutsModal onClose={closeShortcutsModal}/>
+                                    }
+                                    {
+                                        gamepadModalOpen && <GamepadModal onClose={closeGamepadModal}/>
+                                    }
+                                    <ServicesToaster />
+                                    <SearchParamsHandler />
+                                    <DeepLinkHandler />
+                                    <UpdaterBanner className={styles['updater-banner-container']} />
+                                    <ProtectedRoutes />
+                                </DiscordProvider>
                             </FullscreenProvider>
                         </ShortcutsProvider>
                     </GamepadProvider>
