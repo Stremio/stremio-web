@@ -2,6 +2,7 @@
 
 import React from 'react';
 import routes from 'stremio/routes';
+import { PLAYER_PATH, META_DETAILS_PATH, LEGACY_META_DETAILS_PATH } from './getBackFallback';
 
 export default [
     {
@@ -35,12 +36,12 @@ export default [
         element: <routes.Search />,
     },
     {
-        path: '/metadetails/:type?/:id?/:videoId?',
+        path: META_DETAILS_PATH,
         view: 2,
         element: <routes.MetaDetails />,
     },
     {
-        path: '/detail/:type?/:id?/:videoId?',
+        path: LEGACY_META_DETAILS_PATH,
         view: 2,
         element: <routes.MetaDetails />,
     },
@@ -55,7 +56,7 @@ export default [
         element: <routes.Settings />,
     },
     {
-        path: '/player/:stream/:streamTransportUrl?/:metaTransportUrl?/:type?/:id?/:videoId?',
+        path: PLAYER_PATH,
         view: 4,
         element: <routes.Player />,
     },
