@@ -5,9 +5,10 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
 const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, useProfile } = require('stremio/common');
-const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
+const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
+const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
@@ -17,10 +18,17 @@ const Board = () => {
     const t = useTranslate();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
+    const liveTvContinueWatching = useLiveTvContinueWatching();
     const [board, loadBoardRows] = useBoard();
     const notifications = useNotifications();
     const profile = useProfile();
-    const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
+    const liveTvCatalog = React.useMemo(() => ({
+        items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
+            .map((item) => ({ ...item, posterShape: 'landscape' })),
+    }), [liveTvContinueWatching.items]);
+    const boardCatalogsOffset =
+        (continueWatchingPreview.items.length > 0 ? 1 : 0) +
+        (liveTvCatalog.items.length > 0 ? 1 : 0);
     const scrollContainerRef = React.useRef();
     const showStreamingServerWarning = React.useMemo(() => {
         return streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
@@ -57,6 +65,18 @@ const Board = () => {
                                 title={t.string('BOARD_CONTINUE_WATCHING')}
                                 catalog={continueWatchingPreview}
                                 itemComponent={ContinueWatchingItem}
+                                notifications={notifications}
+                            />
+                            :
+                            null
+                    }
+                    {
+                        liveTvCatalog.items.length > 0 ?
+                            <MetaRow
+                                className={classnames(styles['board-row'], styles['board-row-landscape'], 'animation-fade-in')}
+                                title={t.string('BOARD_CONTINUE_WATCHING_LIVE')}
+                                catalog={liveTvCatalog}
+                                itemComponent={LiveTvContinueWatchingItem}
                                 notifications={notifications}
                             />
                             :

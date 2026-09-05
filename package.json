@@ -4,6 +4,7 @@
     "version": "5.0.0-beta.39",
     "author": "Smart Code OOD",
     "private": true,
+    "packageManager": "pnpm@11.8.0",
     "license": "gpl-2.0",
     "scripts": {
         "start": "webpack serve --mode development",
@@ -21,7 +22,7 @@
         "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
-        "@stremio/stremio-core-web": "0.62.1",
+        "@stremio/stremio-core-web": "https://stremio.github.io/stremio-core/stremio-core-web/feat/epg-support-addons/dev/stremio-stremio-core-web-0.61.1.tgz",
         "@stremio/stremio-icons": "5.15.0",
         "@stremio/stremio-video": "0.0.96",
         "a-color-picker": "1.2.1",

@@ -37,6 +37,7 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
+const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgProgress, getEpgTimeRange, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
@@ -193,6 +194,46 @@ const Player = () => {
 
     const HOLD_DELAY = 400;
 
+    const metaItemContent = React.useMemo(() => {
+        return player.metaItem !== null && player.metaItem.type === 'Ready' ?
+            player.metaItem.content
+            :
+            null;
+    }, [player.metaItem]);
+
+    const metaVideos = React.useMemo(() => {
+        return Array.isArray(metaItemContent?.videos) ?
+            metaItemContent.videos
+            :
+            [];
+    }, [metaItemContent]);
+
+    const isEpg = React.useMemo(() => {
+        return metaVideos.some(hasEpgProgramTimes);
+    }, [metaVideos]);
+    const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
+
+    const liveEpgVideo = React.useMemo(() => {
+        return isEpg ? metaVideos.find((video) => getEpgProgress(video, epgNow) !== null) ?? null : null;
+    }, [isEpg, metaVideos, epgNow]);
+
+    const currentEpgVideo = React.useMemo(() => {
+        if (!isEpg) {
+            return null;
+        }
+
+        const selectedVideoId = player.selected?.streamRequest?.path?.id ?? videoId;
+        const selectedVideo = metaVideos.find((video) => video.id === selectedVideoId) ?? null;
+
+        return liveEpgVideo ?? selectedVideo;
+    }, [isEpg, liveEpgVideo, metaVideos, player.selected, videoId]);
+
+    React.useEffect(() => {
+        if (isEpg) {
+            nextVideoPopupDismissed.current = false;
+        }
+    }, [isEpg, currentEpgVideo?.id]);
+
     const handleNextVideoNavigation = React.useCallback((deepLinks, bingeWatching, ended) => {
         if (ended) {
             if (bingeWatching) {
@@ -216,6 +257,11 @@ const Player = () => {
 
     const onEnded = React.useCallback(() => {
         ended();
+
+        if (isEpg) {
+            return;
+        }
+
         if (player.nextVideo !== null) {
             nextVideo();
 
@@ -224,7 +270,7 @@ const Player = () => {
         } else {
             navigate(-1);
         }
-    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
+    }, [isEpg, player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
 
     const onError = React.useCallback((error) => {
         console.error('Player', error);
@@ -266,9 +312,12 @@ const Player = () => {
     }, []);
 
     const commitSeek = React.useCallback((time) => {
+        if (isEpg) {
+            return;
+        }
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
-    }, [video.state.duration, video.state.manifest]);
+    }, [isEpg, video.state.duration, video.state.manifest]);
     const {
         time: keyboardSeekTime,
         seekBy: seekByKeyboard,
@@ -283,10 +332,13 @@ const Player = () => {
         setSeeking,
     });
     const onKeyboardSeekRequested = React.useCallback((offset) => {
+        if (isEpg) {
+            return;
+        }
         setImmersedDebounced.cancel();
         setImmersed(false);
         seekByKeyboard(offset);
-    }, [seekByKeyboard]);
+    }, [isEpg, seekByKeyboard]);
     const overlayHidden = React.useMemo(() => {
         return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
     }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
@@ -359,6 +411,10 @@ const Player = () => {
     }, []);
 
     const onNextVideoRequested = React.useCallback(() => {
+        if (isEpg) {
+            return;
+        }
+
         if (player.nextVideo !== null) {
             cancelKeyboardSeek();
             nextVideo();
@@ -366,7 +422,7 @@ const Player = () => {
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation, profile.settings, cancelKeyboardSeek]);
+    }, [player.nextVideo, isEpg, handleNextVideoNavigation, profile.settings, cancelKeyboardSeek]);
 
     const onVideoClick = React.useCallback(() => {
         if (video.state.paused !== null && !longPress.current) {
@@ -437,21 +493,21 @@ const Player = () => {
     }, [menusOpen, nextVideoPopupOpen, video.state.paused]);
 
     const onSeekPrev = React.useCallback((event) => {
-        if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+        if (!isEpg && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
             const seekDuration = event?.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
             const seekTime = video.state.time - seekDuration;
             setSeeking(true);
             onSeekRequested(Math.max(seekTime, 0));
         }
-    }, [menusOpen, nextVideoPopupOpen, video.state.time]);
+    }, [isEpg, menusOpen, nextVideoPopupOpen, video.state.time]);
 
     const onSeekNext = React.useCallback((event) => {
-        if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+        if (!isEpg && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
             const seekDuration = event?.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
             setSeeking(true);
             onSeekRequested(video.state.time + seekDuration);
         }
-    }, [menusOpen, nextVideoPopupOpen, video.state.time]);
+    }, [isEpg, menusOpen, nextVideoPopupOpen, video.state.time]);
 
     const onVolumeUp = React.useCallback(() => {
         if (!menusOpen && !nextVideoPopupOpen && video.state.volume !== null) {
@@ -556,14 +612,51 @@ const Player = () => {
     }, [video.state.videoParams]);
 
     React.useEffect(() => {
-        if (player.nextVideo !== null && !nextVideoPopupDismissed.current) {
-            if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
+        if (nextVideoPopupDismissed.current) {
+            closeNextVideoPopup();
+            return;
+        }
+
+        if (isEpg) {
+            if (liveEpgVideo === null || player.nextVideo === null) {
+                closeNextVideoPopup();
+                return;
+            }
+
+            const range = getEpgTimeRange(liveEpgVideo);
+
+            if (range === null) {
+                closeNextVideoPopup();
+                return;
+            }
+
+            const remainingTime = range.endTime - epgNow;
+            const notificationDuration = settings.nextVideoNotificationDuration;
+
+            if (remainingTime > 0 && remainingTime <= notificationDuration) {
                 openNextVideoPopup();
             } else {
                 closeNextVideoPopup();
             }
+
+            return;
         }
-    }, [player.nextVideo, video.state.time, video.state.duration]);
+
+        if (player.nextVideo !== null) {
+            if (
+                video.state.time !== null &&
+                video.state.duration !== null &&
+                video.state.time < video.state.duration &&
+                (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration
+            ) {
+                openNextVideoPopup();
+            } else {
+                closeNextVideoPopup();
+            }
+        } else {
+            closeNextVideoPopup();
+        }
+    }, [ isEpg, liveEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
 
     // Auto audio track selection
     React.useEffect(() => {
@@ -677,10 +770,9 @@ const Player = () => {
             return;
         }
 
-        const metaItem = player.metaItem?.type === 'Ready' ? player.metaItem.content : null;
         const { activity, timestamps } = getPlaybackDiscordActivity({
             title: player.title,
-            image: metaItem?.poster || metaItem?.background || null,
+            image: metaItemContent?.poster || metaItemContent?.background || null,
             paused: video.state.paused,
             time: video.state.time,
             duration: video.state.duration,
@@ -689,7 +781,7 @@ const Player = () => {
 
         discordTimestamps.current = timestamps;
         discord.setActivity(activity);
-    }, [discord.setActivity, player?.title, player.metaItem, video.state.duration, video.state.paused, video.state.stream, video.state.time]);
+    }, [discord.setActivity, player?.title, metaItemContent, video.state.duration, video.state.paused, video.state.stream, video.state.time]);
 
     React.useEffect(() => {
         return () => {
@@ -714,7 +806,7 @@ const Player = () => {
                     onPauseRequested();
                     break;
                 case 'next-track':
-                    if (player.nextVideo !== null) {
+                    if (!isEpg && player.nextVideo !== null) {
                         video.setTime(0);
                         onNextVideoRequested();
                     }
@@ -723,17 +815,17 @@ const Player = () => {
         };
         platform.shell.on('media-key', onMediaKey);
         return () => platform.shell.off('media-key', onMediaKey);
-    }, [video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
+    }, [isEpg, video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
     onShortcut('seekForward', (combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && !isEpg);
 
     onShortcut('seekBackward', (combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(-seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && !isEpg);
 
     onShortcut('mute', () => {
         video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
@@ -818,12 +910,12 @@ const Player = () => {
 
     onShortcut('playNext', () => {
         closeMenus();
-        if (player.nextVideo !== null) {
+        if (!isEpg && player.nextVideo !== null) {
             nextVideo();
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, false, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation]);
+    }, [isEpg, player.nextVideo, handleNextVideoNavigation]);
 
     onShortcut('exit', () => {
         closeMenus();
@@ -997,7 +1089,7 @@ const Player = () => {
             {
                 !video.state.loaded ?
                     <div className={classnames(styles['layer'], styles['background-layer'])}>
-                        <img className={styles['image']} src={player?.metaItem?.content?.background} />
+                        <img className={styles['image']} src={metaItemContent?.background} />
                     </div>
                     :
                     null
@@ -1007,7 +1099,7 @@ const Player = () => {
                     <Buffering
                         ref={bufferingRef}
                         className={classnames(styles['layer'], styles['buffering-layer'])}
-                        logo={player?.metaItem?.content?.logo}
+                        logo={metaItemContent?.logo}
                         progress={statistics.progress}
                     />
                     :
@@ -1079,7 +1171,7 @@ const Player = () => {
                 subtitlesTracks={allSubtitleTracks}
                 audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
-                nextVideo={player.nextVideo}
+                nextVideo={isEpg ? null : player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
                 statisticsAvailable={statisticsMenuAvailable}
                 onPlayRequested={onPlayRequested}
@@ -1097,6 +1189,8 @@ const Player = () => {
                 onToggleSpeedMenu={toggleSpeedMenu}
                 videoScale={video.state.videoScale}
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
+                live={isEpg}
+                buffering={video.state.buffering || !video.state.loaded}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onToggleSideDrawer={toggleSideDrawer}
@@ -1110,13 +1204,14 @@ const Player = () => {
                 disabled={subtitlesMenuOpen || speedMenuOpen}
             />
             {
-                nextVideoPopupOpen ?
+                nextVideoPopupOpen && player.nextVideo !== null ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
-                        metaItem={player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null}
+                        metaItem={metaItemContent}
                         nextVideo={player.nextVideo}
+                        isEpg={isEpg}
                         onDismiss={onDismissNextVideoPopup}
-                        onNextVideoRequested={onNextVideoRequested}
+                        onNextVideoRequested={isEpg ? undefined : onNextVideoRequested}
                     />
                     :
                     null
@@ -1138,7 +1233,7 @@ const Player = () => {
             <Transition when={sideDrawerOpen} name={'slide-left'}>
                 <SideDrawer
                     className={classnames(styles['layer'], styles['side-drawer-layer'])}
-                    metaItem={player.metaItem?.content}
+                    metaItem={metaItemContent}
                     seriesInfo={player.seriesInfo}
                     closeSideDrawer={closeSideDrawer}
                     selected={player.selected?.streamRequest?.path?.id}

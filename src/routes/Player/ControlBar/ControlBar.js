@@ -49,6 +49,8 @@ const ControlBar = React.forwardRef(({
     onToggleCastDevicesMenu,
     videoScale,
     videoScaleLabel,
+    live,
+    buffering,
     onVideoScaleChanged,
     onToggleStatisticsMenu,
     onTouchEnd,
@@ -137,6 +139,8 @@ const ControlBar = React.forwardRef(({
                 buffered={buffered}
                 onSeekRequested={onSeekRequested}
                 playbackSpeed={playbackSpeed}
+                live={live}
+                buffering={buffering}
             />
             <div className={styles['control-bar-buttons-container']}>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
@@ -227,6 +231,8 @@ ControlBar.propTypes = {
     playbackSpeed: PropTypes.number,
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
+    live: PropTypes.bool,
+    buffering: PropTypes.bool,
     onVideoScaleChanged: PropTypes.func,
     subtitlesTracks: PropTypes.array,
     audioTracks: PropTypes.array,
