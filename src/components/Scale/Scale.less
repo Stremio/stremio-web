@@ -22,6 +22,11 @@
                 font-weight: 700;
                 opacity: 1;
             }
+
+            &:focus-visible {
+                outline: var(--focus-outline-size) solid var(--primary-accent-color);
+                outline-offset: -2px;
+            }
         }
     }
 
@@ -32,6 +37,12 @@
         outline: none;
         padding: 0 1.5rem;
         cursor: pointer;
+        touch-action: none;
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--primary-accent-color);
+            outline-offset: -2px;
+        }
 
         &::-webkit-slider-runnable-track {
             appearance: none;

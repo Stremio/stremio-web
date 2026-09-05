@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
-import { getKeyboardShortcutKey, getKeyboardShortcutKeys } from './keyboard';
+import { PRIMARY_MODIFIER, getKeyboardShortcutKey, getKeyboardShortcutKeys } from './keyboard';
 import shortcuts from './shortcuts.json';
 
 const SHORTCUTS = shortcuts.map(({ shortcuts }) => shortcuts).flat();
@@ -21,6 +21,11 @@ type Props = {
 };
 
 const REPEAT_THROTTLE_MS = 130;
+const ZOOM_KEY_ALIASES: Record<string, string[]> = {
+    '+': ['=', 'Equal', 'NumpadAdd'],
+    '-': ['Minus', 'NumpadSubtract'],
+    '0': ['Digit0', 'Numpad0'],
+};
 
 const isInputFocused = () => {
     const inputElements = ['INPUT', 'TEXTAREA', 'SELECT'];
@@ -36,29 +41,36 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
 
     const onKeyDown = useCallback((event: KeyboardEvent) => {
         const { ctrlKey, shiftKey, altKey, metaKey, key, repeat } = event;
-        if (isInputFocused()) return;
+        if (event.isComposing) return;
+        const inputFocused = isInputFocused();
 
         const shortcutKeys = getKeyboardShortcutKeys(event);
         const repeatKey = getKeyboardShortcutKey(event);
-        if (repeat) {
-            const now = Date.now();
-            const last = lastRepeatTime.current.get(repeatKey) ?? 0;
-            if (now - last < REPEAT_THROTTLE_MS) return;
-            lastRepeatTime.current.set(repeatKey, now);
-        }
+        const now = Date.now();
+        const throttled = repeat && now - (lastRepeatTime.current.get(repeatKey) ?? 0) < REPEAT_THROTTLE_MS;
+        if (repeat && !throttled) lastRepeatTime.current.set(repeatKey, now);
 
         SHORTCUTS.forEach(({ name, combos }) => combos.forEach((keys) => {
-            const modifers = (keys.includes('Ctrl') === ctrlKey)
-                && (keys.includes('Shift') === shiftKey)
+            const interfaceScale = name === 'interfaceScale';
+            if (inputFocused && !interfaceScale) return;
+
+            const primary = keys.includes('Mod');
+            const modifiers = ((keys.includes('Ctrl') || (primary && PRIMARY_MODIFIER === 'Ctrl')) === ctrlKey)
+                && ((primary && PRIMARY_MODIFIER === 'Meta') === metaKey)
+                && (keys.includes('Shift') === shiftKey || (interfaceScale && (keys.includes('+') || keys.includes('0'))))
                 && !altKey
-                && !metaKey;
+                && !event.getModifierState('AltGraph');
             const keyMatched = keys.some((shortcutKey) => (
                 shortcutKey !== 'Ctrl'
                 && shortcutKey !== 'Shift'
-                && shortcutKeys.includes(shortcutKey)
+                && shortcutKey !== 'Mod'
+                && (shortcutKeys.includes(shortcutKey) || (interfaceScale && ZOOM_KEY_ALIASES[shortcutKey]?.some((alias) => shortcutKeys.includes(alias))))
             ));
 
-            if (modifers && keyMatched) {
+            if (modifiers && keyMatched) {
+                // Consume repeats and limit hits too, otherwise the browser also zooms.
+                if (interfaceScale) event.preventDefault();
+                if (throttled) return;
                 const combo = combos.indexOf(keys);
                 listeners.current.get(name)?.forEach((listener) => listener(combo, key));
 
