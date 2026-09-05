@@ -1,26 +1,47 @@
 import { useEffect } from 'react';
+import { usePlatform } from 'stremio/common';
 
 const useMediaSession = (
     videoState: VideoState,
     player: Player,
+    fullscreen: boolean,
     onPlayRequested: () => void,
     onPauseRequested: () => void,
     onNextVideoRequested: () => void,
 ) => {
-    useEffect(() => {
-        if (!navigator.mediaSession) return;
+    const { shell } = usePlatform();
 
-        const playbackState = !videoState.paused ? 'playing' : 'paused';
-        navigator.mediaSession.playbackState = playbackState;
+    useEffect(() => {
+        if (!('audioSession' in navigator)) return;
+        const audioSession = (navigator as any).audioSession;
+        audioSession.type = fullscreen ? 'ambient' : 'playback';
+        return () => {
+            audioSession.type = 'playback';
+        };
+    }, [fullscreen]);
+
+    // Playback state
+    useEffect(() => {
+        if (navigator.mediaSession) {
+            const playbackState = videoState.paused === null ? 'none' : videoState.paused ? 'paused' : 'playing';
+            navigator.mediaSession.playbackState = playbackState;
+        }
+
+        if (shell.active) {
+            shell.send('media.status', {
+                paused: !!videoState.paused,
+            });
+        }
 
         return () => {
-            navigator.mediaSession.playbackState = 'none';
+            if (navigator.mediaSession) {
+                navigator.mediaSession.playbackState = 'none';
+            }
         };
     }, [videoState.paused]);
 
+    // Metadata
     useEffect(() => {
-        if (!navigator.mediaSession) return;
-
         const metaItem = player.metaItem && player.metaItem?.type === 'Ready' ? player.metaItem.content as MetaItemPlayer : null;
         const videoId = player.selected ? player.selected?.streamRequest?.path?.id : null;
         const video = metaItem?.videos.find(({ id }) => id === videoId);
@@ -35,22 +56,48 @@ const useMediaSession = (
         const artwork = imageUrl ? [{ src: imageUrl }] : undefined;
 
         if (title) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title,
-                artist,
-                artwork,
-            });
+            if (navigator.mediaSession) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title,
+                    artist,
+                    artwork,
+                });
+            }
+
+            if (shell.active) {
+                shell.send('media.metadata', {
+                    title,
+                    artist,
+                    artUrl: imageUrl,
+                });
+            }
         }
     }, [player.metaItem, player.selected]);
 
+    // Callbacks
     useEffect(() => {
-        if (!navigator.mediaSession) return;
-
-        navigator.mediaSession.setActionHandler('play', onPlayRequested);
-        navigator.mediaSession.setActionHandler('pause', onPauseRequested);
+        if (navigator.mediaSession) {
+            navigator.mediaSession.setActionHandler('play', onPlayRequested);
+            navigator.mediaSession.setActionHandler('pause', onPauseRequested);
+        }
 
         const nexVideoCallback = player.nextVideo ? onNextVideoRequested : null;
-        navigator.mediaSession.setActionHandler('nexttrack', nexVideoCallback);
+        if (navigator.mediaSession && nexVideoCallback) {
+            navigator.mediaSession.setActionHandler('nexttrack', nexVideoCallback);
+        }
+
+        const onMediaStatus = ({ paused }: MediaStatus) => {
+            paused ? onPauseRequested() : onPlayRequested();
+        };
+
+        shell.on('media.status', onMediaStatus);
+
+        return () => {
+            navigator.mediaSession.setActionHandler('play', null);
+            navigator.mediaSession.setActionHandler('pause', null);
+            navigator.mediaSession.setActionHandler('nexttrack', null);
+            shell.off('media.status', onMediaStatus);
+        };
     }, [player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 };
 

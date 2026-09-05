@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const { useModelState, useCoreSuspender } = require('stremio/common');
 
 const map = (player) => ({
@@ -33,7 +33,7 @@ const map = (player) => ({
 });
 
 const usePlayer = (urlParams) => {
-    const { core } = useServices();
+    const core = useCore();
     const { decodeStream } = useCoreSuspender();
     const stream = decodeStream(urlParams.stream);
     const action = React.useMemo(() => {
@@ -171,7 +171,27 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, [player.streamState]);
 
-    return [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
+    const subtitlePreferenceChanged = React.useCallback((preference) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'SubtitlePreferenceChanged',
+                args: { preference },
+            },
+        }, 'player');
+    }, []);
+
+    const videoScaleChanged = React.useCallback((videoScale) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'VideoScaleChanged',
+                args: { videoScale },
+            },
+        }, 'player');
+    }, []);
+
+    return [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;

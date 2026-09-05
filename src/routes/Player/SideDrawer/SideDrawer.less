@@ -7,6 +7,11 @@
     action-buttons-container: action-buttons-container;
 }
 
+:import('~stremio/components/MultiselectMenu/Dropdown/Dropdown.less') {
+    dropdown: dropdown;
+    open: open;
+}
+
 @padding: 1rem;
 
 .side-drawer {
@@ -69,6 +74,7 @@
 
     .info {
         padding: @padding;
+        min-height: 0;
         overflow-y: auto;
 
         .side-drawer-meta-preview {
@@ -89,8 +95,11 @@
         flex: 2;
         display: flex;
         flex-direction: column;
+        min-height: 0;
 
         .videos {
+            flex: 1;
+            min-height: 0;
             overflow-y: auto;
         }
     }
@@ -109,6 +118,14 @@
 @media @phone-landscape {
     .side-drawer {
         max-width: 50dvw;
+
+        .info {
+            max-height: 40dvh;
+        }
+
+        .dropdown.open {
+            max-height: calc(3rem * 4);
+        }
     }
 }
 

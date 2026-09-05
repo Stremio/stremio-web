@@ -13,10 +13,14 @@ if (browser?.platform?.type === 'desktop') {
 
 const React = require('react');
 const ReactDOM = require('react-dom/client');
+const { HashRouter } = require('react-router-dom');
 const i18n = require('i18next');
 const { initReactI18next } = require('react-i18next');
 const stremioTranslations = require('stremio-translations');
 const App = require('./App');
+const { default: WebUpdateScreen } = require('./App/WebUpdateScreen');
+const { CoreProvider } = require('./core');
+const { FileDropProvider, PlatformProvider } = require('./common');
 
 const translations = Object.fromEntries(Object.entries(stremioTranslations()).map(([key, value]) => [key, {
     translation: value
@@ -33,14 +37,25 @@ i18n
         }
     });
 
-const root = ReactDOM.createRoot(document.getElementById('app'));
-root.render(<App />);
+const appInfo = {
+    appVersion: process.env.VERSION,
+    shellVersion: null
+};
 
-if (process.env.NODE_ENV === 'production' && process.env.SERVICE_WORKER_DISABLED !== 'true' && process.env.SERVICE_WORKER_DISABLED !== true && 'serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-            .catch((registrationError) => {
-                console.error('SW registration failed: ', registrationError);
-            });
-    });
-}
+const root = ReactDOM.createRoot(document.getElementById('app'));
+root.render(
+    <React.StrictMode>
+        <PlatformProvider>
+            <CoreProvider appInfo={appInfo}>
+                <FileDropProvider>
+                    <HashRouter>
+                        <>
+                            <WebUpdateScreen />
+                            <App />
+                        </>
+                    </HashRouter>
+                </FileDropProvider>
+            </CoreProvider>
+        </PlatformProvider>
+    </React.StrictMode>
+);

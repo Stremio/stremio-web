@@ -2,14 +2,14 @@
 
 const React = require('react');
 const magnet = require('magnet-uri');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 const useToast = require('stremio/common/Toast/useToast');
 const useStreamingServer = require('stremio/common/useStreamingServer');
 
 const CREATE_TORRENT_TIMEOUT = 20000;
 
 const useTorrent = () => {
-    const { core } = useServices();
+    const core = useCore();
     const streamingServer = useStreamingServer();
     const toast = useToast();
     const createTorrentTimeout = React.useRef(null);

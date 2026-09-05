@@ -3,8 +3,7 @@
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classnames from 'classnames';
 import throttle from 'lodash.throttle';
-import { useRouteFocused } from 'stremio-router';
-import { usePlatform, useProfile, useStreamingServer, withCoreSuspender } from 'stremio/common';
+import { usePlatform, useProfile, useStreamingServer, useRouteFocused, withCoreSuspender } from 'stremio/common';
 import { MainNavBars } from 'stremio/components';
 import { SECTIONS } from './constants';
 import Menu from './Menu';
@@ -17,7 +16,7 @@ import Info from './Info';
 import styles from './Settings.less';
 
 const Settings = () => {
-    const { routeFocused } = useRouteFocused();
+    const routeFocused = useRouteFocused();
     const profile = useProfile();
     const platform = usePlatform();
     const streamingServer = useStreamingServer();

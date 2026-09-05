@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import { getKeyboardShortcutKey, getKeyboardShortcutKeys } from './keyboard';
 import shortcuts from './shortcuts.json';
 
 const SHORTCUTS = shortcuts.map(({ shortcuts }) => shortcuts).flat();
 
 export type ShortcutName = string;
-export type ShortcutListener = (combo: number) => void;
+export type ShortcutListener = (combo: number, key: string) => void;
 
 interface ShortcutsContext {
     grouped: ShortcutGroup[],
@@ -16,32 +17,52 @@ const ShortcutsContext = createContext<ShortcutsContext>({} as ShortcutsContext)
 
 type Props = {
     children: JSX.Element,
-    onShortcut: (name: ShortcutName) => void,
+    onShortcut: (name: ShortcutName, combo: number, key: string) => void,
 };
 
 const REPEAT_THROTTLE_MS = 130;
+
+const isInputFocused = () => {
+    const inputElements = ['INPUT', 'TEXTAREA', 'SELECT'];
+    const activeElement = document.activeElement;
+
+    return activeElement instanceof HTMLElement &&
+        (inputElements.includes(activeElement.tagName) || activeElement.isContentEditable);
+};
 
 const ShortcutsProvider = ({ children, onShortcut }: Props) => {
     const listeners = useRef<Map<ShortcutName, Set<ShortcutListener>>>(new Map());
     const lastRepeatTime = useRef<Map<string, number>>(new Map());
 
-    const onKeyDown = useCallback(({ ctrlKey, shiftKey, code, key, repeat }: KeyboardEvent) => {
+    const onKeyDown = useCallback((event: KeyboardEvent) => {
+        const { ctrlKey, shiftKey, altKey, metaKey, key, repeat } = event;
+        if (isInputFocused()) return;
+
+        const shortcutKeys = getKeyboardShortcutKeys(event);
+        const repeatKey = getKeyboardShortcutKey(event);
         if (repeat) {
             const now = Date.now();
-            const last = lastRepeatTime.current.get(code) ?? 0;
+            const last = lastRepeatTime.current.get(repeatKey) ?? 0;
             if (now - last < REPEAT_THROTTLE_MS) return;
-            lastRepeatTime.current.set(code, now);
+            lastRepeatTime.current.set(repeatKey, now);
         }
 
         SHORTCUTS.forEach(({ name, combos }) => combos.forEach((keys) => {
-            const modifers = (keys.includes('Ctrl') ? ctrlKey : true)
-                && (keys.includes('Shift') ? shiftKey : true);
+            const modifers = (keys.includes('Ctrl') === ctrlKey)
+                && (keys.includes('Shift') === shiftKey)
+                && !altKey
+                && !metaKey;
+            const keyMatched = keys.some((shortcutKey) => (
+                shortcutKey !== 'Ctrl'
+                && shortcutKey !== 'Shift'
+                && shortcutKeys.includes(shortcutKey)
+            ));
 
-            if (modifers && (keys.includes(code) || keys.includes(key.toUpperCase()))) {
+            if (modifers && keyMatched) {
                 const combo = combos.indexOf(keys);
-                listeners.current.get(name)?.forEach((listener) => listener(combo));
+                listeners.current.get(name)?.forEach((listener) => listener(combo, key));
 
-                onShortcut(name as ShortcutName);
+                onShortcut(name as ShortcutName, combo, key);
             }
         }));
     }, [onShortcut]);

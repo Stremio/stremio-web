@@ -3,6 +3,8 @@
 .routes-container {
     position: relative;
     z-index: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .routes-container .route-container {
@@ -16,6 +18,25 @@
 
 .routes-container .route-container:not(:last-child) {
     display: none;
+}
+
+@media (pointer: coarse) {
+    .routes-container[data-navigation="push"] .route-container:last-child {
+        animation: route-enter 0.2s ease-out;
+    }
+}
+
+@keyframes route-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .routes-container[data-navigation="push"] .route-container:last-child {
+        animation: none;
+    }
 }
 
 .routes-container .route-container .route-content {

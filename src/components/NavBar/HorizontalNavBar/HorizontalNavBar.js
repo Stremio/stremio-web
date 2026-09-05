@@ -1,24 +1,28 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useNavigate } = require('react-router');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image } = require('stremio/components');
 const { useFullscreen } = require('stremio/common/Fullscreen');
-const usePWA = require('stremio/common/usePWA');
 const { useHorizontalNavGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 const { t } = require('i18next');
 
-const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, hdrInfo, ...props }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, ...props }) => {
+    const navigate = useNavigate();
     const backButtonOnClick = React.useCallback(() => {
-        window.history.back();
-    }, []);
-    const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
-    const [isIOSPWA] = usePWA();
+        if (originPath) {
+            navigate(originPath, { replace: true });
+        } else {
+            navigate(-1);
+        }
+    }, [originPath, navigate]);
+    const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
@@ -64,7 +68,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                         null
                 }
                 {
-                    !isIOSPWA && fullscreenButton ?
+                    supported && fullscreenButton ?
                         <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
                         </Button>
@@ -93,6 +97,7 @@ HorizontalNavBar.propTypes = {
     searchBar: PropTypes.bool,
     fullscreenButton: PropTypes.bool,
     navMenu: PropTypes.bool,
+    originPath: PropTypes.string,
     hdrInfo: PropTypes.shape({
         gamma: PropTypes.string,
     }),

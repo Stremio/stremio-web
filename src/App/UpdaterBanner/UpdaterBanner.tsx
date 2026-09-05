@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
-import Icon from '@stremio/stremio-icons/react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useServices } from 'stremio/services';
-import { useBinaryState, useShell } from 'stremio/common';
-import { Button, Transition } from 'stremio/components';
-import styles from './UpdaterBanner.less';
+import { useMatch } from 'react-router';
+import { useBinaryState, usePlatform } from 'stremio/common';
+import { UpdateBanner } from 'stremio/components';
 
 type Props = {
     className: string,
@@ -12,38 +10,32 @@ type Props = {
 
 const UpdaterBanner = ({ className }: Props) => {
     const { t } = useTranslation();
-    const { shell } = useServices();
-    const shellTransport = useShell();
+    const { shell } = usePlatform();
     const [visible, show, hide] = useBinaryState(false);
+    const isPlayer = useMatch('/player/*');
 
-    const onInstallClick = () => {
-        shellTransport.send('autoupdater-notif-clicked');
-    };
+    const onInstallClick = useCallback(() => {
+        shell.send('autoupdater-notif-clicked');
+    }, [shell]);
 
     useEffect(() => {
-        shell.transport && shell.transport.on('autoupdater-show-notif', show);
+        shell.on('autoupdater-show-notif', show);
 
         return () => {
-            shell.transport && shell.transport.off('autoupdater-show-notif', show);
+            shell.off('autoupdater-show-notif', show);
         };
     }, []);
 
     return (
-        <div className={className}>
-            <Transition when={visible} name={'slide-up'}>
-                <div className={styles['updater-banner']}>
-                    <div className={styles['label']}>
-                        { t('UPDATER_TITLE') }
-                    </div>
-                    <Button className={styles['button']} onClick={onInstallClick}>
-                        { t('UPDATER_INSTALL_BUTTON') }
-                    </Button>
-                    <Button className={styles['close']} onClick={hide}>
-                        <Icon className={styles['icon']} name={'close'} />
-                    </Button>
-                </div>
-            </Transition>
-        </div>
+        <UpdateBanner
+            className={className}
+            visible={visible && isPlayer === null}
+            label={t('UPDATER_TITLE')}
+            actionLabel={t('UPDATER_INSTALL_BUTTON')}
+            closeLabel={t('BUTTON_CLOSE')}
+            onAction={onInstallClick}
+            onClose={hide}
+        />
     );
 };
 

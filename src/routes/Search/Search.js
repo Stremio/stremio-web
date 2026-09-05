@@ -1,7 +1,6 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
@@ -10,10 +9,12 @@ const { withCoreSuspender, getVisibleChildrenRange } = require('stremio/common')
 const { Image, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useSearch = require('./useSearch');
 const styles = require('./styles');
+const { useSearchParams } = require('react-router-dom');
 
 const THRESHOLD = 100;
 
-const Search = ({ queryParams }) => {
+const Search = () => {
+    const [queryParams] = useSearchParams();
     const t = useTranslate();
     const [search, loadSearchRows] = useSearch(queryParams);
     const query = React.useMemo(() => {
@@ -127,14 +128,9 @@ const Search = ({ queryParams }) => {
     );
 };
 
-Search.propTypes = {
-    queryParams: PropTypes.instanceOf(URLSearchParams)
+const SearchFallback = () => {
+    const [queryParams] = useSearchParams();
+    return <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search') ?? queryParams.get('query')} />;
 };
-
-const SearchFallback = ({ queryParams }) => (
-    <MainNavBars className={styles['search-container']} route={'search'} query={queryParams.get('search') ?? queryParams.get('query')} />
-);
-
-SearchFallback.propTypes = Search.propTypes;
 
 module.exports = withCoreSuspender(Search, SearchFallback);

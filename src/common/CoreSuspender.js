@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useServices } = require('stremio/services');
+const { useCore } = require('stremio/core');
 
 const CoreSuspenderContext = React.createContext(null);
 
@@ -40,7 +40,7 @@ const useCoreSuspender = () => {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const withCoreSuspender = (Component, Fallback = () => { }) => {
     return function withCoreSuspender(props) {
-        const { core } = useServices();
+        const core = useCore();
         const parentSuspender = useCoreSuspender();
         const [render, setRender] = React.useState(parentSuspender === null);
         const statesRef = React.useRef({});

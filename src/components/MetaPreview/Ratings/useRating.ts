@@ -1,10 +1,10 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
 import { useMemo, useCallback } from 'react';
-import { useServices } from 'stremio/services';
+import { useCore } from 'stremio/core';
 
 const useRating = (ratingInfo?: Loadable<RatingInfo>) => {
-    const { core } = useServices();
+    const core = useCore();
 
     const setRating = useCallback((status: Rating) => {
         core.transport.dispatch({

@@ -2,10 +2,13 @@
 
 const React = require('react');
 const { useTranslation } = require('react-i18next');
+const { useLocation, useParams, useNavigate } = require('react-router');
+const { useSearchParams } = require('react-router-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const NotFound = require('stremio/routes/NotFound');
-const { useProfile, useNotifications, routesRegexp, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { useProfile, useNotifications, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { default: toPath } = require('stremio-router/toPath');
 const { DelayedRenderer, Chips, Image, MainNavBars, LibItem, MultiselectMenu } = require('stremio/components');
 const { default: Placeholder } = require('./Placeholder');
 const useLibrary = require('./useLibrary');
@@ -15,39 +18,36 @@ const styles = require('./styles');
 const SCROLL_TO_BOTTOM_TRESHOLD = 400;
 
 function withModel(Library) {
-    const withModel = ({ urlParams, queryParams }) => {
+    const withModel = () => {
+        const location = useLocation();
         const model = React.useMemo(() => {
-            return typeof urlParams.path === 'string' ?
-                urlParams.path.match(routesRegexp.library.regexp) ?
+            return typeof location.pathname === 'string' ?
+                location.pathname.match('/library') ?
                     'library'
                     :
-                    urlParams.path.match(routesRegexp.continuewatching.regexp) ?
+                    location.pathname.match('/continuewatching') ?
                         'continue_watching'
                         :
                         null
                 :
                 null;
-        }, [urlParams.path]);
-        if (model === null) {
-            return (
-                <NotFound />
-            );
-        }
+        }, [location?.pathname]);
 
-        return (
-            <Library
-                key={model}
-                model={model}
-                urlParams={urlParams}
-                queryParams={queryParams}
-            />
-        );
+        if (model === null) return <NotFound />;
+
+        return <Library model={model} />;
     };
     withModel.displayName = 'withModel';
     return withModel;
 }
 
-const Library = ({ model, urlParams, queryParams }) => {
+const Library = ({ model }) => {
+    const { type } = useParams();
+    const urlParams = React.useMemo(() => ({
+        type
+    }), [type]);
+    const [queryParams] = useSearchParams();
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const profile = useProfile();
     const notifications = useNotifications();
@@ -67,7 +67,7 @@ const Library = ({ model, urlParams, queryParams }) => {
     }, [profile.auth, library.selected]);
     React.useEffect(() => {
         if (!library.selected?.type && typeSelect.value) {
-            window.location = typeSelect.value;
+            navigate(toPath(typeSelect.value));
         }
     }, [typeSelect.value, library.selected]);
     return (
@@ -105,7 +105,13 @@ const Library = ({ model, urlParams, queryParams }) => {
                                     <div ref={scrollContainerRef} className={classnames(styles['meta-items-container'], 'animation-fade-in')} onScroll={onScroll}>
                                         {
                                             library.catalog.map((libItem, index) => (
-                                                <LibItem {...libItem} notifications={notifications} removable={model === 'library'} key={index} />
+                                                <LibItem
+                                                    {...libItem}
+                                                    key={index}
+                                                    notifications={notifications}
+                                                    removable={model === 'library'}
+                                                    detailsVideosFirst={model === 'library'}
+                                                />
                                             ))
                                         }
                                     </div>
@@ -120,10 +126,6 @@ const Library = ({ model, urlParams, queryParams }) => {
 
 Library.propTypes = {
     model: PropTypes.oneOf(['library', 'continue_watching']),
-    urlParams: PropTypes.shape({
-        type: PropTypes.string
-    }),
-    queryParams: PropTypes.instanceOf(URLSearchParams)
 };
 
 const LibraryFallback = ({ model }) => (

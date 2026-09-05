@@ -55,6 +55,8 @@ html:not(.active-slider-within) {
         }
 
         &.nav-bar-layer {
+            left: var(--safe-area-inset-left);
+            right: var(--safe-area-inset-right);
             bottom: initial;
             background: transparent;
             overflow: visible;
@@ -95,9 +97,11 @@ html:not(.active-slider-within) {
         }
 
         &.control-bar-layer {
+            left: var(--safe-area-inset-left);
+            right: var(--safe-area-inset-right);
             top: initial;
             overflow: visible;
-            padding-bottom: 0.5rem;
+            padding-bottom: calc(0.5rem + var(--safe-area-inset-bottom));
 
             &::before {
                 position: absolute;

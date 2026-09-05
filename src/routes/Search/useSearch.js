@@ -1,11 +1,11 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useCore } = require('stremio/core');
 const { useModelState } = require('stremio/common');
-const { useServices } = require('stremio/services');
 
 const useSearch = (queryParams) => {
-    const { core } = useServices();
+    const core = useCore();
     // TODO: refactor this to be in stremio-core-web
     // React.useEffect(() => {
     //     let timerId = setTimeout(emitSearchEvent, 500);

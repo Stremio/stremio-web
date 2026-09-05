@@ -1,0 +1,36 @@
+
+.buffering {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .logo {
+        position: absolute;
+        display: block;
+        max-width: 15rem;
+        max-height: 15rem;
+        width: auto;
+        height: auto;
+        animation: pulse 2s infinite;
+        transition: clip-path 0.1s ease-in-out;
+
+        &.background {
+            opacity: 0.2 !important;
+        }
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+}

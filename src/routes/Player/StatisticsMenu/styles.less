@@ -7,6 +7,7 @@
     flex-direction: column;
     gap: 1.5rem;
     width: 30rem;
+    max-width: 100%;
     padding: 1.5rem;
 
     .title {
@@ -24,30 +25,67 @@
 
     .value {
         flex: none;
-        font-weight: 500;
+        margin-top: 0.25rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
         color: var(--primary-foreground-color);
     }
 
     .stats {
         flex: auto;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+        gap: 1.5rem;
 
         .stat {
-            flex: auto;
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
+            min-width: 0;
         }
     }
 
-    .info-hash {
+    .detail {
         flex: auto;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+
+        .copyable-value {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            min-height: 3.5rem;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            text-align: left;
+            transition: background-color 150ms ease;
+
+            &:hover,
+            &:focus {
+                background-color: var(--overlay-color);
+            }
+
+            .hash {
+                flex: 1;
+                min-width: 0;
+                font-family: monospace;
+                font-size: 0.85rem;
+                color: var(--primary-foreground-color);
+                overflow-wrap: anywhere;
+            }
+
+            .copy-label {
+                flex: none;
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: var(--primary-foreground-color);
+                opacity: 0.5;
+                transition: opacity 150ms ease;
+            }
+
+            &:hover .copy-label,
+            &:focus .copy-label {
+                opacity: 1;
+            }
+        }
     }
 }

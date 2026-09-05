@@ -1,11 +1,11 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useCore } = require('stremio/core');
 const useModelState = require('stremio/common/useModelState');
-const { useServices } = require('stremio/services');
 
 const useSearchHistory = () => {
-    const { core } = useServices();
+    const core = useCore();
     const { searchHistory: items } = useModelState({ model: 'ctx' });
 
     const clear = React.useCallback(() => {

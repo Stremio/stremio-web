@@ -3,10 +3,10 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
+const { useCore } = require('stremio/core');
 const ModalDialog = require('stremio/components/ModalDialog');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const { usePlatform } = require('stremio/common/Platform');
-const { useServices } = require('stremio/services');
 const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
 const styles = require('./styles');
@@ -45,7 +45,7 @@ function withRemoteAndLocalAddon(AddonDetails) {
 
 const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const { t } = useTranslation();
-    const { core } = useServices();
+    const core = useCore();
     const platform = usePlatform();
     const addonDetails = useAddonDetails(transportUrl);
     const modalButtons = React.useMemo(() => {

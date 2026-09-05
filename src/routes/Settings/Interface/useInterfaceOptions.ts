@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
+import { useCore } from 'stremio/core';
 import { interfaceLanguages, useLanguageSorting } from 'stremio/common';
 import { INTERFACE_SCALES } from 'stremio/common/CONSTANTS';
-import { useServices } from 'stremio/services';
 
 const useInterfaceOptions = (profile: Profile) => {
-    const { core } = useServices();
+    const core = useCore();
 
     const interfaceLanguageOptions = useMemo(() =>
         interfaceLanguages.map(({ name, codes }) => ({

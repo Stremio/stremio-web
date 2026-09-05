@@ -3,7 +3,7 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
-const { useRouteFocused } = require('stremio-router');
+const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { usePlatform } = require('stremio/common');
 const { ModalDialog } = require('stremio/components');
 const CredentialsTextInput = require('../CredentialsTextInput');

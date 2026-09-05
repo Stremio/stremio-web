@@ -14,14 +14,14 @@
                 "combos": [["0"]]
             },
             {
+                "name": "navigateHistory",
+                "label": "SETTINGS_SHORTCUT_NAVIGATE_HISTORY",
+                "combos": [["Backspace"], ["Ctrl", "Backspace"]]
+            },
+            {
                 "name": "fullscreen",
                 "label": "SETTINGS_SHORTCUT_FULLSCREEN",
                 "combos": [["F"]]
-            },
-            {
-                "name": "exit",
-                "label": "SETTINGS_SHORTCUT_EXIT_BACK",
-                "combos": [["Escape"]]
             },
             {
                 "name": "shortcuts",
@@ -55,14 +55,9 @@
                 "combos": [["ArrowLeft"], ["Shift", "ArrowLeft"]]
             },
             {
-                "name": "volumeUp",
-                "label": "SETTINGS_SHORTCUT_VOLUME_UP",
-                "combos": [["ArrowUp"]]
-            },
-            {
-                "name": "volumeDown",
-                "label": "SETTINGS_SHORTCUT_VOLUME_DOWN",
-                "combos": [["ArrowDown"]]
+                "name": "volume",
+                "label": "SETTINGS_SHORTCUT_VOLUME",
+                "combos": [["ArrowUp"], ["ArrowDown"]]
             },
             {
                 "name": "mute",
@@ -80,14 +75,9 @@
                 "combos": [["G"], ["H"]]
             },
             {
-                "name": "speedDown",
-                "label": "SETTINGS_SHORTCUT_DECREASE_PLAYBACK_SPEED",
-                "combos": [["["]]
-            },
-            {
-                "name": "speedUp",
-                "label": "SETTINGS_SHORTCUT_INCREASE_PLAYBACK_SPEED",
-                "combos": [["]"]]
+                "name": "speed",
+                "label": "SETTINGS_SHORTCUT_PLAYBACK_SPEED",
+                "combos": [["["], ["]"]]
             },
             {
                 "name": "toggleSubtitles",
@@ -123,6 +113,11 @@
                 "name": "playNext",
                 "label": "SETTINGS_SHORTCUT_PLAY_NEXT",
                 "combos": [["Shift", "N"]]
+            },
+            {
+                "name": "exit",
+                "label": "SETTINGS_SHORTCUT_EXIT_BACK",
+                "combos": [["Escape"]]
             }
         ]
     }
