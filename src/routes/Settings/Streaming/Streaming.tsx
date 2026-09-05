@@ -22,6 +22,8 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
         remoteEndpointSelect,
         cacheSizeSelect,
         cacheLocationSelect,
+        cacheLocationError,
+        settingsDisabled,
         torrentProfileSelect,
         transcodingProfileSelect,
     } = useStreamingOptions(streamingServer);
@@ -56,6 +58,7 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
                         <MultiselectMenu
                             className={'multiselect'}
                             {...remoteEndpointSelect}
+                            disabled={settingsDisabled}
                         />
                     </Option>
             }
@@ -65,16 +68,20 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
                         <MultiselectMenu
                             className={'multiselect'}
                             {...cacheSizeSelect}
+                            disabled={settingsDisabled}
                         />
                     </Option>
             }
             {
                 cacheLocationSelect !== null &&
                     <Option label={'SETTINGS_CACHING_DRIVE'}>
-                        <MultiselectMenu
-                            className={'multiselect'}
-                            {...cacheLocationSelect}
-                        />
+                        <div title={cacheLocationSelect.title}>
+                            <MultiselectMenu
+                                className={'multiselect'}
+                                {...cacheLocationSelect}
+                            />
+                        </div>
+                        {cacheLocationError && <div className={styles['cache-location-error']} role={'alert'}>{cacheLocationError}</div>}
                     </Option>
             }
             {
@@ -83,6 +90,7 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
                         <MultiselectMenu
                             className={'multiselect'}
                             {...torrentProfileSelect}
+                            disabled={settingsDisabled}
                         />
                     </Option>
             }
@@ -92,6 +100,7 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
                         <MultiselectMenu
                             className={'multiselect'}
                             {...transcodingProfileSelect}
+                            disabled={settingsDisabled}
                         />
                     </Option>
             }

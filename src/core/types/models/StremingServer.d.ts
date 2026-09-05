@@ -132,6 +132,9 @@ type StreamingServer = {
     selected: Selected | null,
     settings: Loadable<StreamingServerSettings> | null,
     settingsOptions: StreamingServerSettingsOption[],
+    cacheRootUpdate: { type: 'Loading' } | { type: 'Ready', content: string } | {
+        type: 'Err', content: { code: number, message: string }
+    } | null,
     torrent: [string, Loadable<Torrent>] | null,
     statistics: Loadable<Statistics> | null,
     playbackDevices: Loadable<PlaybackDevice[]> | null,

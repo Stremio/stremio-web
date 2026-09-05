@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { deepEqual } from 'fast-equals';
 import { useCore } from 'stremio/core';
+import useCacheLocation from './useCacheLocation';
 
 const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, null];
 
@@ -64,6 +65,7 @@ const TORRENT_PROFILES: Record<string, TorrentProfile> = {
 const useStreamingOptions = (streamingServer: StreamingServer) => {
     const core = useCore();
     const { t } = useTranslation();
+    const cacheLocation = useCacheLocation(streamingServer);
     // TODO combine those useMemo in one
 
     const settings = useMemo(() => (
@@ -80,10 +82,6 @@ const useStreamingOptions = (streamingServer: StreamingServer) => {
         streamingServer?.deviceInfo?.type === 'Ready' ?
             streamingServer.deviceInfo.content as DeviceInfo : null
     ), [streamingServer.deviceInfo]);
-
-    const cacheRootOption = useMemo(() => {
-        return streamingServer.settingsOptions?.find(({ id }) => id === 'cacheRoot') ?? null;
-    }, [streamingServer.settingsOptions]);
 
     const streamingServerRemoteUrlInput = useMemo(() => ({
         value: streamingServer.remoteUrl,
@@ -149,43 +147,6 @@ const useStreamingOptions = (streamingServer: StreamingServer) => {
             }
         };
     }, [settings]);
-
-    const cacheLocationSelect = useMemo(() => {
-        if (!settings || !cacheRootOption?.selections?.length) {
-            return null;
-        }
-
-        const options = cacheRootOption.selections
-            .filter(({ val }) => typeof val === 'string')
-            .map(({ name, val }) => ({
-                label: name,
-                value: val as string,
-            }));
-
-        if (!options.length) {
-            return null;
-        }
-
-        return {
-            options,
-            value: settings.cacheRoot,
-            title: () => {
-                return settings.cacheRoot;
-            },
-            onSelect: (value: string) => {
-                core.transport.dispatch({
-                    action: 'StreamingServer',
-                    args: {
-                        action: 'UpdateSettings',
-                        args: {
-                            ...settings,
-                            cacheRoot: value,
-                        }
-                    }
-                });
-            }
-        };
-    }, [settings, cacheRootOption]);
 
     const torrentProfileSelect = useMemo(() => {
         if (!settings) {
@@ -270,7 +231,9 @@ const useStreamingOptions = (streamingServer: StreamingServer) => {
         streamingServerRemoteUrlInput,
         remoteEndpointSelect,
         cacheSizeSelect,
-        cacheLocationSelect,
+        cacheLocationSelect: cacheLocation.select,
+        cacheLocationError: cacheLocation.error,
+        settingsDisabled: cacheLocation.busy,
         torrentProfileSelect,
         transcodingProfileSelect,
     };
