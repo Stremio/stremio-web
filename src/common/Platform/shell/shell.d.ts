@@ -24,11 +24,13 @@ interface Shell {
 type ShellCapabilities = {
     gpuVideoProcessing: boolean;
     nativeAssSubtitles: boolean;
+    cacheDirectoryPicker: boolean;
 };
 
 type ShellState = {
     initialized: boolean;
     version: string | null;
+    streamingServerUrl: string | null;
     windowClosed: boolean;
     windowHidden: boolean;
 };

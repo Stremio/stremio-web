@@ -6,6 +6,8 @@ const LEGACY_IPC = globalThis?.qt?.webChannelTransport;
 if (LEGACY_IPC) LEGACY_IPC.onmessage = () => { /* empty */ };
 
 const events = new EventEmitter();
+const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
+const off = (name: string, listener: (arg: any) => void) => events.off(name, listener);
 
 enum ShellEventType {
     SIGNAL = 1,
@@ -38,16 +40,15 @@ const useShell = (): Shell => {
     const [state, setState] = useState<ShellState>({
         initialized: false,
         version: null,
+        streamingServerUrl: null,
         windowClosed: false,
         windowHidden: false,
     });
     const [capabilities, setCapabilities] = useState<ShellCapabilities>({
         gpuVideoProcessing: false,
         nativeAssSubtitles: false,
+        cacheDirectoryPicker: false,
     });
-
-    const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
-    const off = (name: string, listener: (arg: any) => void) => events.off(name, listener);
 
     const send = (method: string, ...args: (string | number | object)[]) => {
         try {
@@ -100,10 +101,12 @@ const useShell = (): Shell => {
                         ...state,
                         initialized: true,
                         version: shellProperties.shellVersion ?? null,
+                        streamingServerUrl: shellProperties.streamingServerUrl || null,
                     }));
                     setCapabilities({
                         gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
                         nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
+                        cacheDirectoryPicker: shellProperties.cacheDirectoryPicker === 'true',
                     });
                 }
 
