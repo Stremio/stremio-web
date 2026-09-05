@@ -3,6 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
+import {
+    getAcceleratedInterval,
+    getAcceleratedStep,
+    SUBTITLES_DELAY_REPEAT_INTERVAL_MS,
+    SUBTITLES_DELAY_REPEAT_STEP_MS,
+} from './subtitleDelayAcceleration';
 import { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } from './subtitleDelay';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
@@ -175,6 +181,8 @@ const useSubtitles = ({
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
     const trackSelectionLocked = useRef(false);
+    const subtitlesDelayRepeatAt = useRef(0);
+    const subtitlesDelayRepeatValue = useRef<number | null>(null);
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
 
@@ -486,9 +494,29 @@ const useSubtitles = ({
         };
     }, [applySubtitleStyle, t, toast, video.events]);
 
-    onShortcut('subtitlesDelay', (combo) => {
-        combo === 1 ? increaseDelay() : decreaseDelay();
-    }, [increaseDelay, decreaseDelay], !menusOpen);
+    onShortcut('subtitlesDelay', (combo, _key, heldForMs) => {
+        if (heldForMs === 0) {
+            subtitlesDelayRepeatAt.current = 0;
+            subtitlesDelayRepeatValue.current = null;
+            combo === 1 ? increaseDelay() : decreaseDelay();
+            return;
+        }
+
+        const interval = getAcceleratedInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS, heldForMs);
+        if (subtitlesDelayRepeatAt.current === 0) {
+            subtitlesDelayRepeatAt.current = heldForMs;
+        }
+        if (heldForMs < subtitlesDelayRepeatAt.current) return;
+        do {
+            subtitlesDelayRepeatAt.current += interval;
+        } while (subtitlesDelayRepeatAt.current <= heldForMs);
+
+        const step = getAcceleratedStep(SUBTITLES_DELAY_REPEAT_STEP_MS, heldForMs);
+        const direction = combo === 1 ? 1 : -1;
+        subtitlesDelayRepeatValue.current ??= video.state.extraSubtitlesDelay ?? 0;
+        subtitlesDelayRepeatValue.current += direction * step;
+        changeDelay(snapSubtitleDelay(subtitlesDelayRepeatValue.current, direction));
+    }, [changeDelay, decreaseDelay, increaseDelay, video.state.extraSubtitlesDelay], !menusOpen);
 
     onShortcut('subtitlesSize', (combo) => {
         combo === 1 ? updateSize(1) : updateSize(-1);
