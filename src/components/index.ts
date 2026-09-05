@@ -1,4 +1,5 @@
 import AddonDetailsModal from './AddonDetailsModal';
+import ActionMenu from './ActionMenu';
 import BottomSheet from './BottomSheet';
 import Button from './Button';
 import Checkbox from './Checkbox';
@@ -35,6 +36,7 @@ import ActionsGroup from './ActionsGroup';
 
 export {
     AddonDetailsModal,
+    ActionMenu,
     BottomSheet,
     Button,
     Checkbox,
