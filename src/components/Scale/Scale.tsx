@@ -21,39 +21,50 @@ const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 const Scale = ({ min, max, step, options, value, tabIndex, onChange }: Props) => {
     const { t } = useTranslation();
     const [preview, setPreview] = useState(value);
-    const dragging = useRef(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const dragging = useRef<number | null>(null);
 
     const onTickClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         onChange(Number(event.currentTarget.value));
     }, [onChange]);
 
     const onPointerDown = useCallback((event: React.PointerEvent<HTMLInputElement>) => {
-        dragging.current = true;
-        event.currentTarget.setPointerCapture(event.pointerId);
+        if (event.isPrimary && event.button === 0) dragging.current = event.pointerId;
     }, []);
 
     const onInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const next = event.currentTarget.valueAsNumber;
         setPreview(next);
         // Zooming during a drag moves the slider underneath the pointer.
-        if (!dragging.current) onChange(next);
-    }, [onChange]);
-
-    const onPointerUp = useCallback((event: React.PointerEvent<HTMLInputElement>) => {
-        if (!dragging.current) return;
-        dragging.current = false;
-        onChange(event.currentTarget.valueAsNumber);
+        if (dragging.current === null) onChange(next);
     }, [onChange]);
 
     useEffect(() => {
         setPreview(value);
     }, [value]);
 
-    const cancelDrag = useCallback(() => {
-        if (!dragging.current) return;
-        dragging.current = false;
-        setPreview(value);
-    }, [value]);
+    useEffect(() => {
+        const finishDrag = (event: PointerEvent) => {
+            if (dragging.current !== event.pointerId || !inputRef.current) return;
+            dragging.current = null;
+            onChange(inputRef.current.valueAsNumber);
+        };
+        const cancelDrag = () => {
+            if (dragging.current === null) return;
+            dragging.current = null;
+            setPreview(value);
+        };
+
+        // Let the native range own pointer capture; taking it breaks WebKit dragging.
+        document.addEventListener('pointerup', finishDrag, true);
+        document.addEventListener('pointercancel', cancelDrag, true);
+        window.addEventListener('blur', cancelDrag);
+        return () => {
+            document.removeEventListener('pointerup', finishDrag, true);
+            document.removeEventListener('pointercancel', cancelDrag, true);
+            window.removeEventListener('blur', cancelDrag);
+        };
+    }, [value, onChange]);
 
     return (
         <div className={styles['scale']}>
@@ -74,6 +85,7 @@ const Scale = ({ min, max, step, options, value, tabIndex, onChange }: Props) =>
                 }
             </div>
             <input
+                ref={inputRef}
                 type={'range'}
                 tabIndex={tabIndex}
                 aria-label={t('SETTINGS_UI_ZOOM')}
@@ -85,9 +97,6 @@ const Scale = ({ min, max, step, options, value, tabIndex, onChange }: Props) =>
                 onKeyDown={onKeyDown}
                 onPointerDown={onPointerDown}
                 onChange={onInputChange}
-                onPointerUp={onPointerUp}
-                onPointerCancel={cancelDrag}
-                onLostPointerCapture={cancelDrag}
             />
         </div>
     );
