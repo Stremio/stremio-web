@@ -74,14 +74,14 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
             }
             {
                 cacheLocationSelect !== null &&
-                    <Option label={'SETTINGS_CACHING_DRIVE'}>
-                        <div title={cacheLocationSelect.title}>
+                    <Option className={styles['cache-location-container']} label={'SETTINGS_CACHING_DRIVE'}>
+                        <div className={styles['cache-location-control']} title={cacheLocationSelect.title}>
                             <MultiselectMenu
                                 className={'multiselect'}
                                 {...cacheLocationSelect}
                             />
+                            {cacheLocationError && <div className={styles['cache-location-error']} role={'alert'}>{cacheLocationError}</div>}
                         </div>
-                        {cacheLocationError && <div className={styles['cache-location-error']} role={'alert'}>{cacheLocationError}</div>}
                     </Option>
             }
             {
