@@ -1,5 +1,6 @@
 import React, { memo, RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { getInterfaceRect, getInterfaceScale } from 'stremio/common/interfaceScale';
 import Transition from '../Transition';
 import styles from './ContextMenu.less';
 
@@ -27,7 +28,8 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
     }, []);
 
     const style = useMemo(() => {
-        const [viewportWidth, viewportHeight] = [window.innerWidth, window.innerHeight];
+        const scale = getInterfaceScale();
+        const [viewportWidth, viewportHeight] = [window.innerWidth / scale, window.innerHeight / scale];
         const [containerWidth, containerHeight] = containerSize;
 
         let x: number;
@@ -90,9 +92,9 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
 
         if (lock) {
             const target = event.currentTarget as HTMLElement;
-            setTriggerRect(target.getBoundingClientRect());
+            setTriggerRect(getInterfaceRect(target));
         } else {
-            setPosition([event.clientX, event.clientY]);
+            setPosition([event.clientX / getInterfaceScale(), event.clientY / getInterfaceScale()]);
         }
         setActive(true);
     }, [lock]);
@@ -106,7 +108,7 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
 
         event.preventDefault();
         if (!lock && event.target === event.currentTarget) {
-            setPosition([event.clientX, event.clientY]);
+            setPosition([event.clientX / getInterfaceScale(), event.clientY / getInterfaceScale()]);
         }
     }, [lock]);
 
@@ -120,12 +122,14 @@ const ContextMenu = ({ children, on, autoClose, lock }: Props) => {
     useEffect(() => {
         on.forEach((ref) => ref.current && ref.current.addEventListener('contextmenu', onContextMenu));
         document.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('resize', close);
 
         return () => {
             on.forEach((ref) => ref.current && ref.current.removeEventListener('contextmenu', onContextMenu));
             document.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('resize', close);
         };
-    }, [on, onContextMenu, handleKeyDown]);
+    }, [on, onContextMenu, handleKeyDown, close]);
 
     return createPortal((
         <Transition when={active} name={'fade'}>

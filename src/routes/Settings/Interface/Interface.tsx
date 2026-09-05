@@ -28,12 +28,9 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
                     {...interfaceLanguageSelect}
                 />
             </Option>
-            {
-                shell.active &&
-                    <Option label={'SETTINGS_UI_SIZE'}>
-                        <Scale tabIndex={-1} {...interfaceSize} />
-                    </Option>
-            }
+            <Option label={'SETTINGS_UI_ZOOM'}>
+                <Scale {...interfaceSize} />
+            </Option>
             {
                 shell.active &&
                     <Option label={'SETTINGS_QUIT_ON_CLOSE'}>

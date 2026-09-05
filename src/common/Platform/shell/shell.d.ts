@@ -19,12 +19,12 @@ interface Shell {
     on: (name: string, listener: (arg: any) => void) => void;
     off: (name: string, listener: (arg: any) => void) => void;
     send: (method: string, ...args: (string | number | object)[]) => void;
-    scaleInterface: (value: number) => void;
 }
 
 type ShellCapabilities = {
     gpuVideoProcessing: boolean;
     nativeAssSubtitles: boolean;
+    nativeInterfaceScale: boolean;
 };
 
 type ShellState = {

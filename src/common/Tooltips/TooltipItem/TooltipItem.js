@@ -3,6 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classNames = require('classnames');
+const { getInterfaceRect } = require('stremio/common/interfaceScale');
 const styles = require('./styles');
 
 const TooltipItem = React.memo(({ className, active, label, position, margin, parent }) => {
@@ -13,8 +14,8 @@ const TooltipItem = React.memo(({ className, active, label, position, margin, pa
     React.useEffect(() => {
         if (!ref.current || !active) return setStyle(null);
 
-        const tooltipBounds = ref.current.getBoundingClientRect();
-        const parentBounds = parent.getBoundingClientRect();
+        const tooltipBounds = getInterfaceRect(ref.current);
+        const parentBounds = getInterfaceRect(parent);
 
         switch (position) {
             case 'top':

@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import useBinaryState from 'stremio/common/useBinaryState';
 import useOrientation from 'stremio/common/useOrientation';
+import { getInterfaceScale } from 'stremio/common/interfaceScale';
 import styles from './BottomSheet.less';
 
 const CLOSE_THRESHOLD = 100;
@@ -39,7 +40,7 @@ const BottomSheet = ({ children, title, show, onClose }: Props) => {
 
     const onTouchMove = useCallback(({ touches }: React.TouchEvent<HTMLDivElement>) => {
         const { clientY } = touches[0];
-        setOffset(Math.max(0, clientY - startOffset));
+        setOffset(Math.max(0, (clientY - startOffset) / getInterfaceScale()));
     }, [startOffset]);
 
     const onTouchEnd = () => {

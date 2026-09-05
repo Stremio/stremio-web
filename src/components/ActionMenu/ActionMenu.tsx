@@ -3,6 +3,7 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
+import { getInterfaceRect, getInterfaceScale } from 'stremio/common/interfaceScale';
 import styles from './ActionMenu.less';
 
 const VIEWPORT_PADDING = 8;
@@ -62,14 +63,16 @@ const ActionMenu = ({ className, title, tabIndex, options, children, onOpen, onC
     useLayoutEffect(() => {
         if (!open || !triggerRef.current || !menuRef.current) return;
 
-        const triggerRect = triggerRef.current.getBoundingClientRect();
-        const menuRect = menuRef.current.getBoundingClientRect();
-        const maxTop = window.innerHeight - menuRect.height - VIEWPORT_PADDING;
-        const maxLeft = window.innerWidth - menuRect.width - VIEWPORT_PADDING;
-        const preferredTop = triggerRect.bottom + menuRect.height <= window.innerHeight - VIEWPORT_PADDING
+        const triggerRect = getInterfaceRect(triggerRef.current);
+        const menuRect = getInterfaceRect(menuRef.current);
+        const viewportWidth = window.innerWidth / getInterfaceScale();
+        const viewportHeight = window.innerHeight / getInterfaceScale();
+        const maxTop = viewportHeight - menuRect.height - VIEWPORT_PADDING;
+        const maxLeft = viewportWidth - menuRect.width - VIEWPORT_PADDING;
+        const preferredTop = triggerRect.bottom + menuRect.height <= viewportHeight - VIEWPORT_PADDING
             ? triggerRect.bottom
             : triggerRect.top - menuRect.height;
-        const preferredLeft = triggerRect.left + menuRect.width <= window.innerWidth - VIEWPORT_PADDING
+        const preferredLeft = triggerRect.left + menuRect.width <= viewportWidth - VIEWPORT_PADDING
             ? triggerRect.left
             : triggerRect.right - menuRect.width;
 

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import EventEmitter from 'eventemitter3';
-import { INTERFACE_SCALES } from 'stremio/common/CONSTANTS';
 
-const UI_SCALES = INTERFACE_SCALES as Record<number, number>;
 const IPC = globalThis?.chrome?.webview;
 const LEGACY_IPC = globalThis?.qt?.webChannelTransport;
 if (LEGACY_IPC) LEGACY_IPC.onmessage = () => { /* empty */ };
@@ -46,6 +44,7 @@ const useShell = (): Shell => {
     const [capabilities, setCapabilities] = useState<ShellCapabilities>({
         gpuVideoProcessing: false,
         nativeAssSubtitles: false,
+        nativeInterfaceScale: false,
     });
 
     const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
@@ -61,12 +60,6 @@ const useShell = (): Shell => {
         } catch (e) {
             console.error('Shell', 'Failed to send event', e);
         }
-    };
-
-    const scaleInterface = (value: number) => {
-        const root = document.documentElement;
-        const size = UI_SCALES[value];
-        root.style.setProperty('font-size', `${size}px`);
     };
 
     useEffect(() => {
@@ -112,6 +105,7 @@ const useShell = (): Shell => {
                     setCapabilities({
                         gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
                         nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
+                        nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
                     });
                 }
 
@@ -139,7 +133,6 @@ const useShell = (): Shell => {
         send,
         on,
         off,
-        scaleInterface,
         state,
         capabilities,
     };

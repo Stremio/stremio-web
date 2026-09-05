@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useCore } from 'stremio/core';
 import { interfaceLanguages, useLanguageSorting } from 'stremio/common';
 import { INTERFACE_SCALES } from 'stremio/common/CONSTANTS';
+import { normalizeInterfaceScale } from 'stremio/common/interfaceScale';
 
 const useInterfaceOptions = (profile: Profile) => {
     const core = useCore();
@@ -35,11 +36,11 @@ const useInterfaceOptions = (profile: Profile) => {
     }), [profile.settings, sortedOptions]);
 
     const interfaceSize = useMemo(() => ({
-        min: 75,
-        max: 175,
+        min: INTERFACE_SCALES[0],
+        max: INTERFACE_SCALES[INTERFACE_SCALES.length - 1],
         step: 25,
-        value: profile.settings.interfaceScale,
-        options: Object.keys(INTERFACE_SCALES).map((value) => parseInt(value)),
+        value: normalizeInterfaceScale(profile.settings.interfaceScale),
+        options: INTERFACE_SCALES,
         onChange: (value: number) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -47,7 +48,7 @@ const useInterfaceOptions = (profile: Profile) => {
                     action: 'UpdateSettings',
                     args: {
                         ...profile.settings,
-                        interfaceScale: value
+                        interfaceScale: normalizeInterfaceScale(value)
                     }
                 }
             });
