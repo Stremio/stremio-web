@@ -39,6 +39,7 @@ const Stepper = ({ className, label, value, unit, step, repeatStep = step, accel
 
     const localValue = useRef(value);
     const holdStartedAt = useRef(0);
+    const hasRepeated = useRef(false);
 
     const timeout = useTimeout(REPEAT_DELAY_MS);
 
@@ -65,9 +66,11 @@ const Stepper = ({ className, label, value, unit, step, repeatStep = step, accel
     const startRepeating = useCallback((direction: number) => {
         cancel();
         holdStartedAt.current = performance.now();
+        hasRepeated.current = false;
         let repeatValue = localValue.current;
 
         const repeat = () => {
+            hasRepeated.current = true;
             const heldFor = performance.now() - holdStartedAt.current;
             const delta = accelerate ? getAcceleratedStep(repeatStep, heldFor) : repeatStep;
             const interval = accelerate ?
@@ -93,7 +96,7 @@ const Stepper = ({ className, label, value, unit, step, repeatStep = step, accel
 
     const onDecrementMouseUp = useCallback(() => {
         cancel();
-        updateValue(-step);
+        if (!hasRepeated.current) updateValue(-step);
     }, [step, updateValue]);
 
     const onIncrementMouseDown = useCallback(() => {
@@ -102,7 +105,7 @@ const Stepper = ({ className, label, value, unit, step, repeatStep = step, accel
 
     const onIncrementMouseUp = useCallback(() => {
         cancel();
-        updateValue(step);
+        if (!hasRepeated.current) updateValue(step);
     }, [step, updateValue]);
 
     useEffect(() => {
