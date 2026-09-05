@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://raw.githubusercontent.com/Stremio/stremio-core/6373c605307a7003f46ec55443b5ab5284c7e379/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz
-        version: https://raw.githubusercontent.com/Stremio/stremio-core/6373c605307a7003f46ec55443b5ab5284c7e379/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz
+        specifier: https://raw.githubusercontent.com/Stremio/stremio-core/c4367d48daeb7194558e0a8e6a60301521320916/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz
+        version: https://raw.githubusercontent.com/Stremio/stremio-core/c4367d48daeb7194558e0a8e6a60301521320916/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz
       '@stremio/stremio-icons':
         specifier: 5.15.0
         version: 5.15.0
@@ -1424,8 +1424,8 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://raw.githubusercontent.com/Stremio/stremio-core/6373c605307a7003f46ec55443b5ab5284c7e379/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz':
-    resolution: {integrity: sha512-QNn6hI2V3lbn9Q8HdKRDzWDg/M4hX2kAdw/24adHv7IaHZ5eMT4nabBIGP/IQtcC/0ZSJBq+eenbAl6rRjy1rQ==, tarball: https://raw.githubusercontent.com/Stremio/stremio-core/6373c605307a7003f46ec55443b5ab5284c7e379/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz}
+  '@stremio/stremio-core-web@https://raw.githubusercontent.com/Stremio/stremio-core/c4367d48daeb7194558e0a8e6a60301521320916/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz':
+    resolution: {integrity: sha512-6P4qpJFt4WypE4lz2qGA2LfftOWY1KTDp8y5CfFC0gw7KFoQD670x3SRzAju6OrOaLD5RWHLNrXKZ3TFbJemrg==, tarball: https://raw.githubusercontent.com/Stremio/stremio-core/c4367d48daeb7194558e0a8e6a60301521320916/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz}
     version: 0.62.1
 
   '@stremio/stremio-icons@5.15.0':
@@ -6492,7 +6492,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://raw.githubusercontent.com/Stremio/stremio-core/6373c605307a7003f46ec55443b5ab5284c7e379/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz':
+  '@stremio/stremio-core-web@https://raw.githubusercontent.com/Stremio/stremio-core/c4367d48daeb7194558e0a8e6a60301521320916/stremio-core-web/cache-root-update/stremio-stremio-core-web-0.62.1.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 
