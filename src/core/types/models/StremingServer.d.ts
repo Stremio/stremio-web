@@ -30,6 +30,7 @@ type StreamingServerSettings = {
 type StreamingServerSettingsOption = {
     id: string,
     label: string,
+    supportsDirectory?: boolean,
     selections?: {
         name: string,
         val: string | number | null,

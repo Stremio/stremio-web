@@ -34,7 +34,8 @@ const useCacheLocation = (streamingServer: StreamingServer) => {
     const update = streamingServer.cacheRootUpdate;
     const busy = update?.type === 'Loading';
     const localUrl = localServerUrl(transportUrl);
-    const supported = name === 'macos' && shell.capabilities.cacheDirectoryPicker &&
+    const supported = ['macos', 'windows'].includes(name) && shell.capabilities.cacheDirectoryPicker &&
+        option?.supportsDirectory === true &&
         localUrl !== null && localUrl === localServerUrl(shell.state.streamingServerUrl) &&
         selections.length && settings && update !== undefined;
 
