@@ -12,6 +12,7 @@ const { useNavigateWithOrigin } = require('stremio-router');
 const { HorizontalNavBar, DelayedRenderer, Image, MetaPreview } = require('stremio/components');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
+const { default: LiveTvDetails } = require('./LiveTvDetails');
 const useMetaDetails = require('./useMetaDetails');
 const useSeason = require('./useSeason');
 const styles = require('./styles');
@@ -32,6 +33,8 @@ const MetaDetails = () => {
         videoId
     }), [type, id, videoId]);
     const metaDetails = useMetaDetails(urlParams);
+    const readyMeta = metaDetails.metaItem?.content.type === 'Ready' ? metaDetails.metaItem.content.content : null;
+    const isLiveMeta = readyMeta !== null && (readyMeta.behaviorHints?.isLive === true || readyMeta.type === 'tv');
     const [season, setSeason] = useSeason(urlParams);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
@@ -132,6 +135,20 @@ const MetaDetails = () => {
     const renderBackground = !!(metaPath && background);
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
+    if (isLiveMeta) {
+        return <div className={styles['metadetails-container']}>
+            <HorizontalNavBar className={styles['nav-bar']} backButton={true} fullscreenButton={true} navMenu={true} originPath={originPath} />
+            <div ref={contentRef} className={classnames(styles['metadetails-content'], styles['live-content'])}>
+                <LiveTvDetails
+                    key={readyMeta.id}
+                    meta={readyMeta}
+                    addonName={metaDetails.metaItem.addon.manifest.name}
+                    streams={metaDetails.streams}
+                    onToggleLibrary={readyMeta.inLibrary ? removeFromLibrary : addToLibrary}
+                />
+            </div>
+        </div>;
+    }
     return (
         <div className={styles['metadetails-container']}>
             {

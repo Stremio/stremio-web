@@ -49,6 +49,12 @@
         padding-top: var(--top-overlay-size);
         padding-bottom: var(--safe-area-inset-bottom, 0rem);
 
+        &.live-content {
+            display: block;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
         .meta-message-container {
             align-self: stretch;
             display: flex;

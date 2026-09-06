@@ -3,12 +3,12 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 
 type Props = {
-    className: string,
+    className?: string,
     src: string,
     alt: string,
-    fallbackSrc: string,
-    renderFallback: () => React.ReactNode,
-    onError: (event: React.SyntheticEvent<HTMLImageElement>) => void,
+    fallbackSrc?: string,
+    renderFallback?: () => React.ReactNode,
+    onError?: (event: React.SyntheticEvent<HTMLImageElement>) => void,
 };
 
 const Image = ({ className, src, alt, fallbackSrc, renderFallback, ...props }: Props) => {

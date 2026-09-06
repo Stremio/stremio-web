@@ -16,7 +16,8 @@ const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavB
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: EpgGuide } = require('./EpgGuide');
-const { useEpgNow, epgDateKey, epgDayWindow, parseEpgDate } = require('stremio/common/EPG');
+const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal');
+const { useEpgNow, epgDateKey, epgDayWindow, parseEpgDate, toEpgProgram } = require('stremio/common/EPG');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
@@ -109,26 +110,8 @@ const Discover = () => {
     }, [liveTvGuide?.channels]);
     const epgPrograms = React.useMemo(() => {
         return (liveTvGuide?.channels ?? []).reduce((programs, { channel, shows }) => {
-            programs[channel.id] = shows.map((show) => ({
-                id: show.id,
-                title: show.title ?? channel.name,
-                overview: show.overview ?? null,
-                thumbnail: show.thumbnail ?? null,
-                links: show.links,
-                runtime: show.runtime ?? null,
-                releaseInfo: show.releaseInfo ?? null,
-                released: show.released ?? null,
-                genres: show.genres,
-                cast: show.cast,
-                directors: show.directors,
-                startTime: new Date(show.startTime),
-                endTime: new Date(show.endTime),
-                channelId: channel.id,
-                channelName: channel.name,
-                channelLogo: channel.logo ?? channel.poster ?? null,
-                deepLinks: show.deepLinks,
-                raw: show,
-            }));
+            const epgChannel = { ...channel, logo: channel.logo ?? channel.poster ?? null };
+            programs[channel.id] = shows.map((show) => toEpgProgram(show, epgChannel)).filter(Boolean);
             return programs;
         }, {});
     }, [liveTvGuide?.channels]);
@@ -383,32 +366,13 @@ const Discover = () => {
         }
 
         const { program, channel } = selectedEpgProgram;
-        const isCurrentProgram = program.startTime.getTime() <= epgNow && epgNow < program.endTime.getTime();
-
-        const preview = (
-            <MetaPreview
-                className={styles['epg-preview']}
-                compact={true}
-                name={program.title}
-                logo={program.channelLogo}
-                background={program.thumbnail}
-                runtime={program.runtime}
-                releaseInfo={program.releaseInfo}
-                released={program.released}
-                description={program.overview}
-                links={program.links}
-                deepLinks={isCurrentProgram ? channel.deepLinks : undefined}
-            />
-        );
-        return isMobile ? (
-            <BottomSheet show={epgPreviewOpen} onCloseRequest={closeEpgPreviewModal} title={program.title} closeOnContentClick={false} closeOnOrientationChange={false}>
-                {preview}
-            </BottomSheet>
-        ) : epgPreviewOpen ? (
-            <ModalDialog className={styles['epg-preview-modal']} background={program.thumbnail ?? undefined} onCloseRequest={closeEpgPreviewModal}>
-                {preview}
-            </ModalDialog>
-        ) : null;
+        return <EpgProgramModal
+            program={program}
+            now={epgNow}
+            show={epgPreviewOpen}
+            onCloseRequest={closeEpgPreviewModal}
+            channelHref={getMetaDetailsHref(channel.deepLinks)}
+        />;
     };
 
     React.useEffect(() => {

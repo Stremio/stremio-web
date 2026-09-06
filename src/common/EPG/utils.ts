@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import type { EPGProgram } from './types';
+import type { EPGChannel, EPGProgram } from './types';
 
 export type EpgSkeletonProgram = {
     index: number;
@@ -65,6 +65,30 @@ export const hasEpgProgramTimes = (
     video: { startTime?: unknown; endTime?: unknown } | null | undefined
 ): boolean => {
     return getEpgTimeRange(video) !== null;
+};
+
+export const toEpgProgram = (video: Video, channel: EPGChannel): EPGProgram | null => {
+    const range = getEpgTimeRange(video);
+    return range === null ? null : {
+        id: video.id,
+        title: video.title || channel.name,
+        overview: video.overview,
+        thumbnail: video.thumbnail,
+        links: video.links,
+        runtime: video.runtime,
+        releaseInfo: video.releaseInfo,
+        released: video.released,
+        genres: video.genres,
+        cast: video.cast,
+        directors: video.directors,
+        startTime: new Date(range.startTime),
+        endTime: new Date(range.endTime),
+        channelId: channel.id,
+        channelName: channel.name,
+        channelLogo: channel.logo,
+        deepLinks: video.deepLinks,
+        raw: video,
+    };
 };
 
 export const getEpgProgress = (

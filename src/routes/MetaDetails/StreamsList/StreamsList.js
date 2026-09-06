@@ -16,7 +16,7 @@ const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, video, isEpg, type, onEpisodeSearch, ...props }) => {
+const StreamsList = ({ className, video = undefined, isEpg, type, onEpisodeSearch = undefined, ...props }) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
