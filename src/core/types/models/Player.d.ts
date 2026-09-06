@@ -40,6 +40,11 @@ type SubtitlesTrackState = {
 
 type AudioTrackState = {
     id: string,
+    language?: string,
+};
+
+type AudioPreference = {
+    language?: string,
 };
 
 type VideoScale = 'contain' | 'cover' | 'fill';
@@ -75,6 +80,7 @@ type Player = {
     stream: Loadable<SelectedStream> | null,
     seriesInfo: SeriesInfo | null,
     streamState: StreamState | null,
+    audioPreference: AudioPreference | null,
     subtitlePreference: SubtitlePreference | null,
     videoScale: VideoScale | null,
     subtitles: Subtitle[],
