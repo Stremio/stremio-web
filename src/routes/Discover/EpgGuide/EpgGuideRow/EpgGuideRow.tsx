@@ -1,18 +1,20 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'stremio/components';
 import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
 
-const DAY_IN_MS = 24 * HOUR_IN_MS;
 const DEFAULT_PIXELS_PER_HOUR = 120;
 
 type Props = {
     channel: EPGChannel;
     programs: EPGProgram[];
-    selectedDay: Date;
+    dayStart: number;
+    dayEnd: number;
+    visibleStart: number;
+    visibleEnd: number;
     now: number;
     onProgramClick: (program: EPGProgram, channel: EPGChannel) => void;
     pixelsPerHour?: number;
@@ -26,27 +28,19 @@ const currentProgramKey = (programs: EPGProgram[], now: number): number => {
     });
 };
 
-const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
+const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibleEnd, now, onProgramClick, pixelsPerHour = DEFAULT_PIXELS_PER_HOUR }: Props) => {
     const { t } = useTranslation();
-    const dayStart = useMemo(() => {
-        const start = new Date(selectedDay);
-        start.setHours(0, 0, 0, 0);
-        return start.getTime();
-    }, [selectedDay]);
-
-    const totalPx = 24 * pixelsPerHour;
+    const totalPx = ((dayEnd - dayStart) / HOUR_IN_MS) * pixelsPerHour;
     const channelHref = channel.deepLinks?.metaDetailsStreams ?? channel.deepLinks?.metaDetailsVideos ?? null;
 
     return (
         <div className={styles['epg-row']}>
             <div className={styles['epg-program-list']} style={{ width: `${totalPx}px` }}>
-                {/* core buckets the shows into the selected day - no re-filtering,
-                    blocks spilling over the day edges are pixel-clamped instead */}
-                {programs.map((program, index) => {
+                {programs.filter((program) => programEndMs(program) > visibleStart && programStartMs(program) < visibleEnd).map((program) => {
                     const startMs = programStartMs(program);
                     const endMs = programEndMs(program);
-                    const left = Math.max(0, ((startMs - dayStart) / DAY_IN_MS) * totalPx);
-                    const width = Math.max(4, ((Math.min(endMs, dayStart + DAY_IN_MS) - Math.max(startMs, dayStart)) / DAY_IN_MS) * totalPx);
+                    const left = Math.max(0, ((startMs - dayStart) / HOUR_IN_MS) * pixelsPerHour);
+                    const width = Math.max(4, ((Math.min(endMs, dayEnd) - Math.max(startMs, dayStart)) / HOUR_IN_MS) * pixelsPerHour);
                     const isCurrent = startMs <= now && now < endMs;
                     const label = programTitle(program);
 
@@ -56,7 +50,6 @@ const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixe
                         startMs,
                         endMs,
                         label,
-                        index,
                     ]
                         .filter((value) => value !== undefined && value !== null && value !== '')
                         .join('-');
@@ -89,7 +82,7 @@ const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixe
                     );
                 })}
                 {/* a channel without a program for the day stays reachable -
-                    the whole 24h block links to its streams */}
+                    the whole day block links to its streams */}
                 {programs.length === 0 && (
                     channelHref !== null ? (
                         <Button className={styles['epg-no-programs']} href={channelHref} title={channel.name}>
@@ -109,7 +102,10 @@ const EpgGuideRow = ({ channel, programs, selectedDay, now, onProgramClick, pixe
 export default memo(EpgGuideRow, (prev, next) => {
     return prev.channel === next.channel &&
         prev.programs === next.programs &&
-        prev.selectedDay.getTime() === next.selectedDay.getTime() &&
+        prev.dayStart === next.dayStart &&
+        prev.dayEnd === next.dayEnd &&
+        prev.visibleStart === next.visibleStart &&
+        prev.visibleEnd === next.visibleEnd &&
         prev.pixelsPerHour === next.pixelsPerHour &&
         prev.onProgramClick === next.onProgramClick &&
         currentProgramKey(prev.programs, prev.now) === currentProgramKey(next.programs, next.now);

@@ -24,7 +24,7 @@ type Props = {
 const getCurrentShow = (shows: Show[] | undefined, now: number): Show | null => {
     const programs = (Array.isArray(shows) ? shows : []).filter(hasEpgProgramTimes);
 
-    return programs.find((show) => getEpgProgress(show, now) !== null) ?? programs[0] ?? null;
+    return programs.find((show) => getEpgProgress(show, now) !== null) ?? null;
 };
 
 const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, notifications }: Props) => {
@@ -34,10 +34,6 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
     const progress = currentShow !== null ? getEpgProgress(currentShow, now) : null;
     const poster = getNonEmptyString(currentShow?.thumbnail) ?? channel?.poster ?? channel?.logo;
     const name = getNonEmptyString(currentShow?.title) ?? channel?.name;
-    const itemDeepLinks = React.useMemo(() => ({
-        ...deepLinks,
-        ...currentShow?.deepLinks,
-    }), [deepLinks, currentShow]);
     const channelId = channel && channel.id;
     const onDismissClick = React.useCallback((event: React.MouseEvent) => {
         event.preventDefault();
@@ -64,7 +60,7 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
             posterChangeCursor={true}
             logo={getNonEmptyString(channel?.logo)}
             progress={progress ?? 0}
-            deepLinks={itemDeepLinks}
+            deepLinks={deepLinks}
             notifications={notifications}
             onDismissClick={onDismissClick}
         />

@@ -7,12 +7,16 @@ const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
-const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
+const { CONSTANTS, useBinaryState, useMediaQuery, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { XSMALL_WIDTH } = require('stremio/common/screenSizes');
+const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
+const { useRouteActive } = require('stremio/common/useRouteFocused');
+const { useNavigateWithOrigin } = require('stremio-router');
+const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: EpgGuide } = require('./EpgGuide');
-const { useEpgNow } = require('stremio/common/EPG');
+const { useEpgNow, epgDateKey, epgDayWindow, parseEpgDate } = require('stremio/common/EPG');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
@@ -29,7 +33,7 @@ const Discover = () => {
     // it is stripped from the catalog extra passed to the discover model
     const epgDate = React.useMemo(() => {
         const date = queryParams.get('epg_date');
-        return date !== null && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+        return parseEpgDate(date) !== null ? date : null;
     }, [queryParams]);
     const catalogQueryParams = React.useMemo(() => {
         const params = new URLSearchParams(queryParams);
@@ -38,11 +42,15 @@ const Discover = () => {
     }, [queryParams]);
     const { t } = useTranslation();
     const core = useCore();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
+    const routeActive = useRouteActive();
     const [discover, loadNextPage] = useDiscover(urlParams, catalogQueryParams);
     const [selectInputs, hasNextPage] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
+    const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
+    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -54,49 +62,41 @@ const Discover = () => {
     const previousCatalogSizeRef = React.useRef(0);
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
+    const [epgPreviewOpen, openEpgPreview, closeEpgPreviewModal] = useBinaryState(false);
     const isEpgLayout = React.useMemo(() => {
         return discover.selectable.catalogs.find(({ selected }) => selected)?.isEpgGuide === true;
     }, [discover.selectable.catalogs]);
-    // Load the core LiveTvGuide model for the selected guide catalog.
-    // `date` is the user's local date (null defaults to the local today);
-    // core resolves it to a UTC window via `utcOffset`, fetches a catalog
-    // page per overlapping UTC date and buckets the shows back into the day.
-    const epgNow = useEpgNow(isEpgLayout);
-    // the local date the guide is following: the picked date, or today -
-    // when following today, a change of this value (midnight rollover,
-    // waking from sleep) re-dispatches the Load below
-    const epgFollowedDate = React.useMemo(() => {
-        const now = new Date(epgNow);
-        return epgDate ?? [
-            now.getFullYear(),
-            String(now.getMonth() + 1).padStart(2, '0'),
-            String(now.getDate()).padStart(2, '0'),
-        ].join('-');
-    }, [epgDate, epgNow]);
+    const epgNow = useEpgNow(isEpgLayout && routeActive);
+    const epgFollowedDate = epgDate ?? epgDateKey(new Date(epgNow));
+    const epgTimezoneOffset = new Date(epgNow).getTimezoneOffset();
+    const epgDay = React.useMemo(() => {
+        const { start, end } = epgDayWindow(parseEpgDate(epgFollowedDate));
+        return { start: new Date(start).toISOString(), end: new Date(end).toISOString() };
+    }, [epgFollowedDate, epgTimezoneOffset]);
     const loadLiveTvGuide = React.useCallback(() => {
-        if (!isEpgLayout || !discover.selected?.request) {
-            return;
-        }
-
+        if (!isEpgLayout || !discover.selected?.request || !routeActive) return;
         core.transport.dispatch({
             action: 'Load',
             args: {
                 model: 'LiveTvGuide',
                 args: {
                     request: discover.selected.request,
-                    date: epgDate,
+                    date: epgFollowedDate,
+                    day: epgDay,
                     utcOffset: -new Date().getTimezoneOffset(),
                 },
             },
         }, 'live_tv_guide');
-    }, [isEpgLayout, discover.selected, epgDate, epgFollowedDate]);
+    }, [isEpgLayout, discover.selected, routeActive, epgFollowedDate, epgDay]);
     React.useEffect(() => {
         loadLiveTvGuide();
-
-        return () => {
-            core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
-        };
-    }, [loadLiveTvGuide]);
+    }, [loadLiveTvGuide, epgNow]);
+    React.useEffect(() => {
+        if (!isEpgLayout) core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
+    }, [isEpgLayout]);
+    const retryLiveTvGuide = React.useCallback(() => {
+        core.transport.dispatch({ action: 'LiveTvGuide', args: { action: 'Retry' } }, 'live_tv_guide');
+    }, []);
     const liveTvGuide = useModelState({ model: 'live_tv_guide' });
     const epgChannels = React.useMemo(() => {
         return (liveTvGuide?.channels ?? []).map(({ channel, deepLinks }) => ({
@@ -106,7 +106,7 @@ const Discover = () => {
             logo: channel.logo ?? channel.poster ?? null,
             deepLinks,
         }));
-    }, [liveTvGuide]);
+    }, [liveTvGuide?.channels]);
     const epgPrograms = React.useMemo(() => {
         return (liveTvGuide?.channels ?? []).reduce((programs, { channel, shows }) => {
             programs[channel.id] = shows.map((show) => ({
@@ -131,10 +131,10 @@ const Discover = () => {
             }));
             return programs;
         }, {});
-    }, [liveTvGuide]);
+    }, [liveTvGuide?.channels]);
     const epgLoading = React.useMemo(() => {
         const catalog = liveTvGuide?.catalog ?? [];
-        return catalog.length === 0 || catalog[catalog.length - 1].type === 'Loading';
+        return catalog.length === 0 || catalog.some((page) => page.type === 'Loading');
     }, [liveTvGuide]);
     const epgError = React.useMemo(() => {
         const page = (liveTvGuide?.catalog ?? []).find(({ type }) => type === 'Err');
@@ -151,11 +151,7 @@ const Discover = () => {
         }, 'live_tv_guide');
     }, []);
     const onEpgDayChange = React.useCallback((day) => {
-        const date = [
-            day.getFullYear(),
-            String(day.getMonth() + 1).padStart(2, '0'),
-            String(day.getDate()).padStart(2, '0'),
-        ].join('-');
+        const date = epgDateKey(day);
         setQueryParams((params) => {
             const nextParams = new URLSearchParams(params);
             nextParams.set('epg_date', date);
@@ -164,9 +160,7 @@ const Discover = () => {
     }, [setQueryParams]);
     const onProgramSelect = React.useCallback((program, channel) => {
         setSelectedEpgProgram({ program, channel });
-    }, []);
-    const closeEpgPreviewModal = React.useCallback(() => {
-        setSelectedEpgProgram(null);
+        openEpgPreview();
     }, []);
 
     React.useEffect(() => {
@@ -239,12 +233,26 @@ const Discover = () => {
         }
     }, []);
     const metaItemOnClick = React.useCallback((event) => {
-        const visible = window.getComputedStyle(metaPreviewRef.current).display !== 'none';
+        const index = Number(event.currentTarget.dataset.index);
+        const hasIndex = Number.isInteger(index);
+
+        if (isMobile && hasIndex) {
+            event.preventDefault();
+            setSelectedMetaItemIndex(index);
+            openMobilePreview();
+            return;
+        }
+
+        if (!hasIndex) {
+            return;
+        }
+
+        const visible = metaPreviewRef.current && window.getComputedStyle(metaPreviewRef.current).display !== 'none';
         if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString() && visible) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [selectedMetaItemIndex]);
+    }, [isMobile, selectedMetaItemIndex, openMobilePreview]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -254,6 +262,7 @@ const Discover = () => {
     React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();
+        closeMobilePreview();
         setSelectedMetaItemIndex(0);
         setSelectedEpgProgram(null);
     }, [discover.selected]);
@@ -281,12 +290,12 @@ const Discover = () => {
                 <EpgGuide
                     channels={epgChannels}
                     programs={epgPrograms}
-                    programsLoading={epgLoading}
-                    catalogLoading={epgLoading}
+                    loading={epgLoading}
+                    dayWindow={liveTvGuide?.selected?.day}
                     selectedDate={liveTvGuide?.selected?.date ?? epgDate}
                     today={liveTvGuide?.selectable?.today ?? null}
                     error={epgError}
-                    onRetry={loadLiveTvGuide}
+                    onRetry={retryLiveTvGuide}
                     hasNextPage={epgHasNextPage}
                     loadNextPage={epgLoadNextPage}
                     now={epgNow}
@@ -373,32 +382,54 @@ const Discover = () => {
             return null;
         }
 
-        const { program } = selectedEpgProgram;
+        const { program, channel } = selectedEpgProgram;
         const isCurrentProgram = program.startTime.getTime() <= epgNow && epgNow < program.endTime.getTime();
 
-        return (
-            <ModalDialog
-                className={styles['epg-preview-modal']}
-                background={program.thumbnail ?? undefined}
-                onCloseRequest={closeEpgPreviewModal}
-            >
-                <MetaPreview
-                    className={styles['epg-preview']}
-                    compact={true}
-                    name={program.title}
-                    logo={program.channelLogo}
-                    background={program.thumbnail}
-                    runtime={program.runtime}
-                    releaseInfo={program.releaseInfo}
-                    released={program.released}
-                    description={program.overview}
-                    links={program.links}
-                    deepLinks={isCurrentProgram ? program.deepLinks : undefined}
-                />
-            </ModalDialog>
+        const preview = (
+            <MetaPreview
+                className={styles['epg-preview']}
+                compact={true}
+                name={program.title}
+                logo={program.channelLogo}
+                background={program.thumbnail}
+                runtime={program.runtime}
+                releaseInfo={program.releaseInfo}
+                released={program.released}
+                description={program.overview}
+                links={program.links}
+                deepLinks={isCurrentProgram ? channel.deepLinks : undefined}
+            />
         );
+        return isMobile ? (
+            <BottomSheet show={epgPreviewOpen} onCloseRequest={closeEpgPreviewModal} title={program.title} closeOnContentClick={false} closeOnOrientationChange={false}>
+                {preview}
+            </BottomSheet>
+        ) : epgPreviewOpen ? (
+            <ModalDialog className={styles['epg-preview-modal']} background={program.thumbnail ?? undefined} onCloseRequest={closeEpgPreviewModal}>
+                {preview}
+            </ModalDialog>
+        ) : null;
     };
 
+    React.useEffect(() => {
+        if (!isMobile) {
+            closeMobilePreview();
+        }
+    }, [isMobile]);
+    React.useEffect(() => {
+        if (!routeActive) {
+            closeMobilePreview();
+            setSelectedEpgProgram(null);
+        }
+    }, [routeActive]);
+    const onMobileShowClick = React.useCallback((event) => {
+        event.preventDefault();
+        const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
+        closeMobilePreview();
+        if (typeof href === 'string') {
+            navigateWithOrigin(href);
+        }
+    }, [selectedMetaItem, closeMobilePreview, navigateWithOrigin]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -436,6 +467,42 @@ const Discover = () => {
                 {renderMetaPreview()}
             </div>
             {renderEpgPreviewModal()}
+            {
+                selectedMetaItem !== null ?
+                    <BottomSheet
+                        className={styles['mobile-bottom-sheet']}
+                        show={isMobile && mobilePreviewOpen}
+                        onCloseRequest={closeMobilePreview}
+                        closeOnContentClick={false}
+                        closeOnOrientationChange={false}
+                        flush={true}
+                        ariaLabel={selectedMetaItem.name}
+                    >
+                        <MetaPreview
+                            className={styles['mobile-preview']}
+                            compact={true}
+                            name={selectedMetaItem.name}
+                            logo={selectedMetaItem.logo}
+                            background={selectedMetaItem.poster}
+                            runtime={selectedMetaItem.runtime}
+                            releaseInfo={selectedMetaItem.releaseInfo}
+                            released={selectedMetaItem.released}
+                            description={selectedMetaItem.description}
+                            links={selectedMetaItem.links}
+                            deepLinks={selectedMetaItem.deepLinks}
+                            trailerStreams={selectedMetaItem.trailerStreams}
+                            inLibrary={selectedMetaItem.inLibrary}
+                            toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
+                            watched={selectedMetaItem.watched}
+                            toggleWatched={toggleWatched}
+                            metaId={selectedMetaItem.id}
+                            like={selectedMetaItem.like}
+                            onShowClick={onMobileShowClick}
+                        />
+                    </BottomSheet>
+                    :
+                    null
+            }
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>

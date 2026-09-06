@@ -50,6 +50,7 @@ const ControlBar = React.forwardRef(({
     videoScale,
     videoScaleLabel,
     live,
+    seekable,
     buffering,
     onVideoScaleChanged,
     onToggleStatisticsMenu,
@@ -140,6 +141,7 @@ const ControlBar = React.forwardRef(({
                 onSeekRequested={onSeekRequested}
                 playbackSpeed={playbackSpeed}
                 live={live}
+                seekable={seekable}
                 buffering={buffering}
             />
             <div className={styles['control-bar-buttons-container']}>
@@ -232,6 +234,7 @@ ControlBar.propTypes = {
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
     live: PropTypes.bool,
+    seekable: PropTypes.bool,
     buffering: PropTypes.bool,
     onVideoScaleChanged: PropTypes.func,
     subtitlesTracks: PropTypes.array,

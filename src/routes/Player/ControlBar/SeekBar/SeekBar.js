@@ -12,14 +12,14 @@ const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed, live, buffering }) => {
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed, live, seekable, buffering }) => {
     const { t } = useTranslation();
-    // Live EPG streams are not seekable: once playback is going show the bar
-    // completely filled, and keep it empty while still loading/buffering.
+    // Use adapter timing for seeking; programme times only describe the broadcast.
+    const liveWithoutTimeline = live && !seekable;
     const liveFill = live && !buffering ? 100 : 0;
-    const progressDuration = live ? 100 : duration;
-    const currentTime = live ? liveFill : time;
-    const disabled = live || currentTime === null || isNaN(currentTime) || progressDuration === null || isNaN(progressDuration);
+    const progressDuration = liveWithoutTimeline ? 100 : duration;
+    const currentTime = liveWithoutTimeline ? liveFill : time;
+    const disabled = !seekable || currentTime === null || isNaN(currentTime) || progressDuration === null || isNaN(progressDuration);
     const routeFocused = useRouteFocused();
     const sliderRef = React.useRef(null);
     const [seekTime, setSeekTime] = React.useState(null);
@@ -137,6 +137,7 @@ SeekBar.propTypes = {
     onSeekRequested: PropTypes.func,
     playbackSpeed: PropTypes.number,
     live: PropTypes.bool,
+    seekable: PropTypes.bool,
     buffering: PropTypes.bool
 };
 

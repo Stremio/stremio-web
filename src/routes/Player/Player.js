@@ -37,7 +37,7 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
-const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgProgress, getEpgTimeRange, hasEpgProgramTimes, useEpgNow } = require('stremio/common/EPG');
+const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgTimeRange, useEpgNow } = require('stremio/common/EPG');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
@@ -201,32 +201,14 @@ const Player = () => {
             null;
     }, [player.metaItem]);
 
-    const metaVideos = React.useMemo(() => {
-        return Array.isArray(metaItemContent?.videos) ?
-            metaItemContent.videos
-            :
-            [];
-    }, [metaItemContent]);
-
-    const isEpg = React.useMemo(() => {
-        return metaVideos.some(hasEpgProgramTimes);
-    }, [metaVideos]);
+    const isEpg = (player.live ?? null) !== null;
+    const currentEpgVideo = player.live?.currentProgram ?? null;
+    const upcomingVideo = isEpg ? player.live?.nextProgram ?? null : player.nextVideo;
     const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
-
-    const liveEpgVideo = React.useMemo(() => {
-        return isEpg ? metaVideos.find((video) => getEpgProgress(video, epgNow) !== null) ?? null : null;
-    }, [isEpg, metaVideos, epgNow]);
-
-    const currentEpgVideo = React.useMemo(() => {
-        if (!isEpg) {
-            return null;
-        }
-
-        const selectedVideoId = player.selected?.streamRequest?.path?.id ?? videoId;
-        const selectedVideo = metaVideos.find((video) => video.id === selectedVideoId) ?? null;
-
-        return liveEpgVideo ?? selectedVideo;
-    }, [isEpg, liveEpgVideo, metaVideos, player.selected, videoId]);
+    const canSeek = Number.isFinite(video.state.duration) && video.state.duration > 0 && Number.isFinite(video.state.time);
+    React.useEffect(() => {
+        if (isEpg) core.transport.dispatch({ action: 'Player', args: { action: 'RefreshLive' } }, 'player');
+    }, [isEpg, epgNow]);
 
     React.useEffect(() => {
         if (isEpg) {
@@ -312,12 +294,12 @@ const Player = () => {
     }, []);
 
     const commitSeek = React.useCallback((time) => {
-        if (isEpg) {
+        if (!canSeek) {
             return;
         }
         video.setTime(time);
         seek(time, video.state.duration, video.state.manifest?.name);
-    }, [isEpg, video.state.duration, video.state.manifest]);
+    }, [canSeek, video.state.duration, video.state.manifest]);
     const {
         time: keyboardSeekTime,
         seekBy: seekByKeyboard,
@@ -332,13 +314,13 @@ const Player = () => {
         setSeeking,
     });
     const onKeyboardSeekRequested = React.useCallback((offset) => {
-        if (isEpg) {
+        if (!canSeek) {
             return;
         }
         setImmersedDebounced.cancel();
         setImmersed(false);
         seekByKeyboard(offset);
-    }, [isEpg, seekByKeyboard]);
+    }, [canSeek, seekByKeyboard]);
     const overlayHidden = React.useMemo(() => {
         return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
     }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
@@ -493,21 +475,21 @@ const Player = () => {
     }, [menusOpen, nextVideoPopupOpen, video.state.paused]);
 
     const onSeekPrev = React.useCallback((event) => {
-        if (!isEpg && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+        if (canSeek && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
             const seekDuration = event?.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
             const seekTime = video.state.time - seekDuration;
             setSeeking(true);
             onSeekRequested(Math.max(seekTime, 0));
         }
-    }, [isEpg, menusOpen, nextVideoPopupOpen, video.state.time]);
+    }, [canSeek, menusOpen, nextVideoPopupOpen, video.state.time]);
 
     const onSeekNext = React.useCallback((event) => {
-        if (!isEpg && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
+        if (canSeek && !menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
             const seekDuration = event?.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
             setSeeking(true);
             onSeekRequested(video.state.time + seekDuration);
         }
-    }, [isEpg, menusOpen, nextVideoPopupOpen, video.state.time]);
+    }, [canSeek, menusOpen, nextVideoPopupOpen, video.state.time]);
 
     const onVolumeUp = React.useCallback(() => {
         if (!menusOpen && !nextVideoPopupOpen && video.state.volume !== null) {
@@ -566,7 +548,7 @@ const Player = () => {
                     subtitles: streamSubtitles
                 },
                 autoplay: true,
-                time: player.libraryItem !== null &&
+                time: !isEpg && player.libraryItem !== null &&
                     player.selected.streamRequest !== null &&
                     player.selected.streamRequest.path !== null &&
                     player.libraryItem.state.video_id === player.selected.streamRequest.path.id ?
@@ -618,12 +600,12 @@ const Player = () => {
         }
 
         if (isEpg) {
-            if (liveEpgVideo === null || player.nextVideo === null) {
+            if (currentEpgVideo === null || upcomingVideo === null) {
                 closeNextVideoPopup();
                 return;
             }
 
-            const range = getEpgTimeRange(liveEpgVideo);
+            const range = getEpgTimeRange(currentEpgVideo);
 
             if (range === null) {
                 closeNextVideoPopup();
@@ -656,7 +638,7 @@ const Player = () => {
         } else {
             closeNextVideoPopup();
         }
-    }, [ isEpg, liveEpgVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
+    }, [ isEpg, currentEpgVideo, upcomingVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
 
     // Auto audio track selection
     React.useEffect(() => {
@@ -820,12 +802,12 @@ const Player = () => {
     onShortcut('seekForward', (combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && !isEpg);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && canSeek);
 
     onShortcut('seekBackward', (combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(-seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && !isEpg);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && canSeek);
 
     onShortcut('mute', () => {
         video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
@@ -1190,6 +1172,7 @@ const Player = () => {
                 videoScale={video.state.videoScale}
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
                 live={isEpg}
+                seekable={canSeek}
                 buffering={video.state.buffering || !video.state.loaded}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
@@ -1204,11 +1187,11 @@ const Player = () => {
                 disabled={subtitlesMenuOpen || speedMenuOpen}
             />
             {
-                nextVideoPopupOpen && player.nextVideo !== null ?
+                nextVideoPopupOpen && upcomingVideo !== null ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={metaItemContent}
-                        nextVideo={player.nextVideo}
+                        nextVideo={upcomingVideo}
                         isEpg={isEpg}
                         onDismiss={onDismissNextVideoPopup}
                         onNextVideoRequested={isEpg ? undefined : onNextVideoRequested}

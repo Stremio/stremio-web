@@ -10,6 +10,24 @@ export type EpgSkeletonProgram = {
 
 export const MINUTES_IN_DAY = 24 * 60;
 export const HOUR_IN_MS = 60 * 60 * 1000;
+
+export const epgDateKey = (date: Date): string => [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+].join('-');
+
+export const parseEpgDate = (value: string | null | undefined): Date | null => {
+    const match = typeof value === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
+    if (match === null) return null;
+    const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    return epgDateKey(date) === value ? date : null;
+};
+
+export const epgDayWindow = (day: Date): { start: number; end: number } => ({
+    start: new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime(),
+    end: new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1).getTime(),
+});
 export const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
 export const EPG_PLAYER_NOW_REFRESH_INTERVAL = 1000;
 export const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
