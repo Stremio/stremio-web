@@ -68,11 +68,11 @@ const Discover = () => {
     }, [discover.selectable.catalogs]);
     const epgNow = useEpgNow(isEpgLayout && routeActive);
     const epgFollowedDate = epgDate ?? epgDateKey(new Date(epgNow));
-    const epgTimezoneOffset = new Date(epgNow).getTimezoneOffset();
+    const epgTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const epgDay = React.useMemo(() => {
         const { start, end } = epgDayWindow(parseEpgDate(epgFollowedDate));
         return { start: new Date(start).toISOString(), end: new Date(end).toISOString() };
-    }, [epgFollowedDate, epgTimezoneOffset]);
+    }, [epgFollowedDate, epgTimezone]);
     const loadLiveTvGuide = React.useCallback(() => {
         if (!isEpgLayout || !discover.selected?.request || !routeActive) return;
         core.transport.dispatch({

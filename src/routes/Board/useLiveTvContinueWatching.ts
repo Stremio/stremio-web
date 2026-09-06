@@ -16,7 +16,7 @@ const useLiveTvContinueWatching = (): LiveTvContinueWatching => {
     const core = useCore();
     const active = useRouteActive();
     const now = useEpgNow(active);
-    const state = useModelState({ model: MODEL }) as LiveTvContinueWatching;
+    const state = useModelState({ model: MODEL, action: null }) as LiveTvContinueWatching;
     React.useEffect(() => {
         core.transport.dispatch(active ? {
             action: 'Load', args: { model: 'LiveTvContinueWatching' },
