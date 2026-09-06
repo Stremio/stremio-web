@@ -16,7 +16,6 @@ type Props = {
     metaItem: MetaItem;
     closeSideDrawer: () => void;
     selected: string;
-    transitionEnded: boolean;
 };
 
 const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, ...props }: Props, ref) => {
@@ -40,8 +39,8 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     }, [metaItem.videos]);
 
     const isEpg = useMemo(() => {
-        return allVideos.some(hasEpgProgramTimes);
-    }, [allVideos]);
+        return (metaItem.behaviorHints?.isLive === true || metaItem.type === 'tv') && allVideos.some(hasEpgProgramTimes);
+    }, [metaItem.behaviorHints?.isLive, metaItem.type, allVideos]);
     const now = useEpgNow(isEpg);
 
     const videos = useMemo(() => {
@@ -91,7 +90,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     const selectedId = isEpg ?
         previewVideo?.id
         :
-        selectedVideoId;
+        selectedVideoId ?? selected;
 
     const onMarkVideoAsWatched = useCallback((video: Video, watched: boolean) => {
         core.transport.dispatch({
@@ -117,12 +116,8 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
         event.stopPropagation();
     };
 
-    const onTransitionEnd = useCallback(() => {
-        setSelectedVideoId(selected);
-    }, [selected]);
-
     return (
-        <div ref={ref} className={classNames(styles['side-drawer'], className)} onMouseDown={onMouseDown} onTransitionEnd={onTransitionEnd}>
+        <div ref={ref} className={classNames(styles['side-drawer'], className)} onMouseDown={onMouseDown}>
             <div className={styles['close-button']} onClick={closeSideDrawer}>
                 <Icon className={styles['icon']} name={'chevron-forward'} />
             </div>
@@ -177,7 +172,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
                                         watched={video.watched}
                                         seasonWatched={seasonWatched}
                                         progress={progress}
-                                        deepLinks={video.deepLinks}
+                                        deepLinks={isEpg ? undefined : video.deepLinks}
                                         scheduled={video.scheduled}
                                         selected={video.id === selectedId}
                                         isEpg={isEpg}
