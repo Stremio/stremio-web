@@ -50,9 +50,11 @@
         padding-bottom: var(--safe-area-inset-bottom, 0rem);
 
         &.live-content {
-            display: block;
+            display: flex;
             min-height: 0;
-            overflow-y: auto;
+            margin-top: 0;
+            padding-top: 0;
+            overflow: hidden;
         }
 
         .meta-message-container {

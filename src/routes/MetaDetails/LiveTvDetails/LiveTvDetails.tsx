@@ -1,16 +1,17 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
+import ModalDialog from 'stremio/components/ModalDialog';
 import EpgProgramModal from 'stremio/components/EpgProgramModal';
+import useMediaQuery from 'stremio/common/useMediaQuery';
 import { EPGProgram, epgDateKey, epgDayWindow, formatEpgTimeRange, getEpgProgress, parseEpgDate, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
 import Stream from '../StreamsList/Stream';
-import StreamsList from '../StreamsList';
 import styles from './LiveTvDetails.less';
 
 type Props = {
@@ -25,13 +26,14 @@ const LiveTvDetails = ({ meta, addonName, streams, onToggleLibrary }: Props) => 
     const core = useCore();
     const now = useEpgNow(true);
     const today = epgDateKey(new Date(now));
-    const [date, setDate] = useState<string | null>(null);
+    const [schedulePage, setSchedulePage] = useState<{ date: string; start: number } | null>(null);
     const [preview, setPreview] = useState<EPGProgram | null>(null);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [streamsOpen, setStreamsOpen] = useState(false);
-    const scheduleRef = useRef<HTMLDivElement>(null);
-    const currentRowRef = useRef<HTMLButtonElement>(null);
-    const selectedDate = date ?? today;
+    const smallScreen = useMediaQuery('(max-width: 700px)');
+    const wideScreen = useMediaQuery('(min-width: 1400px)');
+    const pageSize = smallScreen ? 2 : wideScreen ? 4 : 3;
+    const selectedDate = schedulePage?.date ?? today;
     const channel = useMemo(() => ({
         id: meta.id, type: meta.type, name: meta.name, logo: meta.logo ?? meta.poster, deepLinks: meta.deepLinks,
     }), [meta.id, meta.type, meta.name, meta.logo, meta.poster, meta.deepLinks]);
@@ -45,8 +47,11 @@ const LiveTvDetails = ({ meta, addonName, streams, onToggleLibrary }: Props) => 
     const dates = useMemo(() => Array.from(new Set([today, ...programs.flatMap((program) => [
         epgDateKey(program.startTime), epgDateKey(new Date(program.endTime.getTime() - 1)),
     ])])).sort(), [programs, today]);
-    const day = epgDayWindow(parseEpgDate(selectedDate)!);
-    const dayPrograms = programs.filter((program) => program.startTime.getTime() < day.end && program.endTime.getTime() > day.start);
+    const currentIndex = programs.findIndex((program) => program.endTime.getTime() > now);
+    const maxStart = Math.max(0, programs.length - pageSize);
+    const initialStart = currentIndex < 0 ? maxStart : Math.max(0, currentIndex - (pageSize > 2 ? 1 : 0));
+    const start = Math.min(schedulePage?.start ?? initialStart, maxStart);
+    const visiblePrograms = programs.slice(start, start + pageSize);
     const readyStreams = streams.flatMap((resource) => resource.content.type === 'Ready'
         ? resource.content.content.map((stream) => ({ stream, addonName: resource.addon.manifest.name })) : []);
     const loadingStreams = streams.some((resource) => resource.content.type === 'Loading');
@@ -57,55 +62,40 @@ const LiveTvDetails = ({ meta, addonName, streams, onToggleLibrary }: Props) => 
         setPreview(program);
         setPreviewOpen(true);
     };
+    const changePage = (nextStart: number) => setSchedulePage({ date: epgDateKey(programs[nextStart].startTime), start: nextStart });
+    const renderBrand = () => <div className={styles['brand-artwork']}>
+        {channel.logo ? <Image src={channel.logo} alt={''} renderFallback={() => <span>{meta.name}</span>} /> : <span>{meta.name}</span>}
+    </div>;
 
     useEffect(() => {
         core.transport.dispatch({ action: 'MetaDetails', args: { action: 'RefreshLive' } }, 'meta_details');
     }, [core, meta.id, now]);
 
-    useEffect(() => {
-        const row = selectedDate === today ? currentRowRef.current : null;
-        scheduleRef.current?.scrollTo({ top: row ? Math.max(0, row.offsetTop - 16) : 0 });
-    }, [selectedDate]);
-
     return (
         <div className={styles['channel-page']}>
-            <header className={styles['channel-header']}>
-                <div className={styles['channel-logo']}>
-                    {channel.logo ? <Image src={channel.logo} alt={''} /> : <Icon name={'tv'} />}
+            <section className={styles['hero']} aria-label={t('LIVE_TV_ON_NOW', { defaultValue: 'On now' })}>
+                <div className={styles['hero-visual']} aria-hidden={'true'}>
+                    {artwork ? <Image className={styles['artwork']} src={artwork} alt={''} renderFallback={renderBrand} /> : renderBrand()}
                 </div>
-                <div className={styles['channel-identity']}>
-                    <div className={styles['eyebrow']}>{t('TYPE_tv')}<span>{addonName}</span></div>
-                    <h1>{meta.name}</h1>
-                </div>
-                <Button
-                    className={classNames(styles['library-button'], { [styles['saved']]: meta.inLibrary })}
-                    title={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                    aria-label={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                    onClick={onToggleLibrary}
-                >
-                    <Icon name={meta.inLibrary ? 'remove-from-library' : 'add-to-library'} />
-                </Button>
-            </header>
-            <div className={styles['layout']}>
-                <div className={styles['overview']}>
-                    <section className={styles['now-card']} aria-label={t('LIVE_TV_ON_NOW', { defaultValue: 'On now' })}>
-                        {artwork && <Image className={styles['artwork']} src={artwork} alt={''} renderFallback={() => null} />}
-                        <div className={styles['shade']} />
-                        <div className={styles['now-content']}>
-                            <div className={styles['live-badge']}><span />{t('PLAYER_LIVE')}</div>
-                            <div className={styles['current-information']}>
-                                <div className={styles['eyebrow']}>{t('LIVE_TV_ON_NOW', { defaultValue: 'On now' })}</div>
-                                <h2>{current?.title ?? t('LIVE_TV_NO_PROGRAM', { defaultValue: 'No programme information right now' })}</h2>
-                                {current && <div className={styles['current-time']}>{formatEpgTimeRange(current.startTime, current.endTime, i18n.language)}{current.runtime && <span>{current.runtime}</span>}</div>}
-                                <p>{current?.overview ?? meta.description ?? (current === null && programs.length === 0 ? t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' }) : null)}</p>
-                                {current?.overview && <Button className={styles['details-button']} onClick={() => openProgram(current)}>{t('LIBRARY_DETAILS')}<Icon name={'chevron-forward'} /></Button>}
-                            </div>
-                            {progress !== null && current && <div className={styles['broadcast-progress']}>
-                                <div className={styles['progress-track']}><div style={{ width: `${progress}%` }} /></div>
-                                <span>{t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((current.endTime.getTime() - now) / 60000) })}</span>
-                            </div>}
+                <div className={styles['hero-content']}>
+                    <header className={styles['channel-header']}>
+                        <div className={styles['channel-logo']}>
+                            {channel.logo ? <Image src={channel.logo} alt={''} renderFallback={() => <Icon name={'tv'} />} /> : <Icon name={'tv'} />}
                         </div>
-                    </section>
+                        <div className={styles['channel-identity']}><h1>{meta.name}</h1><span>{addonName}</span></div>
+                    </header>
+                    <div className={styles['current-information']}>
+                        <div className={styles['current-time']}>
+                            <span className={styles['live-badge']}><span />{t('PLAYER_LIVE')}</span>
+                            {current && <span>{formatEpgTimeRange(current.startTime, current.endTime, i18n.language)}</span>}
+                        </div>
+                        <h2>{current?.title ?? t('LIVE_TV_NO_PROGRAM', { defaultValue: 'No programme information right now' })}</h2>
+                        <p className={styles['description']}>{current?.overview ?? meta.description ?? (programs.length === 0 ? t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' }) : null)}</p>
+                        {progress !== null && current && <div className={styles['broadcast-progress']}>
+                            <div className={styles['progress-track']}><div style={{ width: `${progress}%` }} /></div>
+                            <span>{t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((current.endTime.getTime() - now) / 60000) })}</span>
+                        </div>}
+                    </div>
                     <div className={styles['playback']}>
                         {soleStream ? <Stream
                             className={styles['primary-stream']}
@@ -115,45 +105,78 @@ const LiveTvDetails = ({ meta, addonName, streams, onToggleLibrary }: Props) => 
                             progress={null}
                             deepLinks={soleStream.stream.deepLinks}
                             onClick={() => core.transport.analytics({ event: 'StreamClicked', args: { stream: soleStream.stream } })}
-                        /> : readyStreams.length > 1 ? <Button className={styles['streams-button']} onClick={() => setStreamsOpen(!streamsOpen)} aria-expanded={streamsOpen}>
-                            <Icon name={'play'} /><span>{t('LIVE_TV_PLAYBACK_OPTIONS', { defaultValue: 'Playback options' })}</span><span className={styles['stream-count']}>{readyStreams.length}</span>
-                        </Button> : <div className={styles['stream-message']} role={'status'}>{loadingStreams ? t('STREAM_LOADING') : t('NO_STREAM')}</div>}
-                        {readyStreams.length > 1 && streamsOpen && <StreamsList className={styles['stream-options']} streams={streams} isEpg={true} type={meta.type} />}
+                        /> : readyStreams.length > 1 ? <button className={styles['streams-button']} onClick={() => setStreamsOpen(true)} aria-haspopup={'dialog'}>
+                            <Icon name={'play'} /><span>{t('LIVE_TV_WATCH_LIVE', { defaultValue: 'Watch live' })}</span>
+                        </button> : <div className={styles['stream-message']} role={'status'}>{loadingStreams ? t('STREAM_LOADING') : t('NO_STREAM')}</div>}
+                        <button
+                            className={classNames(styles['library-button'], { [styles['saved']]: meta.inLibrary })}
+                            title={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            aria-label={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                            onClick={onToggleLibrary}
+                        ><Icon name={meta.inLibrary ? 'remove-from-library' : 'add-to-library'} /></button>
+                        {current && <Button className={styles['details-button']} onClick={() => openProgram(current)}>{t('LIBRARY_DETAILS')}<Icon name={'chevron-forward'} /></Button>}
                     </div>
-                    {next && <button className={styles['next-program']} onClick={() => openProgram(next)}>
-                        {next.thumbnail && <Image src={next.thumbnail} alt={''} />}
-                        <div><span>{t('LIVE_TV_UP_NEXT', { defaultValue: 'Up next' })} · {timeLabel(next.startTime)}</span><strong>{next.title}</strong></div>
-                        <Icon name={'chevron-forward'} />
-                    </button>}
                 </div>
-                <section className={styles['schedule']} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}>
-                    <div className={styles['schedule-header']}><Icon name={'calendar'} /><h2>{t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}</h2></div>
-                    <div className={styles['dates']}>
-                        {dates.map((value) => <button key={value} className={classNames(styles['date'], { [styles['selected-date']]: value === selectedDate })} aria-pressed={value === selectedDate} onClick={() => setDate(value === today ? null : value)}>
-                            <span>{value === today ? t('LIVE_TV_TODAY', { defaultValue: 'Today' }) : parseEpgDate(value)!.toLocaleDateString(i18n.language, { weekday: 'short' })}</span>
-                            <strong>{parseEpgDate(value)!.toLocaleDateString(i18n.language, { day: 'numeric', month: 'short' })}</strong>
-                        </button>)}
+            </section>
+            <section className={styles['schedule']} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}>
+                <div className={styles['schedule-header']}>
+                    <h2>{t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}</h2>
+                    <div className={styles['schedule-controls']}>
+                        <div className={styles['date-control']}>
+                            <Icon name={'calendar'} />
+                            <select value={selectedDate} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })} onChange={(event) => {
+                                const value = event.target.value;
+                                const day = epgDayWindow(parseEpgDate(value)!);
+                                const firstIndex = programs.findIndex((program) => program.endTime.getTime() > day.start);
+                                setSchedulePage(value === today ? null : { date: value, start: firstIndex < 0 ? maxStart : firstIndex });
+                            }}>
+                                {dates.map((value) => <option key={value} value={value}>
+                                    {value === today ? t('LIVE_TV_TODAY', { defaultValue: 'Today' }) : parseEpgDate(value)!.toLocaleDateString(i18n.language, { weekday: 'short', day: 'numeric', month: 'short' })}
+                                </option>)}
+                            </select>
+                            <Icon name={'chevron-down'} />
+                        </div>
+                        {programs.length > 0 && <span className={styles['page-count']} aria-live={'polite'}>{start + 1}–{start + visiblePrograms.length} / {programs.length}</span>}
+                        <div className={styles['pagination']}>
+                            <button aria-label={t('BUTTON_PREV')} title={t('BUTTON_PREV')} disabled={start === 0} onClick={() => changePage(Math.max(0, start - pageSize))}><Icon name={'chevron-back'} /></button>
+                            <button aria-label={t('BUTTON_NEXT')} title={t('BUTTON_NEXT')} disabled={start >= maxStart} onClick={() => changePage(Math.min(maxStart, start + pageSize))}><Icon name={'chevron-forward'} /></button>
+                        </div>
                     </div>
-                    <div className={styles['programs']} ref={scheduleRef}>
-                        {dayPrograms.length > 0 ? dayPrograms.map((program) => {
-                            const isCurrent = program.id === current?.id;
-                            const aired = program.endTime.getTime() <= now;
-                            return <button
-                                key={program.id}
-                                ref={isCurrent ? currentRowRef : undefined}
-                                className={classNames(styles['program'], { [styles['current']]: isCurrent, [styles['aired']]: aired })}
-                                aria-current={isCurrent ? 'true' : undefined}
-                                onClick={() => openProgram(program)}
-                            >
-                                <div className={styles['program-time']}><strong>{timeLabel(program.startTime)}</strong><span>{timeLabel(program.endTime)}</span></div>
-                                <div className={styles['program-thumbnail']}>{program.thumbnail ? <Image src={program.thumbnail} alt={''} /> : <Icon name={'tv'} />}</div>
-                                <div className={styles['program-info']}><strong>{program.title}</strong><span>{isCurrent ? t('LIVE_TV_ON_NOW', { defaultValue: 'On now' }) : aired ? t('AIRED') : t('UPCOMING')}</span></div>
-                                <Icon name={'chevron-forward'} className={styles['program-arrow']} />
-                            </button>;
-                        }) : <div className={styles['empty-schedule']}><Icon name={'calendar'} /><p>{programs.length === 0 ? t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' }) : t('LIVE_TV_NO_PROGRAMS_DATE', { defaultValue: 'No programmes are listed for this day.' })}</p></div>}
-                    </div>
-                </section>
-            </div>
+                </div>
+                <div className={styles['programs']}>
+                    {visiblePrograms.length > 0 ? visiblePrograms.map((program) => {
+                        const isCurrent = program.id === current?.id;
+                        const aired = program.endTime.getTime() <= now;
+                        return <button
+                            key={program.id}
+                            className={classNames(styles['program'], { [styles['current']]: isCurrent, [styles['aired']]: aired })}
+                            aria-current={isCurrent ? 'true' : undefined}
+                            onClick={() => openProgram(program)}
+                        >
+                            <div className={styles['program-thumbnail']}>
+                                <Image src={program.thumbnail ?? channel.logo ?? ''} alt={''} renderFallback={() => <Icon name={'tv'} />} className={program.thumbnail ? undefined : styles['channel-thumbnail']} />
+                            </div>
+                            <div className={styles['program-info']}>
+                                <div className={styles['program-time']}><span>{epgDateKey(program.startTime) !== selectedDate && `${program.startTime.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })} · `}{timeLabel(program.startTime)}</span><span>{isCurrent ? t('LIVE_TV_ON_NOW', { defaultValue: 'On now' }) : aired ? t('AIRED') : program.id === next?.id ? t('LIVE_TV_UP_NEXT', { defaultValue: 'Up next' }) : t('UPCOMING')}</span></div>
+                                <strong>{program.title}</strong>
+                            </div>
+                        </button>;
+                    }) : <div className={styles['empty-schedule']}><Icon name={'calendar'} /><p>{t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' })}</p></div>}
+                </div>
+            </section>
+            {streamsOpen && <ModalDialog className={styles['streams-modal']} title={t('LIVE_TV_PLAYBACK_OPTIONS', { defaultValue: 'Playback options' })} onCloseRequest={() => setStreamsOpen(false)} role={'dialog'} aria-modal={'true'} aria-label={t('LIVE_TV_PLAYBACK_OPTIONS', { defaultValue: 'Playback options' })}>
+                <div className={styles['stream-options']}>
+                    {readyStreams.map(({ stream, addonName }, index) => <Stream
+                        key={index}
+                        addonName={addonName}
+                        name={stream.name || addonName}
+                        description={stream.description}
+                        progress={null}
+                        deepLinks={stream.deepLinks}
+                        onClick={() => core.transport.analytics({ event: 'StreamClicked', args: { stream } })}
+                    />)}
+                </div>
+            </ModalDialog>}
             {preview && <EpgProgramModal program={preview} now={now} show={previewOpen} onCloseRequest={() => setPreviewOpen(false)} />}
         </div>
     );

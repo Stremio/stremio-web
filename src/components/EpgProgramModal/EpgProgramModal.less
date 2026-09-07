@@ -209,19 +209,24 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 1.25rem;
         box-shadow: 0 1.5rem 6rem rgba(0, 0, 0, 0.5);
-    }
 
-    .modal-content, .modal-body {
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-        max-height: inherit;
-        overflow: hidden;
-    }
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            max-height: inherit;
+            overflow: hidden;
 
-    .modal-body, .modal-body:last-child {
-        padding: 0;
-        margin: 0;
+            .modal-body, .modal-body:last-child {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                max-height: inherit;
+                overflow: hidden;
+                padding: 0;
+                margin: 0;
+            }
+        }
     }
 
     .modal-close {
