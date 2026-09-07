@@ -136,18 +136,17 @@ const MetaDetails = () => {
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     if (isLiveMeta) {
-        return <div className={styles['metadetails-container']}>
+        return <LiveTvDetails
+            key={readyMeta.id}
+            className={styles['metadetails-container']}
+            contentRef={contentRef}
+            meta={readyMeta}
+            addonName={metaDetails.metaItem.addon.manifest.name}
+            streams={metaDetails.streams}
+            onToggleLibrary={readyMeta.inLibrary ? removeFromLibrary : addToLibrary}
+        >
             <HorizontalNavBar className={styles['nav-bar']} backButton={true} fullscreenButton={true} navMenu={true} originPath={originPath} />
-            <div ref={contentRef} className={classnames(styles['metadetails-content'], styles['live-content'])}>
-                <LiveTvDetails
-                    key={readyMeta.id}
-                    meta={readyMeta}
-                    addonName={metaDetails.metaItem.addon.manifest.name}
-                    streams={metaDetails.streams}
-                    onToggleLibrary={readyMeta.inLibrary ? removeFromLibrary : addToLibrary}
-                />
-            </div>
-        </div>;
+        </LiveTvDetails>;
     }
     return (
         <div className={styles['metadetails-container']}>

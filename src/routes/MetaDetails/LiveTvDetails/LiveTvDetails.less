@@ -13,15 +13,47 @@
     modal-body: body-container;
 }
 
+.live-details {
+    position: relative;
+    isolation: isolate;
+    background: #100d20;
+
+    .backdrop, .backdrop-image, .backdrop-shade {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .backdrop {
+        z-index: -1;
+    }
+
+    .backdrop-image {
+        object-fit: cover;
+        object-position: center 20%;
+        opacity: 0.3;
+
+        &.channel-artwork {
+            opacity: 0.18;
+        }
+    }
+
+    .backdrop-shade {
+        background: linear-gradient(90deg, rgba(16, 13, 32, 0.8), rgba(16, 13, 32, 0.1) 70%),
+            linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.4) 45%, #100d20 90%);
+    }
+}
+
 .channel-page {
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
     flex: 1;
     min-width: 0;
     min-height: 0;
-    padding: 0 clamp(1.5rem, 5vw, 6rem) 2rem;
+    padding: 0 clamp(1.5rem, 5vw, 6rem) max(2rem, var(--safe-area-inset-bottom));
     color: var(--primary-foreground-color);
-    background: #100d20;
 
     button, select { font: inherit; color: inherit; }
     button { cursor: pointer; }
@@ -31,51 +63,11 @@
     }
 
     .hero {
-        position: relative;
-        isolation: isolate;
         display: flex;
         align-items: center;
         min-height: 0;
         padding: 1.5rem 0 2rem;
         overflow: visible;
-    }
-
-    .hero-visual {
-        position: absolute;
-        z-index: -1;
-        inset: 0 calc(clamp(1.5rem, 5vw, 6rem) * -1) 0 auto;
-        width: 78%;
-        pointer-events: none;
-        mask-image: linear-gradient(90deg, transparent, #000 40%), linear-gradient(180deg, transparent, #000 10%, #000 65%, transparent);
-        mask-composite: intersect;
-    }
-
-    .artwork {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center 25%;
-        opacity: 0.65;
-    }
-
-    .brand-artwork {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        padding-left: 20%;
-        background: radial-gradient(ellipse at 55% 45%, rgba(103, 76, 176, 0.22), transparent 65%);
-
-        > img { width: min(48%, 18rem); max-height: 60%; object-fit: contain; border-radius: 1.25rem; }
-        > span {
-            max-width: 65%;
-            font-size: clamp(2rem, 5vw, 6rem);
-            font-weight: 700;
-            text-align: center;
-            overflow-wrap: anywhere;
-            opacity: 0.3;
-        }
     }
 
     .hero-content {
@@ -382,21 +374,13 @@
 }
 
 @media (max-width: 700px) {
+    .live-details .backdrop-shade {
+        background: linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.6) 45%, #100d20 85%);
+    }
+
     .channel-page {
-        padding: 0 1.5rem 1.5rem;
+        padding: 0 1.5rem max(1.5rem, var(--safe-area-inset-bottom));
         .hero { align-items: flex-end; padding: 1rem 0 1.75rem; }
-        .hero-visual {
-            inset: 0 -1.5rem auto;
-            width: auto;
-            height: 70%;
-            mask-image: linear-gradient(180deg, #000, #000 20%, transparent);
-        }
-        .brand-artwork {
-            align-items: flex-start;
-            justify-content: flex-end;
-            padding: 1rem 2rem 0 0;
-            > img { width: 45%; height: 70%; }
-        }
         .hero-content { width: 100%; }
         .channel-logo { width: 2.25rem; height: 2.25rem; }
         .current-information h2 { font-size: clamp(1.6rem, 6.5vw, 2.5rem); }
@@ -421,7 +405,7 @@
 
 @media (max-height: 750px) {
     .channel-page {
-        padding-bottom: 1rem;
+        padding-bottom: max(1rem, var(--safe-area-inset-bottom));
         .hero { padding: 0.75rem 0 1.25rem; }
         .hero-content { gap: 0.9rem; }
         .description, .broadcast-progress { margin-top: 0.75rem; }
@@ -441,7 +425,7 @@
 
 @media (max-height: 500px) {
     .channel-page {
-        padding-bottom: 0.75rem;
+        padding-bottom: max(0.75rem, var(--safe-area-inset-bottom));
         .hero { align-items: center; padding: 0.25rem 0 0.75rem; }
         .hero-content { gap: 0.5rem; }
         .channel-logo { width: 1.75rem; height: 1.75rem; }

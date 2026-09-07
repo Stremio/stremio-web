@@ -15,13 +15,16 @@ import Stream from '../StreamsList/Stream';
 import styles from './LiveTvDetails.less';
 
 type Props = {
+    className: string;
+    contentRef: React.Ref<HTMLDivElement>;
+    children: React.ReactNode;
     meta: MetaItemMetaDetails;
     addonName: string;
     streams: MetaDetails['streams'];
     onToggleLibrary: () => void;
 };
 
-const LiveTvDetails = ({ meta, addonName, streams, onToggleLibrary }: Props) => {
+const LiveTvDetails = ({ className, contentRef, children, meta, addonName, streams, onToggleLibrary }: Props) => {
     const { t, i18n } = useTranslation();
     const core = useCore();
     const now = useEpgNow(true);
@@ -63,107 +66,109 @@ const LiveTvDetails = ({ meta, addonName, streams, onToggleLibrary }: Props) => 
         setPreviewOpen(true);
     };
     const changePage = (nextStart: number) => setSchedulePage({ date: epgDateKey(programs[nextStart].startTime), start: nextStart });
-    const renderBrand = () => <div className={styles['brand-artwork']}>
-        {channel.logo ? <Image src={channel.logo} alt={''} renderFallback={() => <span>{meta.name}</span>} /> : <span>{meta.name}</span>}
-    </div>;
+    const renderChannelBackdrop = () => channel.logo ? <Image className={classNames(styles['backdrop-image'], styles['channel-artwork'])} src={channel.logo} alt={''} renderFallback={() => null} /> : null;
 
     useEffect(() => {
         core.transport.dispatch({ action: 'MetaDetails', args: { action: 'RefreshLive' } }, 'meta_details');
     }, [core, meta.id, now]);
 
     return (
-        <div className={styles['channel-page']}>
-            <section className={styles['hero']} aria-label={t('LIVE_TV_ON_NOW', { defaultValue: 'On now' })}>
-                <div className={styles['hero-visual']} aria-hidden={'true'}>
-                    {artwork ? <Image className={styles['artwork']} src={artwork} alt={''} renderFallback={renderBrand} /> : renderBrand()}
-                </div>
-                <div className={styles['hero-content']}>
-                    <header className={styles['channel-header']}>
-                        <div className={styles['channel-logo']}>
-                            {channel.logo ? <Image src={channel.logo} alt={''} renderFallback={() => <Icon name={'tv'} />} /> : <Icon name={'tv'} />}
-                        </div>
-                        <div className={styles['channel-identity']}><h1>{meta.name}</h1><span>{addonName}</span></div>
-                    </header>
-                    <div className={styles['current-information']}>
-                        <div className={styles['current-time']}>
-                            <span className={styles['live-badge']}><span />{t('PLAYER_LIVE')}</span>
-                            {current && <span>{formatEpgTimeRange(current.startTime, current.endTime, i18n.language)}</span>}
-                        </div>
-                        <h2>{current?.title ?? t('LIVE_TV_NO_PROGRAM', { defaultValue: 'No programme information right now' })}</h2>
-                        <p className={styles['description']}>{current?.overview ?? meta.description ?? (programs.length === 0 ? t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' }) : null)}</p>
-                        {progress !== null && current && <div className={styles['broadcast-progress']}>
-                            <div className={styles['progress-track']}><div style={{ width: `${progress}%` }} /></div>
-                            <span>{t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((current.endTime.getTime() - now) / 60000) })}</span>
-                        </div>}
-                    </div>
-                    <div className={styles['playback']}>
-                        {soleStream ? <Stream
-                            className={styles['primary-stream']}
-                            addonName={soleStream.addonName}
-                            name={t('LIVE_TV_WATCH_LIVE', { defaultValue: 'Watch live' })}
-                            description={soleStream.addonName}
-                            progress={null}
-                            deepLinks={soleStream.stream.deepLinks}
-                            onClick={() => core.transport.analytics({ event: 'StreamClicked', args: { stream: soleStream.stream } })}
-                        /> : readyStreams.length > 1 ? <button className={styles['streams-button']} onClick={() => setStreamsOpen(true)} aria-haspopup={'dialog'}>
-                            <Icon name={'play'} /><span>{t('LIVE_TV_WATCH_LIVE', { defaultValue: 'Watch live' })}</span>
-                        </button> : <div className={styles['stream-message']} role={'status'}>{loadingStreams ? t('STREAM_LOADING') : t('NO_STREAM')}</div>}
-                        <button
-                            className={classNames(styles['library-button'], { [styles['saved']]: meta.inLibrary })}
-                            title={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                            aria-label={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                            onClick={onToggleLibrary}
-                        ><Icon name={meta.inLibrary ? 'remove-from-library' : 'add-to-library'} /></button>
-                        {current && <Button className={styles['details-button']} onClick={() => openProgram(current)}>{t('LIBRARY_DETAILS')}<Icon name={'chevron-forward'} /></Button>}
-                    </div>
-                </div>
-            </section>
-            <section className={styles['schedule']} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}>
-                <div className={styles['schedule-header']}>
-                    <h2>{t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}</h2>
-                    <div className={styles['schedule-controls']}>
-                        <div className={styles['date-control']}>
-                            <Icon name={'calendar'} />
-                            <select value={selectedDate} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })} onChange={(event) => {
-                                const value = event.target.value;
-                                const day = epgDayWindow(parseEpgDate(value)!);
-                                const firstIndex = programs.findIndex((program) => program.endTime.getTime() > day.start);
-                                setSchedulePage(value === today ? null : { date: value, start: firstIndex < 0 ? maxStart : firstIndex });
-                            }}>
-                                {dates.map((value) => <option key={value} value={value}>
-                                    {value === today ? t('LIVE_TV_TODAY', { defaultValue: 'Today' }) : parseEpgDate(value)!.toLocaleDateString(i18n.language, { weekday: 'short', day: 'numeric', month: 'short' })}
-                                </option>)}
-                            </select>
-                            <Icon name={'chevron-down'} />
-                        </div>
-                        {programs.length > 0 && <span className={styles['page-count']} aria-live={'polite'}>{start + 1}–{start + visiblePrograms.length} / {programs.length}</span>}
-                        <div className={styles['pagination']}>
-                            <button aria-label={t('BUTTON_PREV')} title={t('BUTTON_PREV')} disabled={start === 0} onClick={() => changePage(Math.max(0, start - pageSize))}><Icon name={'chevron-back'} /></button>
-                            <button aria-label={t('BUTTON_NEXT')} title={t('BUTTON_NEXT')} disabled={start >= maxStart} onClick={() => changePage(Math.min(maxStart, start + pageSize))}><Icon name={'chevron-forward'} /></button>
-                        </div>
-                    </div>
-                </div>
-                <div className={styles['programs']}>
-                    {visiblePrograms.length > 0 ? visiblePrograms.map((program) => {
-                        const isCurrent = program.id === current?.id;
-                        const aired = program.endTime.getTime() <= now;
-                        return <button
-                            key={program.id}
-                            className={classNames(styles['program'], { [styles['current']]: isCurrent, [styles['aired']]: aired })}
-                            aria-current={isCurrent ? 'true' : undefined}
-                            onClick={() => openProgram(program)}
-                        >
-                            <div className={styles['program-thumbnail']}>
-                                <Image src={program.thumbnail ?? channel.logo ?? ''} alt={''} renderFallback={() => <Icon name={'tv'} />} className={program.thumbnail ? undefined : styles['channel-thumbnail']} />
+        <div className={classNames(className, styles['live-details'])}>
+            <div className={styles['backdrop']} aria-hidden={'true'}>
+                {artwork ? <Image className={styles['backdrop-image']} src={artwork} alt={''} renderFallback={renderChannelBackdrop} /> : renderChannelBackdrop()}
+                <div className={styles['backdrop-shade']} />
+            </div>
+            {children}
+            <div ref={contentRef} className={styles['channel-page']}>
+                <section className={styles['hero']} aria-label={t('LIVE_TV_ON_NOW', { defaultValue: 'On now' })}>
+                    <div className={styles['hero-content']}>
+                        <header className={styles['channel-header']}>
+                            <div className={styles['channel-logo']}>
+                                {channel.logo ? <Image src={channel.logo} alt={''} renderFallback={() => <Icon name={'tv'} />} /> : <Icon name={'tv'} />}
                             </div>
-                            <div className={styles['program-info']}>
-                                <div className={styles['program-time']}><span>{epgDateKey(program.startTime) !== selectedDate && `${program.startTime.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })} · `}{timeLabel(program.startTime)}</span><span>{isCurrent ? t('LIVE_TV_ON_NOW', { defaultValue: 'On now' }) : aired ? t('AIRED') : program.id === next?.id ? t('LIVE_TV_UP_NEXT', { defaultValue: 'Up next' }) : t('UPCOMING')}</span></div>
-                                <strong>{program.title}</strong>
+                            <div className={styles['channel-identity']}><h1>{meta.name}</h1><span>{addonName}</span></div>
+                        </header>
+                        <div className={styles['current-information']}>
+                            <div className={styles['current-time']}>
+                                <span className={styles['live-badge']}><span />{t('PLAYER_LIVE')}</span>
+                                {current && <span>{formatEpgTimeRange(current.startTime, current.endTime, i18n.language)}</span>}
                             </div>
-                        </button>;
-                    }) : <div className={styles['empty-schedule']}><Icon name={'calendar'} /><p>{t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' })}</p></div>}
-                </div>
-            </section>
+                            <h2>{current?.title ?? t('LIVE_TV_NO_PROGRAM', { defaultValue: 'No programme information right now' })}</h2>
+                            <p className={styles['description']}>{current?.overview ?? meta.description ?? (programs.length === 0 ? t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' }) : null)}</p>
+                            {progress !== null && current && <div className={styles['broadcast-progress']}>
+                                <div className={styles['progress-track']}><div style={{ width: `${progress}%` }} /></div>
+                                <span>{t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((current.endTime.getTime() - now) / 60000) })}</span>
+                            </div>}
+                        </div>
+                        <div className={styles['playback']}>
+                            {soleStream ? <Stream
+                                className={styles['primary-stream']}
+                                addonName={soleStream.addonName}
+                                name={t('LIVE_TV_WATCH_LIVE', { defaultValue: 'Watch live' })}
+                                description={soleStream.addonName}
+                                progress={null}
+                                deepLinks={soleStream.stream.deepLinks}
+                                onClick={() => core.transport.analytics({ event: 'StreamClicked', args: { stream: soleStream.stream } })}
+                            /> : readyStreams.length > 1 ? <button className={styles['streams-button']} onClick={() => setStreamsOpen(true)} aria-haspopup={'dialog'}>
+                                <Icon name={'play'} /><span>{t('LIVE_TV_WATCH_LIVE', { defaultValue: 'Watch live' })}</span>
+                            </button> : <div className={styles['stream-message']} role={'status'}>{loadingStreams ? t('STREAM_LOADING') : t('NO_STREAM')}</div>}
+                            <button
+                                className={classNames(styles['library-button'], { [styles['saved']]: meta.inLibrary })}
+                                title={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                                aria-label={meta.inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                                onClick={onToggleLibrary}
+                            ><Icon name={meta.inLibrary ? 'remove-from-library' : 'add-to-library'} /></button>
+                            {current && <Button className={styles['details-button']} onClick={() => openProgram(current)}>{t('LIBRARY_DETAILS')}<Icon name={'chevron-forward'} /></Button>}
+                        </div>
+                    </div>
+                </section>
+                <section className={styles['schedule']} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}>
+                    <div className={styles['schedule-header']}>
+                        <h2>{t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })}</h2>
+                        <div className={styles['schedule-controls']}>
+                            <div className={styles['date-control']}>
+                                <Icon name={'calendar'} />
+                                <select value={selectedDate} aria-label={t('LIVE_TV_SCHEDULE', { defaultValue: 'Programme guide' })} onChange={(event) => {
+                                    const value = event.target.value;
+                                    const day = epgDayWindow(parseEpgDate(value)!);
+                                    const firstIndex = programs.findIndex((program) => program.endTime.getTime() > day.start);
+                                    setSchedulePage(value === today ? null : { date: value, start: firstIndex < 0 ? maxStart : firstIndex });
+                                }}>
+                                    {dates.map((value) => <option key={value} value={value}>
+                                        {value === today ? t('LIVE_TV_TODAY', { defaultValue: 'Today' }) : parseEpgDate(value)!.toLocaleDateString(i18n.language, { weekday: 'short', day: 'numeric', month: 'short' })}
+                                    </option>)}
+                                </select>
+                                <Icon name={'chevron-down'} />
+                            </div>
+                            {programs.length > 0 && <span className={styles['page-count']} aria-live={'polite'}>{start + 1}–{start + visiblePrograms.length} / {programs.length}</span>}
+                            <div className={styles['pagination']}>
+                                <button aria-label={t('BUTTON_PREV')} title={t('BUTTON_PREV')} disabled={start === 0} onClick={() => changePage(Math.max(0, start - pageSize))}><Icon name={'chevron-back'} /></button>
+                                <button aria-label={t('BUTTON_NEXT')} title={t('BUTTON_NEXT')} disabled={start >= maxStart} onClick={() => changePage(Math.min(maxStart, start + pageSize))}><Icon name={'chevron-forward'} /></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles['programs']}>
+                        {visiblePrograms.length > 0 ? visiblePrograms.map((program) => {
+                            const isCurrent = program.id === current?.id;
+                            const aired = program.endTime.getTime() <= now;
+                            return <button
+                                key={program.id}
+                                className={classNames(styles['program'], { [styles['current']]: isCurrent, [styles['aired']]: aired })}
+                                aria-current={isCurrent ? 'true' : undefined}
+                                onClick={() => openProgram(program)}
+                            >
+                                <div className={styles['program-thumbnail']}>
+                                    <Image src={program.thumbnail ?? channel.logo ?? ''} alt={''} renderFallback={() => <Icon name={'tv'} />} className={program.thumbnail ? undefined : styles['channel-thumbnail']} />
+                                </div>
+                                <div className={styles['program-info']}>
+                                    <div className={styles['program-time']}><span>{epgDateKey(program.startTime) !== selectedDate && `${program.startTime.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' })} · `}{timeLabel(program.startTime)}</span><span>{isCurrent ? t('LIVE_TV_ON_NOW', { defaultValue: 'On now' }) : aired ? t('AIRED') : program.id === next?.id ? t('LIVE_TV_UP_NEXT', { defaultValue: 'Up next' }) : t('UPCOMING')}</span></div>
+                                    <strong>{program.title}</strong>
+                                </div>
+                            </button>;
+                        }) : <div className={styles['empty-schedule']}><Icon name={'calendar'} /><p>{t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' })}</p></div>}
+                    </div>
+                </section>
+            </div>
             {streamsOpen && <ModalDialog className={styles['streams-modal']} title={t('LIVE_TV_PLAYBACK_OPTIONS', { defaultValue: 'Playback options' })} onCloseRequest={() => setStreamsOpen(false)} role={'dialog'} aria-modal={'true'} aria-label={t('LIVE_TV_PLAYBACK_OPTIONS', { defaultValue: 'Playback options' })}>
                 <div className={styles['stream-options']}>
                     {readyStreams.map(({ stream, addonName }, index) => <Stream
