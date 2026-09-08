@@ -6,11 +6,10 @@ import Icon from '@stremio/stremio-icons/react';
 import { Button, MultiselectMenu } from 'stremio/components';
 import { useMediaQuery } from 'stremio/common';
 import { EpgGuideRow } from './EpgGuideRow';
-import { EPGChannel, EPGProgram, HOUR_IN_MS, epgDayWindow, parseEpgDate, getEpgSkeletonPrograms } from 'stremio/common/EPG';
+import { EPGChannel, EPGProgram, EPG_PIXELS_PER_HOUR as PIXELS_PER_HOUR, HOUR_IN_MS, epgDayWindow, parseEpgDate, getEpgSkeletonPrograms } from 'stremio/common/EPG';
 import styles from './EpgGuide.less';
 
 const HALF_HOUR_IN_MS = HOUR_IN_MS / 2;
-const PIXELS_PER_HOUR = 240;
 const HALF_HOUR_PX = PIXELS_PER_HOUR / 2;
 const CHANNEL_COLUMN_WIDTH = 130;
 const ROW_HEIGHT = 56;
@@ -45,7 +44,6 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
     const headerRef = useRef<HTMLDivElement>(null);
     const channelColumnInnerRef = useRef<HTMLDivElement>(null);
     const nowRef = useRef(now);
-    nowRef.current = now;
     const [viewport, setViewport] = useState({ left: 0, top: 0, width: 0, height: 0 });
     const compact = useMediaQuery('(max-width: 800px)');
     const todayDate = useMemo(() => parseEpgDate(today) ?? new Date(), [today]);
@@ -72,6 +70,10 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
     }, [todayDate, effectiveDay]);
     const selectedDayIndex = days.findIndex((day) => day.getTime() === effectiveDay.getTime());
     const visibleDays = compact ? days.slice(Math.max(0, Math.min(days.length - 3, selectedDayIndex - 1)), Math.max(3, Math.min(days.length, selectedDayIndex + 2))) : days;
+
+    useEffect(() => {
+        nowRef.current = now;
+    }, [now]);
 
     useEffect(() => {
         const element = viewportRef.current;
@@ -135,18 +137,18 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
     return (
         <div className={styles['epg-guide']}>
             <div className={styles['epg-day-selector']}>
-                <button className={styles['epg-day-arrow']} disabled={selectedDayIndex <= 0} onClick={() => onDayChange(days[selectedDayIndex - 1])} aria-label={t('BUTTON_PREV')}>
+                <Button className={styles['epg-day-arrow']} role={'button'} disabled={selectedDayIndex <= 0} aria-disabled={selectedDayIndex <= 0} tabIndex={selectedDayIndex <= 0 ? -1 : 0} onClick={() => selectedDayIndex > 0 && onDayChange(days[selectedDayIndex - 1])} aria-label={t('BUTTON_PREV')}>
                     <Icon className={styles['epg-day-arrow-icon']} name={'chevron-back'} />
-                </button>
+                </Button>
                 {visibleDays.map((day) => (
-                    <button key={day.getTime()} className={`${styles['epg-day-btn']}${day.getTime() === effectiveDay.getTime() ? ` ${styles['epg-day-btn-active']}` : ''}`} onClick={() => onDayChange(day)}>
+                    <Button key={day.getTime()} role={'button'} className={`${styles['epg-day-btn']}${day.getTime() === effectiveDay.getTime() ? ` ${styles['epg-day-btn-active']}` : ''}`} onClick={() => onDayChange(day)}>
                         <span className={styles['epg-day-weekday']}>{abbreviate(t(WEEKDAYS[day.getDay()]))}</span>
                         <span className={styles['epg-day-date']}>{day.toDateString() === todayDate.toDateString() ? `${abbreviate(t(MONTHS[day.getMonth()]))} ${day.getDate()}` : day.getDate()}</span>
-                    </button>
+                    </Button>
                 ))}
-                <button className={styles['epg-day-arrow']} disabled={selectedDayIndex >= days.length - 1} onClick={() => onDayChange(days[selectedDayIndex + 1])} aria-label={t('BUTTON_NEXT')}>
+                <Button className={styles['epg-day-arrow']} role={'button'} disabled={selectedDayIndex >= days.length - 1} aria-disabled={selectedDayIndex >= days.length - 1} tabIndex={selectedDayIndex >= days.length - 1 ? -1 : 0} onClick={() => selectedDayIndex < days.length - 1 && onDayChange(days[selectedDayIndex + 1])} aria-label={t('BUTTON_NEXT')}>
                     <Icon className={styles['epg-day-arrow-icon']} name={'chevron-forward'} />
-                </button>
+                </Button>
             </div>
             {error !== null && (
                 <div className={styles['epg-error-banner']}>

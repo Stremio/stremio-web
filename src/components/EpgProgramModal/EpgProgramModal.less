@@ -11,7 +11,6 @@
     modal-dialog: modal-dialog-container;
     modal-content: modal-dialog-content;
     modal-body: body-container;
-    modal-close: close-button-container;
 }
 
 .preview {
@@ -174,28 +173,8 @@
     }
 
     .channel-button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1.5rem;
-        min-height: 3.25rem;
-        padding: 0.75rem 1.2rem;
-        border-radius: 0.75rem;
-        background: var(--primary-accent-color);
-        color: var(--primary-foreground-color);
-        text-decoration: none;
-        font-size: 0.9rem;
-        font-weight: 600;
-
-        &:hover, &:focus {
-            background: var(--secondary-accent-color);
-            outline-color: var(--primary-foreground-color);
-        }
-    }
-
-    .button-icon {
-        width: 1.25rem;
-        height: 1.25rem;
+        width: 100%;
+        height: 3.5rem;
     }
 }
 
@@ -206,9 +185,6 @@
         max-height: min(48rem, calc(100dvh - 4rem));
         padding: 0;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 1.25rem;
-        box-shadow: 0 1.5rem 6rem rgba(0, 0, 0, 0.5);
 
         .modal-content {
             display: flex;
@@ -229,10 +205,6 @@
         }
     }
 
-    .modal-close {
-        top: 1rem;
-        right: 0.75rem;
-    }
 }
 
 .sheet {
@@ -328,8 +300,7 @@
         }
 
         .channel-button {
-            min-height: 2.75rem;
-            padding: 0.6rem 1rem;
+            height: 2.75rem;
         }
     }
 }

@@ -1,0 +1,242 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+.schedule {
+    --artwork-height: clamp(8rem, 23vh, 16rem);
+    --program-info-height: 6.5rem;
+    min-width: 0;
+    overflow: visible;
+}
+.schedule-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    > h2 { margin: 0; font-size: 1.2rem; font-weight: 600; }
+}
+.zoom-controls {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    > [role='button'] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.25rem;
+        height: 2.25rem;
+        padding: 0 0.6rem;
+        border-radius: var(--border-radius);
+        color: var(--primary-foreground-color);
+        font-size: 0.85rem;
+        line-height: 1;
+        &:hover, &:focus { background-color: var(--overlay-color); }
+        &.automatic { color: var(--primary-accent-color); background-color: var(--overlay-color); }
+    }
+}
+.zoom-icon {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    &::before, &.zoom-in::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1rem;
+        height: 1.5px;
+        background: currentColor;
+        transform: translate(-50%, -50%);
+    }
+    &.zoom-in::after { transform: translate(-50%, -50%) rotate(90deg); }
+}
+.schedule-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-right: 1rem;
+    padding-bottom: 0.5rem;
+}
+.timeline { position: relative; min-width: 100%; overflow: visible; }
+.days, .times { position: relative; }
+.days { height: 1.8rem; overflow: visible; }
+.day {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    overflow: visible;
+    border-left: 1px solid var(--overlay-color);
+    > span {
+        position: sticky;
+        left: 0;
+        display: inline-block;
+        padding: 0 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+}
+.times {
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+    > span {
+        position: absolute;
+        padding: 0.25rem 0.5rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+}
+.programs {
+    position: relative;
+    height: calc(var(--artwork-height) + var(--program-info-height));
+    overflow: visible;
+}
+.program {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    padding-right: 0.4rem;
+    border-radius: var(--border-radius);
+    color: var(--primary-foreground-color);
+    overflow: clip;
+    scroll-snap-align: start;
+    &:hover, &:focus {
+        .program-card { border-color: rgba(255, 255, 255, 0.3); }
+    }
+    &.current .program-card { border-color: var(--primary-accent-color); }
+    &.current .program-info > span:last-of-type { color: var(--primary-accent-color); }
+    &.aired .program-thumbnail { opacity: 0.65; }
+
+    &.compact {
+        .program-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--program-info-height);
+            padding: 0.5rem 0.25rem;
+            > span, > strong, > p { display: none; }
+            .compact-icon { display: block; }
+        }
+    }
+    &.wide {
+        .program-card { display: grid; grid-template-columns: 1fr 1fr; }
+        .program-thumbnail { height: 100%; }
+        .program-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5rem;
+            > strong { height: auto; font-size: 1.2rem; }
+            > p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+        }
+    }
+}
+.program-card {
+    position: sticky;
+    left: 0;
+    width: 100%;
+    max-width: calc(var(--content-width) - 0.4rem);
+    height: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    background-color: var(--overlay-color);
+    overflow: clip;
+}
+.program-thumbnail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--artwork-height);
+    overflow: hidden;
+    > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 25%;
+        &.channel-thumbnail { object-fit: contain; padding: 1rem; }
+    }
+    > svg { width: 2.5rem; height: 2.5rem; opacity: 0.2; }
+}
+.program-info {
+    padding: 0.65rem 0.8rem;
+    > p { display: none; margin: 0.5rem 0 1rem; font-size: 0.85rem; line-height: 1.5; color: rgba(255, 255, 255, 0.65); }
+    > span {
+        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    > strong {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        height: 2.6em;
+        margin: 0.35rem 0;
+        font-size: 0.9rem;
+        line-height: 1.3;
+        font-weight: 500;
+        overflow-wrap: anywhere;
+    }
+}
+.compact-icon {
+    display: none;
+    width: min(1.25rem, 100%);
+    height: 1.25rem;
+    opacity: 0.6;
+}
+.now-line {
+    position: absolute;
+    z-index: 1;
+    top: 1.8rem;
+    bottom: 0;
+    width: 2px;
+    background: var(--primary-accent-color);
+    pointer-events: none;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -3px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: inherit;
+    }
+}
+.empty-schedule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 5rem;
+    color: rgba(255, 255, 255, 0.5);
+    > svg { flex: none; width: 1.5rem; height: 1.5rem; }
+    > p { margin: 0; font-size: 0.9rem; }
+}
+@media (max-width: 700px) {
+    .schedule { --artwork-height: clamp(7rem, 21vh, 14rem); }
+    .schedule-header > h2 { font-size: 1.1rem; }
+}
+@media (max-height: 750px) {
+    .schedule { --artwork-height: 6.5rem; }
+}
+@media (max-height: 650px) {
+    .schedule { --artwork-height: 0rem; }
+    .program-thumbnail { display: none; }
+    .program.wide {
+        .program-card { display: block; }
+        .program-info { display: block; padding: 0.65rem 0.8rem; > p { display: none; } > strong { font-size: 0.9rem; } }
+    }
+}
+@media (max-height: 500px) {
+    .schedule { --program-info-height: 5.25rem; }
+    .schedule-header { margin-bottom: 0.5rem; > h2 { font-size: 1rem; } }
+    .days { height: 1.4rem; }
+    .times { height: 1.6rem; }
+    .now-line { top: 1.4rem; }
+    .program-info {
+        padding: 0.5rem;
+        > strong { font-size: 0.8rem; margin: 0.2rem 0; }
+    }
+}

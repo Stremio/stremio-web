@@ -3,6 +3,12 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/components/MultiselectMenu/MultiselectMenu.less') {
+    multiselect-button: multiselect-button;
+    multiselect-label: label;
+    multiselect-icon: icon;
+}
+
 @keyframes epg-skeleton-shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
@@ -45,13 +51,9 @@
     opacity: 0.5;
     transition: opacity 0.15s, background-color 0.15s;
 
-    &:hover:not(:disabled) {
+    &:hover, &:focus {
         opacity: 1;
         background-color: var(--overlay-color); 
-    }
-    &:disabled {
-        opacity: 0.2;
-        cursor: default;
     }
 }
 
@@ -131,23 +133,23 @@
 }
 
 .epg-time-menu {
-    min-width: 8rem;
+    width: 100%;
+    min-width: 0;
     z-index: 40;
 
-    [class^='multiselect-button-'] {
+    .multiselect-button {
+        width: 100%;
+        height: 2.75rem;
+        padding: 0 0.65rem;
         background-color: #5e4fa2;
-        color: #fff;
-        height: 2.2rem;
 
-        &:hover {
+        &:hover, &:focus {
             background-color: var(--primary-accent-color);
         }
     }
 
-    [class^='label-'],
-    [class^='icon-'] {
-        color: #fff;
-    }
+    .multiselect-label { font-size: 0.9rem; }
+    .multiselect-icon { flex: none; opacity: 1; }
 }
 
 .epg-header-viewport {

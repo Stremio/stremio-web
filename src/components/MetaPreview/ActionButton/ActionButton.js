@@ -8,10 +8,12 @@ const { Button } = require('stremio/components');
 const styles = require('./styles');
 const { Tooltip } = require('stremio/common/Tooltips');
 
-const ActionButton = ({ className, icon, label, tooltip, variant, ...props }) => {
+/** @typedef {Partial<React.ComponentProps<typeof Button>> & { icon?: string, label?: string, tooltip?: boolean, variant?: 'icon' | 'wide' }} Props */
+
+const ActionButton = React.forwardRef(/** @param {Props} props */ ({ className, icon, label, tooltip = false, variant, ...props }, ref) => {
     const wide = variant === 'wide' || (variant !== 'icon' && typeof label === 'string' && !tooltip);
     return (
-        <Button title={tooltip ? '' : label} aria-label={label} {...props} className={classnames(className, styles['action-button-container'], { [styles['wide']]: wide })}>
+        <Button ref={ref} title={tooltip ? '' : label} aria-label={label} {...props} className={classnames(className, styles['action-button-container'], { [styles['wide']]: wide })}>
             {
                 tooltip === true ?
                     <Tooltip label={label} position={'top'} />
@@ -34,16 +36,20 @@ const ActionButton = ({ className, icon, label, tooltip, variant, ...props }) =>
                     :
                     null
             }
+            {props.children}
         </Button>
     );
-};
+});
+
+ActionButton.displayName = 'ActionButton';
 
 ActionButton.propTypes = {
     className: PropTypes.string,
     icon: PropTypes.string,
     label: PropTypes.string,
     tooltip: PropTypes.bool,
-    variant: PropTypes.oneOf(['icon', 'wide'])
+    variant: PropTypes.oneOf(['icon', 'wide']),
+    children: PropTypes.node
 };
 
 module.exports = ActionButton;

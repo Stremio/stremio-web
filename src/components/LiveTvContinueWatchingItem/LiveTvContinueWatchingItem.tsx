@@ -1,9 +1,11 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React from 'react';
+import classNames from 'classnames';
 import { useCore } from 'stremio/core';
 import LibItem from 'stremio/components/LibItem';
 import { useEpgNow, getEpgProgress, getNonEmptyString, hasEpgProgramTimes } from 'stremio/common/EPG';
+import styles from './LiveTvContinueWatchingItem.less';
 
 type Show = {
     title?: string | null,
@@ -51,7 +53,7 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
 
     return (
         <LibItem
-            className={className}
+            className={classNames(className, styles['live-item'])}
             _id={channel?.id}
             type={channel?.type}
             name={name}

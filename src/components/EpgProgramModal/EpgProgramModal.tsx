@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import BottomSheet from 'stremio/components/BottomSheet';
-import Button from 'stremio/components/Button';
+import ActionButton from 'stremio/components/MetaPreview/ActionButton';
 import Image from 'stremio/components/Image';
 import ModalDialog from 'stremio/components/ModalDialog';
 import useMediaQuery from 'stremio/common/useMediaQuery';
@@ -57,10 +57,7 @@ const EpgProgramModal = ({ program, now, show, onCloseRequest, channelHref }: Pr
                 </div>
             </div>
             {channelHref && <footer className={styles['footer']}>
-                <Button className={styles['channel-button']} href={channelHref} onClick={onCloseRequest}>
-                    <span>{t('LIVE_TV_VIEW_CHANNEL', { defaultValue: 'View channel' })}</span>
-                    <Icon name={'chevron-forward'} className={styles['button-icon']} />
-                </Button>
+                <ActionButton className={styles['channel-button']} icon={'chevron-forward'} label={t('LIVE_TV_VIEW_CHANNEL', { defaultValue: 'View channel' })} variant={'wide'} href={channelHref} onClick={onCloseRequest} />
             </footer>}
         </article>
     );

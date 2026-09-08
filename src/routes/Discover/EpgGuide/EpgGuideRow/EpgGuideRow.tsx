@@ -55,8 +55,9 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                         .join('-');
 
                     return (
-                        <button
+                        <Button
                             key={key}
+                            role={'button'}
                             className={`${styles['epg-program-block']}${isCurrent ? ` ${styles['epg-program-block-current']}` : ''}`}
                             style={{ left: `${left}px`, width: `${width}px` }}
                             onClick={() => onProgramClick(program, channel)}
@@ -78,7 +79,7 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                                     </div>
                                 </div>
                             </div>
-                        </button>
+                        </Button>
                     );
                 })}
                 {/* a channel without a program for the day stays reachable -

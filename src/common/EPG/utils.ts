@@ -10,6 +10,7 @@ export type EpgSkeletonProgram = {
 
 export const MINUTES_IN_DAY = 24 * 60;
 export const HOUR_IN_MS = 60 * 60 * 1000;
+export const EPG_PIXELS_PER_HOUR = 240;
 
 export const epgDateKey = (date: Date): string => [
     date.getFullYear(),
