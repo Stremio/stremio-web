@@ -86,18 +86,22 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
                             <div className={styles['seek-tooltip']} style={{ left: `${hover.x}px`, top: `${hover.y}px` }}>
                                 {
                                     (() => {
-                                        const cue = findThumbnailCue(cues, hover.time);
-                                        return cue ? (
+                                        const cue = findThumbnailCue(cues, hover.time / 1000);
+                                        if (!cue) {
+                                            return null;
+                                        }
+                                        const spriteUrl = new URL(cue.url, thumbnailsUrl).href;
+                                        return (
                                             <div
                                                 className={styles['thumbnail-crop']}
                                                 style={{
-                                                    backgroundImage: `url(${cue.url})`,
+                                                    backgroundImage: `url(${spriteUrl})`,
                                                     backgroundPosition: `-${cue.x}px -${cue.y}px`,
                                                     width: cue.w,
                                                     height: cue.h
                                                 }}
                                             />
-                                        ) : null;
+                                        );
                                     })()
                                 }
                                 {formatTime(hover.time)}
