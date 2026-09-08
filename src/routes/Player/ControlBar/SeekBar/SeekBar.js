@@ -9,14 +9,17 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useBinaryState } = require('stremio/common');
 const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
+const useThumbnailCues = require('./useThumbnailCues').default;
+const { findThumbnailCue } = require('./parseThumbnailVtt');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed }) => {
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed, thumbnailsUrl }) => {
     const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
     const routeFocused = useRouteFocused();
     const sliderRef = React.useRef(null);
     const [seekTime, setSeekTime] = React.useState(null);
     const [hover, setHover] = React.useState(null);
+    const { cues } = useThumbnailCues(thumbnailsUrl);
 
     const [remainingTimeMode,,, toggleRemainingTimeMode] = useBinaryState(false);
     const resetTimeDebounced = React.useCallback(debounce(() => {
@@ -81,6 +84,22 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
                     hover !== null && seekTime === null && !disabled ?
                         ReactDOM.createPortal(
                             <div className={styles['seek-tooltip']} style={{ left: `${hover.x}px`, top: `${hover.y}px` }}>
+                                {
+                                    (() => {
+                                        const cue = findThumbnailCue(cues, hover.time);
+                                        return cue ? (
+                                            <div
+                                                className={styles['thumbnail-crop']}
+                                                style={{
+                                                    backgroundImage: `url(${cue.url})`,
+                                                    backgroundPosition: `-${cue.x}px -${cue.y}px`,
+                                                    width: cue.w,
+                                                    height: cue.h
+                                                }}
+                                            />
+                                        ) : null;
+                                    })()
+                                }
                                 {formatTime(hover.time)}
                             </div>,
                             document.body
@@ -106,7 +125,8 @@ SeekBar.propTypes = {
     duration: PropTypes.number,
     buffered: PropTypes.number,
     onSeekRequested: PropTypes.func,
-    playbackSpeed: PropTypes.number
+    playbackSpeed: PropTypes.number,
+    thumbnailsUrl: PropTypes.string
 };
 
 module.exports = SeekBar;
