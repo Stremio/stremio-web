@@ -24,7 +24,7 @@
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz",
         "@stremio/stremio-icons": "5.15.0",
-        "@stremio/stremio-video": "0.0.96",
+        "@stremio/stremio-video": "github:Stremio/stremio-video#7413522ee83c736f524bc2603ac0098cff4e355d",
         "a-color-picker": "1.2.1",
         "bowser": "2.14.1",
         "buffer": "6.0.3",

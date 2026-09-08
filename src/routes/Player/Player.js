@@ -205,7 +205,10 @@ const Player = () => {
     const currentEpgVideo = player.live?.currentProgram ?? null;
     const upcomingVideo = isEpg ? player.live?.nextProgram ?? null : player.nextVideo;
     const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
-    const canSeek = Number.isFinite(video.state.duration) && video.state.duration > 0 && Number.isFinite(video.state.time);
+    const livePlayback = isEpg || video.state.live !== null;
+    const seekStart = livePlayback ? video.state.live?.start : 0;
+    const seekEnd = livePlayback ? video.state.live?.end : video.state.duration;
+    const canSeek = Number.isFinite(seekStart) && Number.isFinite(seekEnd) && seekEnd > seekStart && Number.isFinite(video.state.time);
     React.useEffect(() => {
         if (isEpg) core.transport.dispatch({ action: 'Player', args: { action: 'RefreshLive' } }, 'player');
     }, [isEpg, epgNow]);
@@ -297,9 +300,10 @@ const Player = () => {
         if (!canSeek) {
             return;
         }
-        video.setTime(time);
-        seek(time, video.state.duration, video.state.manifest?.name);
-    }, [canSeek, video.state.duration, video.state.manifest]);
+        const target = Math.max(seekStart, Math.min(seekEnd, time));
+        video.setTime(target);
+        seek(target, video.state.duration, video.state.manifest?.name);
+    }, [canSeek, seekStart, seekEnd, video.state.duration, video.state.manifest]);
     const {
         time: keyboardSeekTime,
         seekBy: seekByKeyboard,
@@ -309,7 +313,8 @@ const Player = () => {
         release: releaseKeyboardSeek,
     } = useKeyboardSeek({
         time: video.state.time,
-        duration: video.state.duration,
+        duration: seekEnd,
+        minimum: seekStart,
         onSeek: commitSeek,
         setSeeking,
     });
@@ -1171,7 +1176,8 @@ const Player = () => {
                 onToggleSpeedMenu={toggleSpeedMenu}
                 videoScale={video.state.videoScale}
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
-                live={isEpg}
+                live={livePlayback}
+                liveTiming={video.state.live}
                 seekable={canSeek}
                 buffering={video.state.buffering || !video.state.loaded}
                 onVideoScaleChanged={onVideoScaleChanged}

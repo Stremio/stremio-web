@@ -50,6 +50,7 @@ const ControlBar = React.forwardRef(({
     videoScale,
     videoScaleLabel,
     live,
+    liveTiming,
     seekable,
     buffering,
     onVideoScaleChanged,
@@ -141,6 +142,9 @@ const ControlBar = React.forwardRef(({
                 onSeekRequested={onSeekRequested}
                 playbackSpeed={playbackSpeed}
                 live={live}
+                liveTiming={liveTiming}
+                paused={paused}
+                onPlayRequested={onPlayRequested}
                 seekable={seekable}
                 buffering={buffering}
             />
@@ -234,6 +238,7 @@ ControlBar.propTypes = {
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
     live: PropTypes.bool,
+    liveTiming: PropTypes.object,
     seekable: PropTypes.bool,
     buffering: PropTypes.bool,
     onVideoScaleChanged: PropTypes.func,
