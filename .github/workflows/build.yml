@@ -13,11 +13,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    concurrency:
+      group: build-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -39,13 +42,52 @@ jobs:
         run: pnpm test
       - name: Lint
         run: pnpm lint
-      - name: Deploy to GitHub Pages
-        if: github.event.pull_request.head.repo.fork == false && github.actor != 'dependabot[bot]'
+      - name: Upload Pages preview
+        if: (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && github.actor != 'dependabot[bot]'
+        uses: actions/upload-artifact@v7
+        with:
+          name: pages-preview
+          path: build
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  deploy:
+    needs: build
+    if: (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: gh-pages-write
+      cancel-in-progress: false
+      queue: max
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Check preview is current
+        id: preview
+        env:
+          SOURCE_REF: ${{ github.ref }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          current_sha="$(git ls-remote origin "$SOURCE_REF" "$SOURCE_REF^{}" | tail -n 1 | cut -f 1)"
+          if [[ "$current_sha" == "$SOURCE_SHA" ]]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Skipping preview for an outdated or deleted ref: $SOURCE_REF"
+          fi
+      - name: Download Pages preview
+        if: steps.preview.outputs.current == 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: pages-preview
+          path: build
+      - name: Update Pages preview
+        if: steps.preview.outputs.current == 'true'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build
           target-folder: ${{ github.head_ref || github.ref_name }}
-          # rebase and retry instead of force pushing, so concurrent
-          # runs (e.g. stacked PRs) don't reject each other's push
           force: false
-          attempt-limit: 10
