@@ -2,13 +2,13 @@
 
 import React, { useCallback, useState } from 'react';
 
-type Props = {
-    className: string,
-    src: string,
-    alt: string,
-    fallbackSrc: string,
-    renderFallback: () => React.ReactNode,
-    onError: (event: React.SyntheticEvent<HTMLImageElement>) => void,
+type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
+    className?: string,
+    src?: string,
+    alt?: string,
+    fallbackSrc?: string,
+    renderFallback?: () => React.ReactNode,
+    onError?: (event: React.SyntheticEvent<HTMLImageElement>) => void,
 };
 
 const ImageContent = ({ className, src, alt, fallbackSrc, renderFallback, ...props }: Props) => {
