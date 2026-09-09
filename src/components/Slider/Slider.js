@@ -9,11 +9,14 @@ const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 
 const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete, audioBoost, stepValue }) => {
-    const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
-    const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
+    const minimum = minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0;
+    const maximum = maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100;
+    const currentValue = value !== null && !isNaN(value) ? Math.min(maximum, Math.max(minimum, value)) : 0;
+    const bufferedValue = buffered !== null && !isNaN(buffered) ? Math.min(maximum, Math.max(minimum, buffered)) : 0;
+    const minimumValueRef = useLiveRef(minimum);
+    const maximumValueRef = useLiveRef(maximum);
     const stepValueRef = useLiveRef(stepValue !== null && !isNaN(stepValue) ? stepValue : null);
-    const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
-    const bufferedRef = useLiveRef(buffered !== null && !isNaN(buffered) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, buffered)) : 0);
+    const valueRef = useLiveRef(currentValue);
     const onSlideRef = useLiveRef(onSlide);
     const onCompleteRef = useLiveRef(onComplete);
     const sliderContainerRef = React.useRef(null);
@@ -131,8 +134,8 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
             releaseThumb();
         };
     }, []);
-    const thumbPosition = Math.max(0, Math.min(1, (valueRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
-    const bufferedPosition = Math.max(0, Math.min(1, (bufferedRef.current - minimumValueRef.current) / (maximumValueRef.current - minimumValueRef.current)));
+    const thumbPosition = Math.max(0, Math.min(1, (currentValue - minimum) / (maximum - minimum)));
+    const bufferedPosition = Math.max(0, Math.min(1, (bufferedValue - minimum) / (maximum - minimum)));
     return (
         <div ref={sliderContainerRef} className={classnames(className, styles['slider-container'], { 'disabled': disabled })} onMouseDown={onMouseDown} onTouchStart={onTouchStart}>
             <div className={styles['layer']}>
