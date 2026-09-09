@@ -102,11 +102,11 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                     <Button role={'button'} onClick={() => select(null)}>{t('LIVE_TV_NOW', { defaultValue: 'Now' })}</Button>
                     <Button role={'button'} aria-label={t('LIVE_TV_NEXT_PROGRAM', { defaultValue: 'Next programme' })} aria-disabled={selectedIndex >= programs.length - 1} tabIndex={selectedIndex < programs.length - 1 ? 0 : -1} disabled={selectedIndex >= programs.length - 1} onClick={() => select(programs[selectedIndex + 1])}><Icon name={'chevron-forward'} /></Button>
                 </div>
-                {view === 'timeline' && <div className={styles['zoom-controls']}>
+                <div className={styles['zoom-controls']} aria-hidden={view !== 'timeline'}>
                     <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_OUT', { defaultValue: 'Zoom out' })} aria-disabled={!canZoomOut} tabIndex={canZoomOut ? 0 : -1} disabled={!canZoomOut} onClick={() => zoom(0.5)}><span className={styles['zoom-icon']} aria-hidden={'true'} /></Button>
                     <Button role={'button'} onClick={() => selected && focus(selected, true)}>{t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })}</Button>
                     <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_IN', { defaultValue: 'Zoom in' })} aria-disabled={!canZoomIn} tabIndex={canZoomIn ? 0 : -1} disabled={!canZoomIn} onClick={() => zoom(2)}><span className={classNames(styles['zoom-icon'], styles['zoom-in'])} aria-hidden={'true'} /></Button>
-                </div>}
+                </div>
             </div>}
             <div ref={agendaRef} className={styles['agenda']} hidden={view !== 'agenda' || programs.length === 0}>
                 {view === 'agenda' && programs.map((program, index) => <React.Fragment key={program.id ?? program.startTime.getTime()}>

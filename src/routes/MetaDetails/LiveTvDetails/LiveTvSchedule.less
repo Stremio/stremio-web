@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 .schedule {
-    --agenda-height: clamp(5rem, calc(100vh - 32rem), 20rem);
+    --schedule-height: clamp(10rem, calc(100vh - 32rem), 20rem);
     min-width: 0;
     min-height: 0;
     overflow: visible;
@@ -37,6 +37,7 @@
     }
 }
 .navigation { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.zoom-controls[aria-hidden='true'] { visibility: hidden; }
 .zoom-icon {
     position: relative;
     width: 1rem;
@@ -53,9 +54,9 @@
     }
     &.zoom-in::after { transform: translate(-50%, -50%) rotate(90deg); }
 }
+.agenda, .schedule-viewport { height: var(--schedule-height); }
 .agenda {
     position: relative;
-    height: var(--agenda-height);
     overflow-y: auto;
     overscroll-behavior-y: contain;
     overflow-anchor: none;
@@ -227,6 +228,7 @@
     .agenda-day { height: 1.5rem; }
 }
 @media (max-height: 500px) {
+    .schedule { --schedule-height: 8.5rem; }
     .schedule-header { margin-bottom: 0.25rem; > h2 { font-size: 1rem; } }
     .navigation { margin-bottom: 0.25rem; }
     .days { height: 1.4rem; }

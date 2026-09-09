@@ -2,6 +2,10 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('./LiveTvActions.less') {
+    channel-actions: playback;
+}
+
 .live-details {
     position: relative;
     isolation: isolate;
@@ -218,5 +222,27 @@
         }
         .current-time { font-size: 0.7rem; }
         .description, .broadcast-progress { display: none; }
+    }
+}
+
+@media (max-width: 700px) and (max-height: 650px) {
+    .channel-page {
+        .current-information h2 { -webkit-line-clamp: 1; }
+        .description, .broadcast-progress { display: none; }
+    }
+}
+
+@media @phone-landscape {
+    .channel-page {
+        .hero-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            column-gap: 1.5rem;
+            width: 100%;
+            max-width: none;
+        }
+        .channel-header, .current-information { grid-column: 1; }
+        .current-information h2 { -webkit-line-clamp: 1; }
+        .channel-actions { grid-column: 2; grid-row: 1 / span 2; }
     }
 }
