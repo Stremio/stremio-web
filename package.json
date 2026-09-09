@@ -10,7 +10,7 @@
         "start-prod": "webpack serve --mode production",
         "build": "webpack --mode production",
         "test": "jest",
-        "lint": "eslint src",
+        "lint": "eslint src --max-warnings 287",
         "scan-translations": "pnpx jest ./tests/i18nScan.test.js"
     },
     "engines": {
