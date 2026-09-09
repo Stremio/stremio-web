@@ -2,6 +2,7 @@
 
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
 import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
@@ -40,7 +41,8 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                     const startMs = programStartMs(program);
                     const endMs = programEndMs(program);
                     const left = Math.max(0, ((startMs - dayStart) / HOUR_IN_MS) * pixelsPerHour);
-                    const width = Math.max(4, ((Math.min(endMs, dayEnd) - Math.max(startMs, dayStart)) / HOUR_IN_MS) * pixelsPerHour);
+                    const width = ((Math.min(endMs, dayEnd) - Math.max(startMs, dayStart)) / HOUR_IN_MS) * pixelsPerHour;
+                    const compact = width < 80;
                     const isCurrent = startMs <= now && now < endMs;
                     const label = programTitle(program);
 
@@ -55,31 +57,30 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                         .join('-');
 
                     return (
-                        <Button
+                        <div
                             key={key}
-                            role={'button'}
-                            className={`${styles['epg-program-block']}${isCurrent ? ` ${styles['epg-program-block-current']}` : ''}`}
-                            style={{ left: `${left}px`, width: `${width}px` }}
-                            onClick={() => onProgramClick(program, channel)}
-                            title={label}
+                            className={`${styles['epg-program-block']}${isCurrent ? ` ${styles['epg-program-block-current']}` : ''}${compact ? ` ${styles['epg-program-block-compact']}` : ''}`}
+                            style={{ left, width }}
                         >
-                            <div className={styles['epg-program-block-inner']}>
-                                {program.thumbnail && (
-                                    <div
-                                        className={styles['epg-program-thumb']}
-                                        style={{ backgroundImage: `url('${program.thumbnail}')` }}
-                                    />
-                                )}
-                                <div className={styles['epg-program-content']}>
-                                    <div className={styles['epg-program-title']}>{label}</div>
-                                    <div className={styles['epg-program-time']}>
-                                        {new Date(startMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        <span>-</span>
-                                        {new Date(endMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            <Button role={'button'} className={styles['epg-program-block-inner']} style={{ width: width - Math.min(4, width / 4) }} onClick={() => onProgramClick(program, channel)} title={label} aria-label={label}>
+                                {compact ? (width >= 20 && <Icon name={'details'} className={styles['epg-program-icon']} />) : <>
+                                    {program.thumbnail && (
+                                        <div
+                                            className={styles['epg-program-thumb']}
+                                            style={{ backgroundImage: `url('${program.thumbnail}')` }}
+                                        />
+                                    )}
+                                    <div className={styles['epg-program-content']}>
+                                        <div className={styles['epg-program-title']}>{label}</div>
+                                        <div className={styles['epg-program-time']}>
+                                            {new Date(startMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <span>-</span>
+                                            {new Date(endMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </Button>
+                                </>}
+                            </Button>
+                        </div>
                     );
                 })}
                 {/* a channel without a program for the day stays reachable -

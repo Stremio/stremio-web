@@ -18,13 +18,7 @@
 
 .epg-program-block {
     position: absolute;
-    padding-right: 4px;
-    width: 100%;
-
-    &:hover {
-        z-index: 10;
-        min-width: max-content;
-    }
+    height: 56px;
 
     &-inner {
         width: 100%;
@@ -40,15 +34,16 @@
         color: var(--color-foreground);
         background-color: #1E1C2E;
         transition: background-color 0.12s;
+        overflow: hidden;
 
         &:hover {
             background-color: #2B293F;
-            z-index: 10;
-            min-width: max-content;
-            min-height: 56px;
-            height: auto;
-            overflow: visible;
         }
+    }
+
+    &-compact .epg-program-block-inner {
+        justify-content: center;
+        padding: 0;
     }
 
     &-current {
@@ -61,6 +56,8 @@
         }
     }
 }
+
+.epg-program-icon { flex: none; width: 1rem; height: 1rem; color: var(--primary-foreground-color); opacity: 0.65; }
 
 .epg-program-thumb {
     width: 2.5rem;
