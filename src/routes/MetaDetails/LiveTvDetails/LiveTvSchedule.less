@@ -54,8 +54,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-right: 1rem;
+    overflow-anchor: none;
     padding-bottom: 0.5rem;
 }
 .timeline { position: relative; min-width: 100%; overflow: visible; }
@@ -100,8 +99,7 @@
     border-radius: var(--border-radius);
     color: var(--primary-foreground-color);
     overflow: clip;
-    scroll-snap-align: start;
-    &:hover, &:focus {
+    &:hover, &:focus-within {
         .program-card { border-color: rgba(255, 255, 255, 0.3); }
     }
     &.current .program-card { border-color: var(--primary-accent-color); }

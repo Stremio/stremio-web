@@ -65,18 +65,20 @@ const LiveTvSchedule = ({ programs, now, onProgramSelect }: Props) => {
                             const aired = program.endTime.getTime() <= now;
                             const left = position(program.startTime.getTime());
                             const width = position(program.endTime.getTime()) - left;
-                            const visibleWidth = Math.max(0, Math.min(left + width, viewport.left + viewport.width) - Math.max(left, viewport.left));
-                            const contentWidth = visibleWidth || Math.min(width, viewport.width);
-                            return <Button
+                            const contentWidth = Math.min(width, viewport.width);
+                            return <div
                                 key={program.id}
-                                role={'button'}
                                 className={classNames(styles['program'], { [styles['current']]: isCurrent, [styles['aired']]: aired, [styles['compact']]: width < 120, [styles['wide']]: contentWidth > 560 })}
-                                style={{ left, width, '--content-width': `${contentWidth}px` }}
-                                aria-current={isCurrent ? 'true' : undefined}
-                                aria-label={`${program.title} · ${formatEpgTimeRange(program.startTime, program.endTime, i18n.language)}`}
-                                onClick={() => onProgramSelect(program)}
+                                style={{ left, width }}
                             >
-                                <div className={styles['program-card']}>
+                                <Button
+                                    role={'button'}
+                                    className={styles['program-card']}
+                                    style={{ '--content-width': `${contentWidth}px` }}
+                                    aria-current={isCurrent ? 'true' : undefined}
+                                    aria-label={`${program.title} · ${formatEpgTimeRange(program.startTime, program.endTime, i18n.language)}`}
+                                    onClick={() => onProgramSelect(program)}
+                                >
                                     <div className={styles['program-thumbnail']}>
                                         <Image src={program.thumbnail ?? program.channelLogo ?? ''} alt={''} renderFallback={() => <Icon name={'tv'} />} className={program.thumbnail ? undefined : styles['channel-thumbnail']} />
                                     </div>
@@ -87,8 +89,8 @@ const LiveTvSchedule = ({ programs, now, onProgramSelect }: Props) => {
                                         <span>{isCurrent ? t('LIVE_TV_ON_NOW', { defaultValue: 'On now' }) : aired ? t('AIRED') : t('UPCOMING')}</span>
                                         <Icon name={'details'} className={styles['compact-icon']} />
                                     </div>
-                                </div>
-                            </Button>;
+                                </Button>
+                            </div>;
                         })}
                     </div>
                     {now >= start && now < end && <div className={styles['now-line']} style={{ left: position(now) }} aria-hidden={'true'} />}
