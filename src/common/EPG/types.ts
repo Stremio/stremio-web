@@ -20,6 +20,7 @@ export type EPGProgram = {
     genres?: string[];
     cast?: string[];
     directors?: string[];
+    ratings?: ContentRating[];
     startTime: Date;
     endTime: Date;
     channelId: string;

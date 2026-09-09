@@ -82,6 +82,7 @@ export const toEpgProgram = (video: Video, channel: EPGChannel): EPGProgram | nu
         genres: video.genres,
         cast: video.cast,
         directors: video.directors,
+        ratings: video.ratings,
         startTime: new Date(range.startTime),
         endTime: new Date(range.endTime),
         channelId: channel.id,

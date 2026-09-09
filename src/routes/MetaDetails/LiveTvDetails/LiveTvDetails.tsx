@@ -80,6 +80,10 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
                                         : <span className={styles['program-status']}>{selected.endTime.getTime() <= now ? t('AIRED') : t('UPCOMING')}</span>}
                                     {dateLabel && <span>{dateLabel}</span>}
                                     {selected && <span>{formatEpgTimeRange(selected.startTime, selected.endTime, i18n.language)}</span>}
+                                    {selected?.ratings?.filter((rating) => rating.value.trim()).map((rating, index) => <span key={`${rating.system}:${rating.value}:${index}`} className={styles['content-rating']} title={rating.system}>
+                                        {rating.icon && <Image src={rating.icon} alt={''} renderFallback={() => null} />}
+                                        {rating.value}
+                                    </span>)}
                                 </div>
                                 <h2>{selected?.title ?? t('LIVE_TV_NO_PROGRAM', { defaultValue: 'No programme information right now' })}</h2>
                             </div>
