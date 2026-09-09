@@ -27,11 +27,11 @@ const Item = ({ url }: Props) => {
     const handleDelete = useCallback(() => {
         deleteServerUrl(url);
         selected && selectServerUrl(DEFAULT_STREAMING_SERVER_URL);
-    }, [url, selected]);
+    }, [url, selected, deleteServerUrl, selectServerUrl]);
 
     const handleSelect = useCallback(() => {
         selectServerUrl(url);
-    }, [url]);
+    }, [url, selectServerUrl]);
 
     return (
         <div className={styles['item']}>
