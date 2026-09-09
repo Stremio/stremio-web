@@ -1,12 +1,12 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
-import { EPGProgram, HOUR_IN_MS, epgDateKey, epgDayWindow, formatEpgTimeRange } from 'stremio/common/EPG';
+import { EPGProgram, HOUR_IN_MS, epgDateKey, epgDayWindow } from 'stremio/common/EPG';
 import useScheduleViewport from './useScheduleViewport';
 import styles from './LiveTvSchedule.less';
 
@@ -42,10 +42,15 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
         days.push(day);
     }
     const position = (time: number) => ((time - start) / HOUR_IN_MS) * scale;
-    const minutes = new Intl.NumberFormat(i18n.language, { style: 'unit', unit: 'minute', unitDisplay: 'short' });
-    const duration = (program: EPGProgram) => minutes.format(Math.ceil((program.endTime.getTime() - program.startTime.getTime()) / 60000));
+    const formatters = useMemo(() => ({
+        time: new Intl.DateTimeFormat(i18n.language, { hour: '2-digit', minute: '2-digit' }),
+        day: new Intl.DateTimeFormat(i18n.language, { weekday: 'short', day: 'numeric', month: 'short' }),
+        minutes: new Intl.NumberFormat(i18n.language, { style: 'unit', unit: 'minute', unitDisplay: 'short' })
+    }), [i18n.language]);
+    const timeRange = (program: EPGProgram) => `${formatters.time.format(program.startTime)} - ${formatters.time.format(program.endTime)}`;
+    const duration = (program: EPGProgram) => formatters.minutes.format(Math.ceil((program.endTime.getTime() - program.startTime.getTime()) / 60000));
     const dayLabel = (date: Date) => epgDateKey(date) === epgDateKey(new Date(now)) ? t('LIVE_TV_TODAY', { defaultValue: 'Today' })
-        : date.toLocaleDateString(i18n.language, { weekday: 'short', day: 'numeric', month: 'short' });
+        : formatters.day.format(date);
 
     const revealAgenda = useCallback(() => {
         if (agendaScrollRef.current === null) return;
@@ -105,19 +110,19 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                 </div>}
             </div>}
             <div ref={agendaRef} className={styles['agenda']} hidden={view !== 'agenda' || programs.length === 0}>
-                {programs.map((program, index) => <React.Fragment key={program.id ?? program.startTime.getTime()}>
+                {view === 'agenda' && programs.map((program, index) => <React.Fragment key={program.id ?? program.startTime.getTime()}>
                     {(index === 0 || epgDateKey(program.startTime) !== epgDateKey(programs[index - 1].startTime)) && <div className={styles['agenda-day']} data-day={true}>{dayLabel(program.startTime)}</div>}
                     <Button
                         role={'button'}
                         className={styles['agenda-program']}
                         aria-pressed={program === selected}
                         aria-current={program.startTime.getTime() <= now && now < program.endTime.getTime() ? 'true' : undefined}
-                        aria-label={`${program.title} · ${formatEpgTimeRange(program.startTime, program.endTime, i18n.language)} · ${duration(program)}`}
+                        aria-label={`${program.title} · ${timeRange(program)} · ${duration(program)}`}
                         onClick={() => select(program)}
                     >
                         <div className={styles['agenda-time']}>
-                            <span>{program.startTime.toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit' })}</span>
-                            <span>{program.endTime.toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit' })}</span>
+                            <span>{formatters.time.format(program.startTime)}</span>
+                            <span>{formatters.time.format(program.endTime)}</span>
                         </div>
                         <div className={styles['agenda-thumbnail']}><Image src={program.thumbnail ?? program.channelLogo ?? ''} alt={''} renderFallback={() => <Icon name={'tv'} />} /></div>
                         <strong>{program.title}</strong>
@@ -131,7 +136,7 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                         {days.map((day) => <div key={day.start} className={styles['day']} style={{ left: position(day.start), width: position(Math.min(day.end, end)) - position(day.start) }}><span>{dayLabel(new Date(day.start))}</span></div>)}
                     </div>
                     <div className={styles['times']} aria-hidden={'true'}>
-                        {ticks.map((time) => <span key={time} style={{ left: position(time) }}>{new Date(time).toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit' })}</span>)}
+                        {ticks.map((time) => <span key={time} style={{ left: position(time) }}>{formatters.time.format(time)}</span>)}
                     </div>
                     <div className={styles['programs']}>
                         {visiblePrograms.map((program) => {
@@ -146,7 +151,7 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                                     tabIndex={width < 24 ? -1 : 0}
                                     aria-current={isCurrent ? 'true' : undefined}
                                     aria-pressed={program === selected}
-                                    aria-label={`${program.title} · ${formatEpgTimeRange(program.startTime, program.endTime, i18n.language)} · ${duration(program)}`}
+                                    aria-label={`${program.title} · ${timeRange(program)} · ${duration(program)}`}
                                     onClick={() => onProgramSelect(program)}
                                 >
                                     <span className={styles['program-label']}><strong>{program.title}</strong><span>{duration(program)}</span></span>

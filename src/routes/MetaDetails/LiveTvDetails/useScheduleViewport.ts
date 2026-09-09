@@ -37,10 +37,11 @@ const useScheduleViewport = (start: number, visible: boolean) => {
         const toLeft = Math.max(0, (time - start) * value / HOUR_IN_MS);
         const apply = (progress: number) => {
             const currentScale = scale + (value - scale) * progress;
-            const left = fromLeft + (toLeft - fromLeft) * progress;
+            const left = Math.round(fromLeft + (toLeft - fromLeft) * progress);
             if (value !== scale) {
                 anchorRef.current = start + left * HOUR_IN_MS / currentScale;
                 setScale(currentScale);
+                setViewport({ left, width: element.clientWidth });
             } else {
                 element.scrollLeft = left;
                 measure();
