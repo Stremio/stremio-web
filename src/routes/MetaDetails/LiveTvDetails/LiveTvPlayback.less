@@ -1,0 +1,98 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    sheet-container: container;
+    sheet-content: content;
+}
+
+:import('../StreamsList/Stream/styles.less') {
+    stream-icon: icon;
+    stream-info: info-container;
+    stream-name: addon-name;
+    stream-description: description-container;
+}
+
+:import('~stremio/components/Popup/styles.less') {
+    stream-menu: menu-container;
+}
+
+.stream-message { padding: 0.5rem 0; font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
+.stream-options .stream-icon { opacity: 1; }
+
+.streams-panel {
+    // The guide determines the row height; extra sources scroll inside it.
+    contain: size;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    padding-left: 1.75rem;
+    border-left: 1px solid var(--overlay-color);
+
+    > h2 {
+        display: flex;
+        align-items: center;
+        flex: none;
+        min-height: 2.5rem;
+        margin: 0 0 0.6rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .stream-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+
+        .stream-option .stream-menu {
+            inset: 3.1rem 0 0 1.75rem;
+            max-width: none;
+            overflow-y: auto;
+        }
+    }
+
+    .stream-option {
+        position: static;
+        flex: none;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: 'name play' 'description play';
+        gap: 0.35rem 0.75rem;
+        padding: 1rem;
+        margin: 0;
+        background: var(--overlay-color);
+        border: 1px solid transparent;
+
+        &:hover, &:focus { border-color: rgba(255, 255, 255, 0.4); }
+        .stream-info { grid-area: name; min-width: 0; }
+        .stream-name { width: auto; font-size: 1rem; line-height: 1.3; overflow-wrap: anywhere; }
+        .stream-description {
+            grid-area: description;
+            display: -webkit-box;
+            min-width: 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            overflow: hidden;
+            color: rgba(255, 255, 255, 0.65);
+            &:empty { display: none; }
+        }
+        .stream-icon { grid-area: play; width: 2.5rem; height: 2.5rem; padding: 0.6rem; }
+    }
+}
+
+.streams-sheet {
+    display: flex !important;
+
+    .sheet-container {
+        max-height: calc(100dvh - var(--horizontal-nav-bar-size));
+        padding-bottom: max(1rem, var(--safe-area-inset-bottom));
+    }
+
+    .sheet-content { border-radius: 0; }
+}

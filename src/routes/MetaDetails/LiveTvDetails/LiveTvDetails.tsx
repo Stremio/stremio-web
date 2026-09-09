@@ -8,8 +8,11 @@ import { useCore } from 'stremio/core';
 import Image from 'stremio/components/Image';
 import EpgProgramModal from 'stremio/components/EpgProgramModal';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
+import useMediaQuery from 'stremio/common/useMediaQuery';
+import { XSMALL_WIDTH } from 'stremio/common/screenSizes';
 import { EPGProgram, epgDateKey, formatEpgTimeRange, getEpgProgress, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
 import LiveTvActions from './LiveTvActions';
+import LiveTvPlayback from './LiveTvPlayback';
 import LiveTvSchedule from './LiveTvSchedule';
 import styles from './LiveTvDetails.less';
 
@@ -29,6 +32,7 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
     const { t, i18n } = useTranslation();
     const core = useCore();
     const active = useRouteActive();
+    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
     const now = useEpgNow(true);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [preview, setPreview] = useState<EPGProgram | null>(null);
@@ -93,10 +97,15 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
                                 <span>{t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((selected.endTime.getTime() - now) / 60000) })}</span>
                             </div>}
                         </div>
-                        <LiveTvActions streams={streams} inLibrary={meta.inLibrary} onToggleLibrary={onToggleLibrary} onShowDetails={selected ? () => openProgram(selected) : undefined} />
+                        <LiveTvActions inLibrary={meta.inLibrary} onToggleLibrary={onToggleLibrary} onShowDetails={selected ? () => openProgram(selected) : undefined}>
+                            {isMobile && <LiveTvPlayback streams={streams} mobile={true} />}
+                        </LiveTvActions>
                     </div>
                 </section>
-                <LiveTvSchedule programs={programs} now={now} selected={selected} onProgramSelect={(program) => setSelectedKey(program ? programKey(program) : null)} />
+                <div className={styles['guide-layout']}>
+                    <LiveTvSchedule programs={programs} now={now} selected={selected} onProgramSelect={(program) => setSelectedKey(program ? programKey(program) : null)} />
+                    {!isMobile && <LiveTvPlayback streams={streams} />}
+                </div>
             </div>
             {preview && <EpgProgramModal program={programs.find((program) => program.id === preview.id) ?? preview} now={now} show={previewOpen} onCloseRequest={() => setPreviewOpen(false)} />}
         </div>

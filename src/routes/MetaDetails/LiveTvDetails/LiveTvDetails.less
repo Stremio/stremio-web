@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .live-details {
     position: relative;
     isolation: isolate;
@@ -152,6 +154,21 @@
         border-radius: 1rem;
         background: rgba(255, 255, 255, 0.14);
         > div { height: 100%; border-radius: inherit; background: var(--primary-accent-color); }
+    }
+}
+
+.guide-layout {
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+}
+
+@media (min-width: (@xsmall + 1px)) {
+    .guide-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(18rem, 25vw, 24rem);
+        gap: 1.75rem;
+        min-height: 12rem;
     }
 }
 

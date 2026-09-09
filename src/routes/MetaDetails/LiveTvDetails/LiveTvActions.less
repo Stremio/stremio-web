@@ -5,21 +5,6 @@
     action-icon: icon;
 }
 
-:import('~stremio/components/ModalDialog/styles.less') {
-    modal-dialog: modal-dialog-container;
-    modal-content: modal-dialog-content;
-    modal-body: body-container;
-}
-
-:import('~stremio/components/BottomSheet/BottomSheet.less') {
-    sheet-container: container;
-    sheet-content: content;
-}
-
-:import('../StreamsList/Stream/styles.less') {
-    stream-icon: icon;
-}
-
 .playback {
     display: flex;
     align-items: center;
@@ -39,49 +24,7 @@
 
         .action-icon { width: 1.5rem; height: 1.5rem; margin: auto; }
     }
-
-    .stream-message { font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
 }
-
-.streams-modal .modal-dialog {
-    width: min(40rem, calc(100vw - 2rem));
-    max-width: calc(100vw - 2rem);
-
-    .modal-content {
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-        overflow: hidden;
-
-        .modal-body, .modal-body:last-child {
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            padding: 0 0 1.5rem;
-            margin: 0;
-            overflow: hidden;
-        }
-    }
-
-    .stream-options {
-        min-height: 0;
-        max-height: 50dvh;
-        overflow-y: auto;
-    }
-}
-
-.streams-sheet {
-    display: flex !important;
-
-    .sheet-container {
-        max-height: calc(100dvh - var(--horizontal-nav-bar-size));
-        padding-bottom: max(1rem, var(--safe-area-inset-bottom));
-    }
-
-    .sheet-content { border-radius: 0; }
-}
-
-.stream-options .stream-icon { opacity: 1; }
 
 @media (max-width: 700px), (max-height: 500px) {
     .playback {
