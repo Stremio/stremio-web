@@ -97,12 +97,14 @@
     }
     .current-time {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: 0.8rem;
+        gap: 0.35rem 0.8rem;
         font-size: 0.8rem;
         color: rgba(255, 255, 255, 0.65);
         > span { font-size: inherit; }
     }
+    .program-status { color: var(--primary-accent-color); }
     .live-badge {
         flex: none;
         display: inline-flex;
