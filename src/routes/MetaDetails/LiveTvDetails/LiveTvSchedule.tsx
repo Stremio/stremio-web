@@ -57,8 +57,7 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
         const element = agendaRef.current;
         const row = element?.querySelector<HTMLElement>('[aria-pressed="true"]');
         if (!element || !row || element.clientHeight === 0) return;
-        const headingHeight = element.querySelector<HTMLElement>('[data-day]')?.offsetHeight ?? 0;
-        const top = row.offsetTop - headingHeight;
+        const top = row.offsetTop;
         if (agendaScrollRef.current === 'start' || top < element.scrollTop) element.scrollTop = top;
         else if (row.offsetTop + row.offsetHeight > element.scrollTop + element.clientHeight) {
             element.scrollTop = row.offsetTop + row.offsetHeight - element.clientHeight;
@@ -111,7 +110,7 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
             </div>}
             <div ref={agendaRef} className={styles['agenda']} hidden={view !== 'agenda' || programs.length === 0}>
                 {view === 'agenda' && programs.map((program, index) => <React.Fragment key={program.id ?? program.startTime.getTime()}>
-                    {(index === 0 || epgDateKey(program.startTime) !== epgDateKey(programs[index - 1].startTime)) && <div className={styles['agenda-day']} data-day={true}>{dayLabel(program.startTime)}</div>}
+                    {(index === 0 || epgDateKey(program.startTime) !== epgDateKey(programs[index - 1].startTime)) && <h3 className={styles['agenda-day']}>{dayLabel(program.startTime)}</h3>}
                     <Button
                         role={'button'}
                         className={styles['agenda-program']}
@@ -143,17 +142,24 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                             const isCurrent = program.startTime.getTime() <= now && now < program.endTime.getTime();
                             const left = position(program.startTime.getTime());
                             const width = position(program.endTime.getTime()) - left;
-                            return <div key={program.id ?? program.startTime.getTime()} className={classNames(styles['program'], { [styles['compact']]: width < 100, [styles['tiny']]: width < 24 })} style={{ left, width }}>
+                            const contentWidth = Math.min(width, viewport.width);
+                            return <div key={program.id ?? program.startTime.getTime()} className={classNames(styles['program'], { [styles['compact']]: width < 100, [styles['tiny']]: width < 24, [styles['with-thumbnail']]: contentWidth >= 180 })} style={{ left, width }}>
                                 <Button
                                     role={'button'}
                                     className={styles['program-card']}
-                                    style={{ '--content-width': `${Math.min(width, viewport.width)}px` }}
+                                    style={{
+                                        '--content-width': `${contentWidth}px`,
+                                        '--viewport-width': `${viewport.width}px`,
+                                        '--preview-left': `${Math.max(0, viewport.left - left)}px`,
+                                        '--preview-space': `${viewport.width - Math.max(0, left - viewport.left)}px`,
+                                    }}
                                     tabIndex={width < 24 ? -1 : 0}
                                     aria-current={isCurrent ? 'true' : undefined}
                                     aria-pressed={program === selected}
                                     aria-label={`${program.title} · ${timeRange(program)} · ${duration(program)}`}
                                     onClick={() => onProgramSelect(program)}
                                 >
+                                    <span className={styles['program-thumbnail']}><Image src={program.thumbnail ?? program.channelLogo ?? ''} alt={''} renderFallback={() => <Icon name={'tv'} />} /></span>
                                     <span className={styles['program-label']}><strong>{program.title}</strong><span>{duration(program)}</span></span>
                                     <Icon name={'details'} className={styles['compact-icon']} />
                                 </Button>
