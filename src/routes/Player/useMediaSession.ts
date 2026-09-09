@@ -76,16 +76,21 @@ const useMediaSession = (
 
     // Callbacks
     useEffect(() => {
-        if (navigator.mediaSession) {
-            navigator.mediaSession.setActionHandler('play', onPlayRequested);
-            navigator.mediaSession.setActionHandler('pause', onPauseRequested);
-        }
+        const mediaSession = navigator.mediaSession;
+        if (!mediaSession) return;
 
-        const nexVideoCallback = player.nextVideo ? onNextVideoRequested : null;
-        if (navigator.mediaSession && nexVideoCallback) {
-            navigator.mediaSession.setActionHandler('nexttrack', nexVideoCallback);
-        }
+        mediaSession.setActionHandler('play', onPlayRequested);
+        mediaSession.setActionHandler('pause', onPauseRequested);
+        mediaSession.setActionHandler('nexttrack', player.nextVideo ? onNextVideoRequested : null);
 
+        return () => {
+            mediaSession.setActionHandler('play', null);
+            mediaSession.setActionHandler('pause', null);
+            mediaSession.setActionHandler('nexttrack', null);
+        };
+    }, [player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
+
+    useEffect(() => {
         const onMediaStatus = ({ paused }: MediaStatus) => {
             paused ? onPauseRequested() : onPlayRequested();
         };
@@ -93,12 +98,9 @@ const useMediaSession = (
         shell.on('media.status', onMediaStatus);
 
         return () => {
-            navigator.mediaSession.setActionHandler('play', null);
-            navigator.mediaSession.setActionHandler('pause', null);
-            navigator.mediaSession.setActionHandler('nexttrack', null);
             shell.off('media.status', onMediaStatus);
         };
-    }, [player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
+    }, [shell, onPlayRequested, onPauseRequested]);
 };
 
 export default useMediaSession;
