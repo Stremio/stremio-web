@@ -26,8 +26,9 @@ const useVisibleCatalogs = ({ catalogs, loadRange, leadingRows = 0, preloadRows 
         const range = getVisibleChildrenRange(scrollContainerRef.current);
         if (range === null) return;
 
-        const firstRow = catalogRows[Math.max(0, range.start - leadingRows)];
-        const lastIndex = range.end - leadingRows;
+        const maxRow = catalogRows.length - 1;
+        const firstRow = catalogRows[Math.min(maxRow, Math.max(0, range.start - leadingRows))];
+        const lastIndex = Math.min(maxRow, range.end - leadingRows);
         const lastRowIndex = lastIndex < 0 ? firstRow.index - 1 : catalogRows[lastIndex].index;
         const start = Math.max(0, firstRow.index - preloadRows);
         const end = Math.min(catalogs.length - 1, lastRowIndex + preloadRows);
