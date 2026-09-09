@@ -41,9 +41,12 @@
         }
     }
 
-    &-compact .epg-program-block-inner {
-        justify-content: center;
-        padding: 0;
+    &-compact {
+        .epg-program-block-inner {
+            justify-content: center;
+            padding: 0;
+        }
+        .epg-program-thumb, .epg-program-content { display: none; }
     }
 
     &-current {
@@ -54,6 +57,22 @@
                 background-color: var(--primary-accent-color);
             }
         }
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .epg-program-block:hover {
+        z-index: 10;
+        overflow: visible;
+
+        .epg-program-block-inner {
+            min-width: max-content;
+            justify-content: flex-start;
+            padding: 0 1rem 0 0.5rem;
+        }
+        .epg-program-icon { display: none; }
+        .epg-program-thumb { display: block; }
+        .epg-program-content { display: flex; }
     }
 }
 

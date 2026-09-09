@@ -63,22 +63,21 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                             style={{ left, width }}
                         >
                             <Button role={'button'} className={styles['epg-program-block-inner']} style={{ width: width - Math.min(4, width / 4) }} onClick={() => onProgramClick(program, channel)} title={label} aria-label={label}>
-                                {compact ? (width >= 20 && <Icon name={'details'} className={styles['epg-program-icon']} />) : <>
-                                    {program.thumbnail && (
-                                        <div
-                                            className={styles['epg-program-thumb']}
-                                            style={{ backgroundImage: `url('${program.thumbnail}')` }}
-                                        />
-                                    )}
-                                    <div className={styles['epg-program-content']}>
-                                        <div className={styles['epg-program-title']}>{label}</div>
-                                        <div className={styles['epg-program-time']}>
-                                            {new Date(startMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            <span>-</span>
-                                            {new Date(endMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </div>
+                                {compact && width >= 20 && <Icon name={'details'} className={styles['epg-program-icon']} />}
+                                {program.thumbnail && (
+                                    <div
+                                        className={styles['epg-program-thumb']}
+                                        style={{ backgroundImage: `url('${program.thumbnail}')` }}
+                                    />
+                                )}
+                                <div className={styles['epg-program-content']}>
+                                    <div className={styles['epg-program-title']}>{label}</div>
+                                    <div className={styles['epg-program-time']}>
+                                        {new Date(startMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        <span>-</span>
+                                        {new Date(endMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>
-                                </>}
+                                </div>
                             </Button>
                         </div>
                     );
