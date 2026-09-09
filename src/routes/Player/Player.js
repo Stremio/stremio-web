@@ -106,7 +106,7 @@ const Player = () => {
     const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
     const [nextVideoPopupDismissal, setNextVideoPopupDismissal] = React.useState(null);
     const nextVideoPopupOpen = player.nextVideo !== null &&
-        nextVideoPopupDismissal?.stream !== video.state.stream &&
+        (nextVideoPopupDismissal === null || nextVideoPopupDismissal.stream !== video.state.stream) &&
         video.state.time !== null && video.state.duration !== null &&
         video.state.time < video.state.duration &&
         video.state.duration - video.state.time <= settings.nextVideoNotificationDuration;
