@@ -2,9 +2,9 @@
 
 const React = require('react');
 const classnames = require('classnames');
-const debounce = require('lodash.debounce');
 const useTranslate = require('stremio/common/useTranslate');
-const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, useProfile } = require('stremio/common');
+const { default: useVisibleCatalogs } = require('stremio/common/useVisibleCatalogs');
+const { useStreamingServer, useNotifications, withCoreSuspender, useProfile } = require('stremio/common');
 const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
@@ -21,30 +21,17 @@ const Board = () => {
     const notifications = useNotifications();
     const profile = useProfile();
     const boardCatalogsOffset = continueWatchingPreview.items.length > 0 ? 1 : 0;
-    const scrollContainerRef = React.useRef();
     const showStreamingServerWarning = React.useMemo(() => {
         return streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
             profile.settings.streamingServerWarningDismissed.getTime() < Date.now());
     }, [profile.settings, streamingServer.settings]);
-    const onVisibleRangeChange = React.useCallback(() => {
-        const range = getVisibleChildrenRange(scrollContainerRef.current);
-        if (range === null) {
-            return;
-        }
-
-        const start = Math.max(0, range.start - boardCatalogsOffset - THRESHOLD);
-        const end = range.end - boardCatalogsOffset + THRESHOLD;
-        if (end < start) {
-            return;
-        }
-
-        loadBoardRows({ start, end });
-    }, [boardCatalogsOffset]);
-    const onScroll = React.useCallback(debounce(onVisibleRangeChange, 250), [onVisibleRangeChange]);
-    React.useLayoutEffect(() => {
-        onVisibleRangeChange();
-    }, [board.catalogs, onVisibleRangeChange]);
+    const { catalogRows, scrollContainerRef, onScroll } = useVisibleCatalogs({
+        catalogs: board.catalogs,
+        loadRange: loadBoardRows,
+        leadingRows: boardCatalogsOffset,
+        preloadRows: THRESHOLD,
+    });
     return (
         <div className={styles['board-container']}>
             <EventModal />
@@ -62,7 +49,7 @@ const Board = () => {
                             :
                             null
                     }
-                    {board.catalogs.map((catalog, index) => {
+                    {catalogRows.map(({ catalog, index }) => {
                         switch (catalog.content?.type) {
                             case 'Ready': {
                                 return (
