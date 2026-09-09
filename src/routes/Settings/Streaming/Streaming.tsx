@@ -39,7 +39,7 @@ const Streaming = forwardRef<HTMLDivElement, Props>(({ profile, streamingServer 
 
     return (
         <Section ref={ref} label={'SETTINGS_NAV_STREAMING'}>
-            <URLsManager />
+            <URLsManager selectedUrl={profile.settings.streamingServerUrl} settings={streamingServer.settings} />
             {
                 streamingServerRemoteUrlInput.value !== null &&
                     <Option className={styles['configure-input-container']} label={'SETTINGS_REMOTE_URL'}>
