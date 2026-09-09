@@ -3,6 +3,7 @@
 .schedule {
     --artwork-height: clamp(8rem, 23vh, 16rem);
     --program-info-height: 6.5rem;
+    --program-height: max(var(--program-info-height), calc((var(--artwork-height) + var(--program-info-height)) * 0.85));
     min-width: 0;
     overflow: visible;
 }
@@ -88,7 +89,7 @@
 }
 .programs {
     position: relative;
-    height: calc(var(--artwork-height) + var(--program-info-height));
+    height: var(--program-height);
     overflow: visible;
 }
 .program {
@@ -145,7 +146,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: var(--artwork-height);
+    height: calc(var(--program-height) - var(--program-info-height));
     overflow: hidden;
     > img {
         width: 100%;
