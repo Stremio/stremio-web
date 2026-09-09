@@ -11,6 +11,11 @@
     modal-body: body-container;
 }
 
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    sheet-container: container;
+    sheet-content: content;
+}
+
 :import('../StreamsList/Stream/styles.less') {
     stream-icon: icon;
 }
@@ -32,7 +37,7 @@
             padding: 0 1.25rem;
         }
 
-        .action-icon { width: 1.5rem; height: 1.5rem; }
+        .action-icon { width: 1.5rem; height: 1.5rem; margin: auto; }
     }
 
     .stream-message { font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
@@ -62,9 +67,21 @@
         min-height: 0;
         max-height: 50dvh;
         overflow-y: auto;
-        .stream-icon { opacity: 1; }
     }
 }
+
+.streams-sheet {
+    display: flex !important;
+
+    .sheet-container {
+        max-height: calc(100dvh - var(--horizontal-nav-bar-size));
+        padding-bottom: max(1rem, var(--safe-area-inset-bottom));
+    }
+
+    .sheet-content { border-radius: 0; }
+}
+
+.stream-options .stream-icon { opacity: 1; }
 
 @media (max-width: 700px), (max-height: 500px) {
     .playback {
