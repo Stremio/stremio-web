@@ -3,8 +3,10 @@
 const React = require('react');
 
 const useLiveRef = (value) => {
-    const ref = React.useRef();
-    ref.current = value;
+    const ref = React.useRef(value);
+    React.useLayoutEffect(() => {
+        ref.current = value;
+    }, [value]);
     return ref;
 };
 

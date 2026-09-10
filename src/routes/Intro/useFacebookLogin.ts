@@ -1,11 +1,8 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-import { useCallback, useEffect, useRef } from 'react';
-import hat from 'hat';
-import { usePlatform } from 'stremio/common';
+import useSocialLogin from './useSocialLogin';
 
 const STREMIO_URL = 'https://www.strem.io';
-const MAX_TRIES = 25;
 
 const getCredentials = async (state: string) => {
     try {
@@ -23,49 +20,12 @@ const getCredentials = async (state: string) => {
 };
 
 const useFacebookLogin = () => {
-    const platform = usePlatform();
-    const started = useRef(false);
-    const timeout = useRef<NodeJS.Timeout | null>(null);
-
-    const start = useCallback(() => new Promise((resolve, reject) => {
-        started.current = true;
-        const state = hat(128);
-        let tries = 0;
-
-        platform.openExternal(`${STREMIO_URL}/login-fb/${state}`);
-
-        const waitForCredentials = () => {
-            if (started.current) {
-                timeout.current && clearTimeout(timeout.current);
-                timeout.current = setTimeout(() => {
-                    if (tries >= MAX_TRIES)
-                        return reject(new Error('Failed to authenticate with facebook', { cause: 'Number of allowed tries exceeded!' }));
-
-                    tries++;
-
-                    getCredentials(state)
-                        .then(resolve)
-                        .catch(waitForCredentials);
-                }, 1000);
-            }
-        };
-
-        waitForCredentials();
-    }), []);
-
-    const stop = useCallback(() => {
-        started.current = false;
-        timeout.current && clearTimeout(timeout.current);
-    }, []);
-
-    useEffect(() => {
-        return () => stop();
-    }, []);
-
-    return [
-        start,
-        stop,
-    ];
+    return useSocialLogin({
+        loginUrl: `${STREMIO_URL}/login-fb`,
+        getCredentials,
+        interval: 1000,
+        errorMessage: 'Failed to authenticate with facebook',
+    });
 };
 
 module.exports = useFacebookLogin;
