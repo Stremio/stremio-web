@@ -23,6 +23,7 @@ type Video = {
 const useCastDevice = (streamingUrl: string | null, session: StreamingServer['casting'], video: Video, playingOnExternalDevice: MutableRefObject<boolean>) => {
     const core = useCore();
     const toast = useToast();
+    const { setPaused } = video;
     const intent = useRef<{ device: string, resume: boolean } | null>(null);
     const extraTrack = video.state.extraSubtitlesTracks.find(({ id }) => id === video.state.selectedExtraSubtitlesTrackId);
     const track = extraTrack ?? video.state.subtitlesTracks.find(({ id }) => id === video.state.selectedSubtitlesTrackId);
@@ -32,7 +33,7 @@ const useCastDevice = (streamingUrl: string | null, session: StreamingServer['ca
     const subtitles = useMemo(() => ({ subtitlesSrc, subtitlesDelay }), [subtitlesSrc, subtitlesDelay]);
     const stop = useCallback(() => {
         core.transport.dispatch({ action: 'StreamingServer', args: { action: 'StopCasting' } });
-    }, []);
+    }, [core.transport]);
 
     const castToDevice = (device: string) => {
         if (!streamingUrl) return;
@@ -71,7 +72,7 @@ const useCastDevice = (streamingUrl: string | null, session: StreamingServer['ca
                 const resume = intent.current.resume;
                 intent.current = null;
                 playingOnExternalDevice.current = false;
-                if (resume) video.setPaused(false);
+                if (resume) setPaused(false);
             }
         };
         const onError = (source: CoreEvent, error: CoreEventError) => {
@@ -85,7 +86,7 @@ const useCastDevice = (streamingUrl: string | null, session: StreamingServer['ca
             core.off('event', onEvent);
             core.off('error', onError);
         };
-    }, []);
+    }, [core, playingOnExternalDevice, setPaused, toast]);
 
     useEffect(() => () => {
         if (intent.current) {
@@ -93,7 +94,7 @@ const useCastDevice = (streamingUrl: string | null, session: StreamingServer['ca
             playingOnExternalDevice.current = false;
             stop();
         }
-    }, [streamingUrl, stop]);
+    }, [streamingUrl, stop, playingOnExternalDevice]);
 
     return { castToDevice, stopBeforeLocalPlay, isCasting };
 };

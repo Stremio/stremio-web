@@ -20,7 +20,7 @@ type Props = {
 
 const MultiselectMenu = ({ className, title, options, value, disabled, onSelect }: Props) => {
     const [menuOpen, , closeMenu, toggleMenu] = useBinaryState(false);
-    const multiselectMenuRef = useOutsideClick(() => closeMenu());
+    const multiselectMenuRef = useOutsideClick(closeMenu);
     const [level, setLevel] = React.useState<number>(0);
 
     const selectedOption = options.find((opt) => opt.value === value);
