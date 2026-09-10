@@ -34,6 +34,21 @@ type ShellMessage = {
     data: string;
 };
 
+const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
+const off = (name: string, listener: (arg: any) => void) => events.off(name, listener);
+
+const send = (method: string, ...args: (string | number | object)[]) => {
+    try {
+        IPC?.postMessage(JSON.stringify({
+            id: 0,
+            type: ShellEventType.INVOKE_METHOD,
+            args: [method, ...args],
+        }));
+    } catch (e) {
+        console.error('Shell', 'Failed to send event', e);
+    }
+};
+
 const useShell = (): Shell => {
     const [state, setState] = useState<ShellState>({
         initialized: false,
@@ -45,21 +60,6 @@ const useShell = (): Shell => {
         gpuVideoProcessing: false,
         nativeAssSubtitles: false,
     });
-
-    const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
-    const off = (name: string, listener: (arg: any) => void) => events.off(name, listener);
-
-    const send = (method: string, ...args: (string | number | object)[]) => {
-        try {
-            IPC?.postMessage(JSON.stringify({
-                id: 0,
-                type: ShellEventType.INVOKE_METHOD,
-                args: [method, ...args],
-            }));
-        } catch (e) {
-            console.error('Shell', 'Failed to send event', e);
-        }
-    };
 
     useEffect(() => {
         const onWindowVisibilityChanged = (data: WindowVisibility) => {
