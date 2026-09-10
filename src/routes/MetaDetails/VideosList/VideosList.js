@@ -7,6 +7,7 @@ const { t } = require('i18next');
 const { useCore } = require('stremio/core');
 const { useProfile } = require('stremio/common');
 const { Image, SearchBar, Toggle, Video } = require('stremio/components');
+const { getEpgProgress, getEpgTimeRange, hasEpgProgramTimes } = require('stremio/common/EPG');
 const SeasonsBar = require('./SeasonsBar');
 const { default: EpisodePicker } = require('../EpisodePicker');
 const styles = require('./styles');
@@ -56,15 +57,25 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
 
         return null;
     }, [seasons, season, videos, libraryItem]);
+    const isEpg = React.useMemo(() => {
+        return videos.some(hasEpgProgramTimes);
+    }, [videos]);
     const videosForSeason = React.useMemo(() => {
-        return videos
-            .filter((video) => {
-                return selectedSeason === null || video.season === selectedSeason;
+        const filtered = videos.filter((video) => {
+            return selectedSeason === null || video.season === selectedSeason;
+        });
+
+        // program shows are listed in schedule order - core sorts videos
+        // by released DESC, which would open the list at the end of the day
+        return isEpg ?
+            filtered.sort((a, b) => {
+                return (getEpgTimeRange(a)?.startTime ?? 0) - (getEpgTimeRange(b)?.startTime ?? 0);
             })
-            .sort((a, b) => {
+            :
+            filtered.sort((a, b) => {
                 return a.episode - b.episode;
             });
-    }, [videos, selectedSeason]);
+    }, [videos, selectedSeason, isEpg]);
 
     const seasonWatched = React.useMemo(() => {
         return videosForSeason.every((video) => video.watched);
@@ -93,6 +104,35 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
             scrollMemoryRef.current = null;
         }
     }, [scrollMemoryRef, titleKey, selectedSeason]);
+
+    // Bring the program on air (or the selected one) into view once
+    // the schedule renders
+    const scrolledToCurrentRef = React.useRef(false);
+    React.useLayoutEffect(() => {
+        if (
+            !isEpg ||
+            scrolledToCurrentRef.current ||
+            restoredScrollRef.current ||
+            videosForSeason.length === 0 ||
+            videosContainerRef.current === null
+        ) {
+            return;
+        }
+
+        scrolledToCurrentRef.current = true;
+        const now = Date.now();
+        const currentIndex = videosForSeason.findIndex((video) => getEpgProgress(video, now) !== null);
+        const targetIndex = currentIndex !== -1 ?
+            currentIndex
+            :
+            videosForSeason.findIndex((video) => video.id === selectedVideoId);
+        if (targetIndex > 0) {
+            const target = videosContainerRef.current.children[targetIndex];
+            if (target) {
+                target.scrollIntoView({ block: 'center' });
+            }
+        }
+    }, [isEpg, videosForSeason, selectedVideoId]);
 
     // Keep restored positions and selected-video scrolling when changing seasons.
     React.useEffect(() => {

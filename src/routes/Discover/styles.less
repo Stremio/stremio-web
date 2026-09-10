@@ -14,6 +14,23 @@
 :import('~stremio/components/ModalDialog/styles.less') {
     selectable-inputs-modal-container: modal-dialog-container;
     selectable-inputs-modal-content: modal-dialog-content;
+    epg-preview-modal-container: modal-dialog-container;
+    epg-preview-modal-background: modal-dialog-background;
+    epg-preview-modal-close-button: close-button-container;
+    epg-preview-modal-content: modal-dialog-content;
+    epg-preview-modal-body: body-container;
+}
+
+:import('~stremio/components/MetaPreview/styles.less') {
+    epg-preview-container: meta-preview-container;
+    epg-preview-compact: compact;
+    epg-preview-background-layer: background-image-layer;
+    epg-preview-meta-info: meta-info-container;
+    epg-preview-logo: logo;
+    epg-preview-logo-placeholder: logo-placeholder;
+    epg-preview-runtime-release-info: runtime-release-info-container;
+    epg-preview-action-buttons: action-buttons-container;
+    epg-preview-show-button: show-button;
 }
 
 .discover-container {
@@ -40,13 +57,14 @@
             }
 
             .selectable-inputs-container {
+                position: relative;
                 flex: none;
                 align-self: stretch;
                 display: flex;
                 flex-direction: row;
                 padding: 1.5rem;
                 overflow: visible;
-                z-index: 2;
+                z-index: 60;
 
                 .select-input {
                     flex: 0 1 15rem;
@@ -248,6 +266,98 @@
     }
 }
 
+.epg-preview-modal {
+    .epg-preview-modal-container {
+        width: 34rem;
+        max-width: calc(100vw - 3rem);
+        height: calc(100vh - 3rem);
+        max-height: calc(100vh - 3rem);
+        padding: 0;
+        overflow: hidden;
+        background-color: transparent;
+        box-shadow: none;
+
+        .epg-preview-modal-close-button {
+            top: 2.5rem;
+            right: 0.5rem;
+            z-index: 3;
+            background-color: transparent;
+        }
+    }
+
+    .epg-preview-modal-background {
+        display: none;
+    }
+
+    .epg-preview-modal-content {
+        height: 100%;
+        min-height: 0;
+        overflow: visible;
+    }
+
+    .epg-preview-modal-body {
+        display: flex;
+        height: 100%;
+        min-height: 0;
+        padding: 0;
+        margin-bottom: 0 !important;
+    }
+
+    .epg-preview {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding: 2rem 2.5rem;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        background-color: var(--modal-background-color);
+
+        .epg-preview-background-layer {
+            top: 0;
+            bottom: 0;
+        }
+
+        .epg-preview-logo,
+        .epg-preview-logo-placeholder {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .epg-preview-meta-info {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow-y: auto;
+            scrollbar-color: var(--overlay-color) transparent;
+
+            &::-webkit-scrollbar-thumb {
+                background-color: var(--overlay-color);
+            }
+        }
+
+        &.epg-preview-container.epg-preview-compact {
+            .epg-preview-meta-info {
+                .epg-preview-runtime-release-info {
+                    justify-content: space-around;
+                }
+            }
+        }
+
+        .epg-preview-action-buttons {
+            flex: none;
+            padding-top: 2rem;
+            justify-content: flex-start;
+        }
+
+        .epg-preview-show-button {
+            width: auto;
+            padding: 0 2rem;
+            border-radius: 4rem;
+        }
+    }
+}
+
 @media only screen and (min-width: @xxlarge) {
     .discover-container {
         .discover-content {
@@ -333,6 +443,19 @@
 }
 
 @media only screen and (max-width: @xsmall) {
+    .epg-preview-modal {
+        .epg-preview-modal-container {
+            width: calc(100vw - 2rem);
+            max-width: calc(100vw - 2rem);
+            height: calc(100vh - 2rem);
+            max-height: calc(100vh - 2rem);
+        }
+
+        .epg-preview {
+            padding: 2rem;
+        }
+    }
+
     .discover-container {
         .discover-content {
             .catalog-container {

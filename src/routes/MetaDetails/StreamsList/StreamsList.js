@@ -16,7 +16,7 @@ const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
+const StreamsList = ({ className, video, isEpg, type, onEpisodeSearch, ...props }) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
@@ -180,7 +180,7 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                                             name={stream.name}
                                             description={stream.description}
                                             thumbnail={stream.thumbnail}
-                                            progress={stream.progress}
+                                            progress={isEpg ? null : stream.progress}
                                             deepLinks={stream.deepLinks}
                                             onClick={stream.onClick}
                                         />
@@ -216,6 +216,7 @@ StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
     video: PropTypes.object,
+    isEpg: PropTypes.bool,
     type: PropTypes.string,
     onEpisodeSearch: PropTypes.func
 };
