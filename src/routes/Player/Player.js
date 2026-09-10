@@ -91,10 +91,12 @@ const Player = () => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
+    const videoContainerRef = video.containerRef;
+    const setPictureInPicture = video.setPictureInPicture;
 
     const getVideoElement = React.useCallback(() => {
-        return video.containerRef.current?.querySelector('video') ?? null;
-    }, []);
+        return videoContainerRef.current?.querySelector('video') ?? null;
+    }, [videoContainerRef]);
     const shell = platform.shell;
     const shellRef = React.useRef(shell);
     shellRef.current = shell;
@@ -143,7 +145,7 @@ const Player = () => {
         }
 
         const onShellPictureInPictureChanged = (data) => {
-            video.setPictureInPicture(data?.enabled === true);
+            setPictureInPicture(data?.enabled === true);
         };
 
         const activeShell = shellRef.current;
@@ -151,9 +153,9 @@ const Player = () => {
         return () => {
             activeShell.off('win-pip-changed', onShellPictureInPictureChanged);
             activeShell.send('win-set-pip', { enabled: false });
-            video.setPictureInPicture(false);
+            setPictureInPicture(false);
         };
-    }, [nativeShellPictureInPictureSupported, video.setPictureInPicture, video.state.loaded]);
+    }, [nativeShellPictureInPictureSupported, setPictureInPicture, video.state.loaded]);
 
     React.useEffect(() => {
         const videoElement = getVideoElement();
@@ -161,8 +163,8 @@ const Player = () => {
             return undefined;
         }
 
-        const onEnterPictureInPicture = () => video.setPictureInPicture(true);
-        const onLeavePictureInPicture = () => video.setPictureInPicture(false);
+        const onEnterPictureInPicture = () => setPictureInPicture(true);
+        const onLeavePictureInPicture = () => setPictureInPicture(false);
 
         videoElement.addEventListener('enterpictureinpicture', onEnterPictureInPicture);
         videoElement.addEventListener('leavepictureinpicture', onLeavePictureInPicture);
@@ -175,9 +177,9 @@ const Player = () => {
                     console.error('Player PiP cleanup', error);
                 });
             }
-            video.setPictureInPicture(false);
+            setPictureInPicture(false);
         };
-    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported, video.setPictureInPicture, video.state.loaded, video.state.manifest]);
+    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported, setPictureInPicture, video.state.loaded, video.state.manifest]);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
