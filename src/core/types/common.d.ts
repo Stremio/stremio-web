@@ -54,6 +54,7 @@ type BehaviorHints = {
     defaultVideoId: string | null,
     featuredVideoId: string | null,
     hasScheduledVideos: boolean,
+    isLive?: boolean,
 };
 
 type PosterShape = 'square' | 'landscape' | 'poster' | null;

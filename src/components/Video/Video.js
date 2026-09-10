@@ -19,11 +19,19 @@ const styles = require('./styles');
 const VideoLabel = React.forwardRef(({ shouldScroll, ...props }, ref) => {
     React.useEffect(() => {
         if (shouldScroll && ref.current) {
-            ref.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'start'
-            });
+            // Keep selection scrolling inside the list. scrollIntoView also
+            // scrolls outer containers while a drawer is translated offscreen.
+            let container = ref.current.parentElement;
+            while (container && !['auto', 'scroll', 'overlay'].includes(getComputedStyle(container).overflowY)) {
+                container = container.parentElement;
+            }
+            if (container) {
+                const itemBounds = ref.current.getBoundingClientRect();
+                const listBounds = container.getBoundingClientRect();
+                const top = itemBounds.top < listBounds.top ? itemBounds.top - listBounds.top
+                    : Math.max(0, itemBounds.bottom - listBounds.bottom);
+                if (top !== 0) container.scrollBy({ top, behavior: 'smooth' });
+            }
         }
     }, [shouldScroll, ref]);
 

@@ -58,7 +58,7 @@ const Calendar = () => {
                             profile={profile}
                             onChange={setSelected}
                         />
-                        <BottomSheet title={detailsTitle} show={!!selected} onClose={onDetailsClose}>
+                        <BottomSheet title={detailsTitle} show={!!selected} onCloseRequest={onDetailsClose}>
                             <Details
                                 selected={selected}
                                 items={calendar.items}

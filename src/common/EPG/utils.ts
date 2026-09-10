@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import type { EPGProgram } from './types';
+import type { EPGChannel, EPGProgram } from './types';
 
 export type EpgSkeletonProgram = {
     index: number;
@@ -10,6 +10,25 @@ export type EpgSkeletonProgram = {
 
 export const MINUTES_IN_DAY = 24 * 60;
 export const HOUR_IN_MS = 60 * 60 * 1000;
+export const EPG_PIXELS_PER_HOUR = 240;
+
+export const epgDateKey = (date: Date): string => [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+].join('-');
+
+export const parseEpgDate = (value: string | null | undefined): Date | null => {
+    const match = typeof value === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
+    if (match === null) return null;
+    const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    return epgDateKey(date) === value ? date : null;
+};
+
+export const epgDayWindow = (day: Date): { start: number; end: number } => ({
+    start: new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime(),
+    end: new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1).getTime(),
+});
 export const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
 export const EPG_PLAYER_NOW_REFRESH_INTERVAL = 1000;
 export const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
@@ -47,6 +66,31 @@ export const hasEpgProgramTimes = (
     video: { startTime?: unknown; endTime?: unknown } | null | undefined
 ): boolean => {
     return getEpgTimeRange(video) !== null;
+};
+
+export const toEpgProgram = (video: Video, channel: EPGChannel): EPGProgram | null => {
+    const range = getEpgTimeRange(video);
+    return range === null ? null : {
+        id: video.id,
+        title: video.title || channel.name,
+        overview: video.overview,
+        thumbnail: video.thumbnail,
+        links: video.links,
+        runtime: video.runtime,
+        releaseInfo: video.releaseInfo,
+        released: video.released,
+        genres: video.genres,
+        cast: video.cast,
+        directors: video.directors,
+        ratings: video.ratings,
+        startTime: new Date(range.startTime),
+        endTime: new Date(range.endTime),
+        channelId: channel.id,
+        channelName: channel.name,
+        channelLogo: channel.logo,
+        deepLinks: video.deepLinks,
+        raw: video,
+    };
 };
 
 export const getEpgProgress = (

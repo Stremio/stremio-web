@@ -1,0 +1,242 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('./LiveTvActions.less') {
+    channel-actions: playback;
+}
+
+.live-details {
+    position: relative;
+    isolation: isolate;
+    background: #100d20;
+
+    .backdrop, .backdrop-image, .backdrop-shade {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .backdrop {
+        z-index: -1;
+    }
+
+    .backdrop-image {
+        object-fit: cover;
+        object-position: center 20%;
+        opacity: 0.3;
+
+        &.channel-artwork {
+            opacity: 0.18;
+        }
+    }
+
+    .backdrop-shade {
+        background: linear-gradient(90deg, rgba(16, 13, 32, 0.8), rgba(16, 13, 32, 0.1) 70%),
+            linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.4) 45%, #100d20 90%);
+    }
+}
+
+.channel-page {
+    display: grid;
+    grid-template-rows: minmax(min-content, 1fr) auto;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 clamp(1.5rem, 5vw, 6rem) max(2rem, var(--safe-area-inset-bottom));
+    color: var(--primary-foreground-color);
+    overflow-y: auto;
+
+    .hero {
+        display: flex;
+        align-items: center;
+        min-height: 0;
+        padding: 1.5rem 0 2rem;
+        overflow: visible;
+    }
+
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(0.8rem, 2.2vh, 1.75rem);
+        width: 65%;
+        max-width: 48rem;
+        min-width: 0;
+        overflow: visible;
+    }
+
+    .channel-header { display: flex; align-items: center; gap: 0.8rem; }
+    .channel-logo {
+        flex: none;
+        width: 2.75rem;
+        height: 2.75rem;
+        > img, > svg { width: 100%; height: 100%; object-fit: contain; }
+    }
+    .channel-identity {
+        min-width: 0;
+        h1 {
+            margin: 0 0 0.2rem;
+            font-size: 1.1rem;
+            line-height: 1.25;
+            font-weight: 600;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        > span { font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); }
+    }
+
+    .current-information {
+        overflow: visible;
+        h2 {
+            margin: 0.8rem 0 0;
+            max-width: 17em;
+            font-size: clamp(2rem, 5.2vh, 3.8rem);
+            line-height: 1.12;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            overflow-wrap: anywhere;
+        }
+    }
+    .current-time {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem 0.8rem;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.65);
+        > span { font-size: inherit; }
+    }
+    .program-status { color: var(--primary-accent-color); }
+    .content-rating {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary-foreground-color);
+        > img { max-width: 2rem; height: 1.2rem; object-fit: contain; }
+    }
+    .live-badge {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #ff7e93;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        > span { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: currentColor; }
+    }
+    .description {
+        max-width: 40rem;
+        margin: 1rem 0 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.7);
+        &:empty { display: none; }
+    }
+    .genres {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        > span {
+            padding: 0.4rem 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 2rem;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.7rem;
+        }
+    }
+    .broadcast-progress {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 29rem;
+        margin-top: 1.2rem;
+        > span { flex: none; font-size: 0.7rem; color: rgba(255, 255, 255, 0.5); }
+    }
+    .progress-track {
+        flex: 1;
+        height: 0.2rem;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.14);
+        > div { height: 100%; border-radius: inherit; background: var(--primary-accent-color); }
+    }
+}
+
+.guide-layout {
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+}
+
+@media (min-width: (@xsmall + 1px)) {
+    .guide-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(18rem, 25vw, 24rem);
+        gap: 1.75rem;
+        min-height: 12rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .live-details .backdrop-shade {
+        background: linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.6) 45%, #100d20 85%);
+    }
+
+    .channel-page {
+        padding: 0 1.5rem max(1.5rem, var(--safe-area-inset-bottom));
+        .hero { align-items: flex-end; padding: 1rem 0 1.75rem; }
+        .hero-content { width: 100%; }
+        .channel-logo { width: 2.25rem; height: 2.25rem; }
+        .current-information h2 { font-size: clamp(1.6rem, 6.5vw, 2.5rem); }
+        .description { font-size: 0.85rem; margin-top: 0.75rem; }
+    }
+}
+
+@media (max-height: 750px) {
+    .channel-page {
+        padding-bottom: max(1rem, var(--safe-area-inset-bottom));
+        .hero { padding: 0.75rem 0 1.25rem; }
+        .hero-content { gap: 0.9rem; }
+        .description, .broadcast-progress { margin-top: 0.75rem; }
+    }
+}
+
+@media (max-height: 650px) {
+    .channel-page {
+        .hero-content { gap: 0.75rem; }
+        .current-information h2 { font-size: clamp(1.5rem, 4.8vh, 2.5rem); margin-top: 0.5rem; }
+    }
+}
+
+@media (max-height: 500px) {
+    .channel-page {
+        padding-bottom: max(0.75rem, var(--safe-area-inset-bottom));
+        .hero { align-items: center; padding: 0.25rem 0 0.75rem; }
+        .hero-content { gap: 0.5rem; }
+        .channel-logo { width: 1.75rem; height: 1.75rem; }
+        .channel-identity {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            h1 { margin: 0; font-size: 0.9rem; }
+        }
+        .current-time { font-size: 0.7rem; }
+    }
+}
+
+@media @phone-landscape {
+    .channel-page {
+        .hero-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            column-gap: 1.5rem;
+            width: 100%;
+            max-width: none;
+        }
+        .channel-header, .current-information { grid-column: 1; }
+        .channel-actions { grid-column: 2; grid-row: 1 / span 2; }
+    }
+}

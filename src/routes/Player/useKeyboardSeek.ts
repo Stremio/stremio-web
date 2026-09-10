@@ -11,6 +11,7 @@ type DebouncedCallback = (() => void) & {
 type Props = {
     time: number | null,
     duration: number | null,
+    minimum?: number | null,
     onSeek: (time: number) => void,
     setSeeking: (seeking: boolean) => void,
 };
@@ -21,13 +22,14 @@ const PREVIEW_TIME = 1500;
 const HOLD_ACCELERATION = 1.05;
 const MAX_HOLD_STEP = 0.1;
 
-const useKeyboardSeek = ({ time, duration, onSeek, setSeeking }: Props) => {
+const useKeyboardSeek = ({ time, duration, minimum = 0, onSeek, setSeeking }: Props) => {
     const [target, setTarget] = useState<number | null>(null);
     const targetRef = useRef<number | null>(null);
     const pendingRef = useRef(false);
     const holdStepRef = useRef<number | null>(null);
     const timeRef = useLiveRef(time);
     const durationRef = useLiveRef(duration);
+    const minimumRef = useLiveRef(minimum ?? 0);
     const onSeekRef = useLiveRef(onSeek);
     const setSeekingRef = useLiveRef(setSeeking);
 
@@ -38,7 +40,7 @@ const useKeyboardSeek = ({ time, duration, onSeek, setSeeking }: Props) => {
         if (timeRef.current === null) return;
 
         const currentTime = targetRef.current ?? timeRef.current;
-        const target = Math.max(currentTime + offset, 0);
+        const target = Math.max(currentTime + offset, minimumRef.current ?? 0);
         const clampedTarget = durationRef.current !== null && !isNaN(durationRef.current) ?
             Math.min(target, durationRef.current)
             :
@@ -104,7 +106,7 @@ const useKeyboardSeek = ({ time, duration, onSeek, setSeeking }: Props) => {
         } else if (Math.sign(holdStepRef.current) === Math.sign(offset)) {
             const duration = durationRef.current;
             if (duration !== null && !isNaN(duration) && duration > 0) {
-                holdStepRef.current = Math.sign(holdStepRef.current) * Math.min(Math.abs(holdStepRef.current) * HOLD_ACCELERATION, duration * MAX_HOLD_STEP);
+                holdStepRef.current = Math.sign(holdStepRef.current) * Math.min(Math.abs(holdStepRef.current) * HOLD_ACCELERATION, (duration - (minimumRef.current ?? 0)) * MAX_HOLD_STEP);
             }
         } else {
             return;

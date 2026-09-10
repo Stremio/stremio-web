@@ -111,7 +111,9 @@
         color: var(--primary-foreground-color);
         background-color: var(--secondary-accent-color);
     }
+}
 
+.stream-container, .stream-action {
     .menu-icon {
         flex: none;
         width: 1.7rem;
@@ -156,6 +158,11 @@
 			}
 		}
 	}
+}
+
+.stream-action .context-menu-container {
+    width: 20rem;
+    max-width: calc(100vw - 3rem);
 }
 
 @media only screen and (max-width: @small) {

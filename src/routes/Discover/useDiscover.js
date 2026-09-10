@@ -39,7 +39,7 @@ const useDiscover = (urlParams, queryParams) => {
                 return {
                     action: 'Load',
                     args: {
-                        model: 'CatalogWithFilters',
+                        model: 'CatalogWithFiltersSelection',
                         args: {
                             request: {
                                 base: urlParams.transportUrl,
@@ -58,7 +58,7 @@ const useDiscover = (urlParams, queryParams) => {
             return {
                 action: 'Load',
                 args: {
-                    model: 'CatalogWithFilters',
+                    model: 'CatalogWithFiltersSelection',
                     args: null
                 }
             };

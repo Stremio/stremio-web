@@ -13,6 +13,7 @@ type Props = {
     download?: string,
     title?: string,
     disabled?: boolean,
+    role?: React.AriaRole,
     tabIndex?: number,
     children: React.ReactNode,
     onKeyDown?: (event: React.KeyboardEvent) => void,

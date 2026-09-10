@@ -3,9 +3,10 @@
 import React from 'react';
 import { useCore } from 'stremio/core';
 import { useModelState } from 'stremio/common';
+import { useRouteActive } from 'stremio/common/useRouteFocused';
+import { useEpgNow } from 'stremio/common/EPG';
 
 const MODEL = 'live_tv_continue_watching';
-const DAY_ROLLOVER_CHECK_INTERVAL = 60 * 1000;
 
 export type LiveTvContinueWatching = {
     items: LiveTvGuideChannel[],
@@ -13,25 +14,15 @@ export type LiveTvContinueWatching = {
 
 const useLiveTvContinueWatching = (): LiveTvContinueWatching => {
     const core = useCore();
-    const action = React.useMemo(() => ({
-        action: 'Load',
-        args: {
-            model: 'LiveTvContinueWatching'
-        }
-    }), []);
-    const liveTvContinueWatching = useModelState({ model: MODEL, action }) as LiveTvContinueWatching;
+    const active = useRouteActive();
+    const now = useEpgNow(active);
+    const state = useModelState({ model: MODEL, action: null }) as LiveTvContinueWatching;
     React.useEffect(() => {
-        let dayKey = new Date().toDateString();
-        const interval = window.setInterval(() => {
-            const nextKey = new Date().toDateString();
-            if (nextKey !== dayKey) {
-                dayKey = nextKey;
-                core.transport.dispatch(action, MODEL);
-            }
-        }, DAY_ROLLOVER_CHECK_INTERVAL);
-        return () => window.clearInterval(interval);
-    }, [action, core.transport]);
-    return liveTvContinueWatching;
+        core.transport.dispatch(active ? {
+            action: 'Load', args: { model: 'LiveTvContinueWatching' },
+        } : { action: 'Unload' }, MODEL);
+    }, [active, now, core.transport]);
+    return state;
 };
 
 export default useLiveTvContinueWatching;

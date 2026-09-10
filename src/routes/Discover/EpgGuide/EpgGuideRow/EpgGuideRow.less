@@ -18,13 +18,7 @@
 
 .epg-program-block {
     position: absolute;
-    padding-right: 4px;
-    width: 100%;
-
-    &:hover {
-        z-index: 10;
-        min-width: max-content;
-    }
+    height: 56px;
 
     &-inner {
         width: 100%;
@@ -40,15 +34,19 @@
         color: var(--color-foreground);
         background-color: #1E1C2E;
         transition: background-color 0.12s;
+        overflow: hidden;
 
         &:hover {
             background-color: #2B293F;
-            z-index: 10;
-            min-width: max-content;
-            min-height: 56px;
-            height: auto;
-            overflow: visible;
         }
+    }
+
+    &-compact {
+        .epg-program-block-inner {
+            justify-content: center;
+            padding: 0;
+        }
+        .epg-program-thumb, .epg-program-content { display: none; }
     }
 
     &-current {
@@ -61,6 +59,24 @@
         }
     }
 }
+
+@media (hover: hover) and (pointer: fine) {
+    .epg-program-block:hover {
+        z-index: 10;
+        overflow: visible;
+
+        .epg-program-block-inner {
+            min-width: max-content;
+            justify-content: flex-start;
+            padding: 0 1rem 0 0.5rem;
+        }
+        .epg-program-icon { display: none; }
+        .epg-program-thumb { display: block; }
+        .epg-program-content { display: flex; }
+    }
+}
+
+.epg-program-icon { flex: none; width: 1rem; height: 1rem; color: var(--primary-foreground-color); opacity: 0.65; }
 
 .epg-program-thumb {
     width: 2.5rem;
@@ -102,18 +118,10 @@
 }
 
 .epg-no-programs {
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-    width: 100%;
-    height: 100%;
-    font-size: 1.2rem;
-    color: var(--primary-foreground-color);
-    opacity: 0.4;
+    width: calc(100% - 4px);
 
-    &:hover, &:focus {
-        opacity: 0.8;
-        background-color: var(--overlay-color);
+    &:not([href]) {
+        cursor: default;
     }
 }
 

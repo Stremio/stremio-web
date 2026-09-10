@@ -8,11 +8,12 @@ const { t } = require('i18next');
 const { useCore } = require('stremio/core');
 const { useProfile, usePlatform, useToast, useBinaryState } = require('stremio/common');
 const { Button, Image, Popup } = require('stremio/components');
+const ActionButton = require('stremio/components/MetaPreview/ActionButton');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({ className = '', compact = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
@@ -202,6 +203,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     ), []);
 
     const renderLabel = React.useMemo(() => function renderLabel({ className, children, ...props }) {
+        if (compact) {
+            return <ActionButton className={classnames(className, styles['stream-action'])} icon={'play'} label={name || addonName} variant={'wide'} href={href} target={target} download={download} onClick={onClick} {...props}>
+                {children}
+            </ActionButton>;
+        }
+
         return (
             <Button className={classnames(className, styles['stream-container'], { 'active': menuOpen })} title={addonName} href={href} target={target} download={download} onClick={onClick} {...props}>
                 <div className={styles['info-container']}>
@@ -235,7 +242,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 {children}
             </Button>
         );
-    }, [thumbnail, progress, addonName, name, description, href, target, download, onClick, menuOpen]);
+    }, [compact, thumbnail, progress, addonName, name, description, href, target, download, onClick, menuOpen]);
 
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
@@ -296,6 +303,7 @@ Stream.Placeholder = StreamPlaceholder;
 
 Stream.propTypes = {
     className: PropTypes.string,
+    compact: PropTypes.bool,
     videoId: PropTypes.string,
     videoReleased: PropTypes.instanceOf(Date),
     addonName: PropTypes.string,
