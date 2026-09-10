@@ -1431,7 +1431,7 @@ packages:
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
   '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz':
-    resolution: {integrity: sha512-tGPEHPUaxnvf99RP0xXPUa8ZthkaM6bbTTi3Lwn8So+T+5oTFu5g8ShaW+GLPhk6VZlKLZzgRdXa38+TuDD71g==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz}
+    resolution: {integrity: sha512-sb9P3XkJS6JifeVBl1ABxluQw4xWpR9gUP0qcm0C+6CzvLFeIPStVysLv93xUj1FCwClAEO9R6C5lsqwWFqvsw==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz}
     version: 0.61.1
 
   '@stremio/stremio-icons@5.15.0':
