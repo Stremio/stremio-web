@@ -26,6 +26,7 @@ const MetaDetails = () => {
     const navigate = useNavigate();
     const { getStoredOrigin } = useNavigateWithOrigin();
     const contentRef = React.useRef(null);
+    const videosScrollMemoryRef = React.useRef(null);
     const { t } = useTranslation();
     const core = useCore();
     const urlParams = React.useMemo(() => ({
@@ -248,6 +249,8 @@ const MetaDetails = () => {
                                 selectedVideoId={metaDetails.libraryItem?.state?.video_id}
                                 seasonOnSelect={seasonOnSelect}
                                 toggleNotifications={toggleNotifications}
+                                scrollMemoryRef={videosScrollMemoryRef}
+                                titleKey={JSON.stringify([metaPath.type, metaPath.id])}
                             />
                             :
                             null

@@ -1,0 +1,43 @@
+name: Publish GitHub Pages
+
+on:
+  workflow_run:
+    workflows: [Build, GitHub Pages Cleanup]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    concurrency:
+      group: gh-pages-publish
+      # Keep the active publication; the latest pending run includes all previews.
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout latest previews
+        uses: actions/checkout@v7
+        with:
+          ref: gh-pages
+          persist-credentials: false
+      - name: Upload Pages site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: github-pages-${{ github.run_attempt }}
+          path: .
+          include-hidden-files: true
+      - name: Deploy Pages site
+        id: deployment
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}

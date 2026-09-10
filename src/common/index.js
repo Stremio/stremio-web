@@ -1,11 +1,11 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const { FileDropProvider, useFileDrop, onFileDrop } = require('./FileDrop');
+const { FileDropProvider, useFileDrop, useFileDropListener } = require('./FileDrop');
 const { FullscreenProvider, useFullscreen } = require('./Fullscreen');
 const { PlatformProvider, usePlatform } = require('./Platform');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
-const { ShortcutsProvider, useShortcuts, onShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys } = require('./Shortcuts');
+const { ShortcutsProvider, useShortcuts, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys } = require('./Shortcuts');
 const { DiscordProvider, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('./Discord');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
@@ -36,13 +36,13 @@ const { default: useLanguageSorting } = require('./useLanguageSorting');
 module.exports = {
     FileDropProvider,
     useFileDrop,
-    onFileDrop,
+    useFileDropListener,
     FullscreenProvider,
     PlatformProvider,
     usePlatform,
     ShortcutsProvider,
     useShortcuts,
-    onShortcut,
+    useShortcut,
     getKeyboardShortcutKey,
     getKeyboardShortcutKeys,
     ToastProvider,

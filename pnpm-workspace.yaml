@@ -2,3 +2,6 @@ minimumReleaseAgeExclude:
   - '@stremio/*'
 
 blockExoticSubdeps: false
+
+patchedDependencies:
+  a-color-picker@1.2.1: patches/a-color-picker@1.2.1.patch

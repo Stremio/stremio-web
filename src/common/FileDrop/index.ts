@@ -1,8 +1,8 @@
 import { FileDropProvider, useFileDrop } from './FileDrop';
-import onFileDrop from './onFileDrop';
+import useFileDropListener from './useFileDropListener';
 
 export {
     FileDropProvider,
     useFileDrop,
-    onFileDrop,
+    useFileDropListener,
 };
