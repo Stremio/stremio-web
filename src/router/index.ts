@@ -6,6 +6,7 @@ import Modal from './Modal';
 import Routes from './Routes';
 import Route from './Route';
 import toPath from './toPath';
+import navigateToRoute from './routePath';
 
 export {
     useModalsContainer,
@@ -14,4 +15,5 @@ export {
     Routes,
     Route,
     toPath,
+    navigateToRoute,
 };
