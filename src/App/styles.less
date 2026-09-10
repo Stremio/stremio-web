@@ -20,11 +20,11 @@
 }
 
 // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
-@calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0rem), max(1rem, calc(var(--viewport-height-diff) - env(safe-area-inset-top, 0rem))))";
+@calculated-bottom-safe-inset: ~"min(calc(env(safe-area-inset-bottom, 0rem) / var(--interface-scale)), max(1rem, calc(var(--viewport-height-diff) - var(--safe-area-inset-top))))";
 
 // Viewport sizes
-@viewport-width: ~"100vw";
-@viewport-height: ~"100vh";
+@viewport-width: ~"calc(100vw / var(--interface-scale))";
+@viewport-height: ~"calc(100vh / var(--interface-scale))";
 
 // HTML sizes
 @html-width: ~"calc(max(var(--small-viewport-width), var(--dynamic-viewport-width)))";
@@ -33,10 +33,10 @@
 @html-standalone-height: ~"calc(max(100%, var(--large-viewport-height)))";
 
 // Safe area insets
-@safe-area-inset-top: env(safe-area-inset-top, 0rem);
-@safe-area-inset-right: env(safe-area-inset-right, 0rem);
-@safe-area-inset-bottom: env(safe-area-inset-bottom, 0rem);
-@safe-area-inset-left: env(safe-area-inset-left, 0rem);
+@safe-area-inset-top: calc(env(safe-area-inset-top, 0rem) / var(--interface-scale));
+@safe-area-inset-right: calc(env(safe-area-inset-right, 0rem) / var(--interface-scale));
+@safe-area-inset-bottom: calc(env(safe-area-inset-bottom, 0rem) / var(--interface-scale));
+@safe-area-inset-left: calc(env(safe-area-inset-left, 0rem) / var(--interface-scale));
 
 @top-overlay-size: 5.25rem;
 @bottom-overlay-size: 0rem;
@@ -44,6 +44,7 @@
 @transparency-gradient-pad: 6rem;
 
 :root {
+    --interface-scale: 1;
     --landscape-shape-ratio: 0.5625;
     --poster-shape-ratio: 1.464;
     --scroll-bar-size: 6px;
@@ -89,22 +90,22 @@
     --viewport-height-diff: calc(100vh - 100vh);
 
     @supports (height: 100dvh) {
-        --dynamic-viewport-width: 100dvw;
-        --dynamic-viewport-height: 100dvh;
+        --dynamic-viewport-width: calc(100dvw / var(--interface-scale));
+        --dynamic-viewport-height: calc(100dvh / var(--interface-scale));
     }
 
     @supports (height: 100lvh) {
-        --large-viewport-width: 100lvw;
-        --large-viewport-height: 100lvh;
+        --large-viewport-width: calc(100lvw / var(--interface-scale));
+        --large-viewport-height: calc(100lvh / var(--interface-scale));
     }
 
     @supports (height: 100svh) {
-        --small-viewport-width: 100svw;
-        --small-viewport-height: 100svh;
+        --small-viewport-width: calc(100svw / var(--interface-scale));
+        --small-viewport-height: calc(100svh / var(--interface-scale));
     }
 
     @supports (height: 100lvh) and (height: 100svh) {
-        --viewport-height-diff: calc(100lvh - 100svh);
+        --viewport-height-diff: calc((100lvh - 100svh) / var(--interface-scale));
     }
 
     @media (display-mode: standalone) {
@@ -160,6 +161,7 @@ svg {
 }
 
 html {
+    zoom: var(--interface-scale);
     width: @html-width;
     height: @html-height;
     font-family: 'PlusJakartaSans', 'Arial', 'Helvetica', 'TwemojiFlags', 'sans-serif';

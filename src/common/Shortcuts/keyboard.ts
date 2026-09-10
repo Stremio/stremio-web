@@ -1,3 +1,7 @@
+import { name } from 'stremio/common/Platform/device';
+
+const PRIMARY_MODIFIER = ['macos', 'ios', 'visionos'].includes(name) ? 'Meta' : 'Ctrl';
+
 const KEY_CODE_MAP: Record<number, string> = {
     8: 'Backspace',
     27: 'Escape',
@@ -6,6 +10,8 @@ const KEY_CODE_MAP: Record<number, string> = {
     38: 'ArrowUp',
     39: 'ArrowRight',
     40: 'ArrowDown',
+    107: '+',
+    109: '-',
     122: 'F11',
     187: '=',
     189: '-',
@@ -64,6 +70,7 @@ const getKeyboardShortcutKeys = (event: KeyboardEvent) => {
 };
 
 export {
+    PRIMARY_MODIFIER,
     getKeyboardShortcutKey,
     getKeyboardShortcutKeys,
 };
