@@ -7,7 +7,7 @@ const { useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
 const { Routes } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, useFileDropListener, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const DeepLinkHandler = require('./DeepLinkHandler');
@@ -19,6 +19,7 @@ const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
 const NAVIGATE_TABS_ROUTES = ['/', '/discover', '/library', '/calendar', '/addons', '/settings'];
+const TORRENT_FILE_TYPES = ['application/x-bittorrent'];
 
 const App = () => {
     const core = useCore();
@@ -62,7 +63,7 @@ const App = () => {
         }
     }, [toggleShortcutModal, toggleGamepadModal, changeInterfaceScale]);
 
-    onFileDrop(['application/x-bittorrent'], (file, buffer) => {
+    const onTorrentDrop = React.useCallback((file, buffer) => {
         core.transport.dispatch({
             action: 'StreamingServer',
             args: {
@@ -70,7 +71,9 @@ const App = () => {
                 args: Array.from(new Uint8Array(buffer))
             }
         });
-    });
+    }, []);
+
+    useFileDropListener(TORRENT_FILE_TYPES, onTorrentDrop);
 
     React.useEffect(() => {
         let prevPath = window.location.hash.slice(1);

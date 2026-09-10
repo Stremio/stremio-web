@@ -68,15 +68,13 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                 return streamsByAddon;
             }, {});
     }, [props.streams]);
+    const effectiveSelectedAddon = Object.prototype.hasOwnProperty.call(streamsByAddon, selectedAddon) ? selectedAddon : ALL_ADDONS_KEY;
     const filteredStreams = React.useMemo(() => {
-        return selectedAddon === ALL_ADDONS_KEY ?
+        return effectiveSelectedAddon === ALL_ADDONS_KEY ?
             Object.values(streamsByAddon).map(({ streams }) => streams).flat(1)
             :
-            streamsByAddon[selectedAddon] ?
-                streamsByAddon[selectedAddon].streams
-                :
-                [];
-    }, [streamsByAddon, selectedAddon]);
+            streamsByAddon[effectiveSelectedAddon].streams;
+    }, [streamsByAddon, effectiveSelectedAddon]);
     const selectableOptions = React.useMemo(() => {
         return {
             options: [
@@ -91,10 +89,10 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                     title: streamsByAddon[transportUrl].addon.manifest.name,
                 }))
             ],
-            value: selectedAddon,
+            value: effectiveSelectedAddon,
             onSelect: onAddonSelected
         };
-    }, [streamsByAddon, selectedAddon]);
+    }, [streamsByAddon, effectiveSelectedAddon, onAddonSelected, t]);
 
     const handleEpisodePicker = React.useCallback((season, episode) => {
         onEpisodeSearch(season, episode);

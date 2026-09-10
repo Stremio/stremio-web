@@ -34,7 +34,7 @@ const useInterfaceScale = (profile: Profile) => {
             action: 'Ctx',
             args: { action: 'UpdateSettings', args: settingsRef.current }
         });
-    }, []);
+    }, [core.transport]);
 
     useEffect(() => {
         if (shell.active && !shell.state.initialized) return;
@@ -45,7 +45,7 @@ const useInterfaceScale = (profile: Profile) => {
         } else {
             setInterfaceScale(scale / 100);
         }
-    }, [scale, shell.state.initialized, shell.capabilities.nativeInterfaceScale]);
+    }, [scale, shell]);
 
     useEffect(() => {
         const onScale = (action: string) => {
@@ -55,7 +55,7 @@ const useInterfaceScale = (profile: Profile) => {
         };
         shell.on('interface-scale', onScale);
         return () => { shell.off('interface-scale', onScale); };
-    }, [changeInterfaceScale]);
+    }, [changeInterfaceScale, shell]);
 
     return changeInterfaceScale;
 };

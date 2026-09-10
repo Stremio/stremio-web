@@ -53,7 +53,7 @@ const useInterfaceOptions = (profile: Profile) => {
                 }
             });
         }
-    }), [profile.settings]);
+    }), [profile.settings, core.transport]);
 
     const escExitFullscreenToggle = useMemo(() => ({
         checked: profile.settings.escExitFullscreen,

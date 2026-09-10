@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { PRIMARY_MODIFIER, getKeyboardShortcutKey, getKeyboardShortcutKeys } from './keyboard';
 import shortcuts from './shortcuts.json';
 
@@ -79,14 +79,16 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
         }));
     }, [onShortcut]);
 
-    const on = (name: ShortcutName, listener: ShortcutListener) => {
+    const on = useCallback((name: ShortcutName, listener: ShortcutListener) => {
         !listeners.current.has(name) && listeners.current.set(name, new Set());
         listeners.current.get(name)!.add(listener);
-    };
+    }, []);
 
-    const off = (name: ShortcutName, listener: ShortcutListener) => {
+    const off = useCallback((name: ShortcutName, listener: ShortcutListener) => {
         listeners.current.get(name)?.delete(listener);
-    };
+    }, []);
+
+    const value = useMemo(() => ({ grouped: shortcuts, on, off }), [on, off]);
 
     useEffect(() => {
         document.addEventListener('keydown', onKeyDown);
@@ -94,7 +96,7 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
     }, [onKeyDown]);
 
     return (
-        <ShortcutsContext.Provider value={{ grouped: shortcuts, on, off }}>
+        <ShortcutsContext.Provider value={value}>
             {children}
         </ShortcutsContext.Provider>
     );

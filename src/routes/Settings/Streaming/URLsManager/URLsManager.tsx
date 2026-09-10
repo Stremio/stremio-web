@@ -9,10 +9,15 @@ import AddItem from './AddItem';
 import Icon from '@stremio/stremio-icons/react';
 import useStreamingServerUrls from './useStreamingServerUrls';
 
-const URLsManager = () => {
+type Props = {
+    selectedUrl: string;
+    settings: StreamingServer['settings'];
+};
+
+const URLsManager = ({ selectedUrl, settings }: Props) => {
     const { t } = useTranslation();
     const [addMode, setAddMode] = useState(false);
-    const { streamingServerUrls, addServerUrl, reloadServer } = useStreamingServerUrls();
+    const { streamingServerUrls, addServerUrl, deleteServerUrl, selectServerUrl, reloadServer } = useStreamingServerUrls();
 
     const onAdd = () => {
         setAddMode(true);
@@ -36,7 +41,14 @@ const URLsManager = () => {
             <div className={styles['content']}>
                 {
                     streamingServerUrls.map((item: StreamingServerUrl) => (
-                        <Item key={item.url} {...item} />
+                        <Item
+                            key={item.url}
+                            url={item.url}
+                            selected={item.url === selectedUrl}
+                            settings={settings}
+                            deleteServerUrl={deleteServerUrl}
+                            selectServerUrl={selectServerUrl}
+                        />
                     ))
                 }
                 {
