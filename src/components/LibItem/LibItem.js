@@ -137,7 +137,7 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
             newVideos={newVideos}
             options={options}
             optionOnSelect={optionOnSelect}
-            onPlayClick={typeof playerHref === 'string' ? onPlayClick : null}
+            onPlayClick={typeof playerHref === 'string' && props.progress > 0 ? onPlayClick : null}
         />
     );
 };

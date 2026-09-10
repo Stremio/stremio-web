@@ -16,6 +16,24 @@ const { formatEpgTimeRange } = require('stremio/common/EPG');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
+const VideoLabel = React.forwardRef(({ shouldScroll, ...props }, ref) => {
+    React.useEffect(() => {
+        if (shouldScroll && ref.current) {
+            ref.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+            });
+        }
+    }, [shouldScroll, ref]);
+
+    return <Button {...props} ref={ref} />;
+});
+
+VideoLabel.propTypes = {
+    shouldScroll: PropTypes.bool,
+};
+
 const Video = ({
     className,
     id,
@@ -123,20 +141,8 @@ const Video = ({
             :
             null;
 
-        React.useEffect(() => {
-            if (selected && ref.current) {
-                if ((progress && watched) || !watched) {
-                    ref.current.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest',
-                        inline: 'start'
-                    });
-                }
-            }
-        }, [selected]);
-
         return (
-            <Button {...props} ref={ref} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
+            <VideoLabel {...props} ref={ref} shouldScroll={selected && (!watched || !!progress)} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
                         <div className={styles['thumbnail-container']}>
@@ -233,9 +239,9 @@ const Video = ({
                         null
                 }
                 {children}
-            </Button>
+            </VideoLabel>
         );
-    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen]);
+    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen, endTime, isEpg, isNow, profile.settings.hideSpoilers, profile.settings.interfaceLanguage, season, startTime, t]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>

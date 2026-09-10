@@ -2,12 +2,11 @@
 
 import { useCallback } from 'react';
 import { useCore } from 'stremio/core';
-import { useModelState, useToast } from 'stremio/common';
-import useProfile from 'stremio/common/useProfile';
+import { useModelState, useSettings, useToast } from 'stremio/common';
 
 const useStreamingServerUrls = () => {
     const core = useCore();
-    const profile = useProfile();
+    const [, updateSettings] = useSettings();
     const toast = useToast();
     const ctx = useModelState({ model: 'ctx' });
     const streamingServerUrls = ctx.streamingServerUrls;
@@ -57,17 +56,8 @@ const useStreamingServerUrls = () => {
         });
     }, []);
     const selectServerUrl = useCallback((url) => {
-        core.transport.dispatch({
-            action: 'Ctx',
-            args: {
-                action: 'UpdateSettings',
-                args: {
-                    ...profile.settings,
-                    streamingServerUrl: url
-                }
-            }
-        });
-    }, [profile.settings]);
+        updateSettings({ streamingServerUrl: url });
+    }, [updateSettings]);
     const reloadServer = useCallback(() => {
         core.transport.dispatch({
             action: 'StreamingServer',

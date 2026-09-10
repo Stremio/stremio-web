@@ -3,11 +3,11 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const { useNavigate } = require('react-router');
+const { createPath, useLocation, useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Routes } = require('stremio-router');
+const { Routes, useGoBack } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, onFileDrop, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, useFileDropListener, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const DeepLinkHandler = require('./DeepLinkHandler');
@@ -18,6 +18,7 @@ const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
 const NAVIGATE_TABS_ROUTES = ['/', '/discover', '/library', '/calendar', '/addons', '/settings'];
+const TORRENT_FILE_TYPES = ['application/x-bittorrent'];
 
 const App = () => {
     const core = useCore();
@@ -25,6 +26,10 @@ const App = () => {
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
     const navigate = useNavigate();
+    const goBack = useGoBack();
+    const locationPath = createPath(useLocation());
+    const previousPathRef = React.useRef(locationPath);
+    const appReadySentRef = React.useRef(false);
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -52,12 +57,16 @@ const App = () => {
                 break;
             }
             case 'navigateHistory':
-                navigate(combo === 0 ? -1 : 1);
+                if (combo === 0) {
+                    goBack();
+                } else {
+                    navigate(1);
+                }
                 break;
         }
-    }, [toggleShortcutModal, toggleGamepadModal]);
+    }, [toggleShortcutModal, toggleGamepadModal, navigate, goBack]);
 
-    onFileDrop(['application/x-bittorrent'], (file, buffer) => {
+    const onTorrentDrop = React.useCallback((file, buffer) => {
         core.transport.dispatch({
             action: 'StreamingServer',
             args: {
@@ -65,22 +74,20 @@ const App = () => {
                 args: Array.from(new Uint8Array(buffer))
             }
         });
-    });
+    }, [core.transport]);
+
+    useFileDropListener(TORRENT_FILE_TYPES, onTorrentDrop);
 
     React.useEffect(() => {
-        let prevPath = window.location.hash.slice(1);
-        const onLocationHashChange = () => {
+        const prevPath = previousPathRef.current;
+        previousPathRef.current = locationPath;
+        if (prevPath !== locationPath) {
             core.transport.analytics({
                 event: 'LocationPathChanged',
                 args: { prevPath }
             });
-            prevPath = window.location.hash.slice(1);
-        };
-        window.addEventListener('hashchange', onLocationHashChange);
-        return () => {
-            window.removeEventListener('hashchange', onLocationHashChange);
-        };
-    }, []);
+        }
+    }, [locationPath, core.transport]);
 
     React.useEffect(() => {
         const onChromecastStateChange = () => {
@@ -102,7 +109,7 @@ const App = () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
         };
-    }, []);
+    }, [services]);
 
     React.useEffect(() => {
         const onOpenMedia = (data) => {
@@ -122,12 +129,13 @@ const App = () => {
         };
 
         shell.on('open-media', onOpenMedia);
-        if (shell.state.initialized) {
+        if (shell.state.initialized && !appReadySentRef.current) {
+            appReadySentRef.current = true;
             shell.send('app-ready');
         }
 
         return () => shell.off('open-media', onOpenMedia);
-    }, [shell.state.initialized]);
+    }, [navigate, shell]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
@@ -141,7 +149,7 @@ const App = () => {
         if (profile.settings?.quitOnClose && shell.state.windowClosed) {
             shell.send('quit');
         }
-    }, [profile.settings, shell.state.windowClosed]);
+    }, [profile.settings, i18n, shell]);
 
     React.useEffect(() => {
         const onWindowFocus = () => {
@@ -178,7 +186,7 @@ const App = () => {
         return () => {
             window.removeEventListener('focus', onWindowFocus);
         };
-    }, []);
+    }, [core.transport]);
 
     return (
         <ServicesProvider services={services}>

@@ -30,7 +30,7 @@ const useLiveTvContinueWatching = (): LiveTvContinueWatching => {
             }
         }, DAY_ROLLOVER_CHECK_INTERVAL);
         return () => window.clearInterval(interval);
-    }, [action]);
+    }, [action, core.transport]);
     return liveTvContinueWatching;
 };
 
