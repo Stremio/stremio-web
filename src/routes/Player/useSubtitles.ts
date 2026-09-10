@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CONSTANTS, languages, onFileDrop, onShortcut, useToast } from 'stremio/common';
+import { CONSTANTS, languages, useFileDropListener, useShortcut, useToast } from 'stremio/common';
+import { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } from './subtitleDelay';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
     if (!Array.isArray(tracks)) {
@@ -170,6 +171,7 @@ const useSubtitles = ({
     toggleSubtitlesMenu,
 }: UseSubtitlesArgs): UseSubtitlesResult => {
     const { t } = useTranslation();
+    const { setSubtitlesTrack, setExtraSubtitlesTrack, setSubtitlesDelay, setSubtitlesSize, setSubtitlesOffset } = video;
     const toast = useToast();
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
@@ -242,15 +244,25 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = null;
-        video.setSubtitlesTrack(null);
-        video.setExtraSubtitlesTrack(null);
+        setSubtitlesTrack(null);
+        setExtraSubtitlesTrack(null);
         streamStateChanged({ subtitleTrack: null });
         subtitlePreferenceChanged({
             enabled: false,
             ...(source ? { source } : {}),
             ...(language ? { language } : {}),
         });
-    }, [player.subtitlePreference, streamStateChanged, subtitlePreferenceChanged, video]);
+    }, [
+        player.subtitlePreference,
+        streamStateChanged,
+        subtitlePreferenceChanged,
+        setSubtitlesTrack,
+        setExtraSubtitlesTrack,
+        video.state.subtitlesTracks,
+        video.state.extraSubtitlesTracks,
+        video.state.selectedSubtitlesTrackId,
+        video.state.selectedExtraSubtitlesTrackId,
+    ]);
 
     const selectEmbeddedTrack = useCallback((track: SubtitleTrack | null) => {
         if (!track) {
@@ -260,9 +272,9 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = { id: track.id, source: 'embedded' };
-        video.setSubtitlesTrack(track.id);
+        setSubtitlesTrack(track.id);
         rememberTrack(track, true);
-    }, [disableSubtitles, rememberTrack, video]);
+    }, [disableSubtitles, rememberTrack, setSubtitlesTrack]);
 
     const selectExtraTrack = useCallback((track: SubtitleTrack | null) => {
         if (!track) {
@@ -272,27 +284,29 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = { id: track.id, source: 'external' };
-        video.setExtraSubtitlesTrack(track.id);
+        setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
-    }, [disableSubtitles, rememberTrack, video]);
+    }, [disableSubtitles, rememberTrack, setExtraSubtitlesTrack]);
 
     const changeDelay = useCallback((delay: number) => {
-        video.setSubtitlesDelay(delay);
+        setSubtitlesDelay(delay);
         streamStateChanged({ subtitleDelay: delay });
-    }, [streamStateChanged, video]);
+    }, [streamStateChanged, setSubtitlesDelay]);
 
     const increaseDelay = useCallback(() => {
-        changeDelay((video.state.extraSubtitlesDelay ?? 0) + 250);
+        const delay = (video.state.extraSubtitlesDelay ?? 0) + SUBTITLES_DELAY_STEP_MS;
+        changeDelay(snapSubtitleDelay(delay, 1));
     }, [changeDelay, video.state.extraSubtitlesDelay]);
 
     const decreaseDelay = useCallback(() => {
-        changeDelay((video.state.extraSubtitlesDelay ?? 0) - 250);
+        const delay = (video.state.extraSubtitlesDelay ?? 0) - SUBTITLES_DELAY_STEP_MS;
+        changeDelay(snapSubtitleDelay(delay, -1));
     }, [changeDelay, video.state.extraSubtitlesDelay]);
 
     const changeSize = useCallback((size: number) => {
-        video.setSubtitlesSize(size);
+        setSubtitlesSize(size);
         streamStateChanged({ subtitleSize: size });
-    }, [streamStateChanged, video]);
+    }, [streamStateChanged, setSubtitlesSize]);
 
     const updateSize = useCallback((delta: number) => {
         const sizes = CONSTANTS.SUBTITLES_SIZES as number[];
@@ -303,13 +317,15 @@ const useSubtitles = ({
     }, [changeSize, video.state.subtitlesSize]);
 
     const changeOffset = useCallback((offset: number) => {
-        video.setSubtitlesOffset(offset);
+        setSubtitlesOffset(offset);
         streamStateChanged({ subtitleOffset: offset });
-    }, [streamStateChanged, video]);
+    }, [streamStateChanged, setSubtitlesOffset]);
 
-    onFileDrop(CONSTANTS.SUPPORTED_LOCAL_SUBTITLES, (file: File, buffer: ArrayBuffer) => {
+    const onSubtitlesDrop = useCallback((file: File, buffer: ArrayBuffer) => {
         videoRef.current.addLocalSubtitles(file.name, buffer);
-    });
+    }, []);
+
+    useFileDropListener(CONSTANTS.SUPPORTED_LOCAL_SUBTITLES, onSubtitlesDrop);
 
     useEffect(() => {
         if (video.state.stream !== null) {
@@ -334,8 +350,8 @@ const useSubtitles = ({
         if (sessionPreference?.enabled === false || (!sessionEnabled && settings.subtitlesLanguage === null)) {
             if (video.state.selectedSubtitlesTrackId !== null ||
                 video.state.selectedExtraSubtitlesTrackId !== null) {
-                video.setSubtitlesTrack(null);
-                video.setExtraSubtitlesTrack(null);
+                setSubtitlesTrack(null);
+                setExtraSubtitlesTrack(null);
             }
             appliedTrack.current = null;
             return;
@@ -365,8 +381,8 @@ const useSubtitles = ({
 
         if (!bestCandidate) {
             if (sessionEnabled && selectedTrack) {
-                video.setSubtitlesTrack(null);
-                video.setExtraSubtitlesTrack(null);
+                setSubtitlesTrack(null);
+                setExtraSubtitlesTrack(null);
             }
             appliedTrack.current = null;
             return;
@@ -388,9 +404,15 @@ const useSubtitles = ({
         }
 
         trackToApply.source === 'embedded' ?
-            video.setSubtitlesTrack(trackToApply.track.id)
+            setSubtitlesTrack(trackToApply.track.id)
             :
-            video.setExtraSubtitlesTrack(trackToApply.track.id);
+            setExtraSubtitlesTrack(trackToApply.track.id);
+
+        const delay = player.streamState?.subtitleDelay;
+        // Selecting an external track resets its delay in stremio-video.
+        if (trackToApply.source === 'external' && typeof delay === 'number') {
+            setSubtitlesDelay(delay);
+        }
         appliedTrack.current = {
             id: trackToApply.track.id,
             source: trackToApply.source,
@@ -399,6 +421,9 @@ const useSubtitles = ({
         player.subtitlePreference,
         player.streamState,
         settings.subtitlesLanguage,
+        setSubtitlesTrack,
+        setExtraSubtitlesTrack,
+        setSubtitlesDelay,
         video.state.extraSubtitlesTracks,
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
@@ -413,19 +438,19 @@ const useSubtitles = ({
 
         const delay = player.streamState?.subtitleDelay;
         if (typeof delay === 'number') {
-            video.setSubtitlesDelay(delay);
+            setSubtitlesDelay(delay);
         }
 
         const size = player.streamState?.subtitleSize;
         if (typeof size === 'number') {
-            video.setSubtitlesSize(size);
+            setSubtitlesSize(size);
         }
 
         const offset = player.streamState?.subtitleOffset;
         if (typeof offset === 'number') {
-            video.setSubtitlesOffset(offset);
+            setSubtitlesOffset(offset);
         }
-    }, [player.streamState, video.state.stream]);
+    }, [player.streamState, video.state.stream, setSubtitlesDelay, setSubtitlesSize, setSubtitlesOffset]);
 
     useEffect(() => {
         if (!hasTracks) {
@@ -477,15 +502,15 @@ const useSubtitles = ({
         };
     }, [applySubtitleStyle, t, toast, video.events]);
 
-    onShortcut('subtitlesDelay', (combo) => {
+    useShortcut('subtitlesDelay', useCallback((combo) => {
         combo === 1 ? increaseDelay() : decreaseDelay();
-    }, [increaseDelay, decreaseDelay], !menusOpen);
+    }, [increaseDelay, decreaseDelay]), !menusOpen);
 
-    onShortcut('subtitlesSize', (combo) => {
+    useShortcut('subtitlesSize', useCallback((combo) => {
         combo === 1 ? updateSize(1) : updateSize(-1);
-    }, [updateSize], !menusOpen);
+    }, [updateSize]), !menusOpen);
 
-    onShortcut('toggleSubtitles', () => {
+    useShortcut('toggleSubtitles', useCallback(() => {
         const subtitlesEnabled = video.state.selectedSubtitlesTrackId !== null ||
             video.state.selectedExtraSubtitlesTrackId !== null;
 
@@ -539,14 +564,14 @@ const useSubtitles = ({
         video.state.selectedExtraSubtitlesTrackId,
         video.state.selectedSubtitlesTrackId,
         video.state.subtitlesTracks,
-    ], !menusOpen);
+    ]), !menusOpen);
 
-    onShortcut('subtitlesMenu', () => {
+    useShortcut('subtitlesMenu', useCallback(() => {
         closeMenus();
         if (hasTracks) {
             toggleSubtitlesMenu();
         }
-    }, [closeMenus, hasTracks, toggleSubtitlesMenu]);
+    }, [closeMenus, hasTracks, toggleSubtitlesMenu]));
 
     const menuProps = useMemo(() => ({
         subtitlesLanguage: settings.subtitlesLanguage,

@@ -149,17 +149,17 @@ const Discover = () => {
         closeAddonModal();
         closeMobilePreview();
         setSelectedMetaItemIndex(0);
-    }, [discover.selected]);
+    }, [discover.selected, closeInputsModal, closeAddonModal, closeMobilePreview]);
     React.useEffect(() => {
         if (!isMobile) {
             closeMobilePreview();
         }
-    }, [isMobile]);
+    }, [isMobile, closeMobilePreview]);
     React.useEffect(() => {
         if (!routeActive) {
             closeMobilePreview();
         }
-    }, [routeActive]);
+    }, [routeActive, closeMobilePreview]);
     const onMobileShowClick = React.useCallback((event) => {
         event.preventDefault();
         const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);

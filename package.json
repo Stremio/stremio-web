@@ -10,7 +10,7 @@
         "start-prod": "webpack serve --mode production",
         "build": "webpack --mode production",
         "test": "jest",
-        "lint": "eslint src",
+        "lint": "eslint src --max-warnings 287",
         "scan-translations": "pnpx jest ./tests/i18nScan.test.js"
     },
     "engines": {
@@ -21,9 +21,9 @@
         "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
-        "@stremio/stremio-core-web": "0.61.1",
+        "@stremio/stremio-core-web": "0.62.1",
         "@stremio/stremio-icons": "5.15.0",
-        "@stremio/stremio-video": "0.0.93",
+        "@stremio/stremio-video": "0.0.96",
         "a-color-picker": "1.2.1",
         "bowser": "2.14.1",
         "buffer": "6.0.3",
@@ -47,7 +47,7 @@
         "react-router": "6.30.0",
         "react-router-dom": "6.30.0",
         "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "github:Stremio/stremio-translations#c4a6cfcca4b5c3747d7ed6ea4281cc029ee1e844",
+        "stremio-translations": "github:Stremio/stremio-translations#ac0671c3bf483a21bb94a419ab1ee474293b7c06",
         "url": "0.11.4",
         "use-long-press": "^3.3.0",
         "workbox-window": "7.4.1"
@@ -72,6 +72,7 @@
         "cssnano-preset-advanced": "7.0.16",
         "eslint": "^9.39.4",
         "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^7.1.1",
         "globals": "^15.15.0",
         "html-webpack-plugin": "5.6.7",
         "jest": "29.7.0",

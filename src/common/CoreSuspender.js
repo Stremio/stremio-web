@@ -39,7 +39,7 @@ const useCoreSuspender = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const withCoreSuspender = (Component, Fallback = () => { }) => {
-    return function withCoreSuspender(props) {
+    return function CoreSuspender(props) {
         const core = useCore();
         const parentSuspender = useCoreSuspender();
         const [render, setRender] = React.useState(parentSuspender === null);

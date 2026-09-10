@@ -42,6 +42,8 @@ type AudioTrackState = {
     id: string,
 };
 
+type VideoScale = 'contain' | 'cover' | 'fill';
+
 type SubtitleSource = 'embedded' | 'external';
 
 type SubtitlePreference = {
@@ -56,6 +58,7 @@ type StreamState = {
     subtitleSize?: number,
     subtitleOffset?: number,
     audioTrack?: AudioTrackState,
+    videoScale?: VideoScale,
 };
 
 type Player = {
@@ -73,6 +76,7 @@ type Player = {
     seriesInfo: SeriesInfo | null,
     streamState: StreamState | null,
     subtitlePreference: SubtitlePreference | null,
+    videoScale: VideoScale | null,
     subtitles: Subtitle[],
     title: string | null,
 };

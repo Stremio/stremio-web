@@ -17,6 +17,10 @@ const VIDEO_SCALE_KEYS: Record<string, string> = {
 };
 
 const PROPERTIES: Record<string, Property> = {
+    'playbackSpeed': {
+        label: 'PLAYBACK_SPEED',
+        format: (value) => `${value}x`,
+    },
     'extraSubtitlesDelay': {
         label: 'SUBTITLES_DELAY',
         format: (value) => `${(value / 1000).toFixed(2)}s`,
