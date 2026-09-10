@@ -118,18 +118,10 @@
 }
 
 .epg-no-programs {
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-    width: 100%;
-    height: 100%;
-    font-size: 1.2rem;
-    color: var(--primary-foreground-color);
-    opacity: 0.4;
+    width: calc(100% - 4px);
 
-    &:hover, &:focus {
-        opacity: 0.8;
-        background-color: var(--overlay-color);
+    &:not([href]) {
+        cursor: default;
     }
 }
 

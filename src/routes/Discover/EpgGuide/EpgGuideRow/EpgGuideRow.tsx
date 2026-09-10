@@ -86,11 +86,13 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                     the whole day block links to its streams */}
                 {programs.length === 0 && (
                     channelHref !== null ? (
-                        <Button className={styles['epg-no-programs']} href={channelHref} title={channel.name}>
-                            {channel.name}
+                        <Button className={`${styles['epg-program-block-inner']} ${styles['epg-no-programs']}`} href={channelHref} title={channel.name}>
+                            <div className={styles['epg-program-title']}>{channel.name}</div>
                         </Button>
                     ) : (
-                        <div className={styles['epg-no-programs']}>{t('NO_STREAM')}</div>
+                        <div className={`${styles['epg-program-block-inner']} ${styles['epg-no-programs']}`}>
+                            <div className={styles['epg-program-title']}>{t('NO_STREAM')}</div>
+                        </div>
                     )
                 )}
             </div>
