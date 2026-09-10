@@ -144,7 +144,7 @@ const Discover = () => {
     const onProgramSelect = React.useCallback((program, channel) => {
         setSelectedEpgProgram({ program, channel });
         openEpgPreview();
-    }, []);
+    }, [openEpgPreview]);
 
     React.useEffect(() => {
         if (!isEpgLayout && discover.catalog?.content.type === 'Loading' && metasContainerRef.current) {
@@ -248,7 +248,7 @@ const Discover = () => {
         closeMobilePreview();
         setSelectedMetaItemIndex(0);
         setSelectedEpgProgram(null);
-    }, [discover.selected]);
+    }, [discover.selected, closeInputsModal, closeAddonModal, closeMobilePreview]);
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
             <div className={styles['message-container']}>
@@ -379,13 +379,13 @@ const Discover = () => {
         if (!isMobile) {
             closeMobilePreview();
         }
-    }, [isMobile]);
+    }, [isMobile, closeMobilePreview]);
     React.useEffect(() => {
         if (!routeActive) {
             closeMobilePreview();
             setSelectedEpgProgram(null);
         }
-    }, [routeActive]);
+    }, [routeActive, closeMobilePreview]);
     const onMobileShowClick = React.useCallback((event) => {
         event.preventDefault();
         const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);

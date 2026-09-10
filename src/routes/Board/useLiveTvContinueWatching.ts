@@ -21,7 +21,7 @@ const useLiveTvContinueWatching = (): LiveTvContinueWatching => {
         core.transport.dispatch(active ? {
             action: 'Load', args: { model: 'LiveTvContinueWatching' },
         } : { action: 'Unload' }, MODEL);
-    }, [active, now]);
+    }, [active, now, core.transport]);
     return state;
 };
 

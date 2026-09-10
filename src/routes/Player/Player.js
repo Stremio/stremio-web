@@ -11,7 +11,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, onShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
+const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
@@ -30,6 +30,7 @@ const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
 const { default: useKeyboardSeek } = require('./useKeyboardSeek');
+const { default: usePlaybackSpeedHold } = require('./usePlaybackSpeedHold');
 const { default: useStatistics } = require('./useStatistics');
 const useVideo = require('./useVideo');
 const { default: useSubtitles } = require('./useSubtitles');
@@ -104,7 +105,36 @@ const Player = () => {
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
-    const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
+    const metaItemContent = React.useMemo(() => {
+        return player.metaItem !== null && player.metaItem.type === 'Ready' ?
+            player.metaItem.content
+            :
+            null;
+    }, [player.metaItem]);
+
+    const isEpg = (player.live ?? null) !== null;
+    const currentEpgVideo = player.live?.currentProgram ?? null;
+    const upcomingVideo = isEpg ? player.live?.nextProgram ?? null : player.nextVideo;
+    const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
+    const livePlayback = isEpg || video.state.live !== null;
+    const seekStart = livePlayback ? video.state.live?.start : 0;
+    const seekEnd = livePlayback ? video.state.live?.end : video.state.duration;
+    const canSeek = Number.isFinite(seekStart) && Number.isFinite(seekEnd) && seekEnd > seekStart && Number.isFinite(video.state.time);
+    React.useEffect(() => {
+        if (isEpg) core.transport.dispatch({ action: 'Player', args: { action: 'RefreshLive' } }, 'player');
+    }, [isEpg, epgNow, core.transport]);
+
+    const [nextVideoPopupDismissal, setNextVideoPopupDismissal] = React.useState(null);
+    const liveEpgRange = currentEpgVideo === null ? null : getEpgTimeRange(currentEpgVideo);
+    const nextVideoRemainingTime = isEpg ?
+        liveEpgRange === null ? null : liveEpgRange.endTime - epgNow
+        :
+        video.state.time === null || video.state.duration === null ? null : video.state.duration - video.state.time;
+    const nextVideoPopupOpen = upcomingVideo !== null &&
+        (nextVideoPopupDismissal === null || nextVideoPopupDismissal.stream !== video.state.stream ||
+            (isEpg && nextVideoPopupDismissal.programId !== currentEpgVideo?.id)) &&
+        nextVideoRemainingTime !== null && nextVideoRemainingTime > 0 &&
+        nextVideoRemainingTime <= settings.nextVideoNotificationDuration;
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
 
     const menusOpen = React.useMemo(() => {
@@ -176,7 +206,6 @@ const Player = () => {
         toggleSubtitlesMenu,
     });
 
-    const nextVideoPopupDismissed = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
     const requestedVideoScale = React.useRef(null);
@@ -186,38 +215,17 @@ const Player = () => {
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
 
-    const playbackSpeed = React.useRef(video.state.playbackSpeed || 1);
-    const pressTimer = React.useRef(null);
-    const longPress = React.useRef(false);
+    const {
+        start: startPlaybackSpeedHold,
+        finish: finishPlaybackSpeedHold,
+        cancel: cancelPlaybackSpeedHold,
+        isActive: isPlaybackSpeedHoldActive,
+        consumeClick: consumePlaybackSpeedHoldClick,
+    } = usePlaybackSpeedHold(routeFocused && !menusOpen, video.state.stream, video.state.playbackSpeed, video.setPlaybackSpeed);
     const detailsHold = React.useRef(null);
     const controlBarRef = React.useRef(null);
 
     const HOLD_DELAY = 400;
-
-    const metaItemContent = React.useMemo(() => {
-        return player.metaItem !== null && player.metaItem.type === 'Ready' ?
-            player.metaItem.content
-            :
-            null;
-    }, [player.metaItem]);
-
-    const isEpg = (player.live ?? null) !== null;
-    const currentEpgVideo = player.live?.currentProgram ?? null;
-    const upcomingVideo = isEpg ? player.live?.nextProgram ?? null : player.nextVideo;
-    const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
-    const livePlayback = isEpg || video.state.live !== null;
-    const seekStart = livePlayback ? video.state.live?.start : 0;
-    const seekEnd = livePlayback ? video.state.live?.end : video.state.duration;
-    const canSeek = Number.isFinite(seekStart) && Number.isFinite(seekEnd) && seekEnd > seekStart && Number.isFinite(video.state.time);
-    React.useEffect(() => {
-        if (isEpg) core.transport.dispatch({ action: 'Player', args: { action: 'RefreshLive' } }, 'player');
-    }, [isEpg, epgNow]);
-
-    React.useEffect(() => {
-        if (isEpg) {
-            nextVideoPopupDismissed.current = false;
-        }
-    }, [isEpg, currentEpgVideo?.id]);
 
     const handleNextVideoNavigation = React.useCallback((deepLinks, bingeWatching, ended) => {
         if (ended) {
@@ -361,14 +369,7 @@ const Player = () => {
         return () => resizeObserver.disconnect();
     }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetMinimum]);
 
-    const onPlaybackSpeedChanged = React.useCallback((rate, skipUpdate) => {
-        video.setPlaybackSpeed(rate);
-
-        if (skipUpdate) return;
-
-        playbackSpeed.current = rate;
-
-    }, []);
+    const onPlaybackSpeedChanged = video.setPlaybackSpeed;
 
     const onVideoScaleChanged = React.useCallback(() => {
         const currentScale = video.state.videoScale || 'contain';
@@ -393,9 +394,8 @@ const Player = () => {
     }, [streamStateChanged]);
 
     const onDismissNextVideoPopup = React.useCallback(() => {
-        closeNextVideoPopup();
-        nextVideoPopupDismissed.current = true;
-    }, []);
+        setNextVideoPopupDismissal({ stream: video.state.stream, programId: currentEpgVideo?.id });
+    }, [video.state.stream, currentEpgVideo?.id]);
 
     const onNextVideoRequested = React.useCallback(() => {
         if (isEpg) {
@@ -409,17 +409,17 @@ const Player = () => {
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, false);
         }
-    }, [player.nextVideo, isEpg, handleNextVideoNavigation, profile.settings, cancelKeyboardSeek]);
+    }, [player.nextVideo, isEpg, handleNextVideoNavigation, profile.settings, cancelKeyboardSeek, nextVideo]);
 
     const onVideoClick = React.useCallback(() => {
-        if (video.state.paused !== null && !longPress.current) {
+        if (video.state.paused !== null && !consumePlaybackSpeedHoldClick()) {
             if (video.state.paused) {
                 onPlayRequestedDebounced();
             } else {
                 onPauseRequestedDebounced();
             }
         }
-    }, [video.state.paused, longPress.current]);
+    }, [video.state.paused, consumePlaybackSpeedHoldClick, onPlayRequestedDebounced, onPauseRequestedDebounced]);
 
     const onVideoDoubleClick = React.useCallback(() => {
         onPlayRequestedDebounced.cancel();
@@ -598,53 +598,6 @@ const Player = () => {
         videoParamsChanged(video.state.videoParams);
     }, [video.state.videoParams]);
 
-    React.useEffect(() => {
-        if (nextVideoPopupDismissed.current) {
-            closeNextVideoPopup();
-            return;
-        }
-
-        if (isEpg) {
-            if (currentEpgVideo === null || upcomingVideo === null) {
-                closeNextVideoPopup();
-                return;
-            }
-
-            const range = getEpgTimeRange(currentEpgVideo);
-
-            if (range === null) {
-                closeNextVideoPopup();
-                return;
-            }
-
-            const remainingTime = range.endTime - epgNow;
-            const notificationDuration = settings.nextVideoNotificationDuration;
-
-            if (remainingTime > 0 && remainingTime <= notificationDuration) {
-                openNextVideoPopup();
-            } else {
-                closeNextVideoPopup();
-            }
-
-            return;
-        }
-
-        if (player.nextVideo !== null) {
-            if (
-                video.state.time !== null &&
-                video.state.duration !== null &&
-                video.state.time < video.state.duration &&
-                (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration
-            ) {
-                openNextVideoPopup();
-            } else {
-                closeNextVideoPopup();
-            }
-        } else {
-            closeNextVideoPopup();
-        }
-    }, [ isEpg, currentEpgVideo, upcomingVideo, epgNow, player.nextVideo, video.state.time, video.state.duration, settings.nextVideoNotificationDuration ]);
-
     // Auto audio track selection
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
@@ -661,7 +614,6 @@ const Player = () => {
 
     React.useEffect(() => {
         defaultAudioTrackSelected.current = false;
-        nextVideoPopupDismissed.current = false;
         playingOnExternalDevice.current = false;
     }, [video.state.stream]);
 
@@ -804,54 +756,54 @@ const Player = () => {
         return () => platform.shell.off('media-key', onMediaKey);
     }, [isEpg, video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
-    onShortcut('seekForward', (combo) => {
+    useShortcut('seekForward', React.useCallback((combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && canSeek);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested]), !menusOpen && canSeek);
 
-    onShortcut('seekBackward', (combo) => {
+    useShortcut('seekBackward', React.useCallback((combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
         onKeyboardSeekRequested(-seekDuration);
-    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested], !menusOpen && canSeek);
+    }, [settings.seekShortTimeDuration, settings.seekTimeDuration, onKeyboardSeekRequested]), !menusOpen && canSeek);
 
-    onShortcut('mute', () => {
+    useShortcut('mute', React.useCallback(() => {
         video.state.muted === true ? onUnmuteRequested() : onMuteRequested();
-    }, [video.state.muted], !menusOpen);
+    }, [onMuteRequested, onUnmuteRequested, video.state.muted]), !menusOpen);
 
-    onShortcut('volume', (combo) => {
+    useShortcut('volume', React.useCallback((combo) => {
         if (video.state.volume !== null) {
             const volume = combo === 0 ? Math.min(video.state.volume + 5, 200) : Math.max(video.state.volume - 5, 0);
             onVolumeChangeRequested(volume);
         }
-    }, [video.state.volume], !menusOpen);
+    }, [onVolumeChangeRequested, video.state.volume]), !menusOpen);
 
-    onShortcut('audioMenu', () => {
+    useShortcut('audioMenu', React.useCallback(() => {
         closeMenus();
         if (video.state?.audioTracks?.length > 0) {
             toggleAudioMenu();
         }
-    }, [video.state.audioTracks, toggleAudioMenu]);
+    }, [closeMenus, video.state?.audioTracks?.length, toggleAudioMenu]));
 
-    onShortcut('infoMenu', () => {
+    useShortcut('infoMenu', React.useCallback(() => {
         closeMenus();
         if (player.metaItem?.type === 'Ready') {
             toggleSideDrawer();
         }
-    }, [player.metaItem, toggleSideDrawer]);
+    }, [closeMenus, player.metaItem?.type, toggleSideDrawer]));
 
-    onShortcut('speedMenu', () => {
+    useShortcut('speedMenu', React.useCallback(() => {
         closeMenus();
         if (video.state.playbackSpeed !== null) {
             toggleSpeedMenu();
         }
-    }, [video.state.playbackSpeed, toggleSpeedMenu]);
+    }, [closeMenus, video.state.playbackSpeed, toggleSpeedMenu]));
 
-    onShortcut('speed', (combo) => {
+    useShortcut('speed', React.useCallback((combo) => {
         if (video.state.playbackSpeed !== null) {
             const speed = combo === 0 ? Math.max(video.state.playbackSpeed - 0.25, 0.25) : Math.min(video.state.playbackSpeed + 0.25, 2);
             onPlaybackSpeedChanged(speed);
         }
-    }, [video.state.playbackSpeed, onPlaybackSpeedChanged], !menusOpen);
+    }, [video.state.playbackSpeed, onPlaybackSpeedChanged]), !menusOpen);
 
     const selectedStream = player.selected?.stream;
     const statisticsMenuAvailable = streamingServer?.statistics?.type !== 'Err'
@@ -880,8 +832,8 @@ const Player = () => {
         }
     }, [finishDetailsHold, closeMenus, statisticsMenuAvailable, toggleStatisticsMenu]);
 
-    onShortcut('statisticsMenu', () => {
-        if (detailsHold.current !== null || pressTimer.current !== null) return;
+    useShortcut('statisticsMenu', React.useCallback(() => {
+        if (detailsHold.current !== null || isPlaybackSpeedHoldActive()) return;
 
         const hold = { phase: 'pending', timer: null };
         hold.timer = setTimeout(() => {
@@ -893,18 +845,18 @@ const Player = () => {
             }
         }, HOLD_DELAY);
         detailsHold.current = hold;
-    }, [statisticsMenuAvailable, closeMenus, openStatisticsMenu], routeFocused);
+    }, [statisticsMenuAvailable, closeMenus, openStatisticsMenu, isPlaybackSpeedHoldActive]), routeFocused);
 
-    onShortcut('playNext', () => {
+    useShortcut('playNext', React.useCallback(() => {
         closeMenus();
         if (!isEpg && player.nextVideo !== null) {
             nextVideo();
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, false, false);
         }
-    }, [isEpg, player.nextVideo, handleNextVideoNavigation]);
+    }, [isEpg, closeMenus, player.nextVideo, nextVideo, handleNextVideoNavigation]));
 
-    onShortcut('exit', () => {
+    useShortcut('exit', React.useCallback(() => {
         closeMenus();
         // When escExitFullscreen is enabled, FullscreenProvider handles the first
         // Escape press by leaving fullscreen. Only skip navigating back in that case,
@@ -913,17 +865,11 @@ const Player = () => {
             return;
         }
         navigate(-1);
-    }, [settings.escExitFullscreen, fullscreen]);
+    }, [closeMenus, settings.escExitFullscreen, fullscreen, navigate]));
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {
             finishDetailsHold();
-        }
-
-        if (menusOpen) {
-            clearTimeout(pressTimer.current);
-            pressTimer.current = null;
-            longPress.current = false;
         }
 
         const onKeyDown = (e) => {
@@ -931,12 +877,7 @@ const Player = () => {
             if (keyboardKey !== 'Space' || e.repeat) return;
             if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey) return;
 
-            longPress.current = false;
-
-            pressTimer.current = setTimeout(() => {
-                longPress.current = true;
-                onPlaybackSpeedChanged(2, true);
-            }, HOLD_DELAY);
+            startPlaybackSpeedHold('keyboard');
         };
 
         const onKeyUp = (e) => {
@@ -948,7 +889,10 @@ const Player = () => {
             }
 
             if (!keyboardKeys.includes('Space') && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
-            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (e.ctrlKey || e.metaKey || e.altKey) {
+                if (keyboardKeys.includes('Space')) finishPlaybackSpeedHold('keyboard');
+                return;
+            }
 
             if (keyboardKeys.includes('ArrowRight') || keyboardKeys.includes('ArrowLeft')) {
                 releaseKeyboardSeek();
@@ -957,11 +901,8 @@ const Player = () => {
                 return;
             }
             if (keyboardKeys.includes('Space')) {
-                clearTimeout(pressTimer.current);
-                pressTimer.current = null;
-                if (longPress.current) {
-                    onPlaybackSpeedChanged(playbackSpeed.current);
-                } else if (!menusOpen && video.state.paused !== null) {
+                const phase = finishPlaybackSpeedHold('keyboard');
+                if (phase === 'pending' && !menusOpen && video.state.paused !== null) {
                     if (video.state.paused) {
                         onPlayRequested();
                         setSeeking(false);
@@ -969,7 +910,6 @@ const Player = () => {
                         onPauseRequested();
                     }
                 }
-                longPress.current = false;
             }
         };
 
@@ -990,32 +930,17 @@ const Player = () => {
             if (menusOpen || detailsHold.current !== null) return;
             if (controlBarRef.current && controlBarRef.current.contains(e.target)) return;
 
-            longPress.current = false;
-
-            pressTimer.current = setTimeout(() => {
-                longPress.current = true;
-                onPlaybackSpeedChanged(2, true);
-            }, HOLD_DELAY);
+            startPlaybackSpeedHold('pointer');
         };
 
         const onMouseUp = (e) => {
             if (e.button !== 0) return;
 
-            clearTimeout(pressTimer.current);
-            pressTimer.current = null;
-
-            if (longPress.current) {
-                onPlaybackSpeedChanged(playbackSpeed.current);
-            }
+            finishPlaybackSpeedHold('pointer');
         };
 
         const onBlur = () => {
-            clearTimeout(pressTimer.current);
-            pressTimer.current = null;
-            if (longPress.current) {
-                onPlaybackSpeedChanged(playbackSpeed.current);
-                longPress.current = false;
-            }
+            cancelPlaybackSpeedHold();
             finishDetailsHold();
             flushKeyboardSeek();
             setImmersed(false);
@@ -1040,7 +965,7 @@ const Player = () => {
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('blur', onBlur);
         };
-    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold, cancelKeyboardSeek, flushKeyboardSeek, releaseKeyboardSeek]);
+    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold, cancelKeyboardSeek, flushKeyboardSeek, releaseKeyboardSeek, startPlaybackSpeedHold, finishPlaybackSpeedHold, cancelPlaybackSpeedHold]);
 
     React.useEffect(() => {
         video.events.on('error', onError);

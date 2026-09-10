@@ -16,6 +16,32 @@ const { formatEpgTimeRange } = require('stremio/common/EPG');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
+const VideoLabel = React.forwardRef(({ shouldScroll, ...props }, ref) => {
+    React.useEffect(() => {
+        if (shouldScroll && ref.current) {
+            // Keep selection scrolling inside the list. scrollIntoView also
+            // scrolls outer containers while a drawer is translated offscreen.
+            let container = ref.current.parentElement;
+            while (container && !['auto', 'scroll', 'overlay'].includes(getComputedStyle(container).overflowY)) {
+                container = container.parentElement;
+            }
+            if (container) {
+                const itemBounds = ref.current.getBoundingClientRect();
+                const listBounds = container.getBoundingClientRect();
+                const top = itemBounds.top < listBounds.top ? itemBounds.top - listBounds.top
+                    : Math.max(0, itemBounds.bottom - listBounds.bottom);
+                if (top !== 0) container.scrollBy({ top, behavior: 'smooth' });
+            }
+        }
+    }, [shouldScroll, ref]);
+
+    return <Button {...props} ref={ref} />;
+});
+
+VideoLabel.propTypes = {
+    shouldScroll: PropTypes.bool,
+};
+
 const Video = ({
     className,
     id,
@@ -123,28 +149,8 @@ const Video = ({
             :
             null;
 
-        React.useEffect(() => {
-            if (selected && ref.current) {
-                if ((progress && watched) || !watched) {
-                    // Keep selection scrolling inside the list. scrollIntoView also
-                    // scrolls outer containers while a drawer is translated offscreen.
-                    let container = ref.current.parentElement;
-                    while (container && !['auto', 'scroll', 'overlay'].includes(getComputedStyle(container).overflowY)) {
-                        container = container.parentElement;
-                    }
-                    if (container) {
-                        const itemBounds = ref.current.getBoundingClientRect();
-                        const listBounds = container.getBoundingClientRect();
-                        const top = itemBounds.top < listBounds.top ? itemBounds.top - listBounds.top
-                            : Math.max(0, itemBounds.bottom - listBounds.bottom);
-                        if (top !== 0) container.scrollBy({ top, behavior: 'smooth' });
-                    }
-                }
-            }
-        }, [selected]);
-
         return (
-            <Button {...props} ref={ref} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
+            <VideoLabel {...props} ref={ref} shouldScroll={selected && (!watched || !!progress)} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
                         <div className={styles['thumbnail-container']}>
@@ -241,9 +247,9 @@ const Video = ({
                         null
                 }
                 {children}
-            </Button>
+            </VideoLabel>
         );
-    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen]);
+    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen, endTime, isEpg, isNow, profile.settings.hideSpoilers, profile.settings.interfaceLanguage, season, startTime, t]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>

@@ -11,6 +11,10 @@ permissions:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    concurrency:
+      group: gh-pages-write
+      cancel-in-progress: false
+      queue: max
     steps:
       - name: Checkout
         uses: actions/checkout@v7
