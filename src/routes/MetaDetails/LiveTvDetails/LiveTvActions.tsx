@@ -9,10 +9,9 @@ type Props = {
     children?: React.ReactNode;
     inLibrary: boolean;
     onToggleLibrary: () => void;
-    onShowDetails?: () => void;
 };
 
-const LiveTvActions = ({ children, inLibrary, onToggleLibrary, onShowDetails }: Props) => {
+const LiveTvActions = ({ children, inLibrary, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
 
     return (
@@ -27,7 +26,6 @@ const LiveTvActions = ({ children, inLibrary, onToggleLibrary, onShowDetails }: 
                 role={'button'}
                 onClick={onToggleLibrary}
             />
-            {onShowDetails && <ActionButton className={styles['action-button']} icon={'details'} label={t('LIBRARY_DETAILS')} variant={'icon'} tooltip={true} role={'button'} onClick={onShowDetails} />}
         </div>
     );
 };
