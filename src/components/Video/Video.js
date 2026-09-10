@@ -15,6 +15,24 @@ const { usePlatform } = require('stremio/common/Platform');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
+const VideoLabel = React.forwardRef(({ shouldScroll, ...props }, ref) => {
+    React.useEffect(() => {
+        if (shouldScroll && ref.current) {
+            ref.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+            });
+        }
+    }, [shouldScroll, ref]);
+
+    return <Button {...props} ref={ref} />;
+});
+
+VideoLabel.propTypes = {
+    shouldScroll: PropTypes.bool,
+};
+
 const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, onSelect, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
     const profile = useProfile();
@@ -95,20 +113,8 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
     const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref, ...props }) {
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
 
-        React.useEffect(() => {
-            if (selected && ref.current) {
-                if ((progress && watched) || !watched) {
-                    ref.current.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest',
-                        inline: 'start'
-                    });
-                }
-            }
-        }, [selected]);
-
         return (
-            <Button {...props} ref={ref} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
+            <VideoLabel {...props} ref={ref} shouldScroll={selected && (!watched || !!progress)} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
                 {
                     typeof thumbnail === 'string' && thumbnail.length > 0 ?
                         <div className={styles['thumbnail-container']}>
@@ -190,7 +196,7 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
                         null
                 }
                 {children}
-            </Button>
+            </VideoLabel>
         );
     }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen]);
     const renderMenu = React.useMemo(() => function renderMenu() {

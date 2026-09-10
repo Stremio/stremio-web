@@ -1,11 +1,11 @@
 import { ShortcutsProvider, useShortcuts } from './Shortcuts';
 import { getKeyboardShortcutKey, getKeyboardShortcutKeys } from './keyboard';
-import onShortcut from './onShortcut';
+import useShortcut from './useShortcut';
 
 export {
     ShortcutsProvider,
     useShortcuts,
-    onShortcut,
+    useShortcut,
     getKeyboardShortcutKey,
     getKeyboardShortcutKeys,
 };
