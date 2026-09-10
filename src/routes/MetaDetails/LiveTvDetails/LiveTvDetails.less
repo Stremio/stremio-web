@@ -41,12 +41,13 @@
 
 .channel-page {
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-rows: minmax(min-content, 1fr) auto;
     flex: 1;
     min-width: 0;
     min-height: 0;
     padding: 0 clamp(1.5rem, 5vw, 6rem) max(2rem, var(--safe-area-inset-bottom));
     color: var(--primary-foreground-color);
+    overflow-y: auto;
 
     .hero {
         display: flex;
@@ -89,9 +90,6 @@
     .current-information {
         overflow: visible;
         h2 {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
             margin: 0.8rem 0 0;
             max-width: 17em;
             font-size: clamp(2rem, 5.2vh, 3.8rem);
@@ -114,10 +112,6 @@
     .content-rating {
         display: inline-flex;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.15rem 0.4rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 0.25rem;
         color: var(--primary-foreground-color);
         > img { max-width: 2rem; height: 1.2rem; object-fit: contain; }
     }
@@ -134,15 +128,25 @@
         > span { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: currentColor; }
     }
     .description {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
         max-width: 40rem;
         margin: 1rem 0 0;
         font-size: 0.95rem;
         line-height: 1.6;
         color: rgba(255, 255, 255, 0.7);
         &:empty { display: none; }
+    }
+    .genres {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        > span {
+            padding: 0.4rem 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 2rem;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.7rem;
+        }
     }
     .broadcast-progress {
         display: flex;
@@ -204,7 +208,6 @@
     .channel-page {
         .hero-content { gap: 0.75rem; }
         .current-information h2 { font-size: clamp(1.5rem, 4.8vh, 2.5rem); margin-top: 0.5rem; }
-        .description { -webkit-line-clamp: 1; }
     }
 }
 
@@ -221,14 +224,6 @@
             h1 { margin: 0; font-size: 0.9rem; }
         }
         .current-time { font-size: 0.7rem; }
-        .description, .broadcast-progress { display: none; }
-    }
-}
-
-@media (max-width: 700px) and (max-height: 650px) {
-    .channel-page {
-        .current-information h2 { -webkit-line-clamp: 1; }
-        .description, .broadcast-progress { display: none; }
     }
 }
 
@@ -242,7 +237,6 @@
             max-width: none;
         }
         .channel-header, .current-information { grid-column: 1; }
-        .current-information h2 { -webkit-line-clamp: 1; }
         .channel-actions { grid-column: 2; grid-row: 1 / span 2; }
     }
 }

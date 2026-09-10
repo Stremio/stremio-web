@@ -6,11 +6,10 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import Image from 'stremio/components/Image';
-import EpgProgramModal from 'stremio/components/EpgProgramModal';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import { XSMALL_WIDTH } from 'stremio/common/screenSizes';
-import { EPGProgram, epgDateKey, formatEpgTimeRange, getEpgProgress, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
+import { EPGProgram, formatEpgTimeRange, getEpgProgress, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
 import LiveTvActions from './LiveTvActions';
 import LiveTvPlayback from './LiveTvPlayback';
 import LiveTvSchedule from './LiveTvSchedule';
@@ -35,8 +34,6 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
     const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
     const now = useEpgNow(true);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
-    const [preview, setPreview] = useState<EPGProgram | null>(null);
-    const [previewOpen, setPreviewOpen] = useState(false);
     const channel = useMemo(() => ({
         id: meta.id, type: meta.type, name: meta.name, logo: meta.logo ?? meta.poster, deepLinks: meta.deepLinks,
     }), [meta.id, meta.type, meta.name, meta.logo, meta.poster, meta.deepLinks]);
@@ -49,12 +46,9 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
         ?? programs[programs.length - 1] ?? null;
     const progress = selected ? getEpgProgress(selected, now) : null;
     const artwork = selected?.thumbnail ?? meta.background;
-    const dateLabel = selected && epgDateKey(selected.startTime) !== epgDateKey(new Date(now))
-        ? selected.startTime.toLocaleDateString(i18n.language, { weekday: 'short', month: 'short', day: 'numeric' }) : null;
-    const openProgram = (program: EPGProgram) => {
-        setPreview(program);
-        setPreviewOpen(true);
-    };
+    const dateLabel = selected?.startTime.toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' });
+    const genres = selected?.genres?.length ? selected.genres
+        : selected?.links?.filter(({ category }) => category === 'Genres').map(({ name }) => name) ?? [];
     const renderChannelBackdrop = () => channel.logo ? <Image className={classNames(styles['backdrop-image'], styles['channel-artwork'])} src={channel.logo} alt={''} renderFallback={() => null} /> : null;
 
     useEffect(() => {
@@ -84,20 +78,21 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
                                         : <span className={styles['program-status']}>{selected.endTime.getTime() <= now ? t('AIRED') : t('UPCOMING')}</span>}
                                     {dateLabel && <span>{dateLabel}</span>}
                                     {selected && <span>{formatEpgTimeRange(selected.startTime, selected.endTime, i18n.language)}</span>}
-                                    {selected?.ratings?.filter((rating) => rating.value.trim()).map((rating, index) => <span key={`${rating.system}:${rating.value}:${index}`} className={styles['content-rating']} title={rating.system}>
-                                        {rating.icon && <Image src={rating.icon} alt={''} renderFallback={() => null} />}
-                                        {rating.value}
+                                    {selected?.runtime && <span>{selected.runtime}</span>}
+                                    {selected?.ratings?.filter((rating) => rating.value.trim()).map((rating, index) => <span key={`${rating.system}:${rating.value}:${index}`} className={styles['content-rating']} title={rating.system ? `${rating.system}: ${rating.value}` : rating.value}>
+                                        {rating.icon ? <Image src={rating.icon} alt={rating.value} renderFallback={() => rating.value} /> : rating.value}
                                     </span>)}
                                 </div>
                                 <h2>{selected?.title ?? t('LIVE_TV_NO_PROGRAM', { defaultValue: 'No programme information right now' })}</h2>
                             </div>
                             <p className={styles['description']}>{selected?.overview ?? meta.description ?? (programs.length === 0 ? t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' }) : null)}</p>
+                            {genres.length > 0 && <div className={styles['genres']}>{genres.map((genre) => <span key={genre}>{genre}</span>)}</div>}
                             {progress !== null && selected && <div className={styles['broadcast-progress']}>
                                 <div className={styles['progress-track']}><div style={{ width: `${progress}%` }} /></div>
                                 <span>{t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((selected.endTime.getTime() - now) / 60000) })}</span>
                             </div>}
                         </div>
-                        <LiveTvActions inLibrary={meta.inLibrary} onToggleLibrary={onToggleLibrary} onShowDetails={selected ? () => openProgram(selected) : undefined}>
+                        <LiveTvActions inLibrary={meta.inLibrary} onToggleLibrary={onToggleLibrary}>
                             {isMobile && <LiveTvPlayback streams={streams} mobile={true} />}
                         </LiveTvActions>
                     </div>
@@ -107,7 +102,6 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
                     {!isMobile && <LiveTvPlayback streams={streams} />}
                 </div>
             </div>
-            {preview && <EpgProgramModal program={programs.find((program) => program.id === preview.id) ?? preview} now={now} show={previewOpen} onCloseRequest={() => setPreviewOpen(false)} />}
         </div>
     );
 };
