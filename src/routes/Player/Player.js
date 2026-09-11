@@ -93,6 +93,95 @@ const Player = () => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
+    const videoContainerRef = video.containerRef;
+    const setPictureInPicture = video.setPictureInPicture;
+
+    const getVideoElement = React.useCallback(() => {
+        return videoContainerRef.current?.querySelector('video') ?? null;
+    }, [videoContainerRef]);
+    const shell = platform.shell;
+    const shellRef = React.useRef(shell);
+    shellRef.current = shell;
+    const nativeShellPictureInPictureSupported = shell.active && video.state.manifest?.name?.startsWith('ShellVideo') === true;
+    const browserVideoElement = getVideoElement();
+    const browserPictureInPictureSupported = browserVideoElement !== null &&
+        browserVideoElement.disablePictureInPicture !== true &&
+        typeof document !== 'undefined' &&
+        document.pictureInPictureEnabled === true &&
+        typeof document.exitPictureInPicture === 'function' &&
+        typeof HTMLVideoElement !== 'undefined' &&
+        typeof HTMLVideoElement.prototype.requestPictureInPicture === 'function';
+    const pictureInPictureSupported = nativeShellPictureInPictureSupported || browserPictureInPictureSupported;
+
+    const onPipEnableRequested = React.useCallback(() => {
+        if (nativeShellPictureInPictureSupported) {
+            shellRef.current.send('win-set-pip', { enabled: true });
+            return;
+        }
+        const videoElement = getVideoElement();
+        if (!browserPictureInPictureSupported || !videoElement || document.pictureInPictureElement === videoElement) {
+            return;
+        }
+        videoElement.requestPictureInPicture().catch((error) => {
+            console.error('Player PiP', error);
+        });
+    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported]);
+
+    const onPipDisableRequested = React.useCallback(() => {
+        if (nativeShellPictureInPictureSupported) {
+            shellRef.current.send('win-set-pip', { enabled: false });
+            return;
+        }
+        if (typeof document !== 'undefined' &&
+            typeof document.exitPictureInPicture === 'function' &&
+            document.pictureInPictureElement) {
+            document.exitPictureInPicture().catch((error) => {
+                console.error('Player PiP', error);
+            });
+        }
+    }, [nativeShellPictureInPictureSupported]);
+
+    React.useEffect(() => {
+        if (!nativeShellPictureInPictureSupported) {
+            return undefined;
+        }
+
+        const onShellPictureInPictureChanged = (data) => {
+            setPictureInPicture(data?.enabled === true);
+        };
+
+        const activeShell = shellRef.current;
+        activeShell.on('win-pip-changed', onShellPictureInPictureChanged);
+        return () => {
+            activeShell.off('win-pip-changed', onShellPictureInPictureChanged);
+            activeShell.send('win-set-pip', { enabled: false });
+            setPictureInPicture(false);
+        };
+    }, [nativeShellPictureInPictureSupported, setPictureInPicture, video.state.loaded]);
+
+    React.useEffect(() => {
+        const videoElement = getVideoElement();
+        if (nativeShellPictureInPictureSupported || !browserPictureInPictureSupported || !videoElement) {
+            return undefined;
+        }
+
+        const onEnterPictureInPicture = () => setPictureInPicture(true);
+        const onLeavePictureInPicture = () => setPictureInPicture(false);
+
+        videoElement.addEventListener('enterpictureinpicture', onEnterPictureInPicture);
+        videoElement.addEventListener('leavepictureinpicture', onLeavePictureInPicture);
+
+        return () => {
+            videoElement.removeEventListener('enterpictureinpicture', onEnterPictureInPicture);
+            videoElement.removeEventListener('leavepictureinpicture', onLeavePictureInPicture);
+            if (document.pictureInPictureElement === videoElement) {
+                document.exitPictureInPicture().catch((error) => {
+                    console.error('Player PiP cleanup', error);
+                });
+            }
+            setPictureInPicture(false);
+        };
+    }, [browserPictureInPictureSupported, getVideoElement, nativeShellPictureInPictureSupported, setPictureInPicture, video.state.loaded, video.state.manifest]);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
@@ -1041,6 +1130,8 @@ const Player = () => {
                 volume={video.state.volume}
                 muted={video.state.muted}
                 playbackSpeed={video.state.playbackSpeed}
+                pictureInPicture={video.state.pictureInPicture}
+                pictureInPictureSupported={pictureInPictureSupported}
                 subtitlesTracks={allSubtitleTracks}
                 audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
@@ -1064,6 +1155,8 @@ const Player = () => {
                 videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
+                onPipEnableRequested={onPipEnableRequested}
+                onPipDisableRequested={onPipDisableRequested}
                 onToggleSideDrawer={toggleSideDrawer}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
