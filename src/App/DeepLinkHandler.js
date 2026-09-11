@@ -8,7 +8,12 @@ const { default: toPath } = require('stremio-router/toPath');
 const DeepLinkHandler = () => {
     const navigate = useNavigate();
     const streamingServer = useStreamingServer();
+    const previousTorrentRef = React.useRef(null);
     React.useEffect(() => {
+        if (previousTorrentRef.current === streamingServer.torrent) {
+            return;
+        }
+        previousTorrentRef.current = streamingServer.torrent;
         if (streamingServer.torrent !== null) {
             const [, { type, content }] = streamingServer.torrent;
             if (type === 'Ready') {
@@ -18,7 +23,7 @@ const DeepLinkHandler = () => {
                 }
             }
         }
-    }, [streamingServer.torrent]);
+    }, [streamingServer.torrent, navigate]);
     return null;
 };
 

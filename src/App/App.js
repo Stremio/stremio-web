@@ -29,6 +29,7 @@ const App = () => {
     const goBack = useGoBack();
     const locationPath = createPath(useLocation());
     const previousPathRef = React.useRef(locationPath);
+    const appReadySentRef = React.useRef(false);
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -73,7 +74,7 @@ const App = () => {
                 args: Array.from(new Uint8Array(buffer))
             }
         });
-    }, []);
+    }, [core.transport]);
 
     useFileDropListener(TORRENT_FILE_TYPES, onTorrentDrop);
 
@@ -108,7 +109,7 @@ const App = () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
         };
-    }, []);
+    }, [services]);
 
     React.useEffect(() => {
         const onOpenMedia = (data) => {
@@ -128,12 +129,13 @@ const App = () => {
         };
 
         shell.on('open-media', onOpenMedia);
-        if (shell.state.initialized) {
+        if (shell.state.initialized && !appReadySentRef.current) {
+            appReadySentRef.current = true;
             shell.send('app-ready');
         }
 
         return () => shell.off('open-media', onOpenMedia);
-    }, [shell.state.initialized]);
+    }, [navigate, shell]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
@@ -147,7 +149,7 @@ const App = () => {
         if (profile.settings?.quitOnClose && shell.state.windowClosed) {
             shell.send('quit');
         }
-    }, [profile.settings, shell.state.windowClosed]);
+    }, [profile.settings, i18n, shell]);
 
     React.useEffect(() => {
         const onWindowFocus = () => {
@@ -184,7 +186,7 @@ const App = () => {
         return () => {
             window.removeEventListener('focus', onWindowFocus);
         };
-    }, []);
+    }, [core.transport]);
 
     return (
         <ServicesProvider services={services}>
