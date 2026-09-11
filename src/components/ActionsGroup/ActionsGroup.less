@@ -69,3 +69,15 @@
         }
     }
 }
+
+@media (pointer: coarse) {
+    .group-container {
+        .icon-container {
+            transition: scale 100ms ease-out;
+
+            &:active {
+                scale: 0.9;
+            }
+        }
+    }
+}
