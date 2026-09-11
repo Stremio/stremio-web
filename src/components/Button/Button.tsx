@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 import { createElement, forwardRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { LongPressEventType, useLongPress } from 'use-long-press';
 import styles from './Button.less';
@@ -26,6 +27,8 @@ type Props = {
 
 const Button = forwardRef(({ className, href, disabled, children, onLongPress, onDoubleClick, ...props }: Props, ref) => {
     const longPress = useLongPress(onLongPress!, { detect: LongPressEventType.Pointer });
+    const to = typeof href === 'string' && href.startsWith('#/') && typeof props.download !== 'string' ? href.slice(1) : null;
+    const component: React.ElementType = to !== null ? Link : typeof href === 'string' && href.length > 0 ? 'a' : 'div';
 
     const onKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
         if (typeof props.onKeyDown === 'function') {
@@ -56,13 +59,14 @@ const Button = forwardRef(({ className, href, disabled, children, onLongPress, o
     }, [props.onMouseDown]);
 
     return createElement(
-        typeof href === 'string' && href.length > 0 ? 'a' : 'div',
+        component,
         {
             tabIndex: 0,
             ...props,
             ref,
             className: classNames(className, styles['button-container'], { 'disabled': disabled }),
             href,
+            ...(to !== null ? { to } : {}),
             onKeyDown,
             onMouseDown,
             onDoubleClick,

@@ -3,9 +3,9 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const { useNavigate } = require('react-router');
+const { createPath, useLocation, useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Routes } = require('stremio-router');
+const { Routes, useGoBack } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, useFileDropListener, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
@@ -26,6 +26,9 @@ const App = () => {
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
     const navigate = useNavigate();
+    const goBack = useGoBack();
+    const locationPath = createPath(useLocation());
+    const previousPathRef = React.useRef(locationPath);
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -53,10 +56,14 @@ const App = () => {
                 break;
             }
             case 'navigateHistory':
-                navigate(combo === 0 ? -1 : 1);
+                if (combo === 0) {
+                    goBack();
+                } else {
+                    navigate(1);
+                }
                 break;
         }
-    }, [toggleShortcutModal, toggleGamepadModal]);
+    }, [toggleShortcutModal, toggleGamepadModal, navigate, goBack]);
 
     const onTorrentDrop = React.useCallback((file, buffer) => {
         core.transport.dispatch({
@@ -71,19 +78,15 @@ const App = () => {
     useFileDropListener(TORRENT_FILE_TYPES, onTorrentDrop);
 
     React.useEffect(() => {
-        let prevPath = window.location.hash.slice(1);
-        const onLocationHashChange = () => {
+        const prevPath = previousPathRef.current;
+        previousPathRef.current = locationPath;
+        if (prevPath !== locationPath) {
             core.transport.analytics({
                 event: 'LocationPathChanged',
                 args: { prevPath }
             });
-            prevPath = window.location.hash.slice(1);
-        };
-        window.addEventListener('hashchange', onLocationHashChange);
-        return () => {
-            window.removeEventListener('hashchange', onLocationHashChange);
-        };
-    }, []);
+        }
+    }, [locationPath, core.transport]);
 
     React.useEffect(() => {
         const onChromecastStateChange = () => {

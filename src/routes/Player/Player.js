@@ -13,6 +13,7 @@ const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
+const { useGoBack } = require('stremio-router');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -58,6 +59,7 @@ const Player = () => {
     }), [stream, streamTransportUrl, metaTransportUrl, type, id, videoId]);
     const [queryParams] = useSearchParams();
     const navigate = useNavigate();
+    const goBack = useGoBack();
     const { t } = useTranslation();
     const services = useServices();
     const core = useCore();
@@ -211,7 +213,7 @@ const Player = () => {
                     navigate(toPath(deepLinks.metaDetailsStreams), { replace: true });
                 }
             } else {
-                navigate(-1);
+                goBack();
             }
 
         } else {
@@ -221,7 +223,7 @@ const Player = () => {
                 navigate(toPath(deepLinks.metaDetailsStreams), { replace: true });
             }
         }
-    }, []);
+    }, [navigate, goBack]);
 
     const onEnded = React.useCallback(() => {
         ended();
@@ -231,9 +233,9 @@ const Player = () => {
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, true);
         } else {
-            navigate(-1);
+            goBack();
         }
-    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
+    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation, ended, nextVideo, goBack]);
 
     const onError = React.useCallback((error) => {
         console.error('Player', error);
@@ -823,8 +825,8 @@ const Player = () => {
         if (settings.escExitFullscreen && fullscreen) {
             return;
         }
-        navigate(-1);
-    }, [closeMenus, settings.escExitFullscreen, fullscreen, navigate]));
+        goBack();
+    }, [closeMenus, settings.escExitFullscreen, fullscreen, goBack]));
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {
