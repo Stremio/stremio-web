@@ -71,7 +71,7 @@ const ServicesToaster = () => {
             core.off('error', onCoreError);
             filedrop.off('*', onFileDrop);
         };
-    }, []);
+    }, [core, filedrop, toast]);
     return null;
 };
 
