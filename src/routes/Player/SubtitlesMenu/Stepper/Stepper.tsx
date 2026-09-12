@@ -4,6 +4,11 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
 import { useInterval, useTimeout } from 'stremio/common';
+import {
+    getSubtitleDelayStepMultiplier,
+    SUBTITLES_DELAY_REPEAT_DELAY_MS,
+    SUBTITLES_DELAY_REPEAT_INTERVAL_MS,
+} from '../../subtitleDelay';
 import styles from './Stepper.less';
 
 const clamp = (value: number, min?: number, max?: number) => {
@@ -21,16 +26,19 @@ type Props = {
     min?: number,
     max?: number,
     disabled?: boolean,
+    accelerate?: boolean,
     onChange: (value: number) => void,
 };
 
-const Stepper = ({ className, label, value, unit, step, min, max, disabled, onChange }: Props) => {
+const Stepper = ({ className, label, value, unit, step, min, max, disabled, accelerate = false, onChange }: Props) => {
     const { t } = useTranslation();
 
     const localValue = useRef(value);
+    const holdStartedAt = useRef(0);
+    const hasRepeated = useRef(false);
 
-    const interval = useInterval(100);
-    const timeout = useTimeout(250);
+    const interval = useInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS);
+    const timeout = useTimeout(SUBTITLES_DELAY_REPEAT_DELAY_MS);
 
     const cancel = () => {
         interval.cancel();
@@ -51,27 +59,45 @@ const Stepper = ({ className, label, value, unit, step, min, max, disabled, onCh
 
     const updateValue = useCallback((delta: number) => {
         onChange(clamp(localValue.current + delta, min, max));
-    }, [onChange]);
+    }, [max, min, onChange]);
+
+    const startRepeating = useCallback((direction: number) => {
+        cancel();
+        holdStartedAt.current = performance.now();
+        hasRepeated.current = false;
+        let repeatValue = localValue.current;
+
+        timeout.start(() => interval.start(() => {
+            if (!accelerate) {
+                updateValue(direction * step);
+                return;
+            }
+
+            hasRepeated.current = true;
+            const heldFor = performance.now() - holdStartedAt.current;
+            const multiplier = getSubtitleDelayStepMultiplier(heldFor);
+            repeatValue = clamp(repeatValue + direction * step * multiplier, min, max);
+            onChange(repeatValue);
+        }));
+    }, [accelerate, max, min, onChange, step, updateValue]);
 
     const onDecrementMouseDown = useCallback(() => {
-        cancel();
-        timeout.start(() => interval.start(() => updateValue(-step)));
-    }, [updateValue]);
+        startRepeating(-1);
+    }, [startRepeating]);
 
     const onDecrementMouseUp = useCallback(() => {
         cancel();
-        updateValue(-step);
-    }, [updateValue]);
+        if (!accelerate || !hasRepeated.current) updateValue(-step);
+    }, [accelerate, step, updateValue]);
 
     const onIncrementMouseDown = useCallback(() => {
-        cancel();
-        timeout.start(() => interval.start(() => updateValue(step)));
-    }, [updateValue]);
+        startRepeating(1);
+    }, [startRepeating]);
 
     const onIncrementMouseUp = useCallback(() => {
         cancel();
-        updateValue(step);
-    }, [updateValue]);
+        if (!accelerate || !hasRepeated.current) updateValue(step);
+    }, [accelerate, step, updateValue]);
 
     useEffect(() => {
         localValue.current = value;
