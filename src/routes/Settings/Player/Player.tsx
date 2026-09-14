@@ -21,6 +21,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         assSubtitlesStylingToggle,
         audioLanguageSelect,
         surroundSoundToggle,
+        forceStereoToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
@@ -86,6 +87,15 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         {...surroundSoundToggle}
                     />
                 </Option>
+                {
+                    shell.active &&
+                        <Option label={'SETTINGS_FORCE_STEREO'}>
+                            <Toggle
+                                tabIndex={-1}
+                                {...forceStereoToggle}
+                            />
+                        </Option>
+                }
             </Category>
             <Category icon={'remote'} label={'SETTINGS_SECTION_CONTROLS'}>
                 <Option label={'SETTINGS_SEEK_KEY'}>

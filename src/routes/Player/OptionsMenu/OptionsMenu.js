@@ -9,7 +9,7 @@ const { default: usePlayOnDevice } = require('../usePlayOnDevice');
 const Option = require('./Option');
 const styles = require('./styles');
 
-const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }, ref) => {
+const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId, forceStereoDownmixAvailable, forceStereoDownmix, onForceStereoDownmixChanged }, ref) => {
     const { t } = useTranslation();
     const platform = usePlatform();
     const toast = useToast();
@@ -139,6 +139,17 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
                     null
             }
             {
+                forceStereoDownmixAvailable ?
+                    <Option
+                        icon={'audio-tracks'}
+                        label={`${t('PLAYER_FORCE_STEREO_DOWNMIX', { defaultValue: 'Force stereo downmix' })}: ${forceStereoDownmix ? t('ON', { defaultValue: 'On' }) : t('OFF', { defaultValue: 'Off' })}`}
+                        selected={forceStereoDownmix}
+                        onClick={() => onForceStereoDownmixChanged(!forceStereoDownmix)}
+                    />
+                    :
+                    null
+            }
+            {
                 streamingUrl && externalDevices.map(({ id, name }) => (
                     <Option
                         key={id}
@@ -160,6 +171,9 @@ OptionsMenu.propTypes = {
     playbackDevices: PropTypes.array,
     extraSubtitlesTracks: PropTypes.array,
     selectedExtraSubtitlesTrackId: PropTypes.string,
+    forceStereoDownmixAvailable: PropTypes.bool,
+    forceStereoDownmix: PropTypes.bool,
+    onForceStereoDownmixChanged: PropTypes.func,
 };
 
 module.exports = OptionsMenu;

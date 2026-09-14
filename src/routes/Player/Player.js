@@ -39,6 +39,8 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
+const { fingerprintStream, readRememberedStereoDownmix, rememberStereoDownmix } = require('./audioOutputPreference');
+const { GLOBAL_FORCE_STEREO_CHANGED_EVENT, readGlobalForceStereo } = require('./globalAudioPreference');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
@@ -70,6 +72,9 @@ const Player = () => {
     const profile = useProfile();
     const [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
+    const [forceStereoByDefault, setForceStereoByDefault] = React.useState(readGlobalForceStereo);
+    const forceStereoByDefaultRef = React.useRef(forceStereoByDefault);
+    forceStereoByDefaultRef.current = forceStereoByDefault;
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
@@ -84,7 +89,21 @@ const Player = () => {
     const [casting, setCasting] = React.useState(() => {
         return services.chromecast.active && services.chromecast.transport.getCastState() === cast.framework.CastState.CONNECTED;
     });
+    const isLocalShellPlayback = platform.shell.active && !casting;
     const playbackDevices = React.useMemo(() => streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Ready' ? streamingServer.playbackDevices.content : [], [streamingServer]);
+
+    React.useEffect(() => {
+        const onGlobalForceStereoChanged = (event) => {
+            if (event.detail === true || event.detail === false) {
+                setForceStereoByDefault(event.detail);
+            }
+        };
+
+        window.addEventListener(GLOBAL_FORCE_STEREO_CHANGED_EVENT, onGlobalForceStereoChanged);
+        return () => {
+            window.removeEventListener(GLOBAL_FORCE_STEREO_CHANGED_EVENT, onGlobalForceStereoChanged);
+        };
+    }, []);
 
     const playerRef = React.useRef(null);
     const bufferingRef = React.useRef();
@@ -183,11 +202,30 @@ const Player = () => {
         toggleSubtitlesMenu,
     });
 
+    // Player model updates (pause state, subtitle preference, watch progress, etc.)
+    // can replace nested objects without changing the stream being played. Keep
+    // those updates from being interpreted as a request to reload the stream.
+    const streamSubtitlesKey = React.useMemo(() => JSON.stringify(streamSubtitles), [streamSubtitles]);
+    const streamLoadKey = React.useMemo(() => JSON.stringify({
+        selectedStreamUrl: player.selected?.stream?.url ?? null,
+        selectedStreamType: player.selected?.stream?.type ?? null,
+        selectedStreamInfoHash: player.selected?.stream?.infoHash ?? null,
+        selectedStreamFileIdx: player.selected?.stream?.fileIdx ?? null,
+        resolvedStreamType: player.stream?.type ?? null,
+        resolvedStreamUrl: player.stream?.type === 'Ready' ? player.stream.content?.url ?? null : null,
+        subtitles: streamSubtitlesKey,
+        season: player.seriesInfo?.season ?? null,
+        episode: player.seriesInfo?.episode ?? null,
+    }), [player.selected?.stream?.url, player.selected?.stream?.type, player.selected?.stream?.infoHash, player.selected?.stream?.fileIdx, player.stream?.type, player.stream?.content?.url, streamSubtitlesKey, player.seriesInfo?.season, player.seriesInfo?.episode]);
+
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
     const requestedVideoScale = React.useRef(null);
     const persistedVideoScale = React.useRef({ stream: null, scale: null });
     const [error, setError] = React.useState(null);
+    const [forceStereoDownmix, setForceStereoDownmix] = React.useState(forceStereoByDefault);
+    const [audioOutputFingerprint, setAudioOutputFingerprint] = React.useState(null);
+    const [audioOutputReady, setAudioOutputReady] = React.useState(false);
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
@@ -357,6 +395,19 @@ const Player = () => {
         });
     }, [streamStateChanged]);
 
+    const forceStereoDownmixAvailable = isLocalShellPlayback &&
+        audioOutputReady &&
+        video.state.manifest?.name?.startsWith('ShellVideo');
+    const onForceStereoDownmixChanged = React.useCallback((enabled) => {
+        if (!forceStereoDownmixAvailable) return;
+
+        video.setForceStereoDownmix(enabled);
+        setForceStereoDownmix(enabled);
+        if (audioOutputFingerprint !== null) {
+            rememberStereoDownmix(audioOutputFingerprint, enabled);
+        }
+    }, [audioOutputFingerprint, forceStereoDownmixAvailable, video.setForceStereoDownmix]);
+
     const onDismissNextVideoPopup = React.useCallback(() => {
         setNextVideoPopupDismissal({ stream: video.state.stream });
     }, [video.state.stream]);
@@ -522,6 +573,7 @@ const Player = () => {
                     0,
                 forceTranscoding: forceTranscoding || casting,
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
+                forceStereoDownmix: isLocalShellPlayback ? forceStereoByDefaultRef.current : undefined,
                 hardwareDecoding: settings.hardwareDecoding,
                 assSubtitlesStyling: settings.assSubtitlesStyling,
                 gpuVideoProcessing: settings.gpuVideoProcessing && platform.shell.capabilities.gpuVideoProcessing,
@@ -540,7 +592,41 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
+    }, [streamingServer.baseUrl, streamingServer.settings?.type, streamingServer.selected?.transportUrl, streamLoadKey, forceTranscoding, casting, isLocalShellPlayback, settings.surroundSound, settings.hardwareDecoding, settings.assSubtitlesStyling, settings.gpuVideoProcessing, settings.videoMode, platform.name, platform.shell.active, platform.shell.capabilities.gpuVideoProcessing, services.chromecast.active, cancelKeyboardSeek]);
+
+    React.useEffect(() => {
+        let cancelled = false;
+        const selectedStreamForAudioOutput = player.selected?.stream;
+
+        setAudioOutputFingerprint(null);
+        setAudioOutputReady(false);
+        setForceStereoDownmix(forceStereoByDefaultRef.current);
+
+        if (!isLocalShellPlayback || !selectedStreamForAudioOutput) {
+            return () => {
+                cancelled = true;
+            };
+        }
+
+        fingerprintStream(selectedStreamForAudioOutput).then((streamFingerprint) => {
+            if (cancelled) return;
+
+            setAudioOutputFingerprint(streamFingerprint);
+            const rememberedDownmix = readRememberedStereoDownmix(streamFingerprint);
+            setForceStereoDownmix(forceStereoByDefaultRef.current || rememberedDownmix === true);
+            setAudioOutputReady(true);
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [streamLoadKey, isLocalShellPlayback]);
+
+    React.useEffect(() => {
+        if (audioOutputReady && video.state.loaded && video.state.manifest?.name?.startsWith('ShellVideo')) {
+            video.setForceStereoDownmix(forceStereoDownmix);
+        }
+    }, [audioOutputReady, forceStereoDownmix, video.state.loaded, video.state.manifest, video.setForceStereoDownmix]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
@@ -1011,6 +1097,9 @@ const Player = () => {
                     playbackDevices={playbackDevices}
                     extraSubtitlesTracks={extraSubtitleTracks}
                     selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
+                    forceStereoDownmixAvailable={forceStereoDownmixAvailable}
+                    forceStereoDownmix={forceStereoDownmix}
+                    onForceStereoDownmixChanged={onForceStereoDownmixChanged}
                 />
             </ContextMenu>
             <HorizontalNavBar
@@ -1137,6 +1226,9 @@ const Player = () => {
                     playbackDevices={playbackDevices}
                     extraSubtitlesTracks={extraSubtitleTracks}
                     selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
+                    forceStereoDownmixAvailable={forceStereoDownmixAvailable}
+                    forceStereoDownmix={forceStereoDownmix}
+                    onForceStereoDownmixChanged={onForceStereoDownmixChanged}
                 />
             </Transition>
         </div>

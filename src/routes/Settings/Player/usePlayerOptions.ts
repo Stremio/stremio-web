@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
 import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
+import { readGlobalForceStereo, rememberGlobalForceStereo } from '../../Player/globalAudioPreference';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
 
@@ -9,6 +10,7 @@ const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
+    const [forceStereo, setForceStereo] = useState(readGlobalForceStereo);
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
         value: code,
@@ -156,6 +158,15 @@ const usePlayerOptions = (profile: Profile) => {
             });
         }
     }), [profile.settings]);
+
+    const forceStereoToggle = useMemo(() => ({
+        checked: forceStereo,
+        onClick: () => {
+            const nextForceStereo = !forceStereo;
+            setForceStereo(nextForceStereo);
+            rememberGlobalForceStereo(nextForceStereo);
+        }
+    }), [forceStereo]);
 
     const seekTimeDurationSelect = useMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
@@ -376,6 +387,7 @@ const usePlayerOptions = (profile: Profile) => {
         assSubtitlesStylingToggle,
         audioLanguageSelect,
         surroundSoundToggle,
+        forceStereoToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,

@@ -122,6 +122,10 @@ const useVideo = () => {
         setProp('selectedAudioTrackId', id);
     }, [setProp]);
 
+    const setForceStereoDownmix = React.useCallback((enabled) => {
+        setProp('forceStereoDownmix', enabled);
+    }, [setProp]);
+
     const setSubtitlesTrack = React.useCallback((id) => {
         setProp('selectedSubtitlesTrackId', id);
         setProp('selectedExtraSubtitlesTrackId', null);
@@ -250,6 +254,7 @@ const useVideo = () => {
         setTime,
         setPlaybackSpeed,
         setAudioTrack,
+        setForceStereoDownmix,
         setSubtitlesTrack,
         setSubtitlesDelay,
         setSubtitlesSize,
