@@ -16,6 +16,7 @@ const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavB
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: EpgGuide } = require('./EpgGuide');
+const { default: EpgDaySelector } = require('./EpgGuide/EpgDaySelector');
 const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal');
 const { useEpgNow, epgDateKey, epgDayWindow, parseEpgDate, toEpgProgram } = require('stremio/common/EPG');
 const styles = require('./styles');
@@ -52,6 +53,8 @@ const Discover = () => {
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
     const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
+
+    const compactEpgDate = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px) and (max-height: 500px) and (orientation: landscape)`);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -283,7 +286,6 @@ const Discover = () => {
                     loadNextPage={epgLoadNextPage}
                     now={epgNow}
                     onProgramSelect={onProgramSelect}
-                    onDayChange={onEpgDayChange}
                 />
             );
         }
@@ -398,7 +400,7 @@ const Discover = () => {
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
-                    <div className={styles['selectable-inputs-container']}>
+                    <div className={classnames(styles['selectable-inputs-container'], { [styles['epg-inputs']]: isEpgLayout })}>
                         {selectInputs.map(({ title, options, value, onSelect }, index) => (
                             <MultiselectMenu
                                 key={index}
@@ -410,6 +412,12 @@ const Discover = () => {
                             />
                         ))}
                         <div className={styles['filter-container']}>
+                            {isEpgLayout && compactEpgDate && <EpgDaySelector
+                                compact={true}
+                                selectedDate={liveTvGuide?.selected?.date ?? epgDate}
+                                today={liveTvGuide?.selectable?.today ?? null}
+                                onDayChange={onEpgDayChange}
+                            />}
                             <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openInputsModal}>
                                 <Icon className={styles['filter-icon']} name={'filters'} />
                             </Button>
@@ -426,6 +434,11 @@ const Discover = () => {
                             :
                             null
                     }
+                    {isEpgLayout && !compactEpgDate && <EpgDaySelector
+                        selectedDate={liveTvGuide?.selected?.date ?? epgDate}
+                        today={liveTvGuide?.selectable?.today ?? null}
+                        onDayChange={onEpgDayChange}
+                    />}
                     {renderCatalogContent()}
                 </div>
                 {renderMetaPreview()}
@@ -469,7 +482,7 @@ const Discover = () => {
             }
             {
                 inputsModalOpen ?
-                    <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
+                    <ModalDialog title={t('CATALOG_FILTERS')} className={classnames(styles['selectable-inputs-modal'], { [styles['epg-inputs-modal']]: isEpgLayout })} onCloseRequest={closeInputsModal}>
                         {selectInputs.map(({ title, options, value, onSelect }, index) => (
                             <MultiselectMenu
                                 key={index}

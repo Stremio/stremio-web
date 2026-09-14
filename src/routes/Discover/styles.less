@@ -11,6 +11,10 @@
     multiselect-label: label;
 }
 
+:import('~stremio/components/MultiselectMenu/MultiselectMenu.less') {
+    multiselect-button: multiselect-button;
+}
+
 :import('~stremio/components/ModalDialog/styles.less') {
     selectable-inputs-modal-container: modal-dialog-container;
     selectable-inputs-modal-content: modal-dialog-content;
@@ -441,6 +445,52 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media @phone-landscape {
+    .discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
+        align-items: center;
+        gap: 0.75rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        .select-input {
+            min-width: 0;
+
+            .multiselect-button { padding-right: 0.75rem; padding-left: 0.75rem; }
+            &:not(:first-child) { margin-left: 0; }
+            &:nth-child(2) {
+                display: block;
+
+                &~.filter-container .filter-button { display: none; }
+            }
+
+            &:nth-child(n+3) {
+                display: none;
+
+                &~.filter-container .filter-button { display: flex; }
+            }
+        }
+
+        .filter-container {
+            flex: none;
+            gap: 0.75rem;
+            margin-left: auto;
+            overflow: visible;
+
+            .filter-button { margin-left: 0; }
+        }
+    }
+
+    .selectable-inputs-modal.epg-inputs-modal .selectable-inputs-modal-container .selectable-inputs-modal-content .select-input {
+        &:nth-child(2) { display: none; }
+
+        &:nth-child(n+3) {
+            display: flex;
+
+            &:not(:last-child) { margin-bottom: 1rem; }
         }
     }
 }
