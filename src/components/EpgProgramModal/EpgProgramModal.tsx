@@ -50,6 +50,9 @@ const EpgProgramModal = ({ program, now, show, onCloseRequest, channelHref }: Pr
                         <Icon name={'clock'} className={styles['time-icon']} />
                         <span>{formatEpgTimeRange(program.startTime, program.endTime, i18n.language)}</span>
                         {program.runtime && <span className={styles['runtime']}>{program.runtime}</span>}
+                        {program.ratings?.filter((rating) => rating.value.trim()).map((rating, index) => <span key={`${rating.system}:${rating.value}:${index}`} className={styles['content-rating']} title={rating.system ? `${rating.system}: ${rating.value}` : rating.value}>
+                            {rating.icon ? <Image src={rating.icon} alt={rating.value} renderFallback={() => rating.value} /> : rating.value}
+                        </span>)}
                     </div>
                     {progress !== null && <div className={styles['progress']}><div style={{ width: `${progress}%` }} /></div>}
                     {program.overview && <p className={styles['description']}>{program.overview}</p>}
