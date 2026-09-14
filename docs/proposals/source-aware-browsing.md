@@ -1,6 +1,6 @@
 # Show source availability before opening a movie
 
-Status: proposal for maintainer discussion. This document does not change application behavior.
+Status: draft design with a first implementation for review. The broad Sources found browsing mode below remains a proposal. The code currently adds an opt-in check for one selected movie in Discover; see [implementation and review guide](../source-check-review.md) for the delivered scope and dependencies.
 
 ## The problem
 
@@ -149,7 +149,7 @@ Core validation should cover classification precedence, request caps, deduplicat
 
 For web implementation, follow the repository's test-file policy, run lint, existing tests, translation scanning, and a production build. Manually exercise desktop and narrow layouts, keyboard navigation, back navigation, offline recovery, and addon reconfiguration. Include screenshots or a recording in the implementation PR. Record observed request counts against the stated budgets.
 
-For this documentation PR, validation is limited to checking the referenced source paths, reviewing the state rules against the current code, and checking the diff for whitespace errors. No runtime behavior or performance has been implemented or tested here.
+The implementation and its validation are tracked separately in the [review guide](../source-check-review.md). The acceptance table above describes the complete proposal, including work not yet implemented.
 
 ## Related discussion and decisions needed
 

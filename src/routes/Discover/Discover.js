@@ -12,6 +12,8 @@ const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const styles = require('./styles');
+const { default: SourceCheckDialog } = require('./SourceCheckDialog');
+const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
 
@@ -30,6 +32,29 @@ const Discover = () => {
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
+    const [checkSources, setCheckSources] = React.useState(false);
+    const [sourceCheck, setSourceCheck] = React.useState(null);
+    const sourceCheckTrigger = React.useRef(null);
+    const closeSourceCheck = React.useCallback(() => {
+        setSourceCheck(null);
+        const trigger = sourceCheckTrigger.current;
+        requestAnimationFrame(() => {
+            if (trigger?.isConnected) trigger.focus();
+        });
+    }, []);
+    const checkBeforeNavigation = React.useCallback((event) => {
+        if (!checkSources || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        const link = event.target.closest('a');
+        if (!link || !event.currentTarget.contains(link) || (link.target && link.target !== '_self')) return;
+        const href = link.getAttribute('href');
+        const movie = discover.catalog?.content.type === 'Ready' && discover.catalog.content.content.find((item) =>
+            item.type === 'movie' && (getMetaDetailsHref(item.deepLinks) === href || item.deepLinks.player === href));
+        if (!movie) return;
+        event.preventDefault();
+        event.stopPropagation();
+        sourceCheckTrigger.current = link;
+        setSourceCheck({ id: movie.id, name: movie.name, href });
+    }, [checkSources, discover.catalog]);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -129,7 +154,7 @@ const Discover = () => {
     }, [discover.selected]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
-            <div className={styles['discover-content']}>
+            <div className={styles['discover-content']} onClickCapture={checkBeforeNavigation}>
                 <div className={styles['catalog-container']}>
                     <div className={styles['selectable-inputs-container']}>
                         {selectInputs.map(({ title, options, value, onSelect }, index) => (
@@ -147,6 +172,13 @@ const Discover = () => {
                                 <Icon className={styles['filter-icon']} name={'filters'} />
                             </Button>
                         </div>
+                    </div>
+                    <div className={styles['source-check-control']}>
+                        <label>
+                            <input type={'checkbox'} checked={checkSources} onChange={(event) => setCheckSources(event.target.checked)} aria-describedby={'source-check-privacy'} />
+                            {t('SOURCE_CHECK_ENABLE')}
+                        </label>
+                        <p id={'source-check-privacy'}>{t('SOURCE_CHECK_PRIVACY')}</p>
                     </div>
                     {
                         discover.catalog !== null && !discover.catalog.installed ?
@@ -235,6 +267,7 @@ const Discover = () => {
                             null
                 }
             </div>
+            {sourceCheck && <SourceCheckDialog {...sourceCheck} onClose={closeSourceCheck} />}
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>

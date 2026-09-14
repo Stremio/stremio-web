@@ -1,0 +1,30 @@
+.content {
+    color: var(--primary-foreground-color);
+    max-width: 34rem;
+    padding-bottom: 1.5rem;
+
+    p {
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    > * {
+        padding: 0.75rem 1rem;
+        border: 0;
+        border-radius: var(--border-radius);
+        color: var(--primary-foreground-color);
+        background: var(--overlay-color);
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: 2px solid var(--primary-foreground-color);
+            outline-offset: 2px;
+        }
+    }
+}
