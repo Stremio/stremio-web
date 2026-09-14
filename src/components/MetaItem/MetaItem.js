@@ -16,7 +16,7 @@ const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHr
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, logo, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, posterOverlay, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
     const { t } = useTranslation();
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
@@ -109,20 +109,8 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                                 :
                                 null
                         }
-                        {
-                            typeof logo === 'string' && logo.length > 0 ?
-                                <div className={styles['logo-layer']}>
-                                    <Image
-                                        className={styles['logo']}
-                                        src={logo}
-                                        alt={' '}
-                                        renderFallback={() => null}
-                                    />
-                                </div>
-                                :
-                                null
-                        }
                     </div>
+                    {posterOverlay}
                     {
                         onPlayClick ?
                             <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={playOnClick}>
@@ -209,6 +197,7 @@ MetaItem.propTypes = {
     poster: PropTypes.string,
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     posterChangeCursor: PropTypes.bool,
+    posterOverlay: PropTypes.node,
     progress: PropTypes.number,
     newVideos: PropTypes.number,
     options: PropTypes.array,
@@ -225,8 +214,7 @@ MetaItem.propTypes = {
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
     watched: PropTypes.bool,
-    live: PropTypes.bool,
-    logo: PropTypes.string
+    live: PropTypes.bool
 };
 
 module.exports = MetaItem;
