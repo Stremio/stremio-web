@@ -107,8 +107,7 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                 <div className={styles['zoom-controls']} aria-hidden={view !== 'timeline'}>
                     <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_OUT', { defaultValue: 'Zoom out' })} aria-disabled={!canZoomOut} tabIndex={canZoomOut ? 0 : -1} disabled={!canZoomOut} onClick={() => zoom(0.5)}><span className={styles['zoom-icon']} aria-hidden={'true'} /></Button>
                     <Button role={'button'} aria-label={t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })} onClick={() => selected && focus(selected, true)}>
-                        <Icon className={styles['fit-icon']} name={'maximize'} />
-                        <span className={styles['fit-label']}>{t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })}</span>
+                        {t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })}
                     </Button>
                     <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_IN', { defaultValue: 'Zoom in' })} aria-disabled={!canZoomIn} tabIndex={canZoomIn ? 0 : -1} disabled={!canZoomIn} onClick={() => zoom(2)}><span className={classNames(styles['zoom-icon'], styles['zoom-in'])} aria-hidden={'true'} /></Button>
                 </div>

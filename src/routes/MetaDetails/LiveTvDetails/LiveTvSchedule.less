@@ -40,8 +40,6 @@
 }
 .navigation { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
 .zoom-controls[aria-hidden='true'] { visibility: hidden; }
-.fit-icon { display: none; }
-.fit-label { font-size: inherit; }
 .zoom-icon {
     position: relative;
     width: 1rem;
@@ -249,10 +247,8 @@
     .schedule { display: flex; flex-direction: column; gap: 0.85rem; height: 100%; overflow: hidden; }
     .schedule-header, .navigation { flex: none; }
     .schedule-header { flex-wrap: nowrap; margin: 0; > h2 { font-size: 1.05rem; } }
-    .navigation { order: 1; flex-wrap: nowrap; margin: 0; }
+    .navigation { order: 1; margin: 0; }
     .view-controls, .program-navigation, .zoom-controls { > [role='button'] { padding: 0.5rem; font-size: 0.85rem; } }
-    .fit-label { display: none; }
-    .fit-icon { display: block; }
     .agenda, .schedule-viewport { flex: 1; min-height: 0; height: auto; }
     .schedule-viewport { padding-bottom: 0.35rem; }
     .timeline { display: flex; flex-direction: column; height: 100%; min-height: 6.5rem; }
