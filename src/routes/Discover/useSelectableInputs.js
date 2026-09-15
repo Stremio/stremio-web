@@ -8,6 +8,8 @@ const { default: toPath } = require('stremio-router/toPath');
 const mapSelectableInputs = (discover, t, navigate) => {
     const selectedType = discover.selectable.types.find(({ selected }) => selected);
     const typeSelect = {
+        id: 'type',
+        label: t.string('TYPE'),
         options: discover.selectable.types
             .map(({ type, deepLinks }) => ({
                 value: deepLinks.discover,
@@ -25,10 +27,13 @@ const mapSelectableInputs = (discover, t, navigate) => {
     };
     const selectedCatalog = discover.selectable.catalogs.find(({ selected }) => selected);
     const catalogSelect = {
+        id: 'catalog',
+        label: t.string('CATALOG'),
         options: discover.selectable.catalogs
             .map(({ id, name, addon, deepLinks }) => ({
                 value: deepLinks.discover,
                 label: t.catalogTitle({ addon, id, name }),
+                description: addon.manifest.name,
                 title: `${name} (${addon.manifest.name})`
             })),
         value: selectedCatalog ?
@@ -49,9 +54,13 @@ const mapSelectableInputs = (discover, t, navigate) => {
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => {
         const selectedExtra = options.find(({ selected }) => selected);
         return {
+            id: `extra:${name}`,
+            label: t.stringWithPrefix(name.toUpperCase(), '', name.charAt(0).toUpperCase() + name.slice(1)),
+            active: typeof selectedExtra?.value === 'string',
             isRequired: isRequired,
             options: options.map(({ value, deepLinks }) => ({
                 label: typeof value === 'string' ? t.string(value) : t.string('NONE'),
+                default: value === null,
                 value: JSON.stringify({
                     href: deepLinks.discover,
                     value

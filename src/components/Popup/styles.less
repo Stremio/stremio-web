@@ -9,17 +9,21 @@
 
     position: relative;
     overflow: visible;
+}
 
+.label-container .menu-container, .portal-menu {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+    visibility: hidden;
+    border-radius: var(--border-radius);
+    background-color: var(--modal-background-color);
+    box-shadow: var(--outer-glow);
+    cursor: auto;
+}
+
+.label-container {
     .menu-container {
-        position: absolute;
-        z-index: 1;
-        overflow: hidden;
-        visibility: hidden;
-        border-radius: var(--border-radius);
-        background-color: var(--modal-background-color);
-        box-shadow: var(--outer-glow);
-        cursor: auto;
-
         &.menu-direction-top-left {
             top: initial;
             right: 0;
@@ -52,4 +56,17 @@
             visibility: visible;
         }
     }
+}
+
+.portal-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    padding: max(0.5rem, var(--safe-area-inset-top)) max(0.5rem, var(--safe-area-inset-right)) max(0.5rem, var(--safe-area-inset-bottom)) max(0.5rem, var(--safe-area-inset-left));
+}
+
+.portal-menu {
+    width: max-content;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }

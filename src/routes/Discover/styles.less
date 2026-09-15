@@ -11,9 +11,17 @@
     multiselect-label: label;
 }
 
+:import('~stremio/components/MultiselectMenu/Label/Label.less') {
+    multiselect-button: button;
+}
+
 :import('~stremio/components/ModalDialog/styles.less') {
     selectable-inputs-modal-container: modal-dialog-container;
     selectable-inputs-modal-content: modal-dialog-content;
+}
+
+:import('./EpgGuide/EpgDaySelector.less') {
+    epg-day-selector: epg-day-selector;
 }
 
 .discover-container {
@@ -40,13 +48,18 @@
             }
 
             .selectable-inputs-container {
+                position: relative;
                 flex: none;
                 align-self: stretch;
                 display: flex;
                 flex-direction: row;
                 padding: 1.5rem;
                 overflow: visible;
-                z-index: 2;
+                z-index: 60;
+
+                .selectable-inputs {
+                    display: contents;
+                }
 
                 .select-input {
                     flex: 0 1 15rem;
@@ -220,6 +233,69 @@
     }
 }
 
+.mobile-filters {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.catalog-summary {
+    flex: 1;
+    min-width: 0;
+    color: var(--primary-foreground-color);
+
+    .catalog-type {
+        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+        opacity: 0.55;
+    }
+
+    .catalog-name {
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
+
+    .catalog-type,
+    .catalog-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.mobile-filter-button {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--overlay-color);
+    color: var(--primary-foreground-color);
+
+    > svg {
+        flex: none;
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .filter-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.4rem;
+        height: 1.4rem;
+        padding: 0 0.25rem;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        background: var(--primary-accent-color);
+    }
+}
+
 .selectable-inputs-modal {
     .selectable-inputs-modal-container {
         overflow: visible;
@@ -370,44 +446,80 @@
     .discover-container {
         .discover-content {
             .catalog-container {
-                .selectable-inputs-container {
-                    justify-content: space-between;
-
-                    .select-input {
-                        &:nth-child(n+2) {
-                            display: none;
-
-                            &~.filter-container {
-                                .filter-button {
-                                    display: flex;
-                                }
-                            }
-                        }
-                    }
-                }
-
                 .meta-items-container {
                     grid-template-columns: repeat(3, 1fr);
                 }
             }
         }
     }
+}
 
-    .selectable-inputs-modal {
-        .selectable-inputs-modal-container {
-            .selectable-inputs-modal-content {
-                .select-input {
-                    display: none;
+.discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
+    align-items: center;
+    gap: 0.75rem;
 
-                    &:nth-child(n+2) {
-                        display: flex;
+    .selectable-inputs {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+        gap: 0.75rem;
+        padding: 0.15rem;
+        margin: -0.15rem;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+    }
 
-                        &:not(:last-child) {
-                            margin-bottom: 1rem;
-                        }
-                    }
-                }
-            }
+    .select-input {
+        flex: none;
+        width: 11rem;
+        min-width: 0;
+
+        &:nth-child(n) {
+            display: block;
+        }
+
+        .multiselect-button {
+            padding-right: 0.75rem;
+            padding-left: 0.75rem;
+        }
+
+        &:not(:first-child) {
+            margin-left: 0;
+        }
+    }
+
+    .filter-container {
+        display: none;
+    }
+}
+
+@media @phone-landscape {
+    .discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+        .mobile-filters {
+            display: contents;
+        }
+
+        .catalog-summary {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .epg-day-selector {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .mobile-filter-button {
+            grid-column: 3;
+            grid-row: 1;
+            justify-self: end;
+            width: max-content;
         }
     }
 }

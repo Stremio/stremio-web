@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
 import AddonDetailsModal from './AddonDetailsModal';
 import ActionMenu from './ActionMenu';
 import BottomSheet from './BottomSheet';
@@ -12,6 +14,7 @@ import EventModal from './EventModal';
 import HorizontalScroll from './HorizontalScroll';
 import Image from './Image';
 import LibItem from './LibItem';
+import LiveTvContinueWatchingItem from './LiveTvContinueWatchingItem';
 import MainNavBars from './MainNavBars';
 import MetaItem from './MetaItem';
 import MetaPreview from './MetaPreview';
@@ -49,6 +52,7 @@ export {
     HorizontalScroll,
     Image,
     LibItem,
+    LiveTvContinueWatchingItem,
     MainNavBars,
     MetaItem,
     MetaPreview,

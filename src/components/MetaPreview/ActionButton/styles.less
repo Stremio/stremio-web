@@ -9,6 +9,8 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    width: 4rem;
+    height: 4rem;
     border-radius: 100%;
     background-color: var(--overlay-color);
     backdrop-filter: blur(5px);
@@ -17,6 +19,12 @@
     &:hover, &:focus {
         outline: var(--focus-outline-size) solid var(--primary-foreground-color);
         background-color: transparent;
+    }
+
+    &.wide {
+        width: auto;
+        padding: 0 2rem;
+        border-radius: 4rem;
     }
 
     .icon-container {
@@ -56,6 +64,16 @@
         .label-container {
             display: none;
         }
+
+        &.wide {
+            height: 3rem;
+            padding: 0 1.5rem;
+            border-radius: 2rem;
+
+            .label-container {
+                display: flex;
+            }
+        }
     }
 }
 
@@ -75,6 +93,14 @@
 
         .label-container {
             display: none;
+        }
+
+        &.wide {
+            padding: 0 2rem;
+
+            .label-container {
+                display: flex;
+            }
         }
     }
 }

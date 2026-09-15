@@ -1,0 +1,35 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+.button {
+    height: 3rem;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0 0.5rem;
+    border-radius: 2.75rem;
+
+    .text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--primary-foreground-color);
+    }
+
+    .icon {
+        width: 1rem;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+
+        &.open {
+            transform: rotate(180deg);
+        }
+    }
+
+    .label-icon {
+        display: block;
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}

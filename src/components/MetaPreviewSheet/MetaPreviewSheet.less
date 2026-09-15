@@ -1,0 +1,138 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    sheet-container: container;
+    sheet-content: content;
+}
+
+:import('~stremio/components/MetaPreview/styles.less') {
+    preview: meta-preview-container;
+    preview-info: meta-info-container;
+    preview-logo: logo;
+    preview-logo-placeholder: logo-placeholder;
+    preview-runtime: runtime-release-info-container;
+    preview-runtime-label: runtime-label;
+    preview-release-label: release-info-label;
+    preview-description: description-container;
+    preview-links: meta-links;
+    preview-actions: action-buttons-container;
+    preview-action: action-button;
+    preview-group: group-container;
+    preview-background: background-image;
+}
+
+.sheet .preview {
+    padding: 1.75rem 1.5rem 1rem;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    background-color: transparent;
+}
+
+.sheet {
+    .preview .preview-background {
+        filter: blur(1px);
+    }
+}
+
+@media (orientation: portrait) {
+    .sheet {
+        .preview {
+            padding-top: 2.25rem;
+            padding-bottom: calc(1rem + var(--safe-area-inset-bottom));
+
+            .preview-info {
+                min-height: 0;
+
+                .preview-logo,
+                .preview-logo-placeholder {
+                    height: 3.5rem;
+                    margin: 0 0 1rem;
+                    object-position: left center;
+                }
+
+                .preview-runtime {
+                    margin-top: 0;
+                    justify-content: flex-start;
+
+                    .preview-runtime-label,
+                    .preview-release-label {
+                        margin: 0;
+                    }
+
+                    > :not(:first-child) {
+                        position: relative;
+                        margin-left: 1.5rem;
+
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            top: 50%;
+                            left: -0.75rem;
+                            width: 1px;
+                            height: 1.25rem;
+                            transform: translateY(-50%);
+                            background: var(--primary-foreground-color);
+                            opacity: 0.2;
+                        }
+                    }
+                }
+
+                .preview-description {
+                    margin-top: 1rem;
+                    line-height: 1.6;
+                }
+
+                .preview-links {
+                    margin-top: 1.25rem;
+                }
+            }
+
+            .preview-actions {
+                margin-top: 0;
+                padding-top: 0.5rem;
+
+                .preview-action,
+                .preview-group {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+@media (orientation: landscape) {
+    .sheet .preview {
+        padding: 1.5rem;
+    }
+}
+
+.sheet {
+    display: flex !important;
+
+    .sheet-container {
+        height: 100%;
+    }
+
+    .sheet-content {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 0;
+    }
+
+    @media (orientation: portrait) {
+        .sheet-container {
+            height: 50%;
+            max-height: 50%;
+        }
+    }
+
+    @media @phone-landscape {
+        .sheet-container {
+            max-width: min(56rem, calc(100% - 3rem - var(--safe-area-inset-left) - var(--safe-area-inset-right)));
+        }
+    }
+}
