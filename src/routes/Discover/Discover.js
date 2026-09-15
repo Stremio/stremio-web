@@ -9,7 +9,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
 const { CONSTANTS, useBinaryState, useMediaQuery, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
 const { useEpgNow, epgDateKey, epgDayWindow, parseEpgDate, toEpgProgram } = require('stremio/common/EPG');
-const { XSMALL_WIDTH } = require('stremio/common/screenSizes');
+const screenSizes = require('stremio/common/screen-sizes.less');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { useNavigateWithOrigin } = require('stremio-router');
@@ -57,9 +57,9 @@ const Discover = () => {
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
-    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
 
-    const compactEpgDate = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px) and (max-height: 500px) and (orientation: landscape)`);
+    const compactEpgDate = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: 500px) and (orientation: landscape)`);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&

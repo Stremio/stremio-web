@@ -9,7 +9,7 @@ import ActionButton from 'stremio/components/MetaPreview/ActionButton';
 import Image from 'stremio/components/Image';
 import ModalDialog from 'stremio/components/ModalDialog';
 import useMediaQuery from 'stremio/common/useMediaQuery';
-import { XSMALL_WIDTH } from 'stremio/common/screenSizes';
+import screenSizes from 'stremio/common/screen-sizes.less';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
 import styles from './EpgProgramModal.less';
 
@@ -23,7 +23,7 @@ type Props = {
 
 const EpgProgramModal = ({ program, now, show, onCloseRequest, channelHref }: Props) => {
     const { t, i18n } = useTranslation();
-    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
     const progress = getEpgProgress(program, now);
     const genres = program.genres?.length ? program.genres
         : program.links?.filter(({ category }) => category === 'Genres').map(({ name }) => name) ?? [];

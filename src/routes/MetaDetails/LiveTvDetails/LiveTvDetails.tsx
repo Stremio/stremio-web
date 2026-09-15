@@ -8,7 +8,7 @@ import { useCore } from 'stremio/core';
 import Image from 'stremio/components/Image';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import useMediaQuery from 'stremio/common/useMediaQuery';
-import { XSMALL_WIDTH } from 'stremio/common/screenSizes';
+import screenSizes from 'stremio/common/screen-sizes.less';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
 import LiveTvActions from './LiveTvActions';
 import LiveTvPlayback from './LiveTvPlayback';
@@ -31,7 +31,7 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
     const { t, i18n } = useTranslation();
     const core = useCore();
     const active = useRouteActive();
-    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
     const now = useEpgNow(true);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const informationRef = useRef<HTMLDivElement>(null);
