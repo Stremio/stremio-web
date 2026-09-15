@@ -42,30 +42,7 @@ VideoLabel.propTypes = {
     shouldScroll: PropTypes.bool,
 };
 
-const Video = ({
-    className,
-    id,
-    title,
-    thumbnail,
-    season,
-    episode,
-    released,
-    upcoming,
-    watched,
-    progress,
-    scheduled,
-    seasonWatched,
-    selected,
-    deepLinks,
-    isEpg,
-    isNow,
-    startTime,
-    endTime,
-    onSelect,
-    onMarkVideoAsWatched,
-    onMarkSeasonAsWatched,
-    ...props
-}) => {
+const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, isEpg, isNow, startTime, endTime, onSelect, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
     const profile = useProfile();
     const navigate = useNavigate();
