@@ -7,8 +7,12 @@ const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
-const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
+const { CONSTANTS, useBinaryState, useMediaQuery, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { XSMALL_WIDTH } = require('stremio/common/screenSizes');
+const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
+const { useRouteActive } = require('stremio/common/useRouteFocused');
+const { useNavigateWithOrigin } = require('stremio-router');
+const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: EpgGuide } = require('./EpgGuide');
@@ -38,11 +42,15 @@ const Discover = () => {
     }, [queryParams]);
     const { t } = useTranslation();
     const core = useCore();
+    const { navigateWithOrigin } = useNavigateWithOrigin();
+    const routeActive = useRouteActive();
     const [discover, loadNextPage] = useDiscover(urlParams, catalogQueryParams);
     const [selectInputs, hasNextPage] = useSelectableInputs(discover);
     const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
+    const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
+    const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
@@ -239,12 +247,26 @@ const Discover = () => {
         }
     }, []);
     const metaItemOnClick = React.useCallback((event) => {
-        const visible = window.getComputedStyle(metaPreviewRef.current).display !== 'none';
+        const index = Number(event.currentTarget.dataset.index);
+        const hasIndex = Number.isInteger(index);
+
+        if (isMobile && hasIndex) {
+            event.preventDefault();
+            setSelectedMetaItemIndex(index);
+            openMobilePreview();
+            return;
+        }
+
+        if (!hasIndex) {
+            return;
+        }
+
+        const visible = metaPreviewRef.current && window.getComputedStyle(metaPreviewRef.current).display !== 'none';
         if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString() && visible) {
             event.preventDefault();
             event.currentTarget.focus();
         }
-    }, [selectedMetaItemIndex]);
+    }, [isMobile, selectedMetaItemIndex, openMobilePreview]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -254,9 +276,28 @@ const Discover = () => {
     React.useEffect(() => {
         closeInputsModal();
         closeAddonModal();
+        closeMobilePreview();
         setSelectedMetaItemIndex(0);
         setSelectedEpgProgram(null);
-    }, [discover.selected]);
+    }, [discover.selected, closeInputsModal, closeAddonModal, closeMobilePreview]);
+    React.useEffect(() => {
+        if (!isMobile) {
+            closeMobilePreview();
+        }
+    }, [isMobile, closeMobilePreview]);
+    React.useEffect(() => {
+        if (!routeActive) {
+            closeMobilePreview();
+        }
+    }, [routeActive, closeMobilePreview]);
+    const onMobileShowClick = React.useCallback((event) => {
+        event.preventDefault();
+        const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
+        closeMobilePreview();
+        if (typeof href === 'string') {
+            navigateWithOrigin(href);
+        }
+    }, [selectedMetaItem, closeMobilePreview, navigateWithOrigin]);
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
             <div className={styles['message-container']}>
@@ -436,6 +477,42 @@ const Discover = () => {
                 {renderMetaPreview()}
             </div>
             {renderEpgPreviewModal()}
+            {
+                selectedMetaItem !== null ?
+                    <BottomSheet
+                        className={styles['mobile-bottom-sheet']}
+                        show={isMobile && mobilePreviewOpen}
+                        onCloseRequest={closeMobilePreview}
+                        closeOnContentClick={false}
+                        closeOnOrientationChange={false}
+                        flush={true}
+                        ariaLabel={selectedMetaItem.name}
+                    >
+                        <MetaPreview
+                            className={styles['mobile-preview']}
+                            compact={true}
+                            name={selectedMetaItem.name}
+                            logo={selectedMetaItem.logo}
+                            background={selectedMetaItem.poster}
+                            runtime={selectedMetaItem.runtime}
+                            releaseInfo={selectedMetaItem.releaseInfo}
+                            released={selectedMetaItem.released}
+                            description={selectedMetaItem.description}
+                            links={selectedMetaItem.links}
+                            deepLinks={selectedMetaItem.deepLinks}
+                            trailerStreams={selectedMetaItem.trailerStreams}
+                            inLibrary={selectedMetaItem.inLibrary}
+                            toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
+                            watched={selectedMetaItem.watched}
+                            toggleWatched={toggleWatched}
+                            metaId={selectedMetaItem.id}
+                            like={selectedMetaItem.like}
+                            onShowClick={onMobileShowClick}
+                        />
+                    </BottomSheet>
+                    :
+                    null
+            }
             {
                 inputsModalOpen ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
