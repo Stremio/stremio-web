@@ -21,7 +21,7 @@ const getAnchorElement = (element) => {
     return getAnchorElement(element.parentElement);
 };
 
-const Popup = ({ open, direction, portal = false, autoFocus = portal, menuClassName, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
+const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassName, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
     const routeFocused = useRouteFocused();
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
@@ -35,15 +35,6 @@ const Popup = ({ open, direction, portal = false, autoFocus = portal, menuClassN
             onCloseRequest({ type: 'close', nativeEvent: event.nativeEvent, dataset });
         }
     };
-    const portalOnKeyDown = (event) => {
-        if (event.code === 'Escape') {
-            event.preventDefault();
-            event.stopPropagation();
-            if (typeof onCloseRequest === 'function') {
-                onCloseRequest({ type: 'close', nativeEvent: event.nativeEvent, dataset });
-            }
-        }
-    };
     React.useEffect(() => {
         const onCloseEvent = (event) => {
             if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
@@ -55,6 +46,10 @@ const Popup = ({ open, direction, portal = false, autoFocus = portal, menuClassN
                 switch (event.type) {
                     case 'keydown':
                         if (event.code === 'Escape') {
+                            if (portal) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
                             onCloseRequest(closeEvent);
                         }
                         break;
@@ -72,16 +67,16 @@ const Popup = ({ open, direction, portal = false, autoFocus = portal, menuClassN
             }
         };
         if (routeFocused && open) {
-            window.addEventListener('keydown', onCloseEvent);
+            window.addEventListener('keydown', onCloseEvent, portal);
             window.addEventListener('mousedown', onCloseEvent);
             window.addEventListener('pointerdown', onCloseEvent);
         }
         return () => {
-            window.removeEventListener('keydown', onCloseEvent);
+            window.removeEventListener('keydown', onCloseEvent, portal);
             window.removeEventListener('mousedown', onCloseEvent);
             window.removeEventListener('pointerdown', onCloseEvent);
         };
-    }, [routeFocused, open, onCloseRequest, dataset]);
+    }, [routeFocused, open, onCloseRequest, dataset, portal]);
     React.useLayoutEffect(() => {
         if (open && !portal) {
             const autoDirection = [];
@@ -171,7 +166,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = portal, menuClassN
         className={classnames(styles['menu-container'], menuClassName, portal ? styles['portal-menu'] : styles[`menu-direction-${direction || autoDirection}`])}
         autoFocus={autoFocus}
         returnFocus={portal ? { preventScroll: true } : false}
-        lockProps={{ onMouseDown: menuOnMouseDown, onKeyDown: portal ? portalOnKeyDown : undefined }}
+        lockProps={{ onMouseDown: menuOnMouseDown }}
     >
         {renderMenu()}
     </FocusLock> : null;
