@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import BottomSheet from 'stremio/components/BottomSheet';
+import RadioButton from 'stremio/components/RadioButton';
 import TextInput from 'stremio/components/TextInput';
 import styles from './DiscoverFiltersSheet.less';
 
@@ -68,23 +69,21 @@ const FilterSelection = ({ inputs, onCloseRequest }: Omit<Props, 'show'>) => {
             />
         </div>}
         <div key={activeFilter?.id ?? 'overview'} className={styles.body}>
-            {activeFilter ? <div className={styles.choices} aria-label={activeFilter.label}>
-                {options.map((option) => <button
+            {activeFilter ? <div className={styles.choices} role={'radiogroup'} aria-label={activeFilter.label}>
+                {options.map((option) => <RadioButton
                     key={option.value}
-                    type={'button'}
-                    className={classNames(styles.choice, { [styles.selected]: option.value === activeFilter.value })}
-                    aria-pressed={option.value === activeFilter.value}
-                    onClick={() => {
+                    className={styles.choice}
+                    selected={option.value === activeFilter.value}
+                    ariaLabel={[optionLabel(option), option.description].filter(Boolean).join(' ')}
+                    onChange={() => {
                         openFilter(null);
                         if (option.value !== activeFilter.value) activeFilter.onSelect(option.value);
                     }}
-                >
-                    <span className={styles['choice-copy']}>
+                    label={<span className={styles['choice-copy']}>
                         <span>{optionLabel(option)}</span>
                         {option.description && <span className={styles.description}>{option.description}</span>}
-                    </span>
-                    <span className={styles.radio} aria-hidden={true} />
-                </button>)}
+                    </span>}
+                />)}
                 {options.length === 0 && <div className={styles.empty} role={'status'}>{t('SEARCH_NO_RESULTS')}</div>}
             </div> : <div className={styles.overview}>
                 {[inputs.slice(0, 2), inputs.slice(2)].filter((group) => group.length > 0).map((group) => <div key={group[0].id} className={styles.group}>
