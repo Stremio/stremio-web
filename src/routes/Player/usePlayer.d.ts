@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
 declare const usePlayer: (urlParams: UrlParams) => [
     Player,
     videoParamsChanged: (videoParams: { hash: string | null, size: number | null, filename: string | null }) => void,
