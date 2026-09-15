@@ -23,6 +23,7 @@ interface Shell {
 
 type ShellCapabilities = {
     gpuVideoProcessing: boolean;
+    nativeAssSubtitles: boolean;
 };
 
 type ShellState = {

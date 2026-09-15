@@ -2,13 +2,32 @@
     "name": "Stremio Web",
     "short_name": "Stremio",
     "description": "Freedom To Stream",
-    "background_color": "#161523",
+    "background_color": "#0c0b11",
     "theme_color": "#2a2843",
     "orientation": "any",
     "display": "standalone",
     "display_override": ["standalone"],
+    "id": "./",
     "scope": "./",
     "start_url": "./",
+    "launch_handler": {
+        "client_mode": "focus-existing"
+    },
+    "shortcuts": [
+        {
+            "name": "Search",
+            "url": "./#/search"
+        },
+        {
+            "name": "Library",
+            "url": "./#/library"
+        },
+        {
+            "name": "Continue Watching",
+            "short_name": "Continue",
+            "url": "./#/continuewatching"
+        }
+    ],
     "icons": [
         {
             "src": "favicons/icon_256x256.ico",
@@ -38,6 +57,12 @@
             "sizes": "196x196",
             "type": "image/png",
             "purpose": "any"
+        },
+        {
+            "src": "images/monochrome_icon_512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "monochrome"
         }
     ],
     "screenshots": [

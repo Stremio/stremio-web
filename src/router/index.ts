@@ -2,6 +2,7 @@
 
 import { useModalsContainer } from './ModalsContainerContext';
 import useNavigateWithOrigin from './useNavigateWithOrigin';
+import useGoBack from './useGoBack';
 import Modal from './Modal';
 import Routes from './Routes';
 import Route from './Route';
@@ -11,6 +12,7 @@ import navigateToRoute from './routePath';
 export {
     useModalsContainer,
     useNavigateWithOrigin,
+    useGoBack,
     Modal,
     Routes,
     Route,

@@ -171,7 +171,27 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, [player.streamState]);
 
-    return [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
+    const subtitlePreferenceChanged = React.useCallback((preference) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'SubtitlePreferenceChanged',
+                args: { preference },
+            },
+        }, 'player');
+    }, []);
+
+    const videoScaleChanged = React.useCallback((videoScale) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'VideoScaleChanged',
+                args: { videoScale },
+            },
+        }, 'player');
+    }, []);
+
+    return [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;

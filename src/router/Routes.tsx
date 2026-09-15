@@ -1,7 +1,8 @@
 // Copyright (C) 2017-2025 Smart code 203358507
 
 import React from 'react';
-import { Routes as RRoutes, Route as RRoute, useLocation, useNavigate, matchPath } from 'react-router';
+import { flushSync } from 'react-dom';
+import { Routes as RRoutes, Route as RRoute, useLocation, useNavigate, useNavigationType, matchPath } from 'react-router';
 import type { Location } from 'react-router';
 import { useProfile } from 'stremio/common';
 import routerPaths from './routerPaths';
@@ -46,6 +47,7 @@ const getNextViews = (currentViews: (CachedView | null)[], location: Location) =
 const Routes = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const navigationType = useNavigationType();
     const profile = useProfile();
     const previousAuthRef = React.useRef(profile.auth);
     const [views, setViews] = React.useState<(CachedView | null)[]>(() => getNextViews([], location));
@@ -68,13 +70,24 @@ const Routes = () => {
     }, [location.pathname, profile.auth]);
 
     React.useLayoutEffect(() => {
-        setViews((currentViews) => getNextViews(currentViews, location));
-    }, [location]);
+        const updateViews = () => setViews((currentViews) => getNextViews(currentViews, location));
+
+        if (
+            navigationType === 'PUSH' &&
+            typeof document.startViewTransition === 'function' &&
+            window.matchMedia('(pointer: fine)').matches &&
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+            document.startViewTransition(() => flushSync(updateViews));
+        } else {
+            updateViews();
+        }
+    }, [location, navigationType]);
 
     const visibleViews = views.filter((view): view is CachedView => view !== null);
 
     return (
-        <div className={'routes-container'}>
+        <div className={'routes-container'} data-navigation={navigationType.toLowerCase()}>
             {
                 visibleViews.map((view, index) => (
                     <RRoutes key={view.key} location={view.location}>

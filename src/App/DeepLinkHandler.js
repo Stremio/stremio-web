@@ -9,18 +9,25 @@ const DeepLinkHandler = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const streamingServer = useStreamingServer();
+    const locationRef = React.useRef(location);
+    locationRef.current = location;
+    const previousTorrentRef = React.useRef(null);
     React.useEffect(() => {
+        if (previousTorrentRef.current === streamingServer.torrent) {
+            return;
+        }
+        previousTorrentRef.current = streamingServer.torrent;
         if (streamingServer.torrent !== null) {
             const [, { type, content }] = streamingServer.torrent;
             if (type === 'Ready') {
                 const [, deepLinks] = content;
                 if (typeof deepLinks.metaDetailsVideos === 'string') {
                     const path = toPath(deepLinks.metaDetailsVideos);
-                    navigateToRoute(navigate, location, path);
+                    navigateToRoute(navigate, locationRef.current, path);
                 }
             }
         }
-    }, [streamingServer.torrent, location.pathname, location.search, navigate]);
+    }, [streamingServer.torrent, navigate]);
     return null;
 };
 

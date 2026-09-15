@@ -43,6 +43,7 @@ const useShell = (): Shell => {
     });
     const [capabilities, setCapabilities] = useState<ShellCapabilities>({
         gpuVideoProcessing: false,
+        nativeAssSubtitles: false,
     });
 
     const on = (name: string, listener: (arg: any) => void) => events.on(name, listener);
@@ -91,15 +92,18 @@ const useShell = (): Shell => {
 
                 if (event.type === ShellEventType.INIT) {
                     const { data } = event as ShellEventInit;
-                    const [, [,,, version], [,,, gpuVideoProcessing] = []] = data.transport.properties;
+                    const shellProperties = Object.fromEntries(data.transport.properties
+                        .filter((property) => property.length >= 4 && property[1])
+                        .map(([, name,, value]) => [name, value]));
 
                     setState((state) => ({
                         ...state,
                         initialized: true,
-                        version,
+                        version: shellProperties.shellVersion ?? null,
                     }));
                     setCapabilities({
-                        gpuVideoProcessing: gpuVideoProcessing === 'true',
+                        gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
+                        nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
                     });
                 }
 

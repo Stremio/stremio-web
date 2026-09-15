@@ -10,6 +10,7 @@ const styles = require('./styles');
 const { t } = require('i18next');
 const { default: Stepper } = require('./Stepper');
 const { default: SubtitleVariant } = require('./SubtitleVariant');
+const { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } = require('../subtitleDelay');
 
 const ORIGIN_PRIORITIES = [
     'LOCAL',
@@ -118,7 +119,8 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
         if (typeof props.selectedExtraSubtitlesTrackId === 'string') {
             if (props.extraSubtitlesDelay !== null && !isNaN(props.extraSubtitlesDelay)) {
                 if (typeof props.onExtraSubtitlesDelayChanged === 'function') {
-                    props.onExtraSubtitlesDelayChanged(value * 1000);
+                    const delay = Math.round(value * 1000);
+                    props.onExtraSubtitlesDelayChanged(snapSubtitleDelay(delay, delay - props.extraSubtitlesDelay));
                 }
             }
         }
@@ -214,7 +216,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         label={'DELAY'}
                         value={props.extraSubtitlesDelay / 1000}
                         unit={'s'}
-                        step={0.25}
+                        step={SUBTITLES_DELAY_STEP_MS / 1000}
                         disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
@@ -226,7 +228,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         step={25}
                         min={SUBTITLES_SIZES[0]}
                         max={SUBTITLES_SIZES[SUBTITLES_SIZES.length - 1]}
-                        disabled={(props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
+                        disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
                         onChange={onSubtitlesSizeChanged}
                     />
                     <Stepper
@@ -237,7 +239,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         step={1}
                         min={0}
                         max={100}
-                        disabled={(props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
+                        disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
                         onChange={onSubtitlesOffsetChanged}
                     />
                 </div>
@@ -255,7 +257,8 @@ SubtitlesMenu.propTypes = {
     subtitlesTracks: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         lang: PropTypes.string.isRequired,
-        origin: PropTypes.string.isRequired
+        origin: PropTypes.string.isRequired,
+        ass: PropTypes.bool
     })),
     selectedSubtitlesTrackId: PropTypes.string,
     subtitlesOffset: PropTypes.number,
@@ -268,12 +271,14 @@ SubtitlesMenu.propTypes = {
         url: PropTypes.string,
         embedded: PropTypes.bool,
         local: PropTypes.bool,
-        exclusive: PropTypes.bool
+        exclusive: PropTypes.bool,
+        ass: PropTypes.bool
     })),
     selectedExtraSubtitlesTrackId: PropTypes.string,
     extraSubtitlesOffset: PropTypes.number,
     extraSubtitlesDelay: PropTypes.number,
     extraSubtitlesSize: PropTypes.number,
+    assSubtitlesStylingActive: PropTypes.bool,
     onSubtitlesTrackSelected: PropTypes.func,
     onExtraSubtitlesTrackSelected: PropTypes.func,
     onSubtitlesOffsetChanged: PropTypes.func,

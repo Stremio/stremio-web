@@ -8,7 +8,7 @@ const Button = require('stremio/components/Button').default;
 const Slider = require('stremio/components/Slider');
 
 const styles = require('./styles');
-const RATES = [0.25, 0.5, 1, 1.5, 2, 2.5, 3, 4];
+const RATES = [0.5, 1, 1.25, 1.5, 1.75, 2, 4];
 
 const SpeedMenu = React.memo(React.forwardRef(({ className, playbackSpeed, onPlaybackSpeedChanged }, ref) => {
     const { t } = useTranslation();
@@ -41,7 +41,7 @@ const SpeedMenu = React.memo(React.forwardRef(({ className, playbackSpeed, onPla
                         value={playbackSpeed}
                         minimumValue={0.1}
                         maximumValue={4}
-                        stepValue={0.1}
+                        stepValue={0.05}
                         onSlide={onSpeedChanged}
                         onComplete={onSpeedChanged}
                     />

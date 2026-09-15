@@ -99,9 +99,33 @@
         }
 
         .meta-items-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            overscroll-behavior-x: contain;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
             .meta-item {
+                scroll-snap-align: start;
+
                 &:not(:first-child) {
                     margin-left: 0;
+                }
+
+                &:empty {
+                    display: none;
+                }
+
+                &.poster-shape-poster, &.poster-shape-square {
+                    flex: 0 0 31%;
+                }
+
+                &.poster-shape-landscape {
+                    flex: 0 0 46%;
                 }
             }
         }

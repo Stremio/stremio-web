@@ -67,7 +67,7 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'VLC',
         value: 'vlc',
-        platforms: ['ios', 'visionos', 'android'],
+        platforms: ['ios', 'visionos', 'android', 'windows'],
     },
     {
         label: 'MPV',
@@ -97,6 +97,11 @@ const EXTERNAL_PLAYERS = [
     {
         label: 'Moonplayer (VisionOS)',
         value: 'moonplayer',
+        platforms: ['visionos'],
+    },
+    {
+        label: 'CineUltra',
+        value: 'cineultra',
         platforms: ['visionos'],
     },
     {

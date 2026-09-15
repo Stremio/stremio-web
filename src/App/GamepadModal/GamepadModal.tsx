@@ -67,7 +67,7 @@ const GamepadModal = ({ onClose }: Props) => {
             gamepad?.off('buttonB', 'gamepad-modal');
             gamepad?.unlock();
         };
-    }, [gamepad]);
+    }, [gamepad, onClose]);
 
     return createPortal((
         <div className={styles['gamepad-modal']} data-gamepad-modal>

@@ -11,8 +11,13 @@ type LoadableError = string | {
 };
 
 type Loadable<T> = {
-    type: 'Ready' | 'Loading' | 'Err',
-    content: T | LoadableError,
+    type: 'Loading',
+} | {
+    type: 'Ready',
+    content: T,
+} | {
+    type: 'Err',
+    content: LoadableError,
 };
 
 type ResourceRequestPath = {

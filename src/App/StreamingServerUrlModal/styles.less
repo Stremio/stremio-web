@@ -1,0 +1,179 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.modal-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    .backdrop {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: @color-background-dark5-40;
+    }
+
+    .modal-dialog-container {
+        position: relative;
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        max-width: 80%;
+        max-height: 80%;
+        padding: 0 2rem;
+        border-radius: var(--border-radius);
+        background-color: var(--modal-background-color);
+        box-shadow: var(--outer-glow);
+
+        .close-button-container {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 3rem;
+            height: 3rem;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            z-index: 2;
+
+            .icon {
+                display: block;
+                width: 100%;
+                height: 100%;
+                color: var(--primary-foreground-color);
+                opacity: 0.4;
+            }
+
+            &:hover,
+            &:focus {
+                .icon {
+                    opacity: 1;
+                }
+            }
+
+            &:focus {
+                outline-color: var(--primary-foreground-color);
+            }
+        }
+
+        .modal-dialog-content {
+            z-index: 1;
+            position: relative;
+            width: 30rem;
+            overflow-y: auto;
+
+            .title-container {
+                display: flex;
+                align-items: center;
+                height: 4.5rem;
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: var(--primary-foreground-color);
+            }
+
+            .body-container {
+                padding: 2rem 0;
+
+                .url {
+                    font-size: 1rem;
+                    color: var(--primary-foreground-color);
+                    direction: ltr;
+                    unicode-bidi: isolate-override;
+                    overflow-wrap: anywhere;
+                }
+            }
+
+            .buttons-container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin: 2rem 0;
+
+                .action-button {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    height: 3.5rem;
+                    border-radius: 3.5rem;
+                    padding: 1.2rem;
+                    background-color: var(--secondary-accent-color);
+
+                    &:hover {
+                        background-color: transparent;
+                        outline: var(--focus-outline-size) solid var(--secondary-accent-color);
+                    }
+
+                    &:focus {
+                        outline-color: var(--primary-foreground-color);
+                    }
+
+                    &:not(:last-child) {
+                        margin-right: 1rem;
+                    }
+
+                    .label {
+                        max-height: 3.6em;
+                        font-size: 1.1rem;
+                        font-weight: 700;
+                        text-align: center;
+                        color: var(--primary-foreground-color);
+                    }
+                }
+
+                .cancel-button {
+                    background-color: transparent;
+                    opacity: 0.3;
+
+                    &:hover {
+                        outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                        opacity: 1;
+                    }
+
+                    &:focus {
+                        outline-color: var(--primary-foreground-color);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .modal-container {
+        .modal-dialog-container {
+            width: 90%;
+            max-width: initial;
+            padding: 0 1.5rem;
+
+            .modal-dialog-content {
+                width: auto;
+
+                .buttons-container {
+                    flex-direction: column;
+                    gap: 1rem;
+
+                    .action-button {
+                        width: 100%;
+
+                        .label {
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

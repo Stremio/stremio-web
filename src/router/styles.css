@@ -20,6 +20,25 @@
     display: none;
 }
 
+@media (pointer: coarse) {
+    .routes-container[data-navigation="push"] .route-container:last-child {
+        animation: route-enter 0.2s ease-out;
+    }
+}
+
+@keyframes route-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .routes-container[data-navigation="push"] .route-container:last-child {
+        animation: none;
+    }
+}
+
 .routes-container .route-container .route-content {
     position: absolute;
     top: 0;

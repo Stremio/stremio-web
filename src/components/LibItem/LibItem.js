@@ -137,7 +137,7 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
             newVideos={newVideos}
             options={options}
             optionOnSelect={optionOnSelect}
-            onPlayClick={typeof playerHref === 'string' ? onPlayClick : null}
+            onPlayClick={typeof playerHref === 'string' && props.progress > 0 ? onPlayClick : null}
         />
     );
 };
@@ -149,6 +149,7 @@ LibItem.propTypes = {
     notifications: PropTypes.object,
     watched: PropTypes.bool,
     detailsVideosFirst: PropTypes.bool,
+    actionMenu: PropTypes.bool,
     deepLinks: PropTypes.shape({
         metaDetailsVideos: PropTypes.string,
         metaDetailsStreams: PropTypes.string,

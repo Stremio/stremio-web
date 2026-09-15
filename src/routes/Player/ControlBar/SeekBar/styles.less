@@ -1,7 +1,5 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
-
 :import('~stremio/components/Slider/styles.less') {
     slider-track-after: track-after;
     slider-thumb: thumb;
@@ -25,10 +23,15 @@
         opacity: 0.9;
     }
 
-    .slider {
+    .slider-wrapper {
         flex: 1;
         align-self: stretch;
         margin: 0 var(--thumb-size);
+        overflow: visible;
+    }
+
+    .slider {
+        height: 100%;
 
         .slider-track-after {
             background-color: var(--primary-accent-color);
@@ -54,5 +57,25 @@
         &:hover .slider-thumb {
             transform: translateX(-50%) scale(1.2);
         }
+    }
+}
+
+.seek-tooltip {
+    position: fixed;
+    transform: translate(-50%, calc(-100% - 1rem));
+    padding: 0.4rem 0.8rem;
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--primary-foreground-color);
+    border-radius: var(--border-radius);
+    background-color: var(--modal-background-color);
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+@media (hover: none) {
+    .seek-tooltip {
+        display: none;
     }
 }

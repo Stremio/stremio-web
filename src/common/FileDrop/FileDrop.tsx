@@ -1,4 +1,4 @@
-import React, { ChangeEvent, createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { isFileType, isFileTypeSupported } from './utils';
 import styles from './styles.less';
@@ -21,13 +21,15 @@ const FileDropProvider = ({ children }: Props) => {
     const listeners = useRef<[FileType, FileDropListener][]>([]);
     const [active, setActive] = useState(false);
 
-    const on = (type: FileType, listener: FileDropListener) => {
+    const on = useCallback((type: FileType, listener: FileDropListener) => {
         listeners.current = [...listeners.current, [type, listener]];
-    };
+    }, []);
 
-    const off = (type: FileType, listener: FileDropListener) => {
-        listeners.current = listeners.current.filter(([key, value]) => key !== type && value !== listener);
-    };
+    const off = useCallback((type: FileType, listener: FileDropListener) => {
+        listeners.current = listeners.current.filter(([key, value]) => key !== type || value !== listener);
+    }, []);
+
+    const value = useMemo(() => ({ on, off }), [on, off]);
 
     const onChange = (event: ChangeEvent) => {
         event.preventDefault();
@@ -81,7 +83,7 @@ const FileDropProvider = ({ children }: Props) => {
     }, []);
 
     return (
-        <FileDropContext.Provider value={{ on, off }}>
+        <FileDropContext.Provider value={value}>
             { children }
             <div className={classNames(styles['file-drop-container'], { 'active': active })}>
                 <input type={'file'} className={styles['file-input']} onChange={onChange} />

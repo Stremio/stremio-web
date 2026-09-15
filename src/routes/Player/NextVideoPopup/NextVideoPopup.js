@@ -12,7 +12,7 @@ const { useTranslation } = require('react-i18next');
 const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
     const { t } = useTranslation();
     const profile = useProfile();
-    const blurPosterImage = profile.settings.hideSpoilers && metaItem.type === 'series';
+    const blurPosterImage = profile.settings.hideSpoilers && metaItem.type === 'series' && !nextVideo?.watched;
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
     const videoName = React.useMemo(() => {

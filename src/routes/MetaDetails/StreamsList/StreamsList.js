@@ -3,6 +3,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router');
 const { default: toPath } = require('stremio-router/toPath');
+const { useGoBack } = require('stremio-router');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
@@ -22,6 +23,7 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
     const platform = usePlatform();
     const profile = useProfile();
     const navigate = useNavigate();
+    const goBack = useGoBack();
     const streamsContainerRef = React.useRef(null);
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((value) => {
@@ -39,9 +41,9 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                     : ''}`;
             navigate(toPath(navigateTo), { replace: true });
         } else {
-            navigate(-1);
+            goBack();
         }
-    }, [video]);
+    }, [video, navigate, goBack]);
     const countLoadingAddons = React.useMemo(() => {
         return props.streams.filter((stream) => stream.content.type === 'Loading').length;
     }, [props.streams]);
@@ -68,15 +70,13 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                 return streamsByAddon;
             }, {});
     }, [props.streams]);
+    const effectiveSelectedAddon = Object.prototype.hasOwnProperty.call(streamsByAddon, selectedAddon) ? selectedAddon : ALL_ADDONS_KEY;
     const filteredStreams = React.useMemo(() => {
-        return selectedAddon === ALL_ADDONS_KEY ?
+        return effectiveSelectedAddon === ALL_ADDONS_KEY ?
             Object.values(streamsByAddon).map(({ streams }) => streams).flat(1)
             :
-            streamsByAddon[selectedAddon] ?
-                streamsByAddon[selectedAddon].streams
-                :
-                [];
-    }, [streamsByAddon, selectedAddon]);
+            streamsByAddon[effectiveSelectedAddon].streams;
+    }, [streamsByAddon, effectiveSelectedAddon]);
     const selectableOptions = React.useMemo(() => {
         return {
             options: [
@@ -91,10 +91,10 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                     title: streamsByAddon[transportUrl].addon.manifest.name,
                 }))
             ],
-            value: selectedAddon,
+            value: effectiveSelectedAddon,
             onSelect: onAddonSelected
         };
-    }, [streamsByAddon, selectedAddon]);
+    }, [streamsByAddon, effectiveSelectedAddon, onAddonSelected, t]);
 
     const handleEpisodePicker = React.useCallback((season, episode) => {
         onEpisodeSearch(season, episode);

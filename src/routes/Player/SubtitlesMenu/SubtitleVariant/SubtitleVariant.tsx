@@ -19,6 +19,7 @@ type SubtitlesTrack = {
     embedded?: boolean,
     local?: boolean,
     exclusive?: boolean,
+    ass?: boolean,
 };
 
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
 };
 
 const hasValidLabel = (label?: string) => label && label.length > 0 && !label.startsWith('http');
+const ASS_BADGE = 'ASS';
 
 const SubtitleVariant = ({ track, selected, onSelect }: Props) => {
     const { t } = useTranslation();
@@ -73,8 +75,11 @@ const SubtitleVariant = ({ track, selected, onSelect }: Props) => {
             className={classNames(styles['variant-option'], { 'selected': selected })}
         >
             <div className={styles['info']}>
-                <div className={styles['variant-label']}>
-                    {variantLabel}
+                <div className={styles['variant-title']}>
+                    <div className={styles['variant-label']}>
+                        {variantLabel}
+                    </div>
+                    {track.ass ? <div className={styles['ass-badge']}>{ASS_BADGE}</div> : null}
                 </div>
                 <div className={styles['variant-origin']}>
                     {t(track.origin)}
