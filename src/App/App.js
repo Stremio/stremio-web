@@ -5,7 +5,7 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { createPath, useLocation, useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Routes, useGoBack } = require('stremio-router');
+const { Routes, useGoBack, navigateToRoute } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
 const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, useFileDropListener, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
@@ -25,9 +25,12 @@ const App = () => {
     const profile = useProfile();
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
+    const location = useLocation();
     const navigate = useNavigate();
     const goBack = useGoBack();
-    const locationPath = createPath(useLocation());
+    const locationPath = createPath(location);
+    const locationRef = React.useRef(location);
+    locationRef.current = location;
     const previousPathRef = React.useRef(locationPath);
     const appReadySentRef = React.useRef(false);
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
@@ -120,7 +123,9 @@ const App = () => {
                         const transportUrl = `https://${hostname}${pathname}`;
                         navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
                     } else {
-                        navigate(`${pathname}?${searchParams.toString()}`);
+                        const search = searchParams.toString();
+                        const path = search ? `${pathname}?${search}` : pathname;
+                        navigateToRoute(navigate, locationRef.current, path);
                     }
                 }
             } catch (e) {
