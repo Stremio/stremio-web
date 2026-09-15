@@ -13,7 +13,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className = '', compact = false, isEpg = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, ...props }) => {
+const Stream = ({ className = '', compact = false, isEpg = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, externalPlayerCallbackCanMarkWatched, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
@@ -121,7 +121,9 @@ const Stream = ({ className = '', compact = false, isEpg = false, videoId = unde
         if (isEpg) closeMenu();
 
         if (profile.settings.playerType !== null) {
-            markVideoAsWatched();
+            if (profile.settings.playerType !== 'infuse' || !externalPlayerCallbackCanMarkWatched) {
+                markVideoAsWatched();
+            }
             toast.show({
                 type: 'success',
                 title: 'Stream opened in external player',
@@ -132,7 +134,7 @@ const Stream = ({ className = '', compact = false, isEpg = false, videoId = unde
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick, profile.settings, markVideoAsWatched, isEpg, closeMenu]);
+    }, [props.onClick, profile.settings.playerType, externalPlayerCallbackCanMarkWatched, markVideoAsWatched, isEpg, closeMenu]);
 
     const copyMagnetLink = React.useCallback((event) => {
         event.preventDefault();
@@ -334,6 +336,7 @@ Stream.propTypes = {
             })
         })
     }),
+    externalPlayerCallbackCanMarkWatched: PropTypes.bool,
     onClick: PropTypes.func
 };
 

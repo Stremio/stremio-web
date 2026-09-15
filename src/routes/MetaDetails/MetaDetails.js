@@ -16,6 +16,7 @@ const { default: LiveTvDetails } = require('./LiveTvDetails');
 const { default: LiveTvPlaceholder } = require('./LiveTvDetails/LiveTvPlaceholder');
 const useMetaDetails = require('./useMetaDetails');
 const useSeason = require('./useSeason');
+const { default: useExternalPlayerCallback } = require('./useExternalPlayerCallback');
 const styles = require('./styles');
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
@@ -37,6 +38,7 @@ const MetaDetails = () => {
     const metaDetails = useMetaDetails(urlParams);
     const readyMeta = metaDetails.metaItem?.content.type === 'Ready' ? metaDetails.metaItem.content.content : null;
     const isLiveMeta = readyMeta !== null && (readyMeta.behaviorHints?.isLive === true || readyMeta.type === 'tv');
+    useExternalPlayerCallback(urlParams, metaDetails);
     const [season, setSeason] = useSeason(urlParams);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
@@ -63,6 +65,11 @@ const MetaDetails = () => {
         return metaDetails.metaItem?.content.type === 'Ready' &&
             metaDetails.metaItem.content.content.videos.some(hasEpgProgramTimes);
     }, [metaDetails.metaItem]);
+    const externalPlayerCallbackCanMarkWatched = React.useMemo(() => {
+        return typeof video?.id === 'string' &&
+            metaDetails.libraryItem?.state?.video_id === video.id &&
+            metaDetails.libraryItem?.state?.duration > 0;
+    }, [metaDetails.libraryItem, video]);
     const addToLibrary = React.useCallback(() => {
         if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
             return;
@@ -237,6 +244,7 @@ const MetaDetails = () => {
                             video={video}
                             isEpg={isEpgVideo || isEpgMeta}
                             type={streamPath.type}
+                            externalPlayerCallbackCanMarkWatched={externalPlayerCallbackCanMarkWatched}
                             onEpisodeSearch={handleEpisodeSearch}
                         />
                         :
