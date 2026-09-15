@@ -107,12 +107,7 @@ const Player = () => {
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
     const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
-    const metaItemContent = React.useMemo(() => {
-        return player.metaItem !== null && player.metaItem.type === 'Ready' ?
-            player.metaItem.content
-            :
-            null;
-    }, [player.metaItem]);
+    const metaItemContent = player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null;
 
     const isEpg = (player.live ?? null) !== null;
     const currentEpgVideo = player.live?.currentProgram ?? null;
@@ -1120,7 +1115,7 @@ const Player = () => {
                 disabled={subtitlesMenuOpen || speedMenuOpen}
             />
             {
-                nextVideoPopupOpen && upcomingVideo !== null ?
+                nextVideoPopupOpen ?
                     <NextVideoPopup
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         metaItem={metaItemContent}

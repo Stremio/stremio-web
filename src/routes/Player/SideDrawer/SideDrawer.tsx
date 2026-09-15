@@ -63,9 +63,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
         return selectedVideo ?? currentVideo ?? videos[0] ?? null;
     }, [isEpg, videos, selectedVideoId, selected, now]);
 
-    const isEpgVideo = useMemo(() => {
-        return previewVideo !== null && hasEpgProgramTimes(previewVideo);
-    }, [previewVideo]);
+    const isEpgVideo = previewVideo !== null;
 
     const seasons = useMemo(() => {
         return allVideos

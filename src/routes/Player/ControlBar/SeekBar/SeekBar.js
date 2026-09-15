@@ -31,11 +31,6 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, onPlayR
     const resetTimeDebounced = React.useCallback(debounce(() => {
         setSeekTime(null);
     }, 1500), []);
-    const onRemainingTimeModeToggle = React.useCallback(() => {
-        if (!live) {
-            toggleRemainingTimeMode();
-        }
-    }, [live, toggleRemainingTimeMode]);
     const onSlide = React.useCallback((time) => {
         resetTimeDebounced.cancel();
         setHover(null);
@@ -130,7 +125,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, onPlayR
                 <div className={styles['live-action']}>
                     {seekable && (behindLive || paused) && <Button className={styles['go-live']} role={'button'} onClick={goLive}>{t('PLAYER_GO_LIVE', { defaultValue: 'Go live' })}</Button>}
                 </div>
-                : <Button onClick={onRemainingTimeModeToggle} tabIndex={-1}>
+                : <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
                     <div className={styles['label']}>
                         {remainingTimeMode && duration !== null && !isNaN(duration)
                             ? formatTime((duration - currentTime)/playbackSpeed, '-')
