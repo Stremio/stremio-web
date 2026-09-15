@@ -1,0 +1,152 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/ModalDialog/styles.less') {
+    modal-dialog: modal-dialog-container;
+    modal-content: modal-dialog-content;
+    modal-body: body-container;
+}
+
+.preview {
+    .channel {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-right: 2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .channel-logo {
+        flex: none;
+        width: 2.5rem;
+        height: 2.5rem;
+        object-fit: contain;
+        border-radius: 0.5rem;
+    }
+
+    .status-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+    }
+
+    .live, .status {
+        padding: 0.25rem 0.6rem;
+        border-radius: 0.35rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--primary-foreground-color);
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .live {
+        background: #d93d57;
+    }
+
+    .time {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .time-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .runtime {
+        margin-left: 0.5rem;
+        padding-left: 0.75rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .content-rating {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary-foreground-color);
+        > img { max-width: 2rem; height: 1.2rem; object-fit: contain; }
+    }
+
+    .progress {
+        height: 0.2rem;
+        margin-top: 1.1rem;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.15);
+
+        > div {
+            height: 100%;
+            border-radius: inherit;
+            background: var(--primary-accent-color);
+        }
+    }
+
+    .genres {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1.25rem;
+
+        > span {
+            padding: 0.4rem 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 2rem;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.7rem;
+        }
+    }
+
+    .metadata {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .channel-button {
+        height: 4rem;
+    }
+}
+
+.modal {
+    .preview {
+        padding: 2rem;
+        max-height: inherit;
+        min-height: 0;
+        color: var(--primary-foreground-color);
+    }
+
+    .modal-dialog {
+        width: 38rem;
+        max-width: calc(100vw - 3rem);
+        max-height: min(48rem, calc(100dvh - 4rem));
+        padding: 0;
+        overflow: hidden;
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            max-height: inherit;
+            overflow: hidden;
+
+            .modal-body, .modal-body:last-child {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                max-height: inherit;
+                overflow: hidden;
+                padding: 0;
+                margin: 0;
+            }
+        }
+    }
+
+}

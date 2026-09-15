@@ -4,6 +4,12 @@ type VideoDeepLinks = {
     externalPlayer: ExternalPlayerLinks | null,
 };
 
+type ContentRating = {
+    value: string,
+    system?: string,
+    icon?: string,
+};
+
 type Video = {
     id: string,
     title: string,
@@ -27,4 +33,5 @@ type Video = {
     cast?: string[],
     directors?: string[],
     links?: Link[],
+    ratings?: ContentRating[],
 };

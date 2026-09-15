@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { Modal, useModalsContainer } from 'stremio-router';
@@ -85,7 +85,9 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
     const [offset, setOffset] = useState(0);
     const [dragging, setDragging] = useState(false);
 
-    onCloseRequestRef.current = onCloseRequest;
+    useLayoutEffect(() => {
+        onCloseRequestRef.current = onCloseRequest;
+    }, [onCloseRequest]);
 
     const setPhaseState = useCallback((next: Phase) => {
         phaseRef.current = next;
@@ -95,10 +97,6 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
     const labelledBy = typeof title === 'string' && title.length > 0 ? title : ariaLabel;
     const open = phase === 'entered';
     const mounted = phase !== 'idle';
-
-    const containerStyle = useMemo(() => ({
-        transform: open ? `translateY(${offset}px)` : 'translateY(100%)',
-    }), [open, offset]);
 
     const requestClose = useCallback(() => {
         if (phaseRef.current === 'idle' || phaseRef.current === 'exiting') {
@@ -322,7 +320,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
                     [styles['dragging']]: dragging,
                     [styles['flush']]: flush,
                 })}
-                style={containerStyle}
+                style={{ transform: open ? `translateY(${offset}px)` : 'translateY(100%)' }}
                 role={'dialog'}
                 aria-modal={'true'}
                 aria-label={labelledBy}

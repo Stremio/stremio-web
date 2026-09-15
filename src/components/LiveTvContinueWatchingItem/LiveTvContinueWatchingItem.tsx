@@ -1,9 +1,12 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React from 'react';
+import classNames from 'classnames';
 import { useCore } from 'stremio/core';
+import Image from 'stremio/components/Image';
 import LibItem from 'stremio/components/LibItem';
 import { useEpgNow, getEpgProgress, getNonEmptyString, hasEpgProgramTimes } from 'stremio/common/EPG';
+import styles from './LiveTvContinueWatchingItem.less';
 
 type Show = {
     title?: string | null,
@@ -24,20 +27,21 @@ type Props = {
 const getCurrentShow = (shows: Show[] | undefined, now: number): Show | null => {
     const programs = (Array.isArray(shows) ? shows : []).filter(hasEpgProgramTimes);
 
-    return programs.find((show) => getEpgProgress(show, now) !== null) ?? programs[0] ?? null;
+    return programs.find((show) => getEpgProgress(show, now) !== null) ?? null;
 };
 
 const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, notifications }: Props) => {
     const core = useCore();
     const now = useEpgNow(true);
     const currentShow = React.useMemo(() => getCurrentShow(shows, now), [shows, now]);
-    const progress = currentShow !== null ? getEpgProgress(currentShow, now) : null;
-    const poster = getNonEmptyString(currentShow?.thumbnail) ?? channel?.poster ?? channel?.logo;
-    const name = getNonEmptyString(currentShow?.title) ?? channel?.name;
-    const itemDeepLinks = React.useMemo(() => ({
-        ...deepLinks,
-        ...currentShow?.deepLinks,
-    }), [deepLinks, currentShow]);
+    const programPoster = getNonEmptyString(currentShow?.thumbnail);
+    const programName = getNonEmptyString(currentShow?.title);
+    const hasProgram = Boolean(programPoster || programName);
+    const channelName = getNonEmptyString(channel?.name);
+    const channelLogo = getNonEmptyString(channel?.logo) ?? getNonEmptyString(channel?.poster);
+    const progress = hasProgram && currentShow !== null ? getEpgProgress(currentShow, now) : null;
+    const poster = hasProgram ? programPoster ?? getNonEmptyString(channel?.background) : channelLogo;
+    const name = programName ?? channelName;
     const channelId = channel && channel.id;
     const onDismissClick = React.useCallback((event: React.MouseEvent) => {
         event.preventDefault();
@@ -55,16 +59,19 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
 
     return (
         <LibItem
-            className={className}
+            className={classNames(className, styles['live-item'], { [styles['channel-card']]: !hasProgram })}
             _id={channel?.id}
             type={channel?.type}
             name={name}
             poster={poster}
             posterShape={'landscape'}
             posterChangeCursor={true}
-            logo={getNonEmptyString(channel?.logo)}
+            posterOverlay={hasProgram && (channelLogo || channelName) ? <div className={styles['channel-badge']} title={channelName ?? undefined}>
+                {channelLogo && <Image src={channelLogo} alt={''} renderFallback={() => null} />}
+                {channelName && <span>{channelName}</span>}
+            </div> : null}
             progress={progress ?? 0}
-            deepLinks={itemDeepLinks}
+            deepLinks={deepLinks}
             notifications={notifications}
             onDismissClick={onDismissClick}
         />

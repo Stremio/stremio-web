@@ -32,7 +32,8 @@
         padding: 0 0.5rem;
         margin: 0 auto;
         border-radius: 0.25rem;
-        background-color: #e50914;
+        background-color: rgba(255, 255, 255, 0.2);
+        &.at-live { background-color: #e50914; }
 
         .live-badge-label {
             font-size: 0.75rem;
@@ -41,6 +42,18 @@
             text-transform: uppercase;
             color: #fff;
         }
+    }
+
+    .live-delay { direction: ltr; display: inline-block; }
+    .live-action { display: flex; flex: none; align-items: center; justify-content: center; width: 5.5rem; }
+    .go-live {
+        flex: none;
+        padding: 0.3rem 0.65rem;
+        border-radius: var(--border-radius);
+        color: var(--primary-foreground-color);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        &:hover, &:focus { background-color: var(--overlay-color); }
     }
 
     .slider-wrapper {
@@ -55,6 +68,7 @@
 
         &.live-slider:global(.disabled) {
             opacity: 1;
+            .slider-thumb { display: none; }
         }
 
         .slider-track-after {

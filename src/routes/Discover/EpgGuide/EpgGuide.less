@@ -3,6 +3,10 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+:import('~stremio/components/MultiselectMenu/MultiselectMenu.less') {
+    multiselect-button: multiselect-button;
+}
+
 @keyframes epg-skeleton-shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
@@ -17,95 +21,8 @@
     overflow: hidden;
 }
 
-.epg-day-selector {
-    flex: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.8rem 1.5rem 1rem 1.5rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar { display: none; }
-}
-
-.epg-day-arrow {
-    flex: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    color: var(--primary-foreground-color);
-    background: transparent;
-    cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.15s, background-color 0.15s;
-
-    &:hover:not(:disabled) {
-        opacity: 1;
-        background-color: var(--overlay-color); 
-    }
-    &:disabled {
-        opacity: 0.2;
-        cursor: default;
-    }
-}
-
-.epg-day-arrow-icon {
-    width: 1.35rem;
-    height: 1.35rem;
-    color: var(--primary-foreground-color);
-}
-
-.epg-day-btn {
-    flex: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.1rem;
-    min-width: 5rem;
-    padding: 0.5rem 0.8rem;
-    border-radius: 0.8rem;
-    color: var(--primary-foreground-color);
-    background-color: transparent;
-    opacity: 0.5;
-    cursor: pointer;
-    transition: background-color 0.15s, opacity 0.15s;
-
-    &:hover {
-        opacity: 0.85;
-        background-color: var(--overlay-color);
-    }
-    
-    &-active {
-        opacity: 1;
-        border: 1.5px solid rgba(255, 255, 255, 0.55);
-        background-color: rgba(255, 255, 255, 0.07);
-        
-        &:hover { background-color: rgba(255, 255, 255, 0.1); }
-    }
-}
-    
-.epg-day-weekday {
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 100%;
-    color: var(--primary-foreground-color);
-    opacity: 0.5;
-}
-
-.epg-day-date {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--primary-foreground-color);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+@media @phone-landscape {
+    .epg-guide { padding-bottom: 0; }
 }
 
 .epg-header-row {
@@ -122,36 +39,72 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 0.5rem;
+    justify-content: flex-start;
+    gap: 0.25rem;
     margin-bottom: 8px;
+    padding-right: 0.5rem;
     position: relative;
     z-index: 20;
     overflow: visible;
 }
 
-.epg-time-menu {
-    min-width: 8rem;
+.epg-header-row .epg-time-menu {
+    flex: 1;
+    max-width: 2.25rem;
+    min-width: 0;
+    border-radius: var(--border-radius);
     z-index: 40;
 
-    [class^='multiselect-button-'] {
-        background-color: #5e4fa2;
-        color: #fff;
-        height: 2.2rem;
+    .multiselect-button {
+        width: 100%;
+        height: 2.25rem;
+        justify-content: center;
+        padding: 0;
+        border-radius: var(--border-radius);
+        background-color: transparent;
 
-        &:hover {
-            background-color: var(--primary-accent-color);
+        &:hover, &:focus {
+            background-color: var(--overlay-color);
         }
-    }
-
-    [class^='label-'],
-    [class^='icon-'] {
-        color: #fff;
     }
 }
 
+.epg-zoom-controls {
+    flex: 2;
+    display: flex;
+    gap: 0.25rem;
+    max-width: 4.75rem;
+    > [role='button'] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        min-width: 0;
+        height: 2.25rem;
+        border-radius: var(--border-radius);
+        color: var(--primary-foreground-color);
+        &:hover, &:focus { background-color: var(--overlay-color); }
+    }
+}
+.epg-zoom-icon {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    &::before, &.epg-zoom-in::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1rem;
+        height: 1.5px;
+        background: currentColor;
+        transform: translate(-50%, -50%);
+    }
+    &.epg-zoom-in::after { transform: translate(-50%, -50%) rotate(90deg); }
+}
+
 .epg-header-viewport {
-    flex: 1;
+    flex: none;
     min-width: 0;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -162,13 +115,12 @@
 }
 
 .epg-header-time-slots {
-    display: flex;
-    flex-shrink: 0;
-    padding-bottom: 0.4rem;
+    position: relative;
+    height: 2.25rem;
 }
 
 .epg-time-slot {
-    flex-shrink: 0;
+    position: absolute;
     padding: 0.3rem 0.5rem;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 1.05rem;
@@ -181,6 +133,7 @@
 // Body layout ─────────────────────────────────────────────────────────────────
 
 .epg-body-row {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex: 1;
@@ -292,10 +245,14 @@
 }
 
 .epg-empty {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem;
+    padding: 1.5rem;
+    text-align: center;
+    pointer-events: none;
     font-size: 1.6rem;
     color: var(--primary-foreground-color);
     opacity: 0.5;
@@ -411,8 +368,15 @@
 }
 
 @media only screen and (max-width: @minimum) {
-    .epg-day-selector { padding: 0.5rem 1rem 0.75rem 1rem; }
     .epg-header-row { margin-left: 1rem; }
     .epg-body-row { margin-left: 1rem; }
     .epg-channel-logo { width: 3rem; height: 1.6rem; }
+}
+
+.epg-loading-more {
+    position: sticky;
+    left: 0;
+    width: fit-content;
+    padding: 1rem;
+    color: var(--primary-foreground-color);
 }
