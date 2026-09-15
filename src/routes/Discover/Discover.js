@@ -15,6 +15,7 @@ const { useNavigateWithOrigin } = require('stremio-router');
 const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
+const { default: DiscoverFiltersSheet } = require('./DiscoverFiltersSheet');
 const { default: EpgGuide } = require('./EpgGuide');
 const { default: EpgDaySelector } = require('./EpgGuide/EpgDaySelector');
 const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal');
@@ -48,7 +49,10 @@ const Discover = () => {
     const routeActive = useRouteActive();
     const [discover, loadNextPage] = useDiscover(urlParams, catalogQueryParams);
     const [selectInputs, hasNextPage] = useSelectableInputs(discover);
-    const [inputsModalOpen, openInputsModal, closeInputsModal] = useBinaryState(false);
+    const [filtersOpen, openFilters, closeFilters] = useBinaryState(false);
+    const selectedTypeOption = selectInputs[0].options.find(({ value }) => value === selectInputs[0].value);
+    const selectedCatalogOption = selectInputs[1].options.find(({ value }) => value === selectInputs[1].value);
+    const activeFilterCount = selectInputs.filter(({ active }) => active).length;
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
@@ -246,12 +250,12 @@ const Discover = () => {
     }, [hasNextPage, loadNextPage]);
     const onScroll = useOnScrollToBottom(onScrollToBottom, SCROLL_TO_BOTTOM_THRESHOLD);
     React.useEffect(() => {
-        closeInputsModal();
+        if (!isMobile) closeFilters();
         closeAddonModal();
         closeMobilePreview();
         setSelectedMetaItemIndex(0);
         setSelectedEpgProgram(null);
-    }, [discover.selected, closeInputsModal, closeAddonModal, closeMobilePreview]);
+    }, [discover.selected, isMobile, closeFilters, closeAddonModal, closeMobilePreview]);
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
             <div className={styles['message-container']}>
@@ -384,10 +388,11 @@ const Discover = () => {
     }, [isMobile, closeMobilePreview]);
     React.useEffect(() => {
         if (!routeActive) {
+            closeFilters();
             closeMobilePreview();
             setSelectedEpgProgram(null);
         }
-    }, [routeActive, closeMobilePreview]);
+    }, [routeActive, closeFilters, closeMobilePreview]);
     const onMobileShowClick = React.useCallback((event) => {
         event.preventDefault();
         const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
@@ -401,7 +406,24 @@ const Discover = () => {
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
                     <div className={classnames(styles['selectable-inputs-container'], { [styles['epg-inputs']]: isEpgLayout })}>
-                        <div className={styles['selectable-inputs']}>
+                        {isMobile ? <div className={styles['mobile-filters']}>
+                            <div className={styles['catalog-summary']}>
+                                <div className={styles['catalog-type']}>{selectedTypeOption?.label ?? t('SELECT_TYPE')}</div>
+                                <div className={styles['catalog-name']} title={selectedCatalogOption?.label}>{selectedCatalogOption?.label ?? t('SELECT_CATALOG')}</div>
+                            </div>
+                            <Button
+                                className={styles['mobile-filter-button']}
+                                role={'button'}
+                                aria-label={t('CATALOG_FILTERS')}
+                                aria-haspopup={'dialog'}
+                                aria-expanded={filtersOpen}
+                                onClick={openFilters}
+                            >
+                                <Icon name={'filters'} />
+                                <span>{t('FILTERS')}</span>
+                                {activeFilterCount > 0 && <span className={styles['filter-count']}>{activeFilterCount}</span>}
+                            </Button>
+                        </div> : <div className={styles['selectable-inputs']}>
                             {selectInputs.map(({ title, options, value, onSelect }, index) => (
                                 <MultiselectMenu
                                     key={index}
@@ -414,11 +436,11 @@ const Discover = () => {
                                 />
                             ))}
                             <div className={styles['filter-container']}>
-                                <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openInputsModal}>
+                                <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openFilters}>
                                     <Icon className={styles['filter-icon']} name={'filters'} />
                                 </Button>
                             </div>
-                        </div>
+                        </div>}
                         {isEpgLayout && compactEpgDate && <EpgDaySelector
                             compact={true}
                             selectedDate={liveTvGuide?.selected?.date ?? epgDate}
@@ -483,9 +505,10 @@ const Discover = () => {
                     :
                     null
             }
+            <DiscoverFiltersSheet inputs={selectInputs} show={isMobile && filtersOpen} onCloseRequest={closeFilters} />
             {
-                inputsModalOpen ?
-                    <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
+                filtersOpen && !isMobile ?
+                    <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeFilters}>
                         {selectInputs.map(({ title, options, value, onSelect }, index) => (
                             <MultiselectMenu
                                 key={index}

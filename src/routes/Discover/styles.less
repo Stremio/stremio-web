@@ -255,6 +255,68 @@
     }
 }
 
+.mobile-filters {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.catalog-summary {
+    flex: 1;
+    min-width: 0;
+    color: var(--primary-foreground-color);
+
+    .catalog-type {
+        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+        opacity: 0.55;
+    }
+
+    .catalog-name {
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
+
+    .catalog-type, .catalog-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.mobile-filter-button {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--overlay-color);
+    color: var(--primary-foreground-color);
+
+    > svg {
+        flex: none;
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .filter-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 1.4rem;
+        height: 1.4rem;
+        padding: 0 0.25rem;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        background: var(--primary-accent-color);
+    }
+}
+
 @media (orientation: landscape) {
     .mobile-preview {
         padding: 1.5rem;
@@ -411,42 +473,8 @@
     .discover-container {
         .discover-content {
             .catalog-container {
-                .selectable-inputs-container {
-                    justify-content: space-between;
-
-                    .select-input {
-                        &:nth-child(n+2) {
-                            display: none;
-
-                            &~.filter-container {
-                                .filter-button {
-                                    display: flex;
-                                }
-                            }
-                        }
-                    }
-                }
-
                 .meta-items-container {
                     grid-template-columns: repeat(3, 1fr);
-                }
-            }
-        }
-    }
-
-    .selectable-inputs-modal {
-        .selectable-inputs-modal-container {
-            .selectable-inputs-modal-content {
-                .select-input {
-                    display: none;
-
-                    &:nth-child(n+2) {
-                        display: flex;
-
-                        &:not(:last-child) {
-                            margin-bottom: 1rem;
-                        }
-                    }
                 }
             }
         }
