@@ -148,3 +148,31 @@
         }
     }
 }
+
+.bottom-sheet.preview {
+    display: flex !important;
+
+    .container {
+        height: 100%;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 0;
+    }
+
+    @media (orientation: portrait) {
+        .container {
+            height: 50%;
+            max-height: 50%;
+        }
+    }
+
+    @media @phone-landscape {
+        .container {
+            max-width: min(56rem, calc(100% - 3rem - var(--safe-area-inset-left) - var(--safe-area-inset-right)));
+        }
+    }
+}

@@ -2,11 +2,6 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/BottomSheet/BottomSheet.less') {
-    sheet-container: container;
-    sheet-content: content;
-}
-
 :import('~stremio/components/ModalDialog/styles.less') {
     modal-dialog: modal-dialog-container;
     modal-content: modal-dialog-content;
@@ -215,21 +210,8 @@
 }
 
 .sheet {
-    display: flex !important;
-
-    .sheet-container {
-        max-height: calc(100dvh - var(--horizontal-nav-bar-size));
-    }
-
-    .sheet-content {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        border-radius: 0;
-    }
-
     .preview {
-        max-height: calc(100dvh - var(--horizontal-nav-bar-size));
+        flex: 1;
     }
 
     .body {
@@ -243,11 +225,6 @@
 
 @media @phone-landscape {
     .sheet {
-        .sheet-container {
-            max-width: min(56rem, calc(100% - 3rem - var(--safe-area-inset-left) - var(--safe-area-inset-right)));
-            border-radius: 1.5rem 1.5rem 0 0;
-        }
-
         .body {
             grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
             grid-template-rows: min-content minmax(0, 1fr);

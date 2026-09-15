@@ -28,7 +28,7 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.metadetails.regexp
 ];
 
-const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, onShowClick }, ref) => {
+const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, showIcon = 'play', onShowClick }, ref) => {
     const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const isMobileLandscape = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px) and (orientation: landscape)`);
@@ -234,7 +234,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                     typeof showHref === 'string' && compact ?
                         <ActionButton
                             className={classnames(styles['action-button'], styles['show-button'])}
-                            icon={'play'}
+                            icon={showIcon}
                             label={t('SHOW')}
                             variant={iconActions ? 'icon' : 'wide'}
                             tooltip={iconActions}
@@ -288,6 +288,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
 MetaPreview.Placeholder = MetaPreviewPlaceholder;
 
 MetaPreview.propTypes = {
+    showIcon: PropTypes.string,
     className: PropTypes.string,
     compact: PropTypes.bool,
     name: PropTypes.string,

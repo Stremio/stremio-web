@@ -473,6 +473,7 @@ const Discover = () => {
                 selectedMetaItem !== null ?
                     <BottomSheet
                         className={styles['mobile-bottom-sheet']}
+                        variant={'preview'}
                         show={isMobile && mobilePreviewOpen}
                         onCloseRequest={closeMobilePreview}
                         closeOnContentClick={false}
@@ -485,12 +486,12 @@ const Discover = () => {
                             compact={true}
                             name={selectedMetaItem.name}
                             logo={selectedMetaItem.logo}
-                            background={selectedMetaItem.poster}
+                            background={selectedMetaItem.background || selectedMetaItem.poster}
                             runtime={selectedMetaItem.runtime}
                             releaseInfo={selectedMetaItem.releaseInfo}
                             released={selectedMetaItem.released}
                             description={selectedMetaItem.description}
-                            links={selectedMetaItem.links}
+                            links={selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
                             deepLinks={selectedMetaItem.deepLinks}
                             trailerStreams={selectedMetaItem.trailerStreams}
                             inLibrary={selectedMetaItem.inLibrary}
@@ -500,6 +501,7 @@ const Discover = () => {
                             metaId={selectedMetaItem.id}
                             like={selectedMetaItem.like}
                             onShowClick={onMobileShowClick}
+                            showIcon={'chevron-forward'}
                         />
                     </BottomSheet>
                     :

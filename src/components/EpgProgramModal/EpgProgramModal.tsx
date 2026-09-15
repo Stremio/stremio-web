@@ -68,6 +68,7 @@ const EpgProgramModal = ({ program, now, show, onCloseRequest, channelHref }: Pr
     return isMobile ? (
         <BottomSheet
             className={styles['sheet']}
+            variant={'preview'}
             show={show}
             onCloseRequest={onCloseRequest}
             closeOnContentClick={false}
