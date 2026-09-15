@@ -72,9 +72,7 @@ const Discover = () => {
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
     const [epgPreviewOpen, openEpgPreview, closeEpgPreviewModal] = useBinaryState(false);
-    const isEpgLayout = React.useMemo(() => {
-        return discover.selectable.catalogs.find(({ selected }) => selected)?.isEpgGuide === true;
-    }, [discover.selectable.catalogs]);
+    const isEpgLayout = discover.selectable.catalogs.find(({ selected }) => selected)?.isEpgGuide === true;
     const epgNow = useEpgNow(isEpgLayout && routeActive);
     const epgFollowedDate = epgDate ?? epgDateKey(new Date(epgNow));
     const epgTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -82,7 +80,7 @@ const Discover = () => {
         const { start, end } = epgDayWindow(parseEpgDate(epgFollowedDate));
         return { start: new Date(start).toISOString(), end: new Date(end).toISOString() };
     }, [epgFollowedDate, epgTimezone]);
-    const loadLiveTvGuide = React.useCallback(() => {
+    React.useEffect(() => {
         if (!isEpgLayout || !discover.selected?.request || !routeActive) return;
         core.transport.dispatch({
             action: 'Load',
@@ -96,10 +94,7 @@ const Discover = () => {
                 },
             },
         }, 'live_tv_guide');
-    }, [isEpgLayout, discover.selected, routeActive, epgFollowedDate, epgDay]);
-    React.useEffect(() => {
-        loadLiveTvGuide();
-    }, [loadLiveTvGuide, epgNow]);
+    }, [isEpgLayout, discover.selected, routeActive, epgFollowedDate, epgDay, epgNow]);
     React.useEffect(() => {
         if (!isEpgLayout) core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
     }, [isEpgLayout]);
@@ -123,17 +118,10 @@ const Discover = () => {
             return programs;
         }, {});
     }, [liveTvGuide?.channels]);
-    const epgLoading = React.useMemo(() => {
-        const catalog = liveTvGuide?.catalog ?? [];
-        return catalog.length === 0 || catalog.some((page) => page.type === 'Loading');
-    }, [liveTvGuide]);
-    const epgError = React.useMemo(() => {
-        const page = (liveTvGuide?.catalog ?? []).find(({ type }) => type === 'Err');
-        return page ?
-            page.content?.content?.message ?? page.content?.type ?? 'Error'
-            :
-            null;
-    }, [liveTvGuide]);
+    const epgCatalog = liveTvGuide?.catalog ?? [];
+    const epgLoading = epgCatalog.length === 0 || epgCatalog.some((page) => page.type === 'Loading');
+    const epgErrorPage = epgCatalog.find(({ type }) => type === 'Err');
+    const epgError = epgErrorPage ? epgErrorPage.content?.content?.message ?? epgErrorPage.content?.type ?? 'Error' : null;
     const epgHasNextPage = (liveTvGuide?.selectable?.nextPage ?? null) !== null;
     const epgLoadNextPage = React.useCallback(() => {
         core.transport.dispatch({
@@ -382,11 +370,6 @@ const Discover = () => {
         />;
     };
 
-    React.useEffect(() => {
-        if (!isMobile) {
-            closeMobilePreview();
-        }
-    }, [isMobile, closeMobilePreview]);
     React.useEffect(() => {
         if (!routeActive) {
             closeFilters();
