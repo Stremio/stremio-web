@@ -40,9 +40,25 @@
                 transform: rotate(180deg);
             }
         }
+
+        .label-icon {
+            display: block;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
     }
 
     &:hover, &.active {
         background-color: var(--overlay-color);
+    }
+}
+
+.menu-popup {
+    min-width: 11rem;
+
+    > [role='listbox'] {
+        position: static;
+        max-height: none;
+        box-shadow: none;
     }
 }

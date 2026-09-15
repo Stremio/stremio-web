@@ -58,6 +58,10 @@
                 overflow: visible;
                 z-index: 60;
 
+                .selectable-inputs {
+                    display: contents;
+                }
+
                 .select-input {
                     flex: 0 1 15rem;
                     background-color: var(--overlay-color);
@@ -449,48 +453,40 @@
     }
 }
 
-@media @phone-landscape {
-    .discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
-        align-items: center;
+.discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
+    align-items: center;
+    gap: 0.75rem;
+
+    .selectable-inputs {
+        display: flex;
+        flex: 1;
+        min-width: 0;
         gap: 0.75rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-
-        .select-input {
-            min-width: 0;
-
-            .multiselect-button { padding-right: 0.75rem; padding-left: 0.75rem; }
-            &:not(:first-child) { margin-left: 0; }
-            &:nth-child(2) {
-                display: block;
-
-                &~.filter-container .filter-button { display: none; }
-            }
-
-            &:nth-child(n+3) {
-                display: none;
-
-                &~.filter-container .filter-button { display: flex; }
-            }
-        }
-
-        .filter-container {
-            flex: none;
-            gap: 0.75rem;
-            margin-left: auto;
-            overflow: visible;
-
-            .filter-button { margin-left: 0; }
-        }
+        padding: 0.15rem;
+        margin: -0.15rem;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
     }
 
-    .selectable-inputs-modal.epg-inputs-modal .selectable-inputs-modal-container .selectable-inputs-modal-content .select-input {
-        &:nth-child(2) { display: none; }
+    .select-input {
+        flex: none;
+        width: 11rem;
+        min-width: 0;
 
-        &:nth-child(n+3) {
-            display: flex;
+        &:nth-child(n) { display: block; }
+        .multiselect-button { padding-right: 0.75rem; padding-left: 0.75rem; }
+        &:not(:first-child) { margin-left: 0; }
+    }
 
-            &:not(:last-child) { margin-bottom: 1rem; }
-        }
+    .filter-container {
+        display: none;
+    }
+}
+
+@media @phone-landscape {
+    .discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
     }
 }

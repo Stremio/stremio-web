@@ -41,7 +41,7 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
     const channelColumnInnerRef = useRef<HTMLDivElement>(null);
     const nowRef = useRef(now);
     const positionRef = useRef<{ day: string; center: number | null }>({ day: '', center: null });
-    const [viewport, setViewport] = useState({ left: 0, top: 0, width: 0, height: 0 });
+    const [viewport, setViewport] = useState({ left: 0, top: 0, width: 0, height: 0, minTickWidth: 100 });
     const [pixelsPerHour, setPixelsPerHour] = useState(EPG_PIXELS_PER_HOUR);
     const todayDate = useMemo(() => parseEpgDate(today) ?? new Date(), [today]);
     const effectiveDay = useMemo(() => parseEpgDate(selectedDate) ?? todayDate, [selectedDate, todayDate]);
@@ -60,7 +60,7 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
             slot.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'shortOffset' }) : slot.label }));
     }, [dayStart, dayEnd]);
     const selectedSlot = Math.max(0, Math.min(slots.length - 1, Math.floor((viewport.left + viewport.width / 2) / halfHourPx)));
-    const tickSize = (TICK_MINUTES.find((minutes) => minutes * pixelsPerHour / 60 >= 75) ?? 120) * 60000;
+    const tickSize = (TICK_MINUTES.find((minutes) => minutes * pixelsPerHour / 60 >= viewport.minTickWidth) ?? 120) * 60000;
     const tickWidth = tickSize * pixelsPerHour / HOUR_IN_MS;
     const firstTick = Math.max(0, Math.floor((viewport.left - TIME_OVERSCAN_PX) / tickWidth));
     const lastTick = Math.min(Math.ceil((dayEnd - dayStart) / tickSize), Math.ceil((viewport.left + viewport.width + TIME_OVERSCAN_PX) / tickWidth));
@@ -70,7 +70,7 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
         nowRef.current = now;
     }, [now]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const element = viewportRef.current;
         if (!element) return;
         let frame: number | null = null;
@@ -78,7 +78,8 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
             frame = null;
             if (headerRef.current) headerRef.current.scrollLeft = element.scrollLeft;
             if (channelColumnInnerRef.current) channelColumnInnerRef.current.style.transform = `translateY(-${element.scrollTop}px)`;
-            setViewport({ left: element.scrollLeft, top: element.scrollTop, width: element.clientWidth, height: element.clientHeight });
+            const minTickWidth = 6.5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+            setViewport({ left: element.scrollLeft, top: element.scrollTop, width: element.clientWidth, height: element.clientHeight, minTickWidth });
         };
         const onScroll = () => {
             if (frame === null) frame = requestAnimationFrame(measure);
@@ -156,16 +157,16 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
             )}
             <div className={styles['epg-header-row']}>
                 <div className={styles['epg-channel-column-header']} style={{ width: CHANNEL_COLUMN_WIDTH }}>
-                    <MultiselectMenu className={styles['epg-time-menu']} options={slots.map((slot) => ({ label: slot.label, value: slot.index }))} value={selectedSlot} onSelect={handleSlotSelect} />
+                    <MultiselectMenu className={styles['epg-time-menu']} icon={'clock'} portal={true} options={slots.map((slot) => ({ label: slot.label, value: slot.index }))} value={selectedSlot} onSelect={handleSlotSelect} />
+                    <div className={styles['epg-zoom-controls']}>
+                        <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_OUT', { defaultValue: 'Zoom out' })} disabled={pixelsPerHour <= MIN_SCALE} aria-disabled={pixelsPerHour <= MIN_SCALE} tabIndex={pixelsPerHour > MIN_SCALE ? 0 : -1} onClick={() => zoom(0.5)}><span className={styles['epg-zoom-icon']} aria-hidden={'true'} /></Button>
+                        <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_IN', { defaultValue: 'Zoom in' })} disabled={pixelsPerHour >= MAX_SCALE} aria-disabled={pixelsPerHour >= MAX_SCALE} tabIndex={pixelsPerHour < MAX_SCALE ? 0 : -1} onClick={() => zoom(2)}><span className={`${styles['epg-zoom-icon']} ${styles['epg-zoom-in']}`} aria-hidden={'true'} /></Button>
+                    </div>
                 </div>
-                <div ref={headerRef} className={styles['epg-header-viewport']}>
+                <div ref={headerRef} className={styles['epg-header-viewport']} style={{ width: viewport.width }}>
                     <div className={styles['epg-header-time-slots']} style={{ width: totalGridWidth }}>
                         {ticks.map((index) => <div key={index} className={styles['epg-time-slot']} style={{ left: index * tickWidth, width: tickWidth }}>{new Date(dayStart + index * tickSize).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>)}
                     </div>
-                </div>
-                <div className={styles['epg-zoom-controls']}>
-                    <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_OUT', { defaultValue: 'Zoom out' })} disabled={pixelsPerHour <= MIN_SCALE} aria-disabled={pixelsPerHour <= MIN_SCALE} tabIndex={pixelsPerHour > MIN_SCALE ? 0 : -1} onClick={() => zoom(0.5)}><span className={styles['epg-zoom-icon']} aria-hidden={'true'} /></Button>
-                    <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_IN', { defaultValue: 'Zoom in' })} disabled={pixelsPerHour >= MAX_SCALE} aria-disabled={pixelsPerHour >= MAX_SCALE} tabIndex={pixelsPerHour < MAX_SCALE ? 0 : -1} onClick={() => zoom(2)}><span className={`${styles['epg-zoom-icon']} ${styles['epg-zoom-in']}`} aria-hidden={'true'} /></Button>
                 </div>
             </div>
             <div className={styles['epg-body-row']}>
@@ -194,10 +195,10 @@ const EpgGuide = ({ channels, programs, loading, selectedDate, today, dayWindow,
                         )) : <div style={rowPadding}>
                             {visibleChannels.map((channel) => <EpgGuideRow key={channel.id} channel={channel} programs={programs[channel.id] ?? EMPTY_PROGRAMS} dayStart={dayStart} dayEnd={dayEnd} visibleStart={visibleStart} visibleEnd={visibleEnd} now={now} onProgramClick={onProgramSelect} pixelsPerHour={pixelsPerHour} />)}
                         </div>}
-                        {!initialLoading && channels.length === 0 && error === null && <div className={styles['epg-empty']}>{t('NO_STREAM')}</div>}
                         {loading && channels.length > 0 && <div className={styles['epg-loading-more']} role={'status'}>{t('STREAM_LOADING')}</div>}
                     </div>
                 </div>
+                {!initialLoading && channels.length === 0 && error === null && <div className={styles['epg-empty']} role={'status'}>{t('NO_STREAM')}</div>}
             </div>
         </div>
     );

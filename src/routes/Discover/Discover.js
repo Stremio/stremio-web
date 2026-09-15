@@ -401,27 +401,30 @@ const Discover = () => {
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
                     <div className={classnames(styles['selectable-inputs-container'], { [styles['epg-inputs']]: isEpgLayout })}>
-                        {selectInputs.map(({ title, options, value, onSelect }, index) => (
-                            <MultiselectMenu
-                                key={index}
-                                className={styles['select-input']}
-                                title={title}
-                                options={options}
-                                value={value}
-                                onSelect={onSelect}
-                            />
-                        ))}
-                        <div className={styles['filter-container']}>
-                            {isEpgLayout && compactEpgDate && <EpgDaySelector
-                                compact={true}
-                                selectedDate={liveTvGuide?.selected?.date ?? epgDate}
-                                today={liveTvGuide?.selectable?.today ?? null}
-                                onDayChange={onEpgDayChange}
-                            />}
-                            <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openInputsModal}>
-                                <Icon className={styles['filter-icon']} name={'filters'} />
-                            </Button>
+                        <div className={styles['selectable-inputs']}>
+                            {selectInputs.map(({ title, options, value, onSelect }, index) => (
+                                <MultiselectMenu
+                                    key={index}
+                                    className={styles['select-input']}
+                                    title={title}
+                                    options={options}
+                                    value={value}
+                                    onSelect={onSelect}
+                                    portal={isEpgLayout}
+                                />
+                            ))}
+                            <div className={styles['filter-container']}>
+                                <Button className={styles['filter-button']} title={t('ALL_FILTERS')} onClick={openInputsModal}>
+                                    <Icon className={styles['filter-icon']} name={'filters'} />
+                                </Button>
+                            </div>
                         </div>
+                        {isEpgLayout && compactEpgDate && <EpgDaySelector
+                            compact={true}
+                            selectedDate={liveTvGuide?.selected?.date ?? epgDate}
+                            today={liveTvGuide?.selectable?.today ?? null}
+                            onDayChange={onEpgDayChange}
+                        />}
                     </div>
                     {
                         discover.catalog !== null && !discover.catalog.installed ?
@@ -482,7 +485,7 @@ const Discover = () => {
             }
             {
                 inputsModalOpen ?
-                    <ModalDialog title={t('CATALOG_FILTERS')} className={classnames(styles['selectable-inputs-modal'], { [styles['epg-inputs-modal']]: isEpgLayout })} onCloseRequest={closeInputsModal}>
+                    <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeInputsModal}>
                         {selectInputs.map(({ title, options, value, onSelect }, index) => (
                             <MultiselectMenu
                                 key={index}

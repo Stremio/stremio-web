@@ -5,8 +5,6 @@
 
 :import('~stremio/components/MultiselectMenu/MultiselectMenu.less') {
     multiselect-button: multiselect-button;
-    multiselect-label: label;
-    multiselect-icon: icon;
 }
 
 @keyframes epg-skeleton-shimmer {
@@ -38,15 +36,17 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    gap: 0.25rem;
     margin-bottom: 8px;
+    padding-right: 0.5rem;
     position: relative;
     z-index: 20;
     overflow: visible;
 }
 
 .epg-header-row .epg-time-menu {
-    width: 100%;
-    max-width: 100%;
+    flex: 1;
+    max-width: 2.25rem;
     min-width: 0;
     border-radius: var(--border-radius);
     z-index: 40;
@@ -54,8 +54,8 @@
     .multiselect-button {
         width: 100%;
         height: 2.25rem;
-        padding: 0 0.4rem;
-        gap: 0.35rem;
+        justify-content: center;
+        padding: 0;
         border-radius: var(--border-radius);
         background-color: transparent;
 
@@ -63,27 +63,19 @@
             background-color: var(--overlay-color);
         }
     }
-
-    .multiselect-label { font-size: 0.9rem; font-variant-numeric: tabular-nums; }
-    .multiselect-icon { flex: none; width: 0.85rem; opacity: 0.65; }
-    [role='listbox'] {
-        width: max-content;
-        min-width: 100%;
-        max-width: calc(100vw - 3rem);
-        white-space: nowrap;
-    }
 }
 
 .epg-zoom-controls {
-    flex: none;
+    flex: 2;
     display: flex;
     gap: 0.25rem;
-    margin: 0 1.5rem 0 0.5rem;
+    max-width: 4.75rem;
     > [role='button'] {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 2.25rem;
+        flex: 1;
+        min-width: 0;
         height: 2.25rem;
         border-radius: var(--border-radius);
         color: var(--primary-foreground-color);
@@ -108,7 +100,7 @@
 }
 
 .epg-header-viewport {
-    flex: 1;
+    flex: none;
     min-width: 0;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -137,6 +129,7 @@
 // Body layout ─────────────────────────────────────────────────────────────────
 
 .epg-body-row {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex: 1;
@@ -248,10 +241,14 @@
 }
 
 .epg-empty {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem;
+    padding: 1.5rem;
+    text-align: center;
+    pointer-events: none;
     font-size: 1.6rem;
     color: var(--primary-foreground-color);
     opacity: 0.5;

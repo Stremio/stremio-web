@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
-import { Button, MultiselectMenu } from 'stremio/components';
+import { Button } from 'stremio/components';
 import { useMediaQuery } from 'stremio/common';
 import { parseEpgDate } from 'stremio/common/EPG';
 import styles from './EpgDaySelector.less';
@@ -31,22 +31,12 @@ const EpgDaySelector = ({ selectedDate, today, compact = false, onDayChange }: P
             .sort((a, b) => a - b).map((time) => new Date(time));
     }, [todayDate, effectiveDay]);
     const selectedDayIndex = days.findIndex((day) => day.getTime() === effectiveDay.getTime());
-    const visibleDays = narrow ? days.slice(Math.max(0, Math.min(days.length - 3, selectedDayIndex - 1)), Math.max(3, Math.min(days.length, selectedDayIndex + 2))) : days;
-
-    if (compact) {
-        return <MultiselectMenu
-            className={styles['epg-day-menu']}
-            options={days.map((day) => ({
-                value: day.getTime(),
-                label: `${abbreviate(t(WEEKDAYS[day.getDay()]))}, ${abbreviate(t(MONTHS[day.getMonth()]))} ${day.getDate()}`,
-            }))}
-            value={effectiveDay.getTime()}
-            onSelect={(value: number) => onDayChange(new Date(value))}
-        />;
-    }
+    const visibleDayCount = compact ? (narrow ? 1 : 3) : (narrow ? 3 : days.length);
+    const firstVisibleDay = Math.max(0, Math.min(days.length - visibleDayCount, selectedDayIndex - Math.floor(visibleDayCount / 2)));
+    const visibleDays = days.slice(firstVisibleDay, firstVisibleDay + visibleDayCount);
 
     return (
-        <div className={styles['epg-day-selector']}>
+        <div className={`${styles['epg-day-selector']}${compact ? ` ${styles['compact']}` : ''}`}>
             <Button className={styles['epg-day-arrow']} role={'button'} disabled={selectedDayIndex <= 0} aria-disabled={selectedDayIndex <= 0} tabIndex={selectedDayIndex <= 0 ? -1 : 0} onClick={() => selectedDayIndex > 0 && onDayChange(days[selectedDayIndex - 1])} aria-label={t('BUTTON_PREV')}>
                 <Icon className={styles['epg-day-arrow-icon']} name={'chevron-back'} />
             </Button>
