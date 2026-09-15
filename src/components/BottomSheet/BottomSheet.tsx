@@ -68,10 +68,9 @@ type Props = {
     closeOnContentClick?: boolean,
     closeOnOrientationChange?: boolean,
     flush?: boolean,
-    variant?: 'preview',
 };
 
-const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, closeOnContentClick = true, closeOnOrientationChange = true, flush = false, variant }: Props) => {
+const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const modalsContainer = useModalsContainer();
@@ -307,7 +306,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
     return (
         <Modal
             ref={modalRef}
-            className={classNames(styles['bottom-sheet'], className, { [styles['open']]: open, [styles['preview']]: variant === 'preview' })}
+            className={classNames(styles['bottom-sheet'], className, { [styles['open']]: open })}
             autoFocus
         >
             <button

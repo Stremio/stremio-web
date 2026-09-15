@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { default: MetaPreviewSheet } = require('stremio/components/MetaPreviewSheet');
 const { useTranslation } = require('react-i18next');
 const { useParams } = require('react-router');
 const { useSearchParams } = require('react-router-dom');
@@ -12,7 +13,7 @@ const { XSMALL_WIDTH } = require('stremio/common/screenSizes');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { useNavigateWithOrigin } = require('stremio-router');
-const { AddonDetailsModal, BottomSheet, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
+const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: DiscoverFiltersSheet } = require('./DiscoverFiltersSheet');
@@ -471,18 +472,12 @@ const Discover = () => {
             {renderEpgPreviewModal()}
             {
                 selectedMetaItem !== null ?
-                    <BottomSheet
-                        className={styles['mobile-bottom-sheet']}
-                        variant={'preview'}
+                    <MetaPreviewSheet
                         show={isMobile && mobilePreviewOpen}
                         onCloseRequest={closeMobilePreview}
-                        closeOnContentClick={false}
-                        closeOnOrientationChange={false}
-                        flush={true}
                         ariaLabel={selectedMetaItem.name}
                     >
                         <MetaPreview
-                            className={styles['mobile-preview']}
                             compact={true}
                             name={selectedMetaItem.name}
                             logo={selectedMetaItem.logo}
@@ -503,7 +498,7 @@ const Discover = () => {
                             onShowClick={onMobileShowClick}
                             showIcon={'chevron-forward'}
                         />
-                    </BottomSheet>
+                    </MetaPreviewSheet>
                     :
                     null
             }

@@ -1,7 +1,5 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
-
 :import('~stremio/components/ModalDialog/styles.less') {
     modal-dialog: modal-dialog-container;
     modal-content: modal-dialog-content;
@@ -9,45 +7,6 @@
 }
 
 .preview {
-    position: relative;
-    isolation: isolate;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    max-height: inherit;
-    overflow: hidden;
-    color: var(--primary-foreground-color);
-    background: var(--modal-background-color);
-
-    .backdrop, .scrim {
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-
-    .backdrop {
-        object-fit: cover;
-        opacity: 0.22;
-        object-position: center 20%;
-    }
-
-    .scrim {
-        background: linear-gradient(155deg, rgba(16, 13, 35, 0.3), rgba(16, 13, 35, 0.85) 65%, var(--modal-background-color));
-    }
-
-    .body {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 1.5rem;
-        min-height: 0;
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        padding: 2rem 2rem 1.5rem;
-    }
-
     .channel {
         display: flex;
         align-items: center;
@@ -64,15 +23,6 @@
         height: 2.5rem;
         object-fit: contain;
         border-radius: 0.5rem;
-    }
-
-    .artwork {
-        display: none;
-    }
-
-    .information {
-        min-width: 0;
-        overflow: visible;
     }
 
     .status-line {
@@ -97,14 +47,6 @@
 
     .live {
         background: #d93d57;
-    }
-
-    .title {
-        margin: 0.8rem 0;
-        font-size: clamp(1.6rem, 4vw, 2.2rem);
-        font-weight: 700;
-        line-height: 1.2;
-        overflow-wrap: anywhere;
     }
 
     .time {
@@ -147,13 +89,6 @@
         }
     }
 
-    .description {
-        margin: 1.25rem 0 0;
-        font-size: 0.95rem;
-        line-height: 1.7;
-        color: rgba(255, 255, 255, 0.85);
-    }
-
     .genres {
         display: flex;
         flex-wrap: wrap;
@@ -169,18 +104,25 @@
         }
     }
 
-    .footer {
-        flex: none;
-        padding: 1rem 2rem 1.5rem;
+    .metadata {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     .channel-button {
-        width: 100%;
-        height: 3.5rem;
+        height: 4rem;
     }
 }
 
 .modal {
+    .preview {
+        padding: 2rem;
+        max-height: inherit;
+        min-height: 0;
+        color: var(--primary-foreground-color);
+    }
+
     .modal-dialog {
         width: 38rem;
         max-width: calc(100vw - 3rem);
@@ -207,84 +149,4 @@
         }
     }
 
-}
-
-.sheet {
-    .preview {
-        flex: 1;
-    }
-
-    .body {
-        padding: 2.5rem 1.5rem 1.25rem;
-    }
-
-    .footer {
-        padding: 0.5rem 1.5rem max(1.25rem, var(--safe-area-inset-bottom));
-    }
-}
-
-@media @phone-landscape {
-    .sheet {
-        .body {
-            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
-            grid-template-rows: min-content minmax(0, 1fr);
-            gap: 0.75rem 1.5rem;
-            padding: 2rem 1.5rem 0.75rem;
-        }
-
-        .channel {
-            grid-column: 1;
-            align-self: start;
-            font-size: 0.75rem;
-            padding: 0;
-            gap: 0.5rem;
-        }
-
-        .channel-logo {
-            width: 1.75rem;
-            height: 1.75rem;
-        }
-
-        .artwork {
-            display: block;
-            grid-column: 1;
-            grid-row: 2;
-            align-self: start;
-            width: 100%;
-            max-height: 8rem;
-            aspect-ratio: 16 / 10;
-            object-fit: cover;
-            object-position: center top;
-            border-radius: 0.75rem;
-        }
-
-        .information {
-            grid-column: 2;
-            grid-row: 1 / span 2;
-        }
-
-        .title {
-            font-size: 1.4rem;
-            margin: 0.6rem 0;
-        }
-
-        .description {
-            margin-top: 0.75rem;
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-
-        .genres {
-            margin-top: 0.75rem;
-        }
-
-        .footer {
-            padding-top: 0.5rem;
-            padding-bottom: max(0.75rem, var(--safe-area-inset-bottom));
-        }
-
-        .channel-button {
-            height: 2.75rem;
-        }
-    }
 }
