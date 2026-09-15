@@ -25,6 +25,10 @@
     mobile-sheet-content: content;
 }
 
+:import('./EpgGuide/EpgDaySelector.less') {
+    epg-day-selector: epg-day-selector;
+}
+
 .discover-container {
     height: calc(100% - var(--safe-area-inset-bottom));
     background-color: transparent;
@@ -514,7 +518,28 @@
 
 @media @phone-landscape {
     .discover-container .discover-content .catalog-container .selectable-inputs-container.epg-inputs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         padding-top: 1rem;
         padding-bottom: 1rem;
+
+        .mobile-filters { display: contents; }
+
+        .catalog-summary {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .epg-day-selector {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .mobile-filter-button {
+            grid-column: 3;
+            grid-row: 1;
+            justify-self: end;
+            width: max-content;
+        }
     }
 }
