@@ -13,7 +13,7 @@ const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className = '', compact = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, ...props }) => {
+const Stream = ({ className = '', compact = false, isEpg = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
@@ -118,6 +118,8 @@ const Stream = ({ className = '', compact = false, videoId = undefined, videoRel
             return;
         }
 
+        if (isEpg) closeMenu();
+
         if (profile.settings.playerType !== null) {
             markVideoAsWatched();
             toast.show({
@@ -130,7 +132,7 @@ const Stream = ({ className = '', compact = false, videoId = undefined, videoRel
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick, profile.settings, markVideoAsWatched]);
+    }, [props.onClick, profile.settings, markVideoAsWatched, isEpg, closeMenu]);
 
     const copyMagnetLink = React.useCallback((event) => {
         event.preventDefault();
@@ -250,7 +252,7 @@ const Stream = ({ className = '', compact = false, videoId = undefined, videoRel
                 <div className={styles['context-menu-title']}>
                     {description}
                 </div>
-                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
+                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')} href={isEpg ? href : undefined} target={isEpg ? target : undefined} download={isEpg ? download : undefined} onClick={isEpg ? onClick : undefined}>
                     <Icon className={styles['menu-icon']} name={'play'} />
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
@@ -262,14 +264,14 @@ const Stream = ({ className = '', compact = false, videoId = undefined, videoRel
                         </Button>
                 }
                 {
-                    magnetLink &&
+                    !isEpg && magnetLink &&
                         <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_MAGNET_LINK')} onClick={copyMagnetLink}>
                             <Icon className={styles['menu-icon']} name={'magnet-link'} />
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_MAGNET_LINK')}</div>
                         </Button>
                 }
                 {
-                    downloadLink &&
+                    !isEpg && downloadLink &&
                         <Button className={styles['context-menu-option-container']} title={t('CTX_DOWNLOAD_VIDEO')} onClick={copyDownloadLink}>
                             <Icon className={styles['menu-icon']} name={'download'} />
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
@@ -277,7 +279,7 @@ const Stream = ({ className = '', compact = false, videoId = undefined, videoRel
                 }
             </div>
         );
-    }, [copyStreamLink, onClick]);
+    }, [copyStreamLink, onClick, isEpg, href, target, download]);
 
     React.useEffect(() => {
         if (!routeFocused) {
@@ -292,6 +294,8 @@ const Stream = ({ className = '', compact = false, videoId = undefined, videoRel
             onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
             open={menuOpen}
+            portal={isEpg}
+            menuClassName={isEpg ? styles['epg-menu'] : undefined}
             onCloseRequest={closeMenu}
             renderLabel={renderLabel}
             renderMenu={renderMenu}
@@ -304,6 +308,7 @@ Stream.Placeholder = StreamPlaceholder;
 Stream.propTypes = {
     className: PropTypes.string,
     compact: PropTypes.bool,
+    isEpg: PropTypes.bool,
     videoId: PropTypes.string,
     videoReleased: PropTypes.instanceOf(Date),
     addonName: PropTypes.string,

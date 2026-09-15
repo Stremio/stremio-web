@@ -57,10 +57,12 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
         const element = agendaRef.current;
         const row = element?.querySelector<HTMLElement>('[aria-pressed="true"]');
         if (!element || !row || element.clientHeight === 0) return;
-        const top = row.offsetTop;
+        const style = window.getComputedStyle(element);
+        const top = row.offsetTop - (parseFloat(style.scrollPaddingTop) || 0);
+        const bottom = row.offsetTop + row.offsetHeight + (parseFloat(style.scrollPaddingBottom) || 0);
         if (agendaScrollRef.current === 'start' || top < element.scrollTop) element.scrollTop = top;
-        else if (row.offsetTop + row.offsetHeight > element.scrollTop + element.clientHeight) {
-            element.scrollTop = row.offsetTop + row.offsetHeight - element.clientHeight;
+        else if (bottom > element.scrollTop + element.clientHeight) {
+            element.scrollTop = bottom - element.clientHeight;
         }
         agendaScrollRef.current = null;
     }, []);
@@ -104,7 +106,10 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                 </div>
                 <div className={styles['zoom-controls']} aria-hidden={view !== 'timeline'}>
                     <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_OUT', { defaultValue: 'Zoom out' })} aria-disabled={!canZoomOut} tabIndex={canZoomOut ? 0 : -1} disabled={!canZoomOut} onClick={() => zoom(0.5)}><span className={styles['zoom-icon']} aria-hidden={'true'} /></Button>
-                    <Button role={'button'} onClick={() => selected && focus(selected, true)}>{t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })}</Button>
+                    <Button role={'button'} aria-label={t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })} onClick={() => selected && focus(selected, true)}>
+                        <Icon className={styles['fit-icon']} name={'maximize'} />
+                        <span className={styles['fit-label']}>{t('LIVE_TV_FIT_SELECTED', { defaultValue: 'Fit selected' })}</span>
+                    </Button>
                     <Button role={'button'} aria-label={t('LIVE_TV_ZOOM_IN', { defaultValue: 'Zoom in' })} aria-disabled={!canZoomIn} tabIndex={canZoomIn ? 0 : -1} disabled={!canZoomIn} onClick={() => zoom(2)}><span className={classNames(styles['zoom-icon'], styles['zoom-in'])} aria-hidden={'true'} /></Button>
                 </div>
             </div>}
@@ -143,7 +148,8 @@ const LiveTvSchedule = ({ programs, now, selected, onProgramSelect }: Props) => 
                             const left = position(program.startTime.getTime());
                             const width = position(program.endTime.getTime()) - left;
                             const contentWidth = Math.min(width, viewport.width);
-                            return <div key={program.id ?? program.startTime.getTime()} className={classNames(styles['program'], { [styles['compact']]: width < 100, [styles['tiny']]: width < 24, [styles['with-thumbnail']]: contentWidth >= 180 })} style={{ left, width }}>
+                            const isVisible = left + width > viewport.left && left < viewport.left + viewport.width;
+                            return <div key={program.id ?? program.startTime.getTime()} className={classNames(styles['program'], { [styles['visible']]: isVisible, [styles['compact']]: width < 100, [styles['icon-only']]: width < 56, [styles['tiny']]: width < 24, [styles['with-thumbnail']]: contentWidth >= 180 })} style={{ left, width }}>
                                 <Button
                                     role={'button'}
                                     className={styles['program-card']}

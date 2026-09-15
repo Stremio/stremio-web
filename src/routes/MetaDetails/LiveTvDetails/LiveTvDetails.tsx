@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
@@ -34,6 +34,7 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
     const isMobile = useMediaQuery(`(max-width: ${XSMALL_WIDTH}px)`);
     const now = useEpgNow(true);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
+    const informationRef = useRef<HTMLDivElement>(null);
     const channel = useMemo(() => ({
         id: meta.id, type: meta.type, name: meta.name, logo: meta.logo ?? meta.poster, deepLinks: meta.deepLinks,
     }), [meta.id, meta.type, meta.name, meta.logo, meta.poster, meta.deepLinks]);
@@ -44,6 +45,7 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
     const selected = programs.find((program) => programKey(program) === selectedKey)
         ?? programs.find((program) => program.endTime.getTime() > now)
         ?? programs[programs.length - 1] ?? null;
+    const selectedStartTime = selected?.startTime.getTime();
     const progress = selected ? getEpgProgress(selected, now) : null;
     const artwork = selected?.thumbnail ?? meta.background;
     const dateLabel = selected?.startTime.toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' });
@@ -54,6 +56,10 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
     useEffect(() => {
         if (active) core.transport.dispatch({ action: 'MetaDetails', args: { action: 'RefreshLive' } }, 'meta_details');
     }, [active, core, meta.id, now]);
+
+    useLayoutEffect(() => {
+        if (informationRef.current) informationRef.current.scrollTop = 0;
+    }, [selected?.id, selectedStartTime]);
 
     return (
         <div className={classNames(className, styles['live-details'])}>
@@ -71,7 +77,7 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
                             </div>
                             <div className={styles['channel-identity']}><h1>{meta.name}</h1><span>{addonName}</span></div>
                         </header>
-                        <div className={styles['current-information']}>
+                        <div ref={informationRef} className={styles['current-information']}>
                             <div aria-live={'polite'} aria-atomic={'true'}>
                                 <div className={styles['current-time']}>
                                     {progress !== null || !selected ? <span className={styles['live-badge']}><span />{t('PLAYER_LIVE')}</span>

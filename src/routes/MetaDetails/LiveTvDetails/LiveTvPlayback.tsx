@@ -21,17 +21,17 @@ const LiveTvPlayback = ({ streams, mobile = false }: Props) => {
     const readyStreams = streams.flatMap((resource) => resource.content.type === 'Ready'
         ? resource.content.content.map((stream) => ({ stream, addonName: resource.addon.manifest.name })) : []);
     const loading = streams.some((resource) => resource.content.type === 'Loading');
-    const soleStream = readyStreams.length === 1 ? readyStreams[0] : null;
+    const soleStream = !loading && readyStreams.length === 1 ? readyStreams[0] : null;
     const watchLabel = t('LIVE_TV_WATCH_LIVE', { defaultValue: 'Watch live' });
     const optionsLabel = t('LIVE_TV_PLAYBACK_OPTIONS', { defaultValue: 'Playback options' });
     const onStreamClick = (stream: Stream) => {
         setStreamsOpen(false);
         core.transport.analytics({ event: 'StreamClicked', args: { stream } });
     };
-    const streamMessage = <div className={styles['stream-message']} role={'status'}>{loading ? t('STREAM_LOADING') : t('NO_STREAM')}</div>;
     const streamOptions = <div className={styles['stream-options']}>
         {readyStreams.map(({ stream, addonName }, index) => <StreamButton
             key={index}
+            isEpg={true}
             className={styles['stream-option']}
             addonName={addonName}
             name={!mobile && soleStream ? watchLabel : stream.name || addonName}
@@ -40,7 +40,11 @@ const LiveTvPlayback = ({ streams, mobile = false }: Props) => {
             deepLinks={stream.deepLinks}
             onClick={() => onStreamClick(stream)}
         />)}
-        {readyStreams.length === 0 && streamMessage}
+        {loading && <div className={styles['stream-loading']} role={'status'} aria-label={t('STREAM_LOADING')}>
+            <StreamButton.Placeholder />
+            <StreamButton.Placeholder />
+        </div>}
+        {!loading && readyStreams.length === 0 && <div className={styles['stream-message']} role={'status'}>{t('NO_STREAM')}</div>}
     </div>;
 
     if (!mobile) return <aside className={styles['streams-panel']} aria-label={optionsLabel}>
@@ -52,13 +56,14 @@ const LiveTvPlayback = ({ streams, mobile = false }: Props) => {
         {soleStream ? <StreamButton
             className={actionStyles['action-button']}
             compact={true}
+            isEpg={true}
             addonName={soleStream.addonName}
             name={watchLabel}
             description={soleStream.addonName}
             progress={null}
             deepLinks={soleStream.stream.deepLinks}
             onClick={() => onStreamClick(soleStream.stream)}
-        /> : readyStreams.length > 1 ? <ActionButton className={actionStyles['action-button']} icon={'play'} label={watchLabel} variant={'wide'} role={'button'} onClick={() => setStreamsOpen(true)} aria-haspopup={'dialog'} /> : streamMessage}
+        /> : <ActionButton className={actionStyles['action-button']} icon={'play'} label={watchLabel} variant={'wide'} role={'button'} onClick={() => setStreamsOpen(true)} aria-haspopup={'dialog'} />}
         <BottomSheet
             className={styles['streams-sheet']}
             title={optionsLabel}

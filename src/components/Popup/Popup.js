@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { createPortal } = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
@@ -20,14 +21,29 @@ const getAnchorElement = (element) => {
     return getAnchorElement(element.parentElement);
 };
 
-const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
+const Popup = ({ open, direction, portal = false, autoFocus = portal, menuClassName, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
     const routeFocused = useRouteFocused();
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
+    const layerRef = React.useRef(null);
     const [autoDirection, setAutoDirection] = React.useState(null);
     const menuOnMouseDown = React.useCallback((event) => {
         event.nativeEvent.closePopupPrevented = true;
     }, []);
+    const portalOnClick = (event) => {
+        if (event.target === event.currentTarget && typeof onCloseRequest === 'function') {
+            onCloseRequest({ type: 'close', nativeEvent: event.nativeEvent, dataset });
+        }
+    };
+    const portalOnKeyDown = (event) => {
+        if (event.code === 'Escape') {
+            event.preventDefault();
+            event.stopPropagation();
+            if (typeof onCloseRequest === 'function') {
+                onCloseRequest({ type: 'close', nativeEvent: event.nativeEvent, dataset });
+            }
+        }
+    };
     React.useEffect(() => {
         const onCloseEvent = (event) => {
             if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
@@ -43,12 +59,12 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
                         }
                         break;
                     case 'mousedown':
-                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
+                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target) && !menuRef.current?.contains(event.target)) {
                             onCloseRequest(closeEvent);
                         }
                         break;
                     case 'pointerdown':
-                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target)) {
+                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target) && !menuRef.current?.contains(event.target)) {
                             onCloseRequest(closeEvent);
                         }
                         break;
@@ -67,7 +83,7 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         };
     }, [routeFocused, open, onCloseRequest, dataset]);
     React.useLayoutEffect(() => {
-        if (open) {
+        if (open && !portal) {
             const autoDirection = [];
             const anchor = getAnchorElement(labelRef.current);
             const anchorRect = anchor.getBoundingClientRect();
@@ -105,23 +121,81 @@ const Popup = ({ open, direction, renderLabel, renderMenu, dataset, onCloseReque
         } else {
             setAutoDirection(null);
         }
-    }, [open]);
-    return renderLabel({
+    }, [open, portal]);
+    React.useLayoutEffect(() => {
+        if (!open || !portal) return;
+
+        const label = labelRef.current;
+        const menu = menuRef.current;
+        const layer = layerRef.current;
+        const positionMenu = () => {
+            const bounds = layer.getBoundingClientRect();
+            const padding = window.getComputedStyle(layer);
+            const top = bounds.top + parseFloat(padding.paddingTop);
+            const bottom = bounds.bottom - parseFloat(padding.paddingBottom);
+            const left = bounds.left + parseFloat(padding.paddingLeft);
+            const right = bounds.right - parseFloat(padding.paddingRight);
+            const anchor = label.getBoundingClientRect();
+            menu.style.maxWidth = `${right - left}px`;
+            const width = menu.getBoundingClientRect().width;
+            const height = menu.scrollHeight;
+            const below = Math.max(0, bottom - anchor.bottom - 4);
+            const above = Math.max(0, anchor.top - top - 4);
+            const opensBelow = height <= below || (height > above && below >= above);
+            const available = opensBelow ? below : above;
+            const menuTop = opensBelow ? anchor.bottom + 4 : anchor.top - 4 - Math.min(height, available);
+            const menuLeft = anchor.left + width <= right ? anchor.left : anchor.right - width;
+            menu.style.maxHeight = `${available}px`;
+            menu.style.top = `${Math.max(top, menuTop) - bounds.top}px`;
+            menu.style.left = `${Math.max(left, Math.min(menuLeft, right - width)) - bounds.left}px`;
+            menu.style.visibility = 'visible';
+        };
+        const onScroll = (event) => {
+            if (!menu.contains(event.target)) positionMenu();
+        };
+        const observer = new ResizeObserver(positionMenu);
+        observer.observe(label);
+        observer.observe(menu);
+        observer.observe(layer);
+        window.addEventListener('resize', positionMenu);
+        window.addEventListener('scroll', onScroll, true);
+        positionMenu();
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', positionMenu);
+            window.removeEventListener('scroll', onScroll, true);
+        };
+    }, [open, portal]);
+    const menu = open ? <FocusLock
+        ref={menuRef}
+        className={classnames(styles['menu-container'], menuClassName, portal ? styles['portal-menu'] : styles[`menu-direction-${direction || autoDirection}`])}
+        autoFocus={autoFocus}
+        returnFocus={portal ? { preventScroll: true } : false}
+        lockProps={{ onMouseDown: menuOnMouseDown, onKeyDown: portal ? portalOnKeyDown : undefined }}
+    >
+        {renderMenu()}
+    </FocusLock> : null;
+    const label = renderLabel({
         ...props,
         ref: labelRef,
         className: classnames(styles['label-container'], props.className, { 'active': open }),
-        children: open ?
-            <FocusLock ref={menuRef} className={classnames(styles['menu-container'], { [styles[`menu-direction-${autoDirection}`]]: !direction }, { [styles[`menu-direction-${direction}`]]: direction })} autoFocus={false} lockProps={{ onMouseDown: menuOnMouseDown }}>
-                {renderMenu()}
-            </FocusLock>
-            :
-            null
+        children: portal ? null : menu
     });
+    return <>
+        {label}
+        {portal && open && createPortal(<div ref={layerRef} className={styles['portal-layer']} onMouseDown={menuOnMouseDown} onPointerDown={menuOnMouseDown} onClick={portalOnClick}>
+            {menu}
+        </div>, labelRef.current?.closest('.modal-container, .route-container') ?? document.body)}
+    </>;
 };
 
 Popup.propTypes = {
+    className: PropTypes.string,
     open: PropTypes.bool,
     direction: PropTypes.oneOf(['top-left', 'bottom-left', 'top-right', 'bottom-right']),
+    portal: PropTypes.bool,
+    autoFocus: PropTypes.bool,
+    menuClassName: PropTypes.string,
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
     dataset: PropTypes.object,

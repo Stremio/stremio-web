@@ -12,11 +12,8 @@
     stream-description: description-container;
 }
 
-:import('~stremio/components/Popup/styles.less') {
-    stream-menu: menu-container;
-}
-
 .stream-message { padding: 0.5rem 0; font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
+.stream-loading { flex: none; }
 .stream-options .stream-icon { opacity: 1; }
 
 .streams-panel {
@@ -47,16 +44,9 @@
         min-height: 0;
         overflow-y: auto;
         overscroll-behavior-y: contain;
-
-        .stream-option .stream-menu {
-            inset: 3.1rem 0 0 1.75rem;
-            max-width: none;
-            overflow-y: auto;
-        }
     }
 
     .stream-option {
-        position: static;
         flex: none;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -94,5 +84,8 @@
         padding-bottom: max(1rem, var(--safe-area-inset-bottom));
     }
 
-    .sheet-content { border-radius: 0; }
+    .sheet-content {
+        margin: 0 1.5rem;
+        border-radius: 0;
+    }
 }

@@ -41,7 +41,7 @@
 
 .channel-page {
     display: grid;
-    grid-template-rows: minmax(min-content, 1fr) auto;
+    grid-template-rows: minmax(min-content, 1fr) min-content;
     flex: 1;
     min-width: 0;
     min-height: 0;
@@ -197,7 +197,6 @@
 
 @media (max-height: 750px) {
     .channel-page {
-        padding-bottom: max(1rem, var(--safe-area-inset-bottom));
         .hero { padding: 0.75rem 0 1.25rem; }
         .hero-content { gap: 0.9rem; }
         .description, .broadcast-progress { margin-top: 0.75rem; }
@@ -213,7 +212,6 @@
 
 @media (max-height: 500px) {
     .channel-page {
-        padding-bottom: max(0.75rem, var(--safe-area-inset-bottom));
         .hero { align-items: center; padding: 0.25rem 0 0.75rem; }
         .hero-content { gap: 0.5rem; }
         .channel-logo { width: 1.75rem; height: 1.75rem; }
@@ -229,14 +227,64 @@
 
 @media @phone-landscape {
     .channel-page {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        grid-template-rows: minmax(0, 1fr);
+        gap: 1.5rem;
+        padding: 0.5rem 1.5rem max(1.5rem, var(--safe-area-inset-bottom));
+        overflow: hidden;
+
+        .hero { min-width: 0; padding: 0; }
         .hero-content {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            column-gap: 1.5rem;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: clamp(0.75rem, 3vh, 1.25rem);
             width: 100%;
-            max-width: none;
+            height: 100%;
         }
-        .channel-header, .current-information { grid-column: 1; }
-        .channel-actions { grid-column: 2; grid-row: 1 / span 2; }
+        .channel-logo { width: 2.25rem; height: 2.25rem; }
+        .channel-identity {
+            display: block;
+            h1 { margin-bottom: 0.2rem; font-size: 1rem; }
+            > span { font-size: 0.75rem; }
+        }
+        .current-information {
+            min-height: 0;
+            padding-right: 0.5rem;
+            overflow-y: auto;
+            overscroll-behavior-y: contain;
+        }
+        .current-time { gap: 0.4rem 0.65rem; font-size: 0.75rem; }
+        .current-information h2 {
+            margin-top: 0.75rem;
+            font-size: clamp(1.6rem, 6vh, 2.15rem);
+        }
+        .description {
+            margin-top: 0.85rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .genres {
+            gap: 0.4rem;
+            margin-top: 0.85rem;
+            > span { padding: 0.25rem 0.55rem; }
+        }
+        .broadcast-progress { margin-top: 1rem; }
+        .guide-layout {
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--overlay-color);
+        }
+    }
+}
+
+@media @small-phone-landscape {
+    .channel-page {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.25fr);
+        column-gap: 1rem;
+        padding: 0.25rem 1rem max(1rem, var(--safe-area-inset-bottom));
+        .current-information {
+            padding-bottom: 0.75rem;
+            mask-image: linear-gradient(#000 calc(100% - 0.75rem), transparent);
+        }
+        .guide-layout { padding-left: 1rem; }
     }
 }

@@ -176,6 +176,7 @@ const StreamsList = ({ className, video = undefined, isEpg, type, onEpisodeSearc
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
+                                            isEpg={isEpg}
                                             videoId={video?.id}
                                             videoReleased={video?.released}
                                             addonName={stream.addonName}
