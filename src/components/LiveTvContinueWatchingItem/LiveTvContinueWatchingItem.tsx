@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useCore } from 'stremio/core';
 import Image from 'stremio/components/Image';
 import LibItem from 'stremio/components/LibItem';
-import { useEpgNow, getEpgProgress, getNonEmptyString, hasEpgProgramTimes } from 'stremio/common/EPG';
+import { useEpgNow, getEpgProgress, getNonEmptyString } from 'stremio/common/EPG';
 import styles from './LiveTvContinueWatchingItem.less';
 
 type Show = {
@@ -25,9 +25,7 @@ type Props = {
 };
 
 const getCurrentShow = (shows: Show[] | undefined, now: number): Show | null => {
-    const programs = (Array.isArray(shows) ? shows : []).filter(hasEpgProgramTimes);
-
-    return programs.find((show) => getEpgProgress(show, now) !== null) ?? null;
+    return (Array.isArray(shows) ? shows : []).find((show) => getEpgProgress(show, now) !== null) ?? null;
 };
 
 const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, notifications }: Props) => {

@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
-import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs, programTitle } from 'stremio/common/EPG';
+import { type EPGChannel, type EPGProgram, HOUR_IN_MS, programStartMs, programEndMs } from 'stremio/common/EPG';
 import styles from './EpgGuideRow.less';
 
 const DEFAULT_PIXELS_PER_HOUR = 120;
@@ -44,7 +44,7 @@ const EpgGuideRow = ({ channel, programs, dayStart, dayEnd, visibleStart, visibl
                     const width = ((Math.min(endMs, dayEnd) - Math.max(startMs, dayStart)) / HOUR_IN_MS) * pixelsPerHour;
                     const compact = width < 80;
                     const isCurrent = startMs <= now && now < endMs;
-                    const label = programTitle(program);
+                    const label = program.title;
 
                     const key = [
                         channel.id,

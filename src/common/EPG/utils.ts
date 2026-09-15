@@ -210,10 +210,6 @@ export const programEndMs = (program: EPGProgram): number => {
     return getEpgTime(program.endTime) ?? 0;
 };
 
-export const programTitle = (program: EPGProgram): string => {
-    return program.title;
-};
-
 const seededRandom = (seed: number): number => {
     const x = Math.sin(seed) * 10000;
 
