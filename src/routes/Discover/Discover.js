@@ -322,6 +322,24 @@ const Discover = () => {
         );
     };
 
+    const metaPreviewProps = selectedMetaItem && {
+        compact: true,
+        name: selectedMetaItem.name,
+        logo: selectedMetaItem.logo,
+        runtime: selectedMetaItem.runtime,
+        releaseInfo: selectedMetaItem.releaseInfo,
+        released: selectedMetaItem.released,
+        description: selectedMetaItem.description,
+        deepLinks: selectedMetaItem.deepLinks,
+        trailerStreams: selectedMetaItem.trailerStreams,
+        inLibrary: selectedMetaItem.inLibrary,
+        toggleInLibrary: selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary,
+        watched: selectedMetaItem.watched,
+        toggleWatched,
+        metaId: selectedMetaItem.id,
+        like: selectedMetaItem.like,
+    };
+
     const renderMetaPreview = () => {
         if (isEpgLayout) {
             return null;
@@ -329,25 +347,11 @@ const Discover = () => {
 
         if (selectedMetaItem !== null) {
             return <MetaPreview
+                {...metaPreviewProps}
                 className={styles['meta-preview-container']}
-                compact={true}
                 ref={metaPreviewRef}
-                name={selectedMetaItem.name}
-                logo={selectedMetaItem.logo}
                 background={selectedMetaItem.poster}
-                runtime={selectedMetaItem.runtime}
-                releaseInfo={selectedMetaItem.releaseInfo}
-                released={selectedMetaItem.released}
-                description={selectedMetaItem.description}
                 links={selectedMetaItem.links}
-                deepLinks={selectedMetaItem.deepLinks}
-                trailerStreams={selectedMetaItem.trailerStreams}
-                inLibrary={selectedMetaItem.inLibrary}
-                toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
-                watched={selectedMetaItem.watched}
-                toggleWatched={toggleWatched}
-                metaId={selectedMetaItem.id}
-                like={selectedMetaItem.like}
             />;
         } else if (discover.catalog !== null && discover.catalog.content.type === 'Loading') {
             return <div className={styles['meta-preview-container']} />;
@@ -461,23 +465,9 @@ const Discover = () => {
                         ariaLabel={selectedMetaItem.name}
                     >
                         <MetaPreview
-                            compact={true}
-                            name={selectedMetaItem.name}
-                            logo={selectedMetaItem.logo}
+                            {...metaPreviewProps}
                             background={selectedMetaItem.background || selectedMetaItem.poster}
-                            runtime={selectedMetaItem.runtime}
-                            releaseInfo={selectedMetaItem.releaseInfo}
-                            released={selectedMetaItem.released}
-                            description={selectedMetaItem.description}
                             links={selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
-                            deepLinks={selectedMetaItem.deepLinks}
-                            trailerStreams={selectedMetaItem.trailerStreams}
-                            inLibrary={selectedMetaItem.inLibrary}
-                            toggleInLibrary={selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary}
-                            watched={selectedMetaItem.watched}
-                            toggleWatched={toggleWatched}
-                            metaId={selectedMetaItem.id}
-                            like={selectedMetaItem.like}
                             onShowClick={onMobileShowClick}
                             showIcon={'chevron-forward'}
                         />
