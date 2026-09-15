@@ -38,7 +38,7 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
     const channelName = getNonEmptyString(channel?.name);
     const channelLogo = getNonEmptyString(channel?.logo) ?? getNonEmptyString(channel?.poster);
     const progress = hasProgram && currentShow !== null ? getEpgProgress(currentShow, now) : null;
-    const poster = hasProgram ? programPoster ?? getNonEmptyString(channel?.background) : channelLogo;
+    const posterSrc = hasProgram ? programPoster ?? getNonEmptyString(channel?.background) : channelLogo;
     const name = programName ?? channelName;
     const channelId = channel && channel.id;
     const onDismissClick = React.useCallback((event: React.MouseEvent) => {
@@ -55,6 +55,25 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
         }
     }, [core, channelId]);
 
+    const poster = React.useMemo(() => ({
+        src: posterSrc,
+        shape: 'landscape',
+        changeCursor: true,
+        overlay: hasProgram && (channelLogo || channelName) ?
+            <div className={styles['channel-badge']} title={channelName ?? undefined}>
+                {
+                    channelLogo &&
+                        <Image src={channelLogo} alt={''} renderFallback={() => null} />
+                }
+                {
+                    channelName &&
+                        <span>{channelName}</span>
+                }
+            </div>
+            :
+            null,
+    }), [posterSrc, hasProgram, channelLogo, channelName]);
+
     return (
         <LibItem
             className={classNames(className, styles['live-item'], { [styles['channel-card']]: !hasProgram })}
@@ -62,12 +81,6 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
             type={channel?.type}
             name={name}
             poster={poster}
-            posterShape={'landscape'}
-            posterChangeCursor={true}
-            posterOverlay={hasProgram && (channelLogo || channelName) ? <div className={styles['channel-badge']} title={channelName ?? undefined}>
-                {channelLogo && <Image src={channelLogo} alt={''} renderFallback={() => null} />}
-                {channelName && <span>{channelName}</span>}
-            </div> : null}
             progress={progress ?? 0}
             deepLinks={deepLinks}
             notifications={notifications}
