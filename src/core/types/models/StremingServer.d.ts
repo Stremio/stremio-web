@@ -125,6 +125,11 @@ type StreamingServer = {
     torrent: [string, Loadable<Torrent>] | null,
     statistics: Loadable<Statistics> | null,
     playbackDevices: Loadable<PlaybackDevice[]> | null,
+    casting: {
+        id: number,
+        device: string,
+        status: { type: 'Starting' | 'Playing' | 'Stopping' } | { type: 'Err', content: CoreEventError },
+    } | null,
     networkInfo: Loadable<NetworkInfo> | null,
     deviceInfo: Loadable<DeviceInfo> | null,
 };

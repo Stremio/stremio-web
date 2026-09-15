@@ -21,8 +21,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: 0.62.1
-        version: 0.62.1
+        specifier: https://raw.githubusercontent.com/Stremio/stremio-core/211fccd9c43e66e9df5f52bddbfbc5f9969b9798/stremio-core-web/fix/cast-device-control/stremio-stremio-core-web-0.62.1.tgz
+        version: https://raw.githubusercontent.com/Stremio/stremio-core/211fccd9c43e66e9df5f52bddbfbc5f9969b9798/stremio-core-web/fix/cast-device-control/stremio-stremio-core-web-0.62.1.tgz
       '@stremio/stremio-icons':
         specifier: 5.15.0
         version: 5.15.0
@@ -1430,8 +1430,9 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@0.62.1':
-    resolution: {integrity: sha512-dtUZtef6GiuItQ7VZG2vbLi8kjIFXckS8VfT72XMntR4OTjz2jgBwdOmjFTrcGC3fiueqL5LYncqybbjqop1tw==}
+  '@stremio/stremio-core-web@https://raw.githubusercontent.com/Stremio/stremio-core/211fccd9c43e66e9df5f52bddbfbc5f9969b9798/stremio-core-web/fix/cast-device-control/stremio-stremio-core-web-0.62.1.tgz':
+    resolution: {integrity: sha512-mNN40+F29C1jiy2gt69VzntNRoW1JMy5NTm5rv2vl7Cq5GpYlaDWnzDDSjddxkJDl4hBgSNcaFlhA/fHTD5+wA==, tarball: https://raw.githubusercontent.com/Stremio/stremio-core/211fccd9c43e66e9df5f52bddbfbc5f9969b9798/stremio-core-web/fix/cast-device-control/stremio-stremio-core-web-0.62.1.tgz}
+    version: 0.62.1
 
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
@@ -6519,7 +6520,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@0.62.1':
+  '@stremio/stremio-core-web@https://raw.githubusercontent.com/Stremio/stremio-core/211fccd9c43e66e9df5f52bddbfbc5f9969b9798/stremio-core-web/fix/cast-device-control/stremio-stremio-core-web-0.62.1.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 

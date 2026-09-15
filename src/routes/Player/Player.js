@@ -30,6 +30,7 @@ const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
+const { default: useCastDevice } = require('./useCastDevice');
 const { default: useKeyboardSeek } = require('./useKeyboardSeek');
 const { default: usePlaybackSpeedHold } = require('./usePlaybackSpeedHold');
 const { default: useStatistics } = require('./useStatistics');
@@ -135,7 +136,7 @@ const Player = () => {
     }, [playbackDevices]);
     const [castDevicesSearching, setCastDevicesSearching] = React.useState(false);
     const castDevicesLoading = platform.shell.active && (castDevicesSearching || (streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Loading'));
-    const { streamingUrl: castStreamingUrl, playOnDevice } = usePlayOnDevice(player.selected?.stream ?? null);
+    const { streamingUrl: castStreamingUrl } = usePlayOnDevice(player.selected?.stream ?? null);
     const shellCastSupported = platform.shell.active && castStreamingUrl !== null;
     const refreshCastDevices = React.useCallback(() => {
         if (platform.shell.active) {
@@ -147,10 +148,6 @@ const Player = () => {
             });
         }
     }, [platform.shell.active]);
-    const onCastDeviceSelected = React.useCallback((deviceId) => {
-        playOnDevice(deviceId, video.state.time);
-        closeCastDevicesMenu();
-    }, [playOnDevice, video.state.time]);
     React.useEffect(() => {
         if (castDevicesMenuOpen && platform.shell.active) {
             setCastDevicesSearching(true);
@@ -185,6 +182,11 @@ const Player = () => {
 
     const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
+    const { castToDevice, stopBeforeLocalPlay, isCasting } = useCastDevice(castStreamingUrl, streamingServer.casting, video, playingOnExternalDevice);
+    const onCastDeviceSelected = (deviceId) => {
+        castToDevice(deviceId);
+        closeCastDevicesMenu();
+    };
     const requestedVideoScale = React.useRef(null);
     const persistedVideoScale = React.useRef({ stream: null, scale: null });
     const [error, setError] = React.useState(null);
@@ -252,9 +254,10 @@ const Player = () => {
     }, []);
 
     const onPlayRequested = React.useCallback(() => {
+        setSeeking(false);
+        if (stopBeforeLocalPlay()) return;
         playingOnExternalDevice.current = false;
         video.setPaused(false);
-        setSeeking(false);
     }, []);
 
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
@@ -574,8 +577,8 @@ const Player = () => {
 
     React.useEffect(() => {
         defaultAudioTrackSelected.current = false;
-        playingOnExternalDevice.current = false;
-    }, [video.state.stream]);
+        if (!isCasting()) playingOnExternalDevice.current = false;
+    }, [video.state.stream, isCasting]);
 
     React.useEffect(() => {
         if (requestedVideoScale.current === player.videoScale) {
