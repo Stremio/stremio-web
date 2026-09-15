@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
+import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, hasEpgProgramTimes, useEpgNow } from 'stremio/common/EPG';
 import { MetaPreview, Video } from 'stremio/components';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
 import styles from './SideDrawer.less';
@@ -32,21 +33,49 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
             }
             :
             props.metaItem;
-    }, [props.metaItem]);
+    }, [props.metaItem, seriesInfo]);
+
+    const allVideos = useMemo(() => {
+        return Array.isArray(metaItem.videos) ? metaItem.videos : [];
+    }, [metaItem.videos]);
+
+    const isEpg = useMemo(() => {
+        return allVideos.some(hasEpgProgramTimes);
+    }, [allVideos]);
+    const now = useEpgNow(isEpg);
+
     const videos = useMemo(() => {
-        return Array.isArray(metaItem.videos) ?
-            metaItem.videos.filter((video) => video.season === season)
-            :
-            metaItem.videos;
-    }, [metaItem, season]);
+        if (isEpg) {
+            return filterVisibleEpgPrograms(allVideos, now);
+        }
+        return allVideos.filter((video) => video.season === season);
+    }, [allVideos, season, isEpg, now]);
+
+    const previewVideo = useMemo(() => {
+        if (!isEpg) {
+            return null;
+        }
+
+        const selectedId = selectedVideoId ?? selected;
+
+        const selectedVideo = videos.find((video) => video.id === selectedId) ?? null;
+        const currentVideo = videos.find((video) => getEpgProgress(video, now) !== null) ?? null;
+
+        return selectedVideo ?? currentVideo ?? videos[0] ?? null;
+    }, [isEpg, videos, selectedVideoId, selected, now]);
+
+    const isEpgVideo = useMemo(() => {
+        return previewVideo !== null && hasEpgProgramTimes(previewVideo);
+    }, [previewVideo]);
+
     const seasons = useMemo(() => {
-        return props.metaItem.videos
+        return allVideos
             .map(({ season }) => season)
             .filter((season, index, seasons) => {
                 return seasons.indexOf(season) === index;
             })
             .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
-    }, [props.metaItem.videos]);
+    }, [allVideos]);
 
     const seasonOnSelect = useCallback((event: { value: string | number }) => {
         setSeason(parseInt(String(event.value), 10));
@@ -54,8 +83,15 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     }, []);
 
     const seasonWatched = React.useMemo(() => {
-        return videos.every((video) => video.watched);
-    }, [videos]);
+        return !isEpg && videos.every((video) => video.watched);
+    }, [isEpg, videos]);
+
+    const shouldRenderVideos = seriesInfo || isEpg;
+
+    const selectedId = isEpg ?
+        previewVideo?.id
+        :
+        selectedVideoId;
 
     const onMarkVideoAsWatched = useCallback((video: Video, watched: boolean) => {
         core.transport.dispatch({
@@ -94,50 +130,71 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
                 <MetaPreview
                     className={styles['side-drawer-meta-preview']}
                     compact={true}
-                    name={metaItem.name}
+                    name={getEpgTitle(isEpgVideo, previewVideo, metaItem)}
                     logo={metaItem.logo}
-                    runtime={metaItem.runtime}
-                    releaseInfo={metaItem.releaseInfo}
-                    released={metaItem.released}
-                    description={metaItem.description}
+                    runtime={getEpgValue(isEpgVideo, previewVideo, metaItem, 'runtime')}
+                    releaseInfo={getEpgValue(isEpgVideo, previewVideo, metaItem, 'releaseInfo')}
+                    released={getEpgValue(isEpgVideo, previewVideo, metaItem, 'released')}
+                    description={getEpgDescription(isEpgVideo, previewVideo, metaItem)}
                     links={metaItem.links}
                 />
             </div>
             {
-                seriesInfo ?
+                shouldRenderVideos ?
                     <div className={styles['series-content']}>
-                        <SeasonsBar
-                            season={season}
-                            seasons={seasons}
-                            onSelect={seasonOnSelect}
-                        />
-                        <div ref={videosRef} className={styles['videos']}>
-                            {videos.map((video, index) => (
-                                <Video
-                                    key={index}
-                                    className={styles['video']}
-                                    id={video.id}
-                                    title={video.title}
-                                    thumbnail={video.thumbnail}
-                                    season={video.season}
-                                    episode={video.episode}
-                                    released={video.released}
-                                    upcoming={video.upcoming}
-                                    watched={video.watched}
-                                    seasonWatched={seasonWatched}
-                                    progress={video.progress}
-                                    deepLinks={video.deepLinks}
-                                    scheduled={video.scheduled}
-                                    selected={video.id === selectedVideoId}
-                                    onMarkVideoAsWatched={onMarkVideoAsWatched}
-                                    onMarkSeasonAsWatched={onMarkSeasonAsWatched}
+                        {
+                            seriesInfo && !isEpg ?
+                                <SeasonsBar
+                                    season={season}
+                                    seasons={seasons}
+                                    onSelect={seasonOnSelect}
                                 />
-                            ))}
+                                :
+                                null
+                        }
+
+                        <div ref={videosRef} className={styles['videos']}>
+                            {videos.map((video, index) => {
+                                const range = isEpg ? getEpgTimeRange(video) : null;
+                                const progress = isEpg ? getEpgProgress(video, now) : video.progress;
+                                const isNow = isEpg && progress !== null;
+                                const upcoming = isEpg ?
+                                    range !== null && range.startTime > now
+                                    :
+                                    video.upcoming;
+
+                                return (
+                                    <Video
+                                        key={index}
+                                        className={styles['video']}
+                                        id={video.id}
+                                        title={video.title}
+                                        thumbnail={video.thumbnail}
+                                        season={video.season}
+                                        episode={video.episode}
+                                        released={video.released}
+                                        upcoming={upcoming}
+                                        watched={video.watched}
+                                        seasonWatched={seasonWatched}
+                                        progress={progress}
+                                        deepLinks={video.deepLinks}
+                                        scheduled={video.scheduled}
+                                        selected={video.id === selectedId}
+                                        isEpg={isEpg}
+                                        isNow={isNow}
+                                        startTime={video.startTime}
+                                        endTime={video.endTime}
+                                        onSelect={isEpg ? () => setSelectedVideoId(video.id) : undefined}
+                                        onMarkVideoAsWatched={onMarkVideoAsWatched}
+                                        onMarkSeasonAsWatched={onMarkSeasonAsWatched}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
-                    : null
+                    :
+                    null
             }
-
         </div>
     );
 }));

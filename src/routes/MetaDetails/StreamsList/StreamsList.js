@@ -3,6 +3,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router');
 const { default: toPath } = require('stremio-router/toPath');
+const { useGoBack } = require('stremio-router');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
@@ -16,12 +17,13 @@ const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
+const StreamsList = ({ className, video, isEpg, type, onEpisodeSearch, ...props }) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
     const profile = useProfile();
     const navigate = useNavigate();
+    const goBack = useGoBack();
     const streamsContainerRef = React.useRef(null);
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((value) => {
@@ -39,9 +41,9 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                     : ''}`;
             navigate(toPath(navigateTo), { replace: true });
         } else {
-            navigate(-1);
+            goBack();
         }
-    }, [video]);
+    }, [video, navigate, goBack]);
     const countLoadingAddons = React.useMemo(() => {
         return props.streams.filter((stream) => stream.content.type === 'Loading').length;
     }, [props.streams]);
@@ -180,7 +182,7 @@ const StreamsList = ({ className, video, type, onEpisodeSearch, ...props }) => {
                                             name={stream.name}
                                             description={stream.description}
                                             thumbnail={stream.thumbnail}
-                                            progress={stream.progress}
+                                            progress={isEpg ? null : stream.progress}
                                             deepLinks={stream.deepLinks}
                                             onClick={stream.onClick}
                                         />
@@ -216,6 +218,7 @@ StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
     video: PropTypes.object,
+    isEpg: PropTypes.bool,
     type: PropTypes.string,
     onEpisodeSearch: PropTypes.func
 };
