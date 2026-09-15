@@ -106,12 +106,6 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
         onCloseRequestRef.current();
     }, []);
 
-    const onContentClick = useCallback(() => {
-        if (closeOnContentClick) {
-            requestClose();
-        }
-    }, [closeOnContentClick, requestClose]);
-
     useEffect(() => {
         if (show) {
             dragRef.current = createDragState();
@@ -336,7 +330,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
                         :
                         null
                 }
-                <div className={styles['content']} onClick={closeOnContentClick ? onContentClick : undefined}>
+                <div className={styles['content']} onClick={closeOnContentClick ? requestClose : undefined}>
                     {children}
                 </div>
             </div>

@@ -54,10 +54,6 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
                         }
                         break;
                     case 'mousedown':
-                        if (event.target !== document.documentElement && !labelRef.current.contains(event.target) && !menuRef.current?.contains(event.target)) {
-                            onCloseRequest(closeEvent);
-                        }
-                        break;
                     case 'pointerdown':
                         if (event.target !== document.documentElement && !labelRef.current.contains(event.target) && !menuRef.current?.contains(event.target)) {
                             onCloseRequest(closeEvent);
