@@ -2,7 +2,6 @@
 
 const React = require('react');
 const { useParams, useLocation, useNavigate } = require('react-router');
-const { useSearchParams } = require('react-router-dom');
 const { useTranslation } = require('react-i18next');
 const classnames = require('classnames');
 const { useCore } = require('stremio/core');
@@ -23,7 +22,6 @@ const MetaDetails = () => {
     const { type, id, videoId } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
-    const [queryParams] = useSearchParams();
     const { getStoredOrigin } = useNavigateWithOrigin();
     const contentRef = React.useRef(null);
     const videosScrollMemoryRef = React.useRef(null);
@@ -35,7 +33,7 @@ const MetaDetails = () => {
         videoId
     }), [type, id, videoId]);
     const metaDetails = useMetaDetails(urlParams);
-    useExternalPlayerCallback(urlParams, queryParams, metaDetails);
+    useExternalPlayerCallback(urlParams, metaDetails);
     const [season, setSeason] = useSeason(urlParams);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
