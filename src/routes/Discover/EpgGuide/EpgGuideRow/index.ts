@@ -1,5 +1,3 @@
 import EpgGuideRow from './EpgGuideRow';
 
-export {
-    EpgGuideRow
-};
+export default EpgGuideRow;

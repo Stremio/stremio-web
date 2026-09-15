@@ -2,13 +2,13 @@
 
 import type { EPGChannel, EPGProgram } from './types';
 
-export type EpgSkeletonProgram = {
+type EpgSkeletonProgram = {
     index: number;
     startMinutes: number;
     durationMinutes: number;
 };
 
-export const MINUTES_IN_DAY = 24 * 60;
+const MINUTES_IN_DAY = 24 * 60;
 export const HOUR_IN_MS = 60 * 60 * 1000;
 export const EPG_PIXELS_PER_HOUR = 240;
 
@@ -31,12 +31,12 @@ export const epgDayWindow = (day: Date): { start: number; end: number } => ({
 });
 export const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
 export const EPG_PLAYER_NOW_REFRESH_INTERVAL = 1000;
-export const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
-export const EPG_SKELETON_MIN_DURATION_MINUTES = 30;
-export const EPG_SKELETON_MAX_DURATION_MINUTES = 120;
-export const EPG_SKELETON_STEP_MINUTES = 30;
+const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
+const EPG_SKELETON_MIN_DURATION_MINUTES = 30;
+const EPG_SKELETON_MAX_DURATION_MINUTES = 120;
+const EPG_SKELETON_STEP_MINUTES = 30;
 
-export const getEpgTime = (value: unknown): number | null => {
+const getEpgTime = (value: unknown): number | null => {
     if (value instanceof Date && !Number.isNaN(value.getTime())) {
         return value.getTime();
     }
@@ -216,7 +216,7 @@ const seededRandom = (seed: number): number => {
     return x - Math.floor(x);
 };
 
-export const getRandomEpgSkeletonDuration = (
+const getRandomEpgSkeletonDuration = (
     seed: number,
     minDuration = EPG_SKELETON_MIN_DURATION_MINUTES,
     maxDuration = EPG_SKELETON_MAX_DURATION_MINUTES,

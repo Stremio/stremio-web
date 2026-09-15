@@ -3,8 +3,8 @@
 import React, { useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, MultiselectMenu } from 'stremio/components';
-import { EpgGuideRow } from './EpgGuideRow';
 import { EPGChannel, EPGProgram, EPG_PIXELS_PER_HOUR, HOUR_IN_MS, epgDayWindow, parseEpgDate, getEpgSkeletonPrograms } from 'stremio/common/EPG';
+import EpgGuideRow from './EpgGuideRow';
 import styles from './EpgGuide.less';
 
 const HALF_HOUR_IN_MS = HOUR_IN_MS / 2;

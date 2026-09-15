@@ -12,6 +12,7 @@ const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
+const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgTimeRange, useEpgNow } = require('stremio/common/EPG');
 const { default: toPath } = require('stremio-router/toPath');
 const { useGoBack } = require('stremio-router');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
@@ -39,7 +40,6 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
-const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgTimeRange, useEpgNow } = require('stremio/common/EPG');
 
 const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
