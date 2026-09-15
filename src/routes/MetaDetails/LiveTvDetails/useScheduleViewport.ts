@@ -22,7 +22,7 @@ const useScheduleViewport = (start: number, visible: boolean) => {
             ? previous : { left: element.scrollLeft, width: element.clientWidth });
     }, []);
 
-    const moveTo = useCallback((time: number, nextScale: number, smooth = false) => {
+    const moveTo = (time: number, nextScale: number) => {
         const element = viewportRef.current;
         if (!element) return;
         if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
@@ -47,7 +47,7 @@ const useScheduleViewport = (start: number, visible: boolean) => {
                 measure();
             }
         };
-        if (!smooth || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
             apply(1);
             return;
         }
@@ -60,7 +60,7 @@ const useScheduleViewport = (start: number, visible: boolean) => {
             else animationRef.current = null;
         };
         animationRef.current = requestAnimationFrame(animate);
-    }, [scale, start, measure]);
+    };
 
     useEffect(() => () => {
         if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
@@ -122,7 +122,7 @@ const useScheduleViewport = (start: number, visible: boolean) => {
         if (!element) return;
         const value = clampScale(scale * factor);
         const center = start + (element.scrollLeft + element.clientWidth / 2) * HOUR_IN_MS / scale;
-        moveTo(center - element.clientWidth * HOUR_IN_MS / value / 2, value, true);
+        moveTo(center - element.clientWidth * HOUR_IN_MS / value / 2, value);
     };
     const focus = (program: EPGProgram, fit = false) => {
         const element = viewportRef.current;
@@ -131,13 +131,13 @@ const useScheduleViewport = (start: number, visible: boolean) => {
         const to = program.endTime.getTime();
         const value = fit ? clampScale(element.clientWidth * HOUR_IN_MS / Math.max(HOUR_IN_MS / 2, (to - from) * 1.2)) : scale;
         const time = fit ? (from + to - element.clientWidth * HOUR_IN_MS / value) / 2 : from;
-        moveTo(time, value, true);
+        moveTo(time, value);
     };
     const showTime = (time: number) => {
         const element = viewportRef.current;
         if (!element) return;
         const width = element.clientWidth || element.parentElement?.clientWidth || 0;
-        moveTo(time - width * HOUR_IN_MS / scale / 2, scale, true);
+        moveTo(time - width * HOUR_IN_MS / scale / 2, scale);
     };
 
     return { viewportRef, viewport, scale, zoom, focus, showTime, canZoomOut: scale > MIN_SCALE, canZoomIn: scale < MAX_SCALE };
