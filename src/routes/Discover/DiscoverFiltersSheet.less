@@ -69,18 +69,39 @@
     }
 }
 
-.icon-button, .heading-icon {
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: start;
+    font-weight: inherit;
+    border-radius: var(--border-radius);
+    background: transparent;
+
+    &:active { background: var(--overlay-color); }
+
+    @media (hover: hover) {
+        &:hover { background: var(--overlay-color); }
+    }
+}
+
+.back-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.back-icon, .heading-icon {
     flex: none;
     width: 3.25rem;
     height: 3.25rem;
 }
 
-.icon-button {
+.back-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: var(--overlay-color);
 
     svg {
         width: 1.25rem;

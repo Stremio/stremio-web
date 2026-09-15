@@ -50,13 +50,18 @@ const FilterSelection = ({ inputs, onCloseRequest }: Omit<Props, 'show'>) => {
 
     return <div className={styles['filter-selection']}>
         <header className={styles.header}>
-            {activeFilter ? <button
-                type={'button'}
-                className={styles['icon-button']}
-                aria-label={t('BACK')}
-                onClick={() => openFilter(null)}
-            ><Icon name={'chevron-back'} /></button> : <Icon className={styles['heading-icon']} name={'filters'} />}
-            <h2 ref={headingRef} tabIndex={-1}>{activeFilter?.label ?? t('FILTERS')}</h2>
+            {!activeFilter && <Icon className={styles['heading-icon']} name={'filters'} />}
+            <h2 ref={headingRef} tabIndex={-1}>
+                {activeFilter ? <button
+                    type={'button'}
+                    className={styles['back-button']}
+                    aria-label={`${t('BACK')}: ${activeFilter.label}`}
+                    onClick={() => openFilter(null)}
+                >
+                    <span className={styles['back-icon']}><Icon name={'chevron-back'} /></span>
+                    <span className={styles['back-label']}>{activeFilter.label}</span>
+                </button> : t('FILTERS')}
+            </h2>
         </header>
         {activeFilter && activeFilter.options.length > 8 && <div className={styles.search}>
             <Icon name={'search'} />
