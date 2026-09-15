@@ -12,12 +12,23 @@
     stream-description: description-container;
 }
 
-.stream-message { padding: 0.5rem 0; font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
-.stream-loading { flex: none; }
-.stream-options .stream-icon { opacity: 1; }
+.stream-message {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.stream-loading {
+    flex: none;
+}
+
+.stream-options .stream-icon {
+    opacity: 1;
+}
 
 .streams-panel {
     // The guide determines the row height; extra sources scroll inside it.
+
     contain: size;
     position: relative;
     display: flex;
@@ -57,9 +68,23 @@
         background: var(--overlay-color);
         border: 1px solid transparent;
 
-        &:hover, &:focus { border-color: rgba(255, 255, 255, 0.4); }
-        .stream-info { grid-area: name; min-width: 0; }
-        .stream-name { width: auto; font-size: 1rem; line-height: 1.3; overflow-wrap: anywhere; }
+        &:hover,
+        &:focus {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .stream-info {
+            grid-area: name;
+            min-width: 0;
+        }
+
+        .stream-name {
+            width: auto;
+            font-size: 1rem;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+        }
+
         .stream-description {
             grid-area: description;
             display: -webkit-box;
@@ -70,9 +95,18 @@
             overflow-wrap: anywhere;
             overflow: hidden;
             color: rgba(255, 255, 255, 0.65);
-            &:empty { display: none; }
+
+            &:empty {
+                display: none;
+            }
         }
-        .stream-icon { grid-area: play; width: 2.5rem; height: 2.5rem; padding: 0.6rem; }
+
+        .stream-icon {
+            grid-area: play;
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0.6rem;
+        }
     }
 }
 

@@ -13,9 +13,13 @@
     overflow-x: auto;
     scrollbar-width: none;
 
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
-    &.compact { padding: 0; }
+    &.compact {
+        padding: 0;
+    }
 }
 
 .epg-day-arrow {
@@ -32,7 +36,8 @@
     opacity: 0.5;
     transition: opacity 0.15s, background-color 0.15s;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         opacity: 1;
         background-color: var(--overlay-color);
     }
@@ -71,7 +76,9 @@
         border-color: rgba(255, 255, 255, 0.55);
         background-color: rgba(255, 255, 255, 0.07);
 
-        &:hover { background-color: rgba(255, 255, 255, 0.1); }
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
     }
 }
 
@@ -93,5 +100,7 @@
 }
 
 @media only screen and (max-width: @minimum) {
-    .epg-day-selector { padding: 0.5rem 1rem 0.75rem 1rem; }
+    .epg-day-selector {
+        padding: 0.5rem 1rem 0.75rem 1rem;
+    }
 }

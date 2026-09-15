@@ -32,7 +32,9 @@
 }
 
 .sheet {
-    .preview .preview-background { filter: blur(1px); }
+    .preview .preview-background {
+        filter: blur(1px);
+    }
 }
 
 @media (orientation: portrait) {
@@ -44,7 +46,8 @@
             .preview-info {
                 min-height: 0;
 
-                .preview-logo, .preview-logo-placeholder {
+                .preview-logo,
+                .preview-logo-placeholder {
                     height: 3.5rem;
                     margin: 0 0 1rem;
                     object-position: left center;
@@ -54,7 +57,8 @@
                     margin-top: 0;
                     justify-content: flex-start;
 
-                    .preview-runtime-label, .preview-release-label {
+                    .preview-runtime-label,
+                    .preview-release-label {
                         margin: 0;
                     }
 
@@ -81,18 +85,24 @@
                     line-height: 1.6;
                 }
 
-                .preview-links { margin-top: 1.25rem; }
+                .preview-links {
+                    margin-top: 1.25rem;
+                }
             }
 
             .preview-actions {
                 margin-top: 0;
                 padding-top: 0.5rem;
 
-                .preview-action, .preview-group { margin-bottom: 0; }
+                .preview-action,
+                .preview-group {
+                    margin-bottom: 0;
+                }
             }
         }
     }
 }
+
 @media (orientation: landscape) {
     .sheet .preview {
         padding: 1.5rem;

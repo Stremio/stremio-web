@@ -8,8 +8,13 @@
 }
 
 @keyframes epg-skeleton-shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 .epg-guide {
@@ -22,7 +27,9 @@
 }
 
 @media @phone-landscape {
-    .epg-guide { padding-bottom: 0; }
+    .epg-guide {
+        padding-bottom: 0;
+    }
 }
 
 .epg-header-row {
@@ -63,7 +70,8 @@
         border-radius: var(--border-radius);
         background-color: transparent;
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
             background-color: var(--overlay-color);
         }
     }
@@ -74,6 +82,7 @@
     display: flex;
     gap: 0.25rem;
     max-width: 4.75rem;
+
     > [role='button'] {
         display: flex;
         align-items: center;
@@ -83,14 +92,21 @@
         height: 2.25rem;
         border-radius: var(--border-radius);
         color: var(--primary-foreground-color);
-        &:hover, &:focus { background-color: var(--overlay-color); }
+
+        &:hover,
+        &:focus {
+            background-color: var(--overlay-color);
+        }
     }
 }
+
 .epg-zoom-icon {
     position: relative;
     width: 1rem;
     height: 1rem;
-    &::before, &.epg-zoom-in::after {
+
+    &::before,
+    &.epg-zoom-in::after {
         content: '';
         position: absolute;
         top: 50%;
@@ -100,7 +116,10 @@
         background: currentColor;
         transform: translate(-50%, -50%);
     }
-    &.epg-zoom-in::after { transform: translate(-50%, -50%) rotate(90deg); }
+
+    &.epg-zoom-in::after {
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
 }
 
 .epg-header-viewport {
@@ -111,7 +130,9 @@
     scrollbar-width: none;
     pointer-events: none;
 
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .epg-header-time-slots {
@@ -217,7 +238,8 @@
     }
 }
 
-.epg-error, .epg-error-banner {
+.epg-error,
+.epg-error-banner {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -269,7 +291,9 @@
     background-color: rgba(255, 255, 255, 0.05);
     cursor: pointer;
 
-    &:hover { background-color: rgba(255, 255, 255, 0.09); }
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.09);
+    }
 }
 
 .epg-skeleton {
@@ -368,9 +392,18 @@
 }
 
 @media only screen and (max-width: @minimum) {
-    .epg-header-row { margin-left: 1rem; }
-    .epg-body-row { margin-left: 1rem; }
-    .epg-channel-logo { width: 3rem; height: 1.6rem; }
+    .epg-header-row {
+        margin-left: 1rem;
+    }
+
+    .epg-body-row {
+        margin-left: 1rem;
+    }
+
+    .epg-channel-logo {
+        width: 3rem;
+        height: 1.6rem;
+    }
 }
 
 .epg-loading-more {

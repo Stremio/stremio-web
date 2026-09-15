@@ -34,7 +34,8 @@
         font-size: 0.8rem;
     }
 
-    .live, .status {
+    .live,
+    .status {
         padding: 0.25rem 0.6rem;
         border-radius: 0.35rem;
         font-size: 0.7rem;
@@ -73,7 +74,12 @@
         display: inline-flex;
         align-items: center;
         color: var(--primary-foreground-color);
-        > img { max-width: 2rem; height: 1.2rem; object-fit: contain; }
+
+        > img {
+            max-width: 2rem;
+            height: 1.2rem;
+            object-fit: contain;
+        }
     }
 
     .progress {
@@ -137,7 +143,8 @@
             max-height: inherit;
             overflow: hidden;
 
-            .modal-body, .modal-body:last-child {
+            .modal-body,
+            .modal-body:last-child {
                 display: flex;
                 flex-direction: column;
                 min-height: 0;
@@ -148,5 +155,4 @@
             }
         }
     }
-
 }
