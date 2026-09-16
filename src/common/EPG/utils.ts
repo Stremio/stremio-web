@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import type { EPGChannel, EPGProgram } from './types';
+import { HOUR_IN_MS } from './constants';
 
 type EpgSkeletonProgram = {
     index: number;
@@ -9,8 +10,6 @@ type EpgSkeletonProgram = {
 };
 
 const MINUTES_IN_DAY = 24 * 60;
-export const HOUR_IN_MS = 60 * 60 * 1000;
-export const EPG_PIXELS_PER_HOUR = 240;
 
 export const epgDateKey = (date: Date): string => [
     date.getFullYear(),
@@ -29,8 +28,6 @@ export const epgDayWindow = (day: Date): { start: number; end: number } => ({
     start: new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime(),
     end: new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1).getTime(),
 });
-export const EPG_NOW_REFRESH_INTERVAL = 60 * 1000;
-export const EPG_PLAYER_NOW_REFRESH_INTERVAL = 1000;
 const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
 const EPG_SKELETON_MIN_DURATION_MINUTES = 30;
 const EPG_SKELETON_MAX_DURATION_MINUTES = 120;

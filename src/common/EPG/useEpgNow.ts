@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
-import { EPG_NOW_REFRESH_INTERVAL } from './utils';
+import { EPG_NOW_REFRESH_INTERVAL } from './constants';
 
 const createClock = (intervalMs: number) => {
     let now = Date.now();
