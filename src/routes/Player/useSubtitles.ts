@@ -2,8 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CONSTANTS, languages, useFileDropListener, useShortcut, useToast } from 'stremio/common';
-import { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } from './subtitleDelay';
+import { CONSTANTS, getKeyboardShortcutKeys, languages, useFileDropListener, useInterval, useShortcut, useTimeout, useToast } from 'stremio/common';
+import {
+    getSubtitleDelayStepMultiplier,
+    snapSubtitleDelay,
+    SUBTITLES_DELAY_REPEAT_DELAY_MS,
+    SUBTITLES_DELAY_REPEAT_INTERVAL_MS,
+    SUBTITLES_DELAY_STEP_MS,
+} from './subtitleDelay';
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
     if (!Array.isArray(tracks)) {
@@ -54,6 +60,15 @@ type ResolvedSubtitleCandidate = {
     source: SubtitleSource,
     rank: number,
     track: SubtitleTrack,
+};
+
+type SubtitleDelayHold = {
+    direction: number,
+    key: string,
+    repeated: boolean,
+    startedAt: number,
+    stream: unknown,
+    value: number,
 };
 
 const candidateMatchesTrack = (
@@ -178,6 +193,9 @@ const useSubtitles = ({
     const trackSelectionLocked = useRef(false);
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
     const lastSelectedTrack = useRef<SelectedSubtitleTrack | null>(null);
+    const subtitleDelayHold = useRef<SubtitleDelayHold | null>(null);
+    const subtitleDelayInterval = useInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS);
+    const subtitleDelayTimeout = useTimeout(SUBTITLES_DELAY_REPEAT_DELAY_MS);
 
     videoRef.current = video;
     settingsRef.current = settings;
@@ -293,15 +311,69 @@ const useSubtitles = ({
         streamStateChanged({ subtitleDelay: delay });
     }, [streamStateChanged, setSubtitlesDelay]);
 
-    const increaseDelay = useCallback(() => {
-        const delay = (video.state.extraSubtitlesDelay ?? 0) + SUBTITLES_DELAY_STEP_MS;
-        changeDelay(snapSubtitleDelay(delay, 1));
-    }, [changeDelay, video.state.extraSubtitlesDelay]);
+    const finishSubtitleDelayHold = useCallback((applyStep: boolean) => {
+        const hold = subtitleDelayHold.current;
+        subtitleDelayInterval.cancel();
+        subtitleDelayTimeout.cancel();
+        subtitleDelayHold.current = null;
 
-    const decreaseDelay = useCallback(() => {
-        const delay = (video.state.extraSubtitlesDelay ?? 0) - SUBTITLES_DELAY_STEP_MS;
-        changeDelay(snapSubtitleDelay(delay, -1));
-    }, [changeDelay, video.state.extraSubtitlesDelay]);
+        if (applyStep && hold && !hold.repeated) {
+            const delay = hold.value + hold.direction * SUBTITLES_DELAY_STEP_MS;
+            changeDelay(snapSubtitleDelay(delay, hold.direction));
+        }
+    }, [changeDelay]);
+
+    const startSubtitleDelayHold = useCallback((combo: number, key: string, repeat: boolean) => {
+        if (repeat || subtitleDelayHold.current) return;
+
+        const hold = {
+            direction: combo === 1 ? 1 : -1,
+            key: key.toUpperCase(),
+            repeated: false,
+            startedAt: performance.now(),
+            stream: videoRef.current.state.stream,
+            value: videoRef.current.state.extraSubtitlesDelay ?? 0,
+        };
+        subtitleDelayHold.current = hold;
+
+        subtitleDelayTimeout.start(() => subtitleDelayInterval.start(() => {
+            if (subtitleDelayHold.current !== hold) return;
+            if (videoRef.current.state.stream !== hold.stream) {
+                finishSubtitleDelayHold(false);
+                return;
+            }
+
+            hold.repeated = true;
+            const multiplier = getSubtitleDelayStepMultiplier(performance.now() - hold.startedAt);
+            const delay = hold.value + hold.direction * SUBTITLES_DELAY_STEP_MS * multiplier;
+            hold.value = snapSubtitleDelay(delay, hold.direction);
+            changeDelay(hold.value);
+        }));
+    }, [changeDelay, finishSubtitleDelayHold]);
+
+    useEffect(() => {
+        const onKeyUp = (event: KeyboardEvent) => {
+            const key = subtitleDelayHold.current?.key;
+            if (!key) return;
+
+            const keys = getKeyboardShortcutKeys(event);
+            if (keys.includes(`Key${key}`) || keys.includes(key)) {
+                finishSubtitleDelayHold(true);
+            }
+        };
+        const onBlur = () => finishSubtitleDelayHold(false);
+
+        document.addEventListener('keyup', onKeyUp);
+        window.addEventListener('blur', onBlur);
+        return () => {
+            document.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('blur', onBlur);
+        };
+    }, [finishSubtitleDelayHold]);
+
+    useEffect(() => {
+        if (menusOpen) finishSubtitleDelayHold(false);
+    }, [finishSubtitleDelayHold, menusOpen]);
 
     const changeSize = useCallback((size: number) => {
         setSubtitlesSize(size);
@@ -502,9 +574,7 @@ const useSubtitles = ({
         };
     }, [applySubtitleStyle, t, toast, video.events]);
 
-    useShortcut('subtitlesDelay', useCallback((combo) => {
-        combo === 1 ? increaseDelay() : decreaseDelay();
-    }, [increaseDelay, decreaseDelay]), !menusOpen);
+    useShortcut('subtitlesDelay', startSubtitleDelayHold, !menusOpen);
 
     useShortcut('subtitlesSize', useCallback((combo) => {
         combo === 1 ? updateSize(1) : updateSize(-1);

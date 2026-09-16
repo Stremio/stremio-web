@@ -212,6 +212,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                 <div className={styles['settings-header']}>{t('PLAYER_SUBTITLES_SETTINGS')}</div>
                 <div className={styles['settings-list']}>
                     <Stepper
+                        accelerate
                         className={styles['stepper']}
                         label={'DELAY'}
                         value={props.extraSubtitlesDelay / 1000}

@@ -5,7 +5,7 @@ import shortcuts from './shortcuts.json';
 const SHORTCUTS = shortcuts.map(({ shortcuts }) => shortcuts).flat();
 
 export type ShortcutName = string;
-export type ShortcutListener = (combo: number, key: string) => void;
+export type ShortcutListener = (combo: number, key: string, repeat: boolean) => void;
 
 interface ShortcutsContext {
     grouped: ShortcutGroup[],
@@ -72,7 +72,7 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
                 if (interfaceScale) event.preventDefault();
                 if (throttled) return;
                 const combo = combos.indexOf(keys);
-                listeners.current.get(name)?.forEach((listener) => listener(combo, key));
+                listeners.current.get(name)?.forEach((listener) => listener(combo, key, repeat));
 
                 onShortcut(name as ShortcutName, combo, key);
             }
