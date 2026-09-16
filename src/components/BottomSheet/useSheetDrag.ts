@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { getInterfaceRect, getInterfaceScale } from 'stremio/common/interfaceScale';
 
 const CLOSE_THRESHOLD = 100;
 const CLOSE_THRESHOLD_RATIO = 0.12;
@@ -123,7 +124,7 @@ const useSheetDrag = ({ containerRef, enabled, isExiting, onDismiss }: Options) 
             }
 
             event.preventDefault();
-            const nextOffset = Math.max(0, touch.clientY - drag.startY);
+            const nextOffset = Math.max(0, (touch.clientY - drag.startY) / getInterfaceScale());
             drag.offset = nextOffset;
             setOffset(nextOffset);
         };
@@ -136,7 +137,7 @@ const useSheetDrag = ({ containerRef, enabled, isExiting, onDismiss }: Options) 
 
             const shouldClose = drag.dismissing && drag.offset > Math.max(
                 CLOSE_THRESHOLD,
-                node.getBoundingClientRect().height * CLOSE_THRESHOLD_RATIO,
+                getInterfaceRect(node).height * CLOSE_THRESHOLD_RATIO,
             );
 
             if (shouldClose) {

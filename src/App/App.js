@@ -14,6 +14,7 @@ const DeepLinkHandler = require('./DeepLinkHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
+const { default: useInterfaceScale } = require('./useInterfaceScale');
 const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
@@ -23,6 +24,7 @@ const TORRENT_FILE_TYPES = ['application/x-bittorrent'];
 const App = () => {
     const core = useCore();
     const profile = useProfile();
+    const changeInterfaceScale = useInterfaceScale(profile);
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
     const location = useLocation();
@@ -44,6 +46,9 @@ const App = () => {
 
     const onShortcut = React.useCallback((name, combo, key) => {
         switch (name) {
+            case 'interfaceScale':
+                changeInterfaceScale(['decrease', 'increase', 'reset'][combo]);
+                break;
             case 'shortcuts':
                 toggleShortcutModal();
                 break;
@@ -67,7 +72,7 @@ const App = () => {
                 }
                 break;
         }
-    }, [toggleShortcutModal, toggleGamepadModal, navigate, goBack]);
+    }, [toggleShortcutModal, toggleGamepadModal, changeInterfaceScale, navigate, goBack]);
 
     const onTorrentDrop = React.useCallback((file, buffer) => {
         core.transport.dispatch({

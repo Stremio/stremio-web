@@ -6,6 +6,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
+const { getInterfaceRect } = require('stremio/common/interfaceScale');
 const styles = require('./styles');
 
 const getAnchorElement = (element) => {
@@ -120,15 +121,15 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
         const menu = menuRef.current;
         const layer = layerRef.current;
         const positionMenu = () => {
-            const bounds = layer.getBoundingClientRect();
+            const bounds = getInterfaceRect(layer);
             const padding = window.getComputedStyle(layer);
             const top = bounds.top + parseFloat(padding.paddingTop);
             const bottom = bounds.bottom - parseFloat(padding.paddingBottom);
             const left = bounds.left + parseFloat(padding.paddingLeft);
             const right = bounds.right - parseFloat(padding.paddingRight);
-            const anchor = label.getBoundingClientRect();
+            const anchor = getInterfaceRect(label);
             menu.style.maxWidth = `${right - left}px`;
-            const width = menu.getBoundingClientRect().width;
+            const width = getInterfaceRect(menu).width;
             const height = menu.scrollHeight;
             const below = Math.max(0, bottom - anchor.bottom - 4);
             const above = Math.max(0, anchor.top - top - 4);

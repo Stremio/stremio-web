@@ -13,6 +13,7 @@ const useBinaryState = require('stremio/common/useBinaryState');
 const useProfile = require('stremio/common/useProfile');
 const { usePlatform } = require('stremio/common/Platform');
 const { formatEpgTimeRange } = require('stremio/common/EPG');
+const { getInterfaceRect } = require('stremio/common/interfaceScale');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
@@ -26,8 +27,8 @@ const VideoLabel = React.forwardRef(({ shouldScroll, ...props }, ref) => {
                 container = container.parentElement;
             }
             if (container) {
-                const itemBounds = ref.current.getBoundingClientRect();
-                const listBounds = container.getBoundingClientRect();
+                const itemBounds = getInterfaceRect(ref.current);
+                const listBounds = getInterfaceRect(container);
                 const top = itemBounds.top < listBounds.top ? itemBounds.top - listBounds.top
                     : Math.max(0, itemBounds.bottom - listBounds.bottom);
                 if (top !== 0) container.scrollBy({ top, behavior: 'smooth' });
