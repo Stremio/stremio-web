@@ -41,7 +41,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
             if (selectedNode) {
                 selectedNode.scrollIntoView({
                     behavior: 'smooth',
-                    block: 'nearest'
+                    block: 'start'
                 });
             }
         }
