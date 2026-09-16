@@ -2,29 +2,7 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/BottomSheet/BottomSheet.less') {
-    sheet-container: container;
-    sheet-content: content;
-}
-
-.sheet {
-    display: flex !important;
-
-    .sheet-container {
-        width: 100%;
-        max-width: 42rem;
-        height: min(44rem, calc(100% - max(0.75rem, var(--safe-area-inset-top))));
-        max-height: calc(100% - max(0.75rem, var(--safe-area-inset-top)));
-    }
-
-    .sheet-content {
-        display: flex;
-        overflow: hidden;
-        border-radius: 0;
-    }
-}
-
-.filter-selection {
+.selection {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -56,17 +34,17 @@
     align-items: center;
     gap: 0.75rem;
     padding: 1.75rem 1rem 0.75rem;
+}
 
-    h2 {
-        flex: 1;
-        min-width: 0;
-        font-size: 1.4rem;
-        font-weight: 600;
-        outline: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+.heading {
+    flex: 1;
+    min-width: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .back-button {
@@ -154,93 +132,6 @@
     overscroll-behavior: contain;
 }
 
-.overview {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.group {
-    flex: none;
-    min-width: 0;
-    overflow: hidden;
-    border-radius: var(--border-radius);
-    background: var(--overlay-color);
-}
-
-.filter-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-    min-height: 4.75rem;
-    padding: 1rem 1.25rem;
-    text-align: start;
-    background: transparent;
-
-    & + & {
-        border-top: 1px solid var(--overlay-color);
-    }
-
-    > svg {
-        flex: none;
-        width: 1.1rem;
-        height: 1.1rem;
-        opacity: 0.45;
-    }
-}
-
-.row-copy,
-.choice-copy {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.3rem;
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-
-.filter-label,
-.description {
-    font-size: 0.85rem;
-    opacity: 0.55;
-}
-
-.value {
-    font-size: 1.1rem;
-    font-weight: 500;
-
-    &.active {
-        color: var(--primary-accent-color);
-    }
-}
-
-.choices {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.choice {
-    flex: none;
-
-    > label {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-        min-height: 3.75rem;
-        padding: 1rem;
-        cursor: pointer;
-    }
-}
-
-.empty {
-    padding: 2rem 1rem;
-    opacity: 0.6;
-    text-align: center;
-}
-
 .footer {
     flex: none;
     padding: 1rem 1.25rem calc(1rem + var(--safe-area-inset-bottom));
@@ -257,22 +148,8 @@
 }
 
 @media @phone-landscape {
-    .overview {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        align-items: start;
-    }
-
-    .group:only-child {
-        grid-column: 1 / -1;
-    }
-
     .header {
         padding-bottom: 0.5rem;
-    }
-
-    .filter-row {
-        padding: 0.75rem 1rem;
     }
 
     .footer {

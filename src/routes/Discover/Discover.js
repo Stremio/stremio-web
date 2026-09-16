@@ -18,7 +18,7 @@ const { default: MetaPreviewSheet } = require('stremio/components/MetaPreviewShe
 const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
-const { default: DiscoverFiltersSheet } = require('./DiscoverFiltersSheet');
+const { default: FiltersSheet } = require('./FiltersSheet');
 const { default: Guide } = require('./Guide');
 const { default: DaySelector } = require('./Guide/DaySelector');
 const { default: useLiveTvGuide } = require('./useLiveTvGuide');
@@ -423,7 +423,7 @@ const Discover = () => {
                     :
                     null
             }
-            <DiscoverFiltersSheet inputs={selectInputs} show={isMobile && filtersOpen} onCloseRequest={closeFilters} />
+            <FiltersSheet inputs={selectInputs} show={isMobile && filtersOpen} onCloseRequest={closeFilters} />
             {
                 filtersOpen && !isMobile ?
                     <ModalDialog title={t('CATALOG_FILTERS')} className={styles['selectable-inputs-modal']} onCloseRequest={closeFilters}>

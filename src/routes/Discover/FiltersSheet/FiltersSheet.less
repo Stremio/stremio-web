@@ -1,0 +1,23 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    sheet-container: container;
+    sheet-content: content;
+}
+
+.sheet {
+    display: flex !important;
+
+    .sheet-container {
+        width: 100%;
+        max-width: 42rem;
+        height: min(44rem, calc(100% - max(0.75rem, var(--safe-area-inset-top))));
+        max-height: calc(100% - max(0.75rem, var(--safe-area-inset-top)));
+    }
+
+    .sheet-content {
+        display: flex;
+        overflow: hidden;
+        border-radius: 0;
+    }
+}
