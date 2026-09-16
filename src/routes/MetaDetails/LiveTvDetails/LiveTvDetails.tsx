@@ -1,13 +1,12 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import classNames from 'classnames';
-import { useCore } from 'stremio/core';
 import Image from 'stremio/components/Image';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import screenSizes from 'stremio/common/screen-sizes.less';
-import { EPGChannel, EPGProgram, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
+import { EPGChannel, EPGProgram, toEpgProgram, useLiveRefresh } from 'stremio/common/EPG';
 import Hero from './Hero';
 import Schedule from './Schedule';
 import Playback from './Playback';
@@ -27,10 +26,9 @@ type Props = {
 const programKey = (program: EPGProgram) => program.id ?? `${program.channelId}:${program.startTime.getTime()}`;
 
 const LiveTvDetails = ({ className, contentRef, children, meta, addonName, streams, onToggleLibrary }: Props) => {
-    const core = useCore();
     const active = useRouteActive();
     const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
-    const now = useEpgNow(true);
+    const now = useLiveRefresh('MetaDetails', 'meta_details', active);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const channel = useMemo<EPGChannel>(() => ({
         id: meta.id,
@@ -50,10 +48,6 @@ const LiveTvDetails = ({ className, contentRef, children, meta, addonName, strea
         ?? programs[programs.length - 1]
         ?? null;
     const artwork = selected?.thumbnail ?? meta.background;
-
-    useEffect(() => {
-        if (active) core.transport.dispatch({ action: 'MetaDetails', args: { action: 'RefreshLive' } }, 'meta_details');
-    }, [active, core, meta.id, now]);
 
     const onProgramSelect = useCallback((program: EPGProgram | null) => {
         setSelectedKey(program ? programKey(program) : null);

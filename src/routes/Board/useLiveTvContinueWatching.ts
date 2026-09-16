@@ -4,7 +4,7 @@ import React from 'react';
 import { useCore } from 'stremio/core';
 import { useModelState } from 'stremio/common';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
-import { useEpgNow } from 'stremio/common/EPG';
+import { useLiveRefresh } from 'stremio/common/EPG';
 
 const MODEL = 'live_tv_continue_watching';
 
@@ -15,13 +15,13 @@ export type LiveTvContinueWatching = {
 const useLiveTvContinueWatching = (): LiveTvContinueWatching => {
     const core = useCore();
     const active = useRouteActive();
-    const now = useEpgNow(active);
     const state = useModelState({ model: MODEL, action: null }) as LiveTvContinueWatching;
+    useLiveRefresh('LiveTvContinueWatching', MODEL, active);
     React.useEffect(() => {
         core.transport.dispatch(active ? {
             action: 'Load', args: { model: 'LiveTvContinueWatching' },
         } : { action: 'Unload' }, MODEL);
-    }, [active, now, core.transport]);
+    }, [active, core.transport]);
     return state;
 };
 

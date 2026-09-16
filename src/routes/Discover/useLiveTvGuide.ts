@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useCore } from 'stremio/core';
 import { useModelState } from 'stremio/common';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
-import { EPGChannel, EPGProgram, epgDateKey, epgDayWindow, parseEpgDate, toEpgProgram, useEpgNow } from 'stremio/common/EPG';
+import { EPGChannel, EPGProgram, epgDateKey, epgDayWindow, parseEpgDate, toEpgProgram, useLiveRefresh } from 'stremio/common/EPG';
 
 const MODEL = 'live_tv_guide';
 
@@ -20,7 +20,7 @@ const useLiveTvGuide = (discover: Discover, epgDate: string | null, enabled: boo
     const core = useCore();
     const routeActive = useRouteActive();
     const active = enabled && routeActive;
-    const now = useEpgNow(active);
+    const now = useLiveRefresh('LiveTvGuide', MODEL, active);
     const followedDate = epgDate ?? epgDateKey(new Date(now));
     const day = useMemo(() => {
         const { start, end } = epgDayWindow(parseEpgDate(followedDate) ?? new Date());

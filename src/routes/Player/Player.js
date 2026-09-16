@@ -12,7 +12,7 @@ const { useCore } = require('stremio/core');
 const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
-const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgTimeRange, useEpgNow } = require('stremio/common/EPG');
+const { EPG_PLAYER_NOW_REFRESH_INTERVAL, getEpgTimeRange, useLiveRefresh } = require('stremio/common/EPG');
 const { default: toPath } = require('stremio-router/toPath');
 const { useGoBack } = require('stremio-router');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
@@ -112,15 +112,11 @@ const Player = () => {
     const isEpg = (player.live ?? null) !== null;
     const currentEpgVideo = player.live?.currentProgram ?? null;
     const upcomingVideo = isEpg ? player.live?.nextProgram ?? null : player.nextVideo;
-    const epgNow = useEpgNow(isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
+    const epgNow = useLiveRefresh('Player', 'player', isEpg, EPG_PLAYER_NOW_REFRESH_INTERVAL);
     const livePlayback = isEpg || video.state.live !== null;
     const seekStart = livePlayback ? video.state.live?.start : 0;
     const seekEnd = livePlayback ? video.state.live?.end : video.state.duration;
     const canSeek = Number.isFinite(seekStart) && Number.isFinite(seekEnd) && seekEnd > seekStart && Number.isFinite(video.state.time);
-    React.useEffect(() => {
-        if (isEpg) core.transport.dispatch({ action: 'Player', args: { action: 'RefreshLive' } }, 'player');
-    }, [isEpg, epgNow, core.transport]);
-
     const [nextVideoPopupDismissal, setNextVideoPopupDismissal] = React.useState(null);
     const liveEpgRange = currentEpgVideo === null ? null : getEpgTimeRange(currentEpgVideo);
     const nextVideoRemainingTime = isEpg ?
