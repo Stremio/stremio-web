@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React from 'react';
-import { Button } from 'stremio/components';
+import { Button, Image } from 'stremio/components';
 import { EPGChannel } from 'stremio/common/EPG';
 import styles from './ChannelColumn.less';
 
@@ -33,12 +33,12 @@ const ChannelColumn = ({ innerRef, width, rowHeight, channels, skeletonRows, sty
                             href={channel.deepLinks?.metaDetailsStreams ?? channel.deepLinks?.metaDetailsVideos ?? undefined}
                             title={channel.name}
                         >
-                            {
-                                channel.logo ?
-                                    <img className={styles['logo']} src={channel.logo} alt={channel.name} loading={'lazy'} />
-                                    :
-                                    <div className={styles['name']}>{channel.name}</div>
-                            }
+                            <Image
+                                className={styles['logo']}
+                                src={channel.logo ?? undefined}
+                                alt={''}
+                                renderFallback={() => <div className={styles['name']}>{channel.name}</div>}
+                            />
                         </Button>
                     ))
             }
