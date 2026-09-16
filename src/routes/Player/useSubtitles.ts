@@ -67,6 +67,7 @@ type SubtitleDelayHold = {
     key: string,
     repeated: boolean,
     startedAt: number,
+    stream: unknown,
     value: number,
 };
 
@@ -330,12 +331,17 @@ const useSubtitles = ({
             key: key.toUpperCase(),
             repeated: false,
             startedAt: performance.now(),
+            stream: videoRef.current.state.stream,
             value: videoRef.current.state.extraSubtitlesDelay ?? 0,
         };
         subtitleDelayHold.current = hold;
 
         subtitleDelayTimeout.start(() => subtitleDelayInterval.start(() => {
             if (subtitleDelayHold.current !== hold) return;
+            if (videoRef.current.state.stream !== hold.stream) {
+                finishSubtitleDelayHold(false);
+                return;
+            }
 
             hold.repeated = true;
             const multiplier = getSubtitleDelayStepMultiplier(performance.now() - hold.startedAt);
@@ -343,7 +349,7 @@ const useSubtitles = ({
             hold.value = snapSubtitleDelay(delay, hold.direction);
             changeDelay(hold.value);
         }));
-    }, [changeDelay]);
+    }, [changeDelay, finishSubtitleDelayHold]);
 
     useEffect(() => {
         const onKeyUp = (event: KeyboardEvent) => {
