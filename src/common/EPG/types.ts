@@ -8,6 +8,8 @@ export type EPGChannel = {
     deepLinks?: MetaItemDeepLinks;
 };
 
+export type EPGShow = Pick<Video, 'id' | 'title' | 'overview' | 'thumbnail' | 'links' | 'runtime' | 'releaseInfo' | 'released' | 'genres' | 'cast' | 'directors' | 'ratings' | 'startTime' | 'endTime' | 'deepLinks'>;
+
 export type EPGProgram = {
     id?: string;
     title: string;

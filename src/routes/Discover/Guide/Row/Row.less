@@ -2,58 +2,37 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
-.epg-row {
+.row {
     display: flex;
     height: 60px;
     flex-shrink: 0;
 }
 
-.epg-program-list {
+.programs {
     position: relative;
     flex: 1;
     min-width: 0;
     height: 100%;
 }
 
-.epg-program-block {
+.program {
     position: absolute;
     height: 56px;
 
-    &-inner {
-        width: 100%;
-        height: 56px;
-        display: flex;
-        box-sizing: border-box;
-        border-radius: 0.5rem;
-        padding: 0 1rem 0 0.5rem;
-        cursor: pointer;
-        text-align: left;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--color-foreground);
-        background-color: #1E1C2E;
-        transition: background-color 0.12s;
-        overflow: hidden;
-
-        &:hover {
-            background-color: #2B293F;
-        }
-    }
-
-    &-compact {
-        .epg-program-block-inner {
+    &.compact {
+        .program-inner {
             justify-content: center;
             padding: 0;
         }
 
-        .epg-program-thumb,
-        .epg-program-content {
+        .program-thumb,
+        .program-content {
             display: none;
         }
     }
 
-    &-current {
-        .epg-program-block-inner {
+    &.current {
+        .program-inner {
             background-color: #5e4fa2;
 
             &:hover {
@@ -63,32 +42,53 @@
     }
 }
 
+.program-inner {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    padding: 0 1rem 0 0.5rem;
+    cursor: pointer;
+    text-align: left;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-foreground);
+    background-color: #1E1C2E;
+    transition: background-color 0.12s;
+    overflow: hidden;
+
+    &:hover {
+        background-color: #2B293F;
+    }
+}
+
 @media (hover: hover) and (pointer: fine) {
-    .epg-program-block:hover {
+    .program:hover {
         z-index: 10;
         overflow: visible;
 
-        .epg-program-block-inner {
+        .program-inner {
             min-width: max-content;
             justify-content: flex-start;
             padding: 0 1rem 0 0.5rem;
         }
 
-        .epg-program-icon {
+        .program-icon {
             display: none;
         }
 
-        .epg-program-thumb {
+        .program-thumb {
             display: block;
         }
 
-        .epg-program-content {
+        .program-content {
             display: flex;
         }
     }
 }
 
-.epg-program-icon {
+.program-icon {
     flex: none;
     width: 1rem;
     height: 1rem;
@@ -96,7 +96,7 @@
     opacity: 0.65;
 }
 
-.epg-program-thumb {
+.program-thumb {
     width: 2.5rem;
     min-width: 2.5rem;
     height: 2.5rem;
@@ -108,7 +108,7 @@
     overflow: hidden;
 }
 
-.epg-program-content {
+.program-content {
     flex: 1;
     min-width: 0;
     display: flex;
@@ -117,7 +117,7 @@
     gap: 0.125rem;
 }
 
-.epg-program-title {
+.program-title {
     font-size: 13px;
     font-weight: 400;
     white-space: nowrap;
@@ -126,7 +126,7 @@
     color: var(--primary-foreground-color);
 }
 
-.epg-program-time {
+.program-time {
     font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
@@ -135,7 +135,7 @@
     opacity: 0.3;
 }
 
-.epg-no-programs {
+.no-programs {
     width: calc(100% - 4px);
 
     &:not([href]) {

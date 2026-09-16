@@ -7,8 +7,8 @@ const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useCore } = require('stremio/core');
-const { CONSTANTS, useBinaryState, useMediaQuery, useModelState, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
-const { useEpgNow, epgDateKey, epgDayWindow, parseEpgDate, toEpgProgram } = require('stremio/common/EPG');
+const { CONSTANTS, useBinaryState, useMediaQuery, useOnScrollToBottom, withCoreSuspender } = require('stremio/common');
+const { epgDateKey, parseEpgDate } = require('stremio/common/EPG');
 const screenSizes = require('stremio/common/screen-sizes.less');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
@@ -19,8 +19,9 @@ const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: DiscoverFiltersSheet } = require('./DiscoverFiltersSheet');
-const { default: EpgGuide } = require('./EpgGuide');
-const { default: EpgDaySelector } = require('./EpgGuide/EpgDaySelector');
+const { default: Guide } = require('./Guide');
+const { default: DaySelector } = require('./Guide/DaySelector');
+const { default: useLiveTvGuide } = require('./useLiveTvGuide');
 const styles = require('./styles');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
@@ -73,62 +74,7 @@ const Discover = () => {
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
     const [epgPreviewOpen, openEpgPreview, closeEpgPreviewModal] = useBinaryState(false);
     const isEpgLayout = discover.selectable.catalogs.find(({ selected }) => selected)?.isEpgGuide === true;
-    const epgNow = useEpgNow(isEpgLayout && routeActive);
-    const epgFollowedDate = epgDate ?? epgDateKey(new Date(epgNow));
-    const epgTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const epgDay = React.useMemo(() => {
-        const { start, end } = epgDayWindow(parseEpgDate(epgFollowedDate));
-        return { start: new Date(start).toISOString(), end: new Date(end).toISOString() };
-    }, [epgFollowedDate, epgTimezone]);
-    React.useEffect(() => {
-        if (!isEpgLayout || !discover.selected?.request || !routeActive) return;
-        core.transport.dispatch({
-            action: 'Load',
-            args: {
-                model: 'LiveTvGuide',
-                args: {
-                    request: discover.selected.request,
-                    date: epgFollowedDate,
-                    day: epgDay,
-                    utcOffset: -new Date().getTimezoneOffset(),
-                },
-            },
-        }, 'live_tv_guide');
-    }, [isEpgLayout, discover.selected, routeActive, epgFollowedDate, epgDay, epgNow]);
-    React.useEffect(() => {
-        if (!isEpgLayout) core.transport.dispatch({ action: 'Unload' }, 'live_tv_guide');
-    }, [isEpgLayout]);
-    const retryLiveTvGuide = React.useCallback(() => {
-        core.transport.dispatch({ action: 'LiveTvGuide', args: { action: 'Retry' } }, 'live_tv_guide');
-    }, []);
-    const liveTvGuide = useModelState({ model: 'live_tv_guide' });
-    const epgChannels = React.useMemo(() => {
-        return (liveTvGuide?.channels ?? []).map(({ channel, deepLinks }) => ({
-            id: channel.id,
-            type: channel.type,
-            name: channel.name,
-            logo: channel.logo ?? channel.poster ?? null,
-            deepLinks,
-        }));
-    }, [liveTvGuide?.channels]);
-    const epgPrograms = React.useMemo(() => {
-        return (liveTvGuide?.channels ?? []).reduce((programs, { channel, shows }) => {
-            const epgChannel = { ...channel, logo: channel.logo ?? channel.poster ?? null };
-            programs[channel.id] = shows.map((show) => toEpgProgram(show, epgChannel)).filter(Boolean);
-            return programs;
-        }, {});
-    }, [liveTvGuide?.channels]);
-    const epgCatalog = liveTvGuide?.catalog ?? [];
-    const epgLoading = epgCatalog.length === 0 || epgCatalog.some((page) => page.type === 'Loading');
-    const epgErrorPage = epgCatalog.find(({ type }) => type === 'Err');
-    const epgError = epgErrorPage ? epgErrorPage.content?.content?.message ?? epgErrorPage.content?.type ?? 'Error' : null;
-    const epgHasNextPage = (liveTvGuide?.selectable?.nextPage ?? null) !== null;
-    const epgLoadNextPage = React.useCallback(() => {
-        core.transport.dispatch({
-            action: 'LiveTvGuide',
-            args: { action: 'LoadNextPage' },
-        }, 'live_tv_guide');
-    }, []);
+    const guide = useLiveTvGuide(discover, epgDate, isEpgLayout);
     const onEpgDayChange = React.useCallback((day) => {
         const date = epgDateKey(day);
         setQueryParams((params) => {
@@ -266,18 +212,8 @@ const Discover = () => {
         // the guide feeds from the LiveTvGuide model instead
         if (isEpgLayout) {
             return (
-                <EpgGuide
-                    channels={epgChannels}
-                    programs={epgPrograms}
-                    loading={epgLoading}
-                    dayWindow={liveTvGuide?.selected?.day}
-                    selectedDate={liveTvGuide?.selected?.date ?? epgDate}
-                    today={liveTvGuide?.selectable?.today ?? null}
-                    error={epgError}
-                    onRetry={retryLiveTvGuide}
-                    hasNextPage={epgHasNextPage}
-                    loadNextPage={epgLoadNextPage}
-                    now={epgNow}
+                <Guide
+                    {...guide}
                     onProgramSelect={onProgramSelect}
                 />
             );
@@ -365,13 +301,15 @@ const Discover = () => {
         }
 
         const { program, channel } = selectedEpgProgram;
-        return <EpgProgramModal
-            program={program}
-            now={epgNow}
-            show={epgPreviewOpen}
-            onCloseRequest={closeEpgPreviewModal}
-            channelHref={getMetaDetailsHref(channel.deepLinks)}
-        />;
+        return (
+            <EpgProgramModal
+                program={program}
+                now={guide.now}
+                show={epgPreviewOpen}
+                onCloseRequest={closeEpgPreviewModal}
+                channelHref={getMetaDetailsHref(channel.deepLinks)}
+            />
+        );
     };
 
     React.useEffect(() => {
@@ -429,12 +367,17 @@ const Discover = () => {
                                 </Button>
                             </div>
                         </div>}
-                        {isEpgLayout && compactEpgDate && <EpgDaySelector
-                            compact={true}
-                            selectedDate={liveTvGuide?.selected?.date ?? epgDate}
-                            today={liveTvGuide?.selectable?.today ?? null}
-                            onDayChange={onEpgDayChange}
-                        />}
+                        {
+                            isEpgLayout && compactEpgDate ?
+                                <DaySelector
+                                    compact={true}
+                                    selectedDate={guide.selectedDate}
+                                    today={guide.today}
+                                    onDayChange={onEpgDayChange}
+                                />
+                                :
+                                null
+                        }
                     </div>
                     {
                         discover.catalog !== null && !discover.catalog.installed ?
@@ -447,11 +390,16 @@ const Discover = () => {
                             :
                             null
                     }
-                    {isEpgLayout && !compactEpgDate && <EpgDaySelector
-                        selectedDate={liveTvGuide?.selected?.date ?? epgDate}
-                        today={liveTvGuide?.selectable?.today ?? null}
-                        onDayChange={onEpgDayChange}
-                    />}
+                    {
+                        isEpgLayout && !compactEpgDate ?
+                            <DaySelector
+                                selectedDate={guide.selectedDate}
+                                today={guide.today}
+                                onDayChange={onEpgDayChange}
+                            />
+                            :
+                            null
+                    }
                     {renderCatalogContent()}
                 </div>
                 {renderMetaPreview()}

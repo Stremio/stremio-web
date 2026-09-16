@@ -44,6 +44,7 @@ type LiveTvGuide = {
         request: ResourceRequest | null,
         date: string | null,
         utcOffset: number,
+        day: { start: string, end: string } | null,
     } | null,
     selectable: {
         catalogs: LiveTvGuideSelectableCatalog[],

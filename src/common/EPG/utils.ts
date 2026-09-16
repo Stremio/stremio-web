@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import type { EPGChannel, EPGProgram } from './types';
+import type { EPGChannel, EPGProgram, EPGShow } from './types';
 import { HOUR_IN_MS } from './constants';
 
 type EpgSkeletonProgram = {
@@ -59,7 +59,7 @@ export const getEpgTimeRange = (
         null;
 };
 
-export const toEpgProgram = (video: Video, channel: EPGChannel): EPGProgram | null => {
+export const toEpgProgram = (video: EPGShow, channel: EPGChannel): EPGProgram | null => {
     const range = getEpgTimeRange(video);
     return range === null ? null : {
         id: video.id,

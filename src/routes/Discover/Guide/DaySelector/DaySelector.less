@@ -2,7 +2,7 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
-.epg-day-selector {
+.day-selector {
     flex: none;
     display: flex;
     flex-direction: row;
@@ -22,7 +22,7 @@
     }
 }
 
-.epg-day-arrow {
+.arrow {
     flex: none;
     display: flex;
     align-items: center;
@@ -43,13 +43,13 @@
     }
 }
 
-.epg-day-arrow-icon {
+.arrow-icon {
     width: 1.35rem;
     height: 1.35rem;
     color: var(--primary-foreground-color);
 }
 
-.epg-day-btn {
+.day {
     flex: none;
     display: flex;
     flex-direction: column;
@@ -71,7 +71,7 @@
         background-color: var(--overlay-color);
     }
 
-    &-active {
+    &.active {
         opacity: 1;
         border-color: rgba(255, 255, 255, 0.55);
         background-color: rgba(255, 255, 255, 0.07);
@@ -82,7 +82,7 @@
     }
 }
 
-.epg-day-weekday {
+.weekday {
     font-size: 1rem;
     font-weight: 500;
     line-height: 100%;
@@ -90,7 +90,7 @@
     opacity: 0.5;
 }
 
-.epg-day-date {
+.date {
     font-size: 1.5rem;
     font-weight: 500;
     color: var(--primary-foreground-color);
@@ -100,7 +100,7 @@
 }
 
 @media only screen and (max-width: @minimum) {
-    .epg-day-selector {
+    .day-selector {
         padding: 0.5rem 1rem 0.75rem 1rem;
     }
 }
