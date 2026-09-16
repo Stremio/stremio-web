@@ -3,8 +3,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
-import useBinaryState from 'stremio/common/useBinaryState';
 import useOrientation from 'stremio/common/useOrientation';
+import { getInterfaceScale } from 'stremio/common/interfaceScale';
 import styles from './BottomSheet.less';
 
 const CLOSE_THRESHOLD = 100;
@@ -16,13 +16,12 @@ type Props = {
     onClose: () => void,
 };
 
-const BottomSheet = ({ children, title, show, onClose }: Props) => {
+const BottomSheetContent = ({ children, title, onClose }: Omit<Props, 'show'>) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const orientation = useOrientation();
+    const previousOrientationRef = useRef(orientation);
     const [startOffset, setStartOffset] = useState(0);
     const [offset, setOffset] = useState(0);
-
-    const [opened, open, close] = useBinaryState();
 
     const containerStyle = useMemo(() => ({
         transform: `translateY(${offset}px)`
@@ -39,7 +38,7 @@ const BottomSheet = ({ children, title, show, onClose }: Props) => {
 
     const onTouchMove = useCallback(({ touches }: React.TouchEvent<HTMLDivElement>) => {
         const { clientY } = touches[0];
-        setOffset(Math.max(0, clientY - startOffset));
+        setOffset(Math.max(0, (clientY - startOffset) / getInterfaceScale()));
     }, [startOffset]);
 
     const onTouchEnd = () => {
@@ -47,24 +46,20 @@ const BottomSheet = ({ children, title, show, onClose }: Props) => {
         setStartOffset(0);
     };
 
-    const onTransitionEnd = useCallback(() => {
-        (offset === containerHeight()) && close();
-    }, [offset]);
+    const onTransitionEnd = useCallback((event: React.TransitionEvent<HTMLDivElement>) => {
+        if (event.target === containerRef.current && event.propertyName === 'transform' && offset === containerHeight()) {
+            onClose();
+        }
+    }, [offset, onClose]);
 
     useEffect(() => {
-        setOffset(0);
-        show ? open() : close();
-    }, [show]);
+        if (previousOrientationRef.current !== orientation) {
+            previousOrientationRef.current = orientation;
+            onClose();
+        }
+    }, [orientation, onClose]);
 
-    useEffect(() => {
-        !opened && onClose();
-    }, [opened]);
-
-    useEffect(() => {
-        opened && close();
-    }, [orientation]);
-
-    return opened && createPortal((
+    return createPortal((
         <div className={styles['bottom-sheet']}>
             <div className={styles['backdrop']} onClick={onCloseRequest} />
             <div
@@ -89,5 +84,7 @@ const BottomSheet = ({ children, title, show, onClose }: Props) => {
         </div>
     ), document.body);
 };
+
+const BottomSheet = ({ show, ...props }: Props) => show ? <BottomSheetContent {...props} /> : null;
 
 export default BottomSheet;

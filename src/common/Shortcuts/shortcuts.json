@@ -4,6 +4,11 @@
         "label": "SETTINGS_NAV_GENERAL",
         "shortcuts": [
             {
+                "name": "interfaceScale",
+                "label": "SETTINGS_UI_ZOOM",
+                "combos": [["Mod", "-"], ["Mod", "+"], ["Mod", "0"]]
+            },
+            {
                 "name": "navigateTabs",
                 "label": "SETTINGS_SHORTCUT_NAVIGATE_MENUS",
                 "combos": [["1", "2", "3", "4", "5", "6"]]

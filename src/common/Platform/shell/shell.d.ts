@@ -25,6 +25,7 @@ type ShellCapabilities = {
     gpuVideoProcessing: boolean;
     nativeAssSubtitles: boolean;
     cacheDirectoryPicker: boolean;
+    nativeInterfaceScale: boolean;
 };
 
 type ShellState = {

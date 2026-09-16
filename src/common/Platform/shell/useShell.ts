@@ -48,6 +48,7 @@ const useShell = (): Shell => {
         gpuVideoProcessing: false,
         nativeAssSubtitles: false,
         cacheDirectoryPicker: false,
+        nativeInterfaceScale: false,
     });
 
     const send = (method: string, ...args: (string | number | object)[]) => {
@@ -107,6 +108,7 @@ const useShell = (): Shell => {
                         gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
                         nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
                         cacheDirectoryPicker: shellProperties.cacheDirectoryPicker === 'true',
+                        nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
                     });
                 }
 

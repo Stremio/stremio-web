@@ -1,5 +1,6 @@
 import React, { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PRIMARY_MODIFIER } from 'stremio/common/Shortcuts/keyboard';
 import styles from './Keys.less';
 
 type Props = {
@@ -13,6 +14,7 @@ const Keys = ({ keys }: Props) => {
         'Shift': `⇧ ${t('SETTINGS_SHORTCUT_SHIFT')}`,
         'Space': t('SETTINGS_SHORTCUT_SPACE'),
         'Ctrl': t('SETTINGS_SHORTCUT_CTRL'),
+        'Mod': PRIMARY_MODIFIER === 'Meta' ? '⌘' : t('SETTINGS_SHORTCUT_CTRL'),
         'Escape': t('SETTINGS_SHORTCUT_ESC'),
         'Backspace': t('SETTINGS_SHORTCUT_BACKSPACE'),
         'ArrowUp': '↑',

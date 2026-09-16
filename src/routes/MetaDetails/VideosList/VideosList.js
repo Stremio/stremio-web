@@ -11,9 +11,7 @@ const SeasonsBar = require('./SeasonsBar');
 const { default: EpisodePicker } = require('../EpisodePicker');
 const styles = require('./styles');
 
-let savedScrollTop = 0;
-
-const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, selectedVideoId, toggleNotifications }) => {
+const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, selectedVideoId, toggleNotifications, scrollMemoryRef, titleKey }) => {
     const core = useCore();
     const profile = useProfile();
     const showNotificationsToggle = React.useMemo(() => {
@@ -73,31 +71,40 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
     }, [videosForSeason]);
 
     const videosContainerRef = React.useRef(null);
-    const isMountedRef = React.useRef(false);
+    const previousListRef = React.useRef({ titleKey, season: selectedSeason });
+    const restoredScrollRef = React.useRef(false);
 
     const saveScrollPosition = React.useCallback(() => {
-        savedScrollTop = videosContainerRef.current?.scrollTop ?? 0;
-    }, []);
+        scrollMemoryRef.current = {
+            titleKey,
+            season: selectedSeason,
+            top: videosContainerRef.current?.scrollTop ?? 0,
+        };
+    }, [scrollMemoryRef, titleKey, selectedSeason]);
 
-    // Restore scroll on mount (before paint), consume immediately
-    React.useLayoutEffect(() => {
-        if (savedScrollTop > 0 && videosContainerRef.current) {
-            videosContainerRef.current.scrollTop = savedScrollTop;
-            savedScrollTop = 0;
+    const attachVideosContainer = React.useCallback((container) => {
+        videosContainerRef.current = container;
+        if (!container) return;
+
+        const saved = scrollMemoryRef.current;
+        restoredScrollRef.current = saved?.titleKey === titleKey && saved.season === selectedSeason;
+        if (restoredScrollRef.current) {
+            container.scrollTop = saved.top;
+            scrollMemoryRef.current = null;
         }
-    }, []);
+    }, [scrollMemoryRef, titleKey, selectedSeason]);
 
-    // Scroll to top when the season changes (skip on initial mount to respect restored scroll position)
+    // Keep restored positions and selected-video scrolling when changing seasons.
     React.useEffect(() => {
-        if (!isMountedRef.current) {
-            isMountedRef.current = true;
-            return;
-        }
+        const listChanged = previousListRef.current.titleKey !== titleKey || previousListRef.current.season !== selectedSeason;
+        previousListRef.current = { titleKey, season: selectedSeason };
+        if (!listChanged || restoredScrollRef.current) return;
+
         const hasSelectedVideo = videosForSeason.some((v) => v.id === selectedVideoId);
         if (!hasSelectedVideo && videosContainerRef.current) {
             videosContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    }, [selectedSeason]);
+    }, [titleKey, selectedSeason, videosForSeason, selectedVideoId]);
 
     const [search, setSearch] = React.useState('');
     const searchInputOnChange = React.useCallback((event) => {
@@ -182,7 +189,7 @@ const VideosList = ({ className, metaItem, libraryItem, season, seasonOnSelect, 
                                 value={search}
                                 onChange={searchInputOnChange}
                             />
-                            <div ref={videosContainerRef} className={styles['videos-container']}>
+                            <div ref={attachVideosContainer} className={styles['videos-container']}>
                                 {
                                     videosForSeason
                                         .filter((video) => {
@@ -229,6 +236,8 @@ VideosList.propTypes = {
     selectedVideoId: PropTypes.string,
     seasonOnSelect: PropTypes.func,
     toggleNotifications: PropTypes.func,
+    scrollMemoryRef: PropTypes.object.isRequired,
+    titleKey: PropTypes.string.isRequired,
 };
 
 module.exports = VideosList;

@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { deepEqual } = require('fast-equals');
+const { createPath, useLocation } = require('react-router');
 const { useCore } = require('stremio/core');
 const { CONSTANTS, withCoreSuspender, useModelState, useProfile, useToast } = require('stremio/common');
 const { default: StreamingServerUrlModal } = require('./StreamingServerUrlModal');
@@ -26,24 +26,16 @@ const loopback = (url) => url.protocol === 'http:' && LOOPBACK_HOSTNAMES.has(url
 const map = ({ streamingServerUrls }) => ({ streamingServerUrls });
 
 const SearchParamsHandler = () => {
+    const location = useLocation();
     const core = useCore();
     const profile = useProfile();
     const toast = useToast();
     const { streamingServerUrls } = useModelState({ model: 'ctx', map: map });
 
-    const [searchParams, setSearchParams] = React.useState({});
+    const { searchParams } = new URL(`${window.location.origin}${createPath(location)}${window.location.search}`);
+    const streamingServerUrl = searchParams.getAll('streamingServerUrl').pop() ?? null;
     const [requested, set] = React.useState(null);
     const handledStreamingServerUrlRef = React.useRef(null);
-
-    const onLocationChange = () => {
-        const { origin, hash, search } = window.location;
-        const { searchParams } = new URL(`${origin}${hash.replace('#', '')}${search}`);
-
-        setSearchParams((previousSearchParams) => {
-            const currentSearchParams = Object.fromEntries(searchParams.entries());
-            return deepEqual(previousSearchParams, currentSearchParams) ? previousSearchParams : currentSearchParams;
-        });
-    };
 
     const apply = React.useCallback((url, { save, notify }) => {
         if (save) {
@@ -86,8 +78,6 @@ const SearchParamsHandler = () => {
     }, []);
 
     React.useEffect(() => {
-        const { streamingServerUrl } = searchParams;
-
         if (handledStreamingServerUrlRef.current === streamingServerUrl) {
             return;
         }
@@ -124,13 +114,7 @@ const SearchParamsHandler = () => {
         }
 
         set(normalized);
-    }, [apply, profile.settings.streamingServerUrl, searchParams, streamingServerUrls]);
-
-    React.useEffect(() => {
-        onLocationChange();
-        window.addEventListener('hashchange', onLocationChange);
-        return () => window.removeEventListener('hashchange', onLocationChange);
-    }, []);
+    }, [apply, profile.settings.streamingServerUrl, streamingServerUrl, streamingServerUrls]);
 
     return requested !== null ?
         <StreamingServerUrlModal
