@@ -21,8 +21,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz
-        version: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz
+        specifier: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.62.1.tgz
+        version: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.62.1.tgz
       '@stremio/stremio-icons':
         specifier: 5.15.0
         version: 5.15.0
@@ -1430,9 +1430,9 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz':
-    resolution: {integrity: sha512-H5W9jPkNtQ89JtM3ksTnfHEf9pb1wIRIa4Dkvtggfwu1w5EGNX2CnNVDjZ3/uS+meyCUZ5OeFd1RG8H5rQXtMQ==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz}
-    version: 0.61.1
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.62.1.tgz':
+    resolution: {integrity: sha512-SMp1+sRTodqPDx/hPHKDhxm8C6+Kz61mOvpoGMRUou0xy278T3391oa5sMkOu5WfyhnhBkqpzXt/Em4XdJQoaA==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.62.1.tgz}
+    version: 0.62.1
 
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
@@ -6521,7 +6521,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.61.1.tgz':
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/fix/epg-model-contracts/dev/stremio-stremio-core-web-0.62.1.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 
