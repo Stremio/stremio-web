@@ -63,28 +63,36 @@
     }
 }
 
+.expanded() {
+    z-index: 10;
+    overflow: visible;
+
+    .program-inner {
+        min-width: max-content;
+        justify-content: flex-start;
+        padding: 0 1rem 0 0.5rem;
+    }
+
+    .program-icon {
+        display: none;
+    }
+
+    .program-thumb {
+        display: block;
+    }
+
+    .program-content {
+        display: flex;
+    }
+}
+
+.program:focus-within {
+    .expanded();
+}
+
 @media (hover: hover) and (pointer: fine) {
     .program:hover {
-        z-index: 10;
-        overflow: visible;
-
-        .program-inner {
-            min-width: max-content;
-            justify-content: flex-start;
-            padding: 0 1rem 0 0.5rem;
-        }
-
-        .program-icon {
-            display: none;
-        }
-
-        .program-thumb {
-            display: block;
-        }
-
-        .program-content {
-            display: flex;
-        }
+        .expanded();
     }
 }
 
