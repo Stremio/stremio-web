@@ -6,57 +6,12 @@ import classNames from 'classnames';
 import { Modal, useModalsContainer } from 'stremio-router';
 import useRouteFocused from 'stremio/common/useRouteFocused';
 import useOrientation from 'stremio/common/useOrientation';
+import useSheetDrag from './useSheetDrag';
 import styles from './BottomSheet.less';
 
-const CLOSE_THRESHOLD = 100;
-const CLOSE_THRESHOLD_RATIO = 0.12;
 const ANIMATION_DURATION = Number.parseInt(styles.animationDurationMs, 10) || 250;
-const DISMISS_START_DELTA = 8;
 
 type Phase = 'idle' | 'entering' | 'entered' | 'exiting';
-
-type DragState = {
-    id: number | null,
-    startX: number,
-    startY: number,
-    offset: number,
-    dismissing: boolean,
-    locked: boolean,
-    scroller: Element | null,
-};
-
-const createDragState = (): DragState => ({
-    id: null,
-    startX: 0,
-    startY: 0,
-    offset: 0,
-    dismissing: false,
-    locked: false,
-    scroller: null,
-});
-
-const isVerticallyScrollable = (element: Element) => {
-    const { overflowY } = window.getComputedStyle(element);
-    if (overflowY !== 'auto' && overflowY !== 'scroll' && overflowY !== 'overlay') {
-        return false;
-    }
-
-    return element.scrollHeight > element.clientHeight + 1;
-};
-
-const findScrolledAncestor = (target: EventTarget | null, container: HTMLElement | null) => {
-    let element = target instanceof Element ? target : null;
-
-    while (element && element !== container) {
-        if (isVerticallyScrollable(element) && element.scrollTop > 1) {
-            return element;
-        }
-
-        element = element.parentElement;
-    }
-
-    return null;
-};
 
 type Props = {
     children: React.ReactNode,
@@ -78,12 +33,9 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
     const containerRef = useRef<HTMLDivElement>(null);
     const onCloseRequestRef = useRef(onCloseRequest);
     const phaseRef = useRef<Phase>('idle');
-    const dragRef = useRef<DragState>(createDragState());
     const orientation = useOrientation();
     const previousOrientationRef = useRef(orientation);
     const [phase, setPhase] = useState<Phase>('idle');
-    const [offset, setOffset] = useState(0);
-    const [dragging, setDragging] = useState(false);
 
     useLayoutEffect(() => {
         onCloseRequestRef.current = onCloseRequest;
@@ -106,11 +58,12 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
         onCloseRequestRef.current();
     }, []);
 
+    const isExiting = useCallback(() => phaseRef.current === 'exiting', []);
+    const { offset, dragging, reset: resetDrag } = useSheetDrag({ containerRef, enabled: mounted, isExiting, onDismiss: requestClose });
+
     useEffect(() => {
         if (show) {
-            dragRef.current = createDragState();
-            setDragging(false);
-            setOffset(0);
+            resetDrag();
             setPhaseState('entering');
             return undefined;
         }
@@ -119,12 +72,10 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
             return undefined;
         }
 
-        dragRef.current = createDragState();
-        setDragging(false);
-        setOffset(0);
+        resetDrag();
         setPhaseState('exiting');
         return undefined;
-    }, [show, setPhaseState]);
+    }, [show, setPhaseState, resetDrag]);
 
     useEffect(() => {
         if (phase !== 'entering') {
@@ -152,12 +103,11 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
 
         const timeout = window.setTimeout(() => {
             setPhaseState('idle');
-            setDragging(false);
-            setOffset(0);
+            resetDrag();
         }, ANIMATION_DURATION);
 
         return () => window.clearTimeout(timeout);
-    }, [phase, setPhaseState]);
+    }, [phase, setPhaseState, resetDrag]);
 
     useEffect(() => {
         if (!mounted || !routeFocused || !(modalsContainer instanceof HTMLElement)) {
@@ -193,105 +143,6 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
         previousOrientationRef.current = orientation;
         return undefined;
     }, [orientation, closeOnOrientationChange, requestClose]);
-
-    useEffect(() => {
-        const node = containerRef.current;
-        if (!mounted || node === null) {
-            return undefined;
-        }
-
-        const resetDrag = () => {
-            dragRef.current = createDragState();
-            setDragging(false);
-            setOffset(0);
-        };
-
-        const onTouchStart = (event: TouchEvent) => {
-            if (phaseRef.current === 'exiting' || event.touches.length !== 1) {
-                return;
-            }
-
-            const touch = event.touches[0];
-            dragRef.current = {
-                id: touch.identifier,
-                startX: touch.clientX,
-                startY: touch.clientY,
-                offset: 0,
-                dismissing: false,
-                locked: false,
-                scroller: findScrolledAncestor(event.target, node),
-            };
-        };
-
-        const onTouchMove = (event: TouchEvent) => {
-            const drag = dragRef.current;
-            const touch = Array.from(event.touches).find(({ identifier }) => identifier === drag.id);
-            if (!touch || phaseRef.current === 'exiting' || drag.locked) {
-                return;
-            }
-
-            const deltaX = touch.clientX - drag.startX;
-            const deltaY = touch.clientY - drag.startY;
-
-            if (!drag.dismissing) {
-                if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
-                    drag.locked = true;
-                    return;
-                }
-
-                if (deltaY < DISMISS_START_DELTA) {
-                    return;
-                }
-
-                if (drag.scroller !== null && drag.scroller.scrollTop > 1) {
-                    return;
-                }
-
-                drag.dismissing = true;
-                drag.startY = touch.clientY;
-                drag.offset = 0;
-                setDragging(true);
-                event.preventDefault();
-                return;
-            }
-
-            event.preventDefault();
-            const nextOffset = Math.max(0, touch.clientY - drag.startY);
-            drag.offset = nextOffset;
-            setOffset(nextOffset);
-        };
-
-        const onTouchEnd = (event: TouchEvent) => {
-            const drag = dragRef.current;
-            if (drag.id === null || event.touches.length > 0) {
-                return;
-            }
-
-            const shouldClose = drag.dismissing && drag.offset > Math.max(
-                CLOSE_THRESHOLD,
-                node.getBoundingClientRect().height * CLOSE_THRESHOLD_RATIO,
-            );
-
-            if (shouldClose) {
-                requestClose();
-                return;
-            }
-
-            resetDrag();
-        };
-
-        node.addEventListener('touchstart', onTouchStart, { passive: true });
-        node.addEventListener('touchmove', onTouchMove, { passive: false });
-        node.addEventListener('touchend', onTouchEnd);
-        node.addEventListener('touchcancel', onTouchEnd);
-
-        return () => {
-            node.removeEventListener('touchstart', onTouchStart);
-            node.removeEventListener('touchmove', onTouchMove);
-            node.removeEventListener('touchend', onTouchEnd);
-            node.removeEventListener('touchcancel', onTouchEnd);
-        };
-    }, [mounted, requestClose]);
 
     if (phase === 'idle') {
         return null;
