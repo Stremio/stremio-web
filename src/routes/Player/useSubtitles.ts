@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CONSTANTS, languages, useFileDropListener, useInterval, useShortcut, useTimeout, useToast } from 'stremio/common';
+import { CONSTANTS, getKeyboardShortcutKeys, languages, useFileDropListener, useInterval, useShortcut, useTimeout, useToast } from 'stremio/common';
 import {
     getSubtitleDelayStepMultiplier,
     snapSubtitleDelay,
@@ -327,7 +327,7 @@ const useSubtitles = ({
 
         const hold = {
             direction: combo === 1 ? 1 : -1,
-            key: key.toLowerCase(),
+            key: key.toUpperCase(),
             repeated: false,
             startedAt: performance.now(),
             value: videoRef.current.state.extraSubtitlesDelay ?? 0,
@@ -347,7 +347,11 @@ const useSubtitles = ({
 
     useEffect(() => {
         const onKeyUp = (event: KeyboardEvent) => {
-            if (event.key.toLowerCase() === subtitleDelayHold.current?.key) {
+            const key = subtitleDelayHold.current?.key;
+            if (!key) return;
+
+            const keys = getKeyboardShortcutKeys(event);
+            if (keys.includes(`Key${key}`) || keys.includes(key)) {
                 finishSubtitleDelayHold(true);
             }
         };
