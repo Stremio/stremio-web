@@ -13,6 +13,7 @@ const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
 const useSeason = require('./useSeason');
+const { default: useExternalPlayerCallback } = require('./useExternalPlayerCallback');
 const styles = require('./styles');
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
@@ -32,6 +33,7 @@ const MetaDetails = () => {
         videoId
     }), [type, id, videoId]);
     const metaDetails = useMetaDetails(urlParams);
+    useExternalPlayerCallback(urlParams, metaDetails);
     const [season, setSeason] = useSeason(urlParams);
     const [metaPath, streamPath] = React.useMemo(() => {
         return metaDetails.selected !== null ?
@@ -51,6 +53,11 @@ const MetaDetails = () => {
             :
             null;
     }, [metaDetails.metaItem, streamPath]);
+    const externalPlayerCallbackCanMarkWatched = React.useMemo(() => {
+        return typeof video?.id === 'string' &&
+            metaDetails.libraryItem?.state?.video_id === video.id &&
+            metaDetails.libraryItem?.state?.duration > 0;
+    }, [metaDetails.libraryItem, video]);
     const addToLibrary = React.useCallback(() => {
         if (metaDetails.metaItem === null || metaDetails.metaItem.content.type !== 'Ready') {
             return;
@@ -204,6 +211,7 @@ const MetaDetails = () => {
                             streams={metaDetails.streams}
                             video={video}
                             type={streamPath.type}
+                            externalPlayerCallbackCanMarkWatched={externalPlayerCallbackCanMarkWatched}
                             onEpisodeSearch={handleEpisodeSearch}
                         />
                         :
