@@ -1,0 +1,331 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.viewport {
+    height: var(--schedule-height);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    overflow-anchor: none;
+    padding-bottom: 0.5rem;
+}
+
+.timeline {
+    position: relative;
+    min-width: 100%;
+    overflow: visible;
+}
+
+.days,
+.times {
+    position: relative;
+}
+
+.days {
+    height: 1.8rem;
+    overflow: visible;
+}
+
+.day {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    overflow: visible;
+    border-left: 1px solid var(--overlay-color);
+}
+
+.day-label {
+    position: sticky;
+    left: 0;
+    display: inline-block;
+    max-width: 100%;
+    padding: 0 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.times {
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.time {
+    position: absolute;
+    padding: 0.25rem 0.5rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.programs {
+    position: relative;
+    height: 5rem;
+    overflow: visible;
+}
+
+.program {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    color: var(--primary-foreground-color);
+    overflow: clip;
+    background: var(--overlay-color);
+    border-right: 2px solid #100d20;
+    border-radius: var(--border-radius);
+
+    &.compact {
+        .card {
+            justify-content: center;
+            padding: 0.25rem;
+        }
+
+        .label {
+            display: none;
+        }
+
+        .compact-icon {
+            display: block;
+        }
+    }
+
+    &.tiny .compact-icon {
+        display: none;
+    }
+
+    &.with-thumbnail .thumbnail {
+        display: flex;
+    }
+}
+
+.card {
+    position: sticky;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: min(24rem, var(--content-width));
+    height: 100%;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    overflow: clip;
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    &[aria-current='true'] {
+        color: var(--primary-accent-color);
+    }
+
+    &[aria-pressed='true'] {
+        background: rgba(127, 82, 233, 0.25);
+        border-color: var(--primary-accent-color);
+    }
+}
+
+.thumbnail {
+    flex: none;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 2.25rem;
+    border-radius: 0.25rem;
+    background: var(--overlay-color);
+
+    > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    > svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        opacity: 0.4;
+    }
+}
+
+.label {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.duration {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.compact-icon {
+    display: none;
+    width: min(1.25rem, 100%);
+    height: 1.25rem;
+    opacity: 0.7;
+}
+
+.now-line {
+    position: absolute;
+    z-index: 3;
+    top: 1.8rem;
+    bottom: 0;
+    width: 2px;
+    background: var(--primary-accent-color);
+    pointer-events: none;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -3px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: inherit;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .program.visible:hover {
+        z-index: 2;
+        overflow: visible;
+
+        .card {
+            position: relative;
+            left: var(--preview-left);
+            justify-content: flex-start;
+            width: max-content;
+            min-width: max(min(24rem, var(--content-width)), min(18rem, var(--viewport-width)));
+            max-width: min(36rem, var(--viewport-width));
+            height: auto;
+            min-height: 100%;
+            padding: 0.5rem 0.6rem;
+            background: #211a33;
+            transform: translateX(min(0px, calc(var(--preview-space) - 100%)));
+        }
+
+        .thumbnail {
+            display: flex;
+        }
+
+        .label {
+            display: flex;
+        }
+
+        .name {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .compact-icon {
+            display: none;
+        }
+    }
+}
+
+@media (max-height: 500px) {
+    .days {
+        height: 1.4rem;
+    }
+
+    .times {
+        height: 1.6rem;
+    }
+
+    .programs {
+        height: 3.5rem;
+    }
+
+    .now-line {
+        top: 1.4rem;
+    }
+}
+
+@media @phone-landscape {
+    .viewport {
+        flex: 1;
+        min-height: 0;
+        height: auto;
+        padding-bottom: 0.35rem;
+    }
+
+    .timeline {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 6.5rem;
+    }
+
+    .days,
+    .times {
+        flex: none;
+    }
+
+    .programs {
+        flex: 1;
+        min-height: 3.5rem;
+        height: auto;
+    }
+
+    .card {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 0.75rem;
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        flex: 1;
+        max-height: 9rem;
+    }
+
+    .label {
+        flex: none;
+        width: 100%;
+    }
+
+    .name {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: normal;
+    }
+
+    .program.compact .card {
+        align-items: center;
+    }
+
+    .program.compact:not(.icon-only) {
+        .card {
+            align-items: flex-start;
+            padding: 0.6rem;
+        }
+
+        .label {
+            display: flex;
+        }
+
+        .compact-icon {
+            display: none;
+        }
+    }
+}

@@ -1,12 +1,10 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { EPGProgram, EPG_PIXELS_PER_HOUR, HOUR_IN_MS } from 'stremio/common/EPG';
+import { EPGProgram, EPG_MAX_PIXELS_PER_HOUR, EPG_MIN_PIXELS_PER_HOUR, EPG_PIXELS_PER_HOUR, HOUR_IN_MS } from 'stremio/common/EPG';
 
-const MIN_SCALE = 30;
-const MAX_SCALE = 9600;
 const TRANSITION_DURATION = 300;
-const clampScale = (scale: number) => Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+const clampScale = (scale: number) => Math.max(EPG_MIN_PIXELS_PER_HOUR, Math.min(EPG_MAX_PIXELS_PER_HOUR, scale));
 
 const useScheduleViewport = (start: number, visible: boolean) => {
     const viewportRef = useRef<HTMLDivElement>(null);
@@ -140,7 +138,7 @@ const useScheduleViewport = (start: number, visible: boolean) => {
         moveTo(time - width * HOUR_IN_MS / scale / 2, scale);
     };
 
-    return { viewportRef, viewport, scale, zoom, focus, showTime, canZoomOut: scale > MIN_SCALE, canZoomIn: scale < MAX_SCALE };
+    return { viewportRef, viewport, scale, zoom, focus, showTime, canZoomOut: scale > EPG_MIN_PIXELS_PER_HOUR, canZoomIn: scale < EPG_MAX_PIXELS_PER_HOUR };
 };
 
 export default useScheduleViewport;

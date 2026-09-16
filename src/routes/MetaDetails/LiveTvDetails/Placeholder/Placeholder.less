@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 .placeholder {
     display: flex;
     flex-direction: column;
@@ -58,7 +60,7 @@
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: @xxsmall) {
     .placeholder {
         padding: 0 1.5rem 1.5rem;
     }

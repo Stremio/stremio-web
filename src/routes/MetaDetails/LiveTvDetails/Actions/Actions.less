@@ -1,11 +1,13 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
+@import (reference) '~stremio/common/screen-sizes.less';
+
 :import('~stremio/components/MetaPreview/ActionButton/styles.less') {
     action-wide: wide;
     action-icon: icon;
 }
 
-.playback {
+.actions {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -30,9 +32,9 @@
     }
 }
 
-@media (max-width: 700px),
+@media (max-width: @xxsmall),
 (max-height: 500px) {
-    .playback {
+    .actions {
         gap: 0.5rem;
 
         .action-button {

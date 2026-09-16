@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ActionButton from 'stremio/components/MetaPreview/ActionButton';
-import styles from './LiveTvActions.less';
+import styles from './Actions.less';
 
 type Props = {
     children?: React.ReactNode;
@@ -11,11 +11,11 @@ type Props = {
     onToggleLibrary: () => void;
 };
 
-const LiveTvActions = ({ children, inLibrary, onToggleLibrary }: Props) => {
+const Actions = ({ children, inLibrary, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
 
     return (
-        <div className={styles['playback']}>
+        <div className={styles['actions']}>
             {children}
             <ActionButton
                 className={styles['action-button']}
@@ -30,4 +30,4 @@ const LiveTvActions = ({ children, inLibrary, onToggleLibrary }: Props) => {
     );
 };
 
-export default LiveTvActions;
+export default Actions;
