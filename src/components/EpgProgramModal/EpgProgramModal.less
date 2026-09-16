@@ -6,6 +6,10 @@
     modal-body: body-container;
 }
 
+:import('~stremio/components/MetaPreview/styles.less') {
+    preview-background: background-image;
+}
+
 .preview {
     .genres {
         display: flex;
@@ -33,6 +37,10 @@
         max-height: inherit;
         min-height: 0;
         color: var(--primary-foreground-color);
+
+        .preview-background {
+            filter: blur(1px);
+        }
     }
 
     .modal-dialog {
