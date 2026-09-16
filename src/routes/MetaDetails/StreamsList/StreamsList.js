@@ -17,7 +17,7 @@ const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const StreamsList = ({ className, video = undefined, isEpg, type, externalPlayerCallbackCanMarkWatched, onEpisodeSearch = undefined, ...props }) => {
+const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatched, onEpisodeSearch, ...props }) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
@@ -176,14 +176,13 @@ const StreamsList = ({ className, video = undefined, isEpg, type, externalPlayer
                                     {filteredStreams.map((stream, index) => (
                                         <Stream
                                             key={index}
-                                            isEpg={isEpg}
                                             videoId={video?.id}
                                             videoReleased={video?.released}
                                             addonName={stream.addonName}
                                             name={stream.name}
                                             description={stream.description}
                                             thumbnail={stream.thumbnail}
-                                            progress={isEpg ? null : stream.progress}
+                                            progress={stream.progress}
                                             deepLinks={stream.deepLinks}
                                             externalPlayerCallbackCanMarkWatched={externalPlayerCallbackCanMarkWatched}
                                             onClick={stream.onClick}
@@ -220,7 +219,6 @@ StreamsList.propTypes = {
     className: PropTypes.string,
     streams: PropTypes.arrayOf(PropTypes.object).isRequired,
     video: PropTypes.object,
-    isEpg: PropTypes.bool,
     type: PropTypes.string,
     externalPlayerCallbackCanMarkWatched: PropTypes.bool,
     onEpisodeSearch: PropTypes.func

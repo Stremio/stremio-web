@@ -59,12 +59,6 @@ export const getEpgTimeRange = (
         null;
 };
 
-export const hasEpgProgramTimes = (
-    video: { startTime?: unknown; endTime?: unknown } | null | undefined
-): boolean => {
-    return getEpgTimeRange(video) !== null;
-};
-
 export const toEpgProgram = (video: Video, channel: EPGChannel): EPGProgram | null => {
     const range = getEpgTimeRange(video);
     return range === null ? null : {

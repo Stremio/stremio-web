@@ -1146,6 +1146,7 @@ const Player = () => {
                     className={classnames(styles['layer'], styles['side-drawer-layer'])}
                     metaItem={metaItemContent}
                     seriesInfo={player.seriesInfo}
+                    isEpg={isEpg}
                     closeSideDrawer={closeSideDrawer}
                     selected={player.selected?.streamRequest?.path?.id}
                 />

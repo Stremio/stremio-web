@@ -7,7 +7,6 @@ const classnames = require('classnames');
 const { useCore } = require('stremio/core');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { withCoreSuspender } = require('stremio/common');
-const { getEpgValue, getNonEmptyString, hasEpgProgramTimes } = require('stremio/common/EPG');
 const { useNavigateWithOrigin } = require('stremio-router');
 const { HorizontalNavBar, DelayedRenderer, Image, MetaPreview } = require('stremio/components');
 const StreamsList = require('./StreamsList');
@@ -58,13 +57,6 @@ const MetaDetails = () => {
             :
             null;
     }, [metaDetails.metaItem, streamPath]);
-    const isEpgVideo = React.useMemo(() => {
-        return video !== null && hasEpgProgramTimes(video);
-    }, [video]);
-    const isEpgMeta = React.useMemo(() => {
-        return metaDetails.metaItem?.content.type === 'Ready' &&
-            metaDetails.metaItem.content.content.videos.some(hasEpgProgramTimes);
-    }, [metaDetails.metaItem]);
     const externalPlayerCallbackCanMarkWatched = React.useMemo(() => {
         return typeof video?.id === 'string' &&
             metaDetails.libraryItem?.state?.video_id === video.id &&
@@ -132,36 +124,49 @@ const MetaDetails = () => {
         navigate(searchVideoPath, { replace: true });
     }, [urlParams, location]);
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
-    const background = React.useMemo(() => {
-        const epgThumbnail = isEpgVideo ? getNonEmptyString(video?.thumbnail) : null;
-        const metaBackground = metaDetails.metaItem?.content.type === 'Ready' ?
-            getNonEmptyString(metaDetails.metaItem.content.content?.background)
-            :
-            null;
-
-        return epgThumbnail ?? metaBackground;
-    }, [isEpgVideo, video, metaDetails.metaItem]);
-    const renderBackground = !!(metaPath && background);
+    const renderBackground = React.useMemo(() => !!(
+        metaPath &&
+        metaDetails?.metaItem &&
+        metaDetails.metaItem.content.type !== 'Loading' &&
+        typeof metaDetails.metaItem.content.content?.background === 'string' &&
+        metaDetails.metaItem.content.content.background.length > 0
+    ), [metaPath, metaDetails]);
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
-    if ((type === 'tv' || type === 'channel') && (metaDetails.selected === null || metaDetails.metaItem?.content.type === 'Loading')) {
-        return <div className={styles['metadetails-container']}>
-            <HorizontalNavBar className={styles['nav-bar']} backButton={true} fullscreenButton={true} navMenu={true} originPath={originPath} />
-            <LiveTvPlaceholder />
-        </div>;
+    if (type === 'tv' && (metaDetails.selected === null || metaDetails.metaItem?.content.type === 'Loading')) {
+        return (
+            <div className={styles['metadetails-container']}>
+                <HorizontalNavBar
+                    className={styles['nav-bar']}
+                    backButton={true}
+                    fullscreenButton={true}
+                    navMenu={true}
+                    originPath={originPath}
+                />
+                <LiveTvPlaceholder />
+            </div>
+        );
     }
     if (isLiveMeta) {
-        return <LiveTvDetails
-            key={readyMeta.id}
-            className={styles['metadetails-container']}
-            contentRef={contentRef}
-            meta={readyMeta}
-            addonName={metaDetails.metaItem.addon.manifest.name}
-            streams={metaDetails.streams}
-            onToggleLibrary={readyMeta.inLibrary ? removeFromLibrary : addToLibrary}
-        >
-            <HorizontalNavBar className={styles['nav-bar']} backButton={true} fullscreenButton={true} navMenu={true} originPath={originPath} />
-        </LiveTvDetails>;
+        return (
+            <LiveTvDetails
+                key={readyMeta.id}
+                className={styles['metadetails-container']}
+                contentRef={contentRef}
+                meta={readyMeta}
+                addonName={metaDetails.metaItem.addon.manifest.name}
+                streams={metaDetails.streams}
+                onToggleLibrary={readyMeta.inLibrary ? removeFromLibrary : addToLibrary}
+            >
+                <HorizontalNavBar
+                    className={styles['nav-bar']}
+                    backButton={true}
+                    fullscreenButton={true}
+                    navMenu={true}
+                    originPath={originPath}
+                />
+            </LiveTvDetails>
+        );
     }
     return (
         <div className={styles['metadetails-container']}>
@@ -170,7 +175,7 @@ const MetaDetails = () => {
                     <div className={styles['background-image-layer']}>
                         <Image
                             className={styles['background-image']}
-                            src={background}
+                            src={metaDetails.metaItem.content.content.background}
                             renderFallback={renderBackgroundImageFallback}
                             alt={' '}
                         />
@@ -215,16 +220,16 @@ const MetaDetails = () => {
                                             className={classnames(styles['meta-preview'], 'animation-fade-in')}
                                             name={metaDetails.metaItem.content.content.name}
                                             logo={metaDetails.metaItem.content.content.logo}
-                                            runtime={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'runtime')}
-                                            releaseInfo={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'releaseInfo')}
-                                            released={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'released')}
+                                            runtime={metaDetails.metaItem.content.content.runtime}
+                                            releaseInfo={metaDetails.metaItem.content.content.releaseInfo}
+                                            released={metaDetails.metaItem.content.content.released}
                                             description={
                                                 video !== null && typeof video.overview === 'string' && video.overview.length > 0 ?
                                                     video.overview
                                                     :
                                                     metaDetails.metaItem.content.content.description
                                             }
-                                            links={getEpgValue(isEpgVideo, video, metaDetails.metaItem.content.content, 'links')}
+                                            links={metaDetails.metaItem.content.content.links}
                                             trailerStreams={metaDetails.metaItem.content.content.trailerStreams}
                                             inLibrary={metaDetails.metaItem.content.content.inLibrary}
                                             toggleInLibrary={metaDetails.metaItem.content.content.inLibrary ? removeFromLibrary : addToLibrary}
@@ -242,7 +247,6 @@ const MetaDetails = () => {
                             className={styles['streams-list']}
                             streams={metaDetails.streams}
                             video={video}
-                            isEpg={isEpgVideo || isEpgMeta}
                             type={streamPath.type}
                             externalPlayerCallbackCanMarkWatched={externalPlayerCallbackCanMarkWatched}
                             onEpisodeSearch={handleEpisodeSearch}
@@ -278,7 +282,7 @@ const MetaDetailsFallback = () => {
                 fullscreenButton={true}
                 navMenu={true}
             />
-            {(type === 'tv' || type === 'channel') && <LiveTvPlaceholder />}
+            {type === 'tv' && <LiveTvPlaceholder />}
         </div>
     );
 };

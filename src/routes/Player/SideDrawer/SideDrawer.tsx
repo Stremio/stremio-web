@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
-import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, hasEpgProgramTimes, useEpgNow } from 'stremio/common/EPG';
+import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, useEpgNow } from 'stremio/common/EPG';
 import { MetaPreview, Video } from 'stremio/components';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
 import styles from './SideDrawer.less';
@@ -16,9 +16,10 @@ type Props = {
     metaItem: MetaItem;
     closeSideDrawer: () => void;
     selected: string;
+    isEpg: boolean;
 };
 
-const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, ...props }: Props, ref) => {
+const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, isEpg, ...props }: Props, ref) => {
     const core = useCore();
     const [season, setSeason] = useState<number>(seriesInfo?.season);
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
@@ -38,9 +39,6 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
         return Array.isArray(metaItem.videos) ? metaItem.videos : [];
     }, [metaItem.videos]);
 
-    const isEpg = useMemo(() => {
-        return (metaItem.behaviorHints?.isLive === true || metaItem.type === 'tv') && allVideos.some(hasEpgProgramTimes);
-    }, [metaItem.behaviorHints?.isLive, metaItem.type, allVideos]);
     const now = useEpgNow(isEpg);
 
     const videos = useMemo(() => {
