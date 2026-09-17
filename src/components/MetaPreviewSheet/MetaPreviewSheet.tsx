@@ -8,14 +8,16 @@ type Props = {
     children: React.ReactNode;
     show: boolean;
     onCloseRequest: () => void;
+    onExited?: () => void;
     ariaLabel: string;
 };
 
-const MetaPreviewSheet = ({ children, show, onCloseRequest, ariaLabel }: Props) => (
+const MetaPreviewSheet = ({ children, show, onCloseRequest, onExited, ariaLabel }: Props) => (
     <BottomSheet
         className={styles['sheet']}
         show={show}
         onCloseRequest={onCloseRequest}
+        onExited={onExited}
         closeOnContentClick={false}
         closeOnOrientationChange={false}
         flush={true}

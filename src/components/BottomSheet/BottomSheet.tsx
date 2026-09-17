@@ -20,12 +20,13 @@ type Props = {
     ariaLabel?: string,
     show: boolean,
     onCloseRequest: () => void,
+    onExited?: () => void,
     closeOnContentClick?: boolean,
     closeOnOrientationChange?: boolean,
     flush?: boolean,
 };
 
-const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
+const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, onExited, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const routeActive = useRouteActive();
@@ -33,6 +34,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
     const modalRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const onCloseRequestRef = useRef(onCloseRequest);
+    const onExitedRef = useRef(onExited);
     const phaseRef = useRef<Phase>('idle');
     const orientation = useOrientation();
     const previousOrientationRef = useRef(orientation);
@@ -40,7 +42,8 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
 
     useLayoutEffect(() => {
         onCloseRequestRef.current = onCloseRequest;
-    }, [onCloseRequest]);
+        onExitedRef.current = onExited;
+    }, [onCloseRequest, onExited]);
 
     const setPhaseState = useCallback((next: Phase) => {
         phaseRef.current = next;
@@ -109,6 +112,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
         const timeout = window.setTimeout(() => {
             setPhaseState('idle');
             resetDrag();
+            onExitedRef.current?.();
         }, ANIMATION_DURATION);
 
         return () => window.clearTimeout(timeout);

@@ -319,14 +319,19 @@ const Discover = () => {
             setSelectedEpgProgram(null);
         }
     }, [routeActive, closeFilters, closeMobilePreview]);
+    const pendingHrefRef = React.useRef(null);
     const onMobileShowClick = React.useCallback((event) => {
         event.preventDefault();
-        const href = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
+        pendingHrefRef.current = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
         closeMobilePreview();
+    }, [selectedMetaItem, closeMobilePreview]);
+    const onMobilePreviewExited = React.useCallback(() => {
+        const href = pendingHrefRef.current;
+        pendingHrefRef.current = null;
         if (typeof href === 'string') {
             navigateWithOrigin(href);
         }
-    }, [selectedMetaItem, closeMobilePreview, navigateWithOrigin]);
+    }, [navigateWithOrigin]);
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -410,6 +415,7 @@ const Discover = () => {
                     <MetaPreviewSheet
                         show={isMobile && mobilePreviewOpen}
                         onCloseRequest={closeMobilePreview}
+                        onExited={onMobilePreviewExited}
                         ariaLabel={selectedMetaItem.name}
                     >
                         <MetaPreview
