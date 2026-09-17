@@ -48,9 +48,13 @@ const useTorrent = () => {
     React.useEffect(() => {
         if (streamingServer.torrent !== null) {
             const [, { type }] = streamingServer.torrent;
-            if (type === 'Ready' || type === 'Err') {
+            if (type === 'Ready') {
                 clearTimeout(createTorrentTimeout.current);
                 toast.remove(parsingToastId.current);
+            } else if (type === 'Err') {
+                clearTimeout(createTorrentTimeout.current);
+                toast.remove(parsingToastId.current);
+                toast.show({ type: 'error', title: 'Failed to open torrent.', timeout: 8000 });
             }
         }
     }, [streamingServer.torrent, toast]);
