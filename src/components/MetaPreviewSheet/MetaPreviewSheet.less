@@ -35,6 +35,21 @@
     .preview .preview-background {
         filter: blur(1px);
     }
+
+    .preview .preview-info .preview-runtime {
+        justify-content: flex-start;
+
+        .preview-runtime-label,
+        .preview-release-label {
+            margin: 0;
+        }
+
+        > :not(:first-child) {
+            margin-left: 0.5rem;
+            padding-left: 0.75rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    }
 }
 
 @media (orientation: portrait) {
@@ -55,29 +70,6 @@
 
                 .preview-runtime {
                     margin-top: 0;
-                    justify-content: flex-start;
-
-                    .preview-runtime-label,
-                    .preview-release-label {
-                        margin: 0;
-                    }
-
-                    > :not(:first-child) {
-                        position: relative;
-                        margin-left: 1.5rem;
-
-                        &::before {
-                            content: "";
-                            position: absolute;
-                            top: 50%;
-                            left: -0.75rem;
-                            width: 1px;
-                            height: 1.25rem;
-                            transform: translateY(-50%);
-                            background: var(--primary-foreground-color);
-                            opacity: 0.2;
-                        }
-                    }
                 }
 
                 .preview-description {
