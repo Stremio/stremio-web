@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import Image from 'stremio/components/Image';
+import MetaLinks from 'stremio/components/MetaPreview/MetaLinks';
 import { EPGChannel, EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
 import styles from './Hero.less';
 
@@ -110,9 +111,7 @@ const Hero = ({ channel, addonName, description, hasSchedule, selected, now, chi
                     </div>
                     {
                         genres.length > 0 ?
-                            <div className={styles['genres']}>
-                                {genres.map((genre) => <div key={genre}>{genre}</div>)}
-                            </div>
+                            <MetaLinks className={styles['genres']} label={'Genres'} links={genres.map((genre) => ({ label: genre }))} />
                             :
                             null
                     }

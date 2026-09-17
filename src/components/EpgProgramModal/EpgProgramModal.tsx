@@ -7,6 +7,7 @@ import { EPGProgram } from 'stremio/common/EPG';
 import MetaPreview from 'stremio/components/MetaPreview';
 import MetaPreviewSheet from 'stremio/components/MetaPreviewSheet';
 import ActionButton from 'stremio/components/MetaPreview/ActionButton';
+import MetaLinks from 'stremio/components/MetaPreview/MetaLinks';
 import ModalDialog from 'stremio/components/ModalDialog';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import ProgramInfo from './ProgramInfo';
@@ -50,10 +51,10 @@ const EpgProgramModal = ({ program, now, show, onCloseRequest, channelHref }: Pr
             }
         >
             {
-                genres.length > 0 &&
-                    <div className={styles['genres']}>
-                        {genres.map((genre) => <span key={genre}>{genre}</span>)}
-                    </div>
+                genres.length > 0 ?
+                    <MetaLinks className={styles['genres']} label={'Genres'} links={genres.map((genre) => ({ label: genre }))} />
+                    :
+                    null
             }
         </MetaPreview>
     );
