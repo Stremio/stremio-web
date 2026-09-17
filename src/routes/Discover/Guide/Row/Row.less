@@ -145,6 +145,12 @@
 
 .no-programs {
     width: calc(100% - 4px);
+    overflow: visible;
+
+    .program-title {
+        position: sticky;
+        left: 0.5rem;
+    }
 
     &:not([href]) {
         cursor: default;
