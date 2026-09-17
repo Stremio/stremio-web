@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { Modal, useModalsContainer } from 'stremio-router';
-import useRouteFocused from 'stremio/common/useRouteFocused';
+import useRouteFocused, { useRouteActive } from 'stremio/common/useRouteFocused';
 import useOrientation from 'stremio/common/useOrientation';
 import useSheetDrag from './useSheetDrag';
 import styles from './BottomSheet.less';
@@ -28,6 +28,7 @@ type Props = {
 const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
+    const routeActive = useRouteActive();
     const modalsContainer = useModalsContainer();
     const modalRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +58,10 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
 
         onCloseRequestRef.current();
     }, []);
+
+    useEffect(() => {
+        if (!routeActive) requestClose();
+    }, [routeActive, requestClose]);
 
     const isExiting = useCallback(() => phaseRef.current === 'exiting', []);
     const { offset, dragging, reset: resetDrag } = useSheetDrag({ containerRef, enabled: mounted, isExiting, onDismiss: requestClose });
