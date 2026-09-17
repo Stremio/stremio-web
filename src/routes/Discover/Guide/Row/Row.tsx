@@ -82,14 +82,14 @@ const Row = ({ channel, programs, currentProgramIndex, dayStart, dayEnd, visible
                 })}
                 {
                     programs.length === 0 ?
-                        channelHref !== null ?
-                            <Button className={classNames(styles['program-inner'], styles['no-programs'])} href={channelHref} title={channel.name}>
+                        <Button className={classNames(styles['program-inner'], styles['no-programs'])} href={channelHref ?? undefined} title={channel.name}>
+                            <div className={styles['program-content']}>
                                 <div className={styles['program-title']}>{channel.name}</div>
-                            </Button>
-                            :
-                            <div className={classNames(styles['program-inner'], styles['no-programs'])}>
-                                <div className={styles['program-title']}>{t('NO_STREAM')}</div>
+                                <div className={styles['program-time']}>
+                                    {t('LIVE_TV_NO_SCHEDULE', { defaultValue: 'Programme information is unavailable for this channel.' })}
+                                </div>
                             </div>
+                        </Button>
                         :
                         null
                 }

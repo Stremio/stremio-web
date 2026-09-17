@@ -6,6 +6,7 @@
     display: flex;
     height: 60px;
     flex-shrink: 0;
+    overflow: visible;
 }
 
 .programs {
@@ -13,6 +14,7 @@
     flex: 1;
     min-width: 0;
     height: 100%;
+    overflow: visible;
 }
 
 .program {
@@ -147,9 +149,11 @@
     width: calc(100% - 4px);
     overflow: visible;
 
-    .program-title {
+    .program-content {
         position: sticky;
-        left: 0.5rem;
+        left: 1.5rem;
+        flex: none;
+        max-width: 100%;
     }
 
     &:not([href]) {

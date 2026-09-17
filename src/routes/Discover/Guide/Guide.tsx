@@ -122,7 +122,7 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
                                     pixelsPerHour={pixelsPerHour}
                                 />
                                 :
-                                <div style={rowPadding}>
+                                <div className={styles['rows']} style={rowPadding}>
                                     {visibleChannels.map((channel) => {
                                         const channelPrograms = programs[channel.id] ?? EMPTY_PROGRAMS;
                                         return (
