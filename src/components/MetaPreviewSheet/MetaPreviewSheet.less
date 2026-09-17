@@ -45,9 +45,20 @@
         }
 
         > :not(:first-child) {
+            position: relative;
             margin-left: 0.5rem;
             padding-left: 0.75rem;
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                width: 1px;
+                height: 1.25rem;
+                transform: translateY(-50%);
+                background: rgba(255, 255, 255, 0.2);
+            }
         }
     }
 }
