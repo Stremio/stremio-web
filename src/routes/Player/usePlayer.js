@@ -99,14 +99,16 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
     const timeChanged = React.useCallback((time, duration, device) => {
-        if (typeof time === 'number' && typeof duration === 'number' && typeof device === 'string') {
+        // live streams have no duration - report 0 instead of skipping the
+        // action, otherwise the library item is never updated while watching
+        if (typeof time === 'number' && typeof device === 'string') {
             core.transport.dispatch({
                 action: 'Player',
                 args: {
                     action: 'TimeChanged',
                     args: {
                         time: Math.max(0, Math.round(time)),
-                        duration: Math.max(0, Math.round(duration)),
+                        duration: typeof duration === 'number' ? Math.max(0, Math.round(duration)) : 0,
                         device,
                     }
                 }
@@ -171,6 +173,16 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, [player.streamState]);
 
+    const audioPreferenceChanged = React.useCallback((preference) => {
+        return core.transport.dispatch({
+            action: 'Player',
+            args: {
+                action: 'AudioPreferenceChanged',
+                args: { preference },
+            },
+        }, 'player');
+    }, []);
+
     const subtitlePreferenceChanged = React.useCallback((preference) => {
         return core.transport.dispatch({
             action: 'Player',
@@ -191,7 +203,7 @@ const usePlayer = (urlParams) => {
         }, 'player');
     }, []);
 
-    return [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
+    return [player, videoParamsChanged, streamStateChanged, audioPreferenceChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo];
 };
 
 module.exports = usePlayer;

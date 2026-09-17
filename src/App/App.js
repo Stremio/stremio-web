@@ -3,29 +3,35 @@
 require('spatial-navigation-polyfill');
 const React = require('react');
 const { useTranslation } = require('react-i18next');
-const { useNavigate } = require('react-router');
+const { createPath, useLocation, useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Routes } = require('stremio-router');
+const { Routes, useGoBack } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, useFileDropListener, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const DeepLinkHandler = require('./DeepLinkHandler');
+const { default: ShellOpenHandler } = require('./ShellOpenHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
+const { default: useInterfaceScale } = require('./useInterfaceScale');
 const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
 const NAVIGATE_TABS_ROUTES = ['/', '/discover', '/library', '/calendar', '/addons', '/settings'];
-const TORRENT_FILE_TYPES = ['application/x-bittorrent'];
 
 const App = () => {
     const core = useCore();
     const profile = useProfile();
+    const changeInterfaceScale = useInterfaceScale(profile);
     const { i18n } = useTranslation();
     const { shell } = usePlatform();
+    const location = useLocation();
     const navigate = useNavigate();
+    const goBack = useGoBack();
+    const locationPath = createPath(location);
+    const previousPathRef = React.useRef(locationPath);
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -37,6 +43,9 @@ const App = () => {
 
     const onShortcut = React.useCallback((name, combo, key) => {
         switch (name) {
+            case 'interfaceScale':
+                changeInterfaceScale(['decrease', 'increase', 'reset'][combo]);
+                break;
             case 'shortcuts':
                 toggleShortcutModal();
                 break;
@@ -53,37 +62,25 @@ const App = () => {
                 break;
             }
             case 'navigateHistory':
-                navigate(combo === 0 ? -1 : 1);
+                if (combo === 0) {
+                    goBack();
+                } else {
+                    navigate(1);
+                }
                 break;
         }
-    }, [toggleShortcutModal, toggleGamepadModal]);
-
-    const onTorrentDrop = React.useCallback((file, buffer) => {
-        core.transport.dispatch({
-            action: 'StreamingServer',
-            args: {
-                action: 'CreateTorrent',
-                args: Array.from(new Uint8Array(buffer))
-            }
-        });
-    }, []);
-
-    useFileDropListener(TORRENT_FILE_TYPES, onTorrentDrop);
+    }, [toggleShortcutModal, toggleGamepadModal, changeInterfaceScale, navigate, goBack]);
 
     React.useEffect(() => {
-        let prevPath = window.location.hash.slice(1);
-        const onLocationHashChange = () => {
+        const prevPath = previousPathRef.current;
+        previousPathRef.current = locationPath;
+        if (prevPath !== locationPath) {
             core.transport.analytics({
                 event: 'LocationPathChanged',
                 args: { prevPath }
             });
-            prevPath = window.location.hash.slice(1);
-        };
-        window.addEventListener('hashchange', onLocationHashChange);
-        return () => {
-            window.removeEventListener('hashchange', onLocationHashChange);
-        };
-    }, []);
+        }
+    }, [locationPath, core.transport]);
 
     React.useEffect(() => {
         const onChromecastStateChange = () => {
@@ -105,32 +102,7 @@ const App = () => {
             services.chromecast.stop();
             services.chromecast.off('stateChanged', onChromecastStateChange);
         };
-    }, []);
-
-    React.useEffect(() => {
-        const onOpenMedia = (data) => {
-            try {
-                const { protocol, hostname, pathname, searchParams } = new URL(data);
-                if (protocol === CONSTANTS.PROTOCOL) {
-                    if (hostname.length) {
-                        const transportUrl = `https://${hostname}${pathname}`;
-                        navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
-                    } else {
-                        navigate(`${pathname}?${searchParams.toString()}`);
-                    }
-                }
-            } catch (e) {
-                console.error('Failed to open media:', e);
-            }
-        };
-
-        shell.on('open-media', onOpenMedia);
-        if (shell.state.initialized) {
-            shell.send('app-ready');
-        }
-
-        return () => shell.off('open-media', onOpenMedia);
-    }, [shell.state.initialized]);
+    }, [services]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
@@ -144,7 +116,7 @@ const App = () => {
         if (profile.settings?.quitOnClose && shell.state.windowClosed) {
             shell.send('quit');
         }
-    }, [profile.settings, shell.state.windowClosed]);
+    }, [profile.settings, i18n, shell]);
 
     React.useEffect(() => {
         const onWindowFocus = () => {
@@ -181,7 +153,7 @@ const App = () => {
         return () => {
             window.removeEventListener('focus', onWindowFocus);
         };
-    }, []);
+    }, [core.transport]);
 
     return (
         <ServicesProvider services={services}>
@@ -200,6 +172,7 @@ const App = () => {
                                     <ServicesToaster />
                                     <SearchParamsHandler />
                                     <DeepLinkHandler />
+                                    <ShellOpenHandler />
                                     <UpdaterBanner className={styles['updater-banner-container']} />
                                     <ProtectedRoutes />
                                 </DiscordProvider>

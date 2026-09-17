@@ -1,0 +1,44 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.logo {
+    width: 5.5rem;
+    height: 2.6rem;
+    object-fit: contain;
+    object-position: center;
+
+    &.loading {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-foreground-color);
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+@media only screen and (max-width: @xsmall) {
+    .logo {
+        width: 3.5rem;
+        height: 1.8rem;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .logo {
+        width: 3rem;
+        height: 1.6rem;
+    }
+}

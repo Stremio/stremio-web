@@ -1,7 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 @border-radius: 2.75rem;
-@height: 3rem;
 
 .multiselect-menu {
     position: relative;
@@ -14,35 +13,18 @@
         opacity: 0.3;
     }
 
-    .multiselect-button {
-        height: @height;
-        padding: 0.75rem 1.5rem;
-        display: flex;
-        flex: 1;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0 0.5rem;
-        border-radius: @border-radius;
-
-        .label {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--primary-foreground-color);
-        }
-
-        .icon {
-            width: 1rem;
-            color: var(--primary-foreground-color);
-            opacity: 0.6;
-
-            &.open {
-                transform: rotate(180deg);
-            }
-        }
-    }
-
-    &:hover, &.active {
+    &:hover,
+    &.active {
         background-color: var(--overlay-color);
+    }
+}
+
+.menu-popup {
+    min-width: 11rem;
+
+    > [role='listbox'] {
+        position: static;
+        max-height: none;
+        box-shadow: none;
     }
 }

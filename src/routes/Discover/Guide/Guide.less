@@ -1,0 +1,122 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.guide {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    padding: 0 0 1.5rem 0;
+    overflow: hidden;
+}
+
+.body {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+    margin-left: 1.5rem;
+}
+
+.viewport {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+}
+
+.grid {
+    display: block;
+    position: relative;
+    overflow: visible;
+}
+
+.rows {
+    overflow: visible;
+}
+
+.now-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e53935;
+    z-index: 20;
+    pointer-events: none;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #e53935;
+    }
+}
+
+.error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: var(--primary-foreground-color);
+    opacity: 0.6;
+}
+
+.error-retry {
+    flex: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 3rem;
+    font-size: 1.1rem;
+    color: var(--primary-foreground-color);
+    background-color: var(--overlay-color);
+
+    &:hover {
+        background-color: var(--secondary-accent-color);
+    }
+}
+
+.empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    pointer-events: none;
+    font-size: 1.6rem;
+    color: var(--primary-foreground-color);
+    opacity: 0.5;
+}
+
+.loading-more {
+    position: sticky;
+    left: 0;
+    width: fit-content;
+    padding: 1rem;
+    color: var(--primary-foreground-color);
+}
+
+@media only screen and (max-width: @minimum) {
+    .body {
+        margin-left: 1rem;
+    }
+}
+
+@media @phone-landscape {
+    .guide {
+        padding-bottom: 0;
+    }
+}

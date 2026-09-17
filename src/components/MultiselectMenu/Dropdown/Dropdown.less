@@ -40,7 +40,7 @@
 @media (orientation: landscape) and (max-width: @xsmall) {
     .dropdown {
         &.open {
-            max-height: calc(100dvh - var(--horizontal-nav-bar-size) - @parent-height);
+            max-height: calc(var(--dynamic-viewport-height) - var(--horizontal-nav-bar-size) - @parent-height);
         }
     }
 }
