@@ -15,6 +15,7 @@ const COMPACT_WIDTH_PX = 100;
 const ICON_ONLY_WIDTH_PX = 56;
 const TINY_WIDTH_PX = 24;
 const THUMBNAIL_WIDTH_PX = 180;
+const CARD_MAX_REM = Number(styles.cardMaxRem);
 
 type Props = {
     viewportRef: React.RefObject<HTMLDivElement>;
@@ -45,6 +46,7 @@ const Timeline = ({ viewportRef, viewport, scale, start, end, programs, now, sel
         days.push(day);
     }
     const position = (value: number) => ((value - start) / HOUR_IN_MS) * scale;
+    const cardMaxWidth = CARD_MAX_REM * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
     return (
         <div ref={viewportRef} className={styles['viewport']} tabIndex={0} hidden={!visible}>
@@ -85,6 +87,7 @@ const Timeline = ({ viewportRef, viewport, scale, start, end, programs, now, sel
                                 key={program.id ?? startTime}
                                 className={classNames(styles['program'], {
                                     [styles['visible']]: inView,
+                                    [styles['clipped']]: programWidth < cardMaxWidth,
                                     [styles['selected']]: program === selected,
                                     [styles['current']]: isCurrent,
                                     [styles['compact']]: programWidth < COMPACT_WIDTH_PX,

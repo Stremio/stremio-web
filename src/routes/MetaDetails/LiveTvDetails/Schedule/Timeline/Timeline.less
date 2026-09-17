@@ -2,6 +2,12 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
+@card-max-rem: 24;
+
+:export {
+    cardMaxRem: @card-max-rem;
+}
+
 .viewport {
     height: var(--schedule-height);
     overflow-x: auto;
@@ -121,7 +127,7 @@
     align-items: center;
     gap: 0.65rem;
     width: 100%;
-    max-width: min(24rem, var(--content-width));
+    max-width: min(~'@{card-max-rem}rem', var(--content-width));
     height: 100%;
     padding: 0.5rem 0.6rem;
     overflow: clip;
@@ -207,7 +213,7 @@
         left: var(--preview-left);
         justify-content: flex-start;
         width: max-content;
-        min-width: max(min(24rem, var(--content-width)), min(18rem, var(--viewport-width)));
+        min-width: max(min(~'@{card-max-rem}rem', var(--content-width)), min(18rem, var(--viewport-width)));
         max-width: min(36rem, var(--viewport-width));
         height: auto;
         min-height: 100%;
@@ -236,12 +242,12 @@
     }
 }
 
-.program.visible:focus-within {
+.program.visible.clipped:focus-within {
     .expanded();
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .program.visible:hover {
+    .program.visible.clipped:hover {
         .expanded();
     }
 }
