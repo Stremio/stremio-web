@@ -24,7 +24,7 @@ const UpdaterBanner = ({ className }: Props) => {
         return () => {
             shell.off('autoupdater-show-notif', show);
         };
-    }, []);
+    }, [shell, show]);
 
     return (
         <UpdateBanner

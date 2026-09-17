@@ -7,6 +7,7 @@ import Chips from './Chips';
 import ColorInput from './ColorInput';
 import ContextMenu from './ContextMenu';
 import ContinueWatchingItem from './ContinueWatchingItem';
+import Scale from './Scale';
 import DelayedRenderer from './DelayedRenderer';
 import EventModal from './EventModal';
 import HorizontalScroll from './HorizontalScroll';
@@ -44,6 +45,7 @@ export {
     ColorInput,
     ContextMenu,
     ContinueWatchingItem,
+    Scale,
     DelayedRenderer,
     EventModal,
     HorizontalScroll,
