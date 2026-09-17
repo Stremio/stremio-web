@@ -5,12 +5,13 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { createPath, useLocation, useNavigate } = require('react-router');
 const { useCore } = require('stremio/core');
-const { Routes, useGoBack, navigateToRoute } = require('stremio-router');
+const { Routes, useGoBack } = require('stremio-router');
 const { Chromecast, ServicesProvider, GamepadProvider } = require('stremio/services');
-const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, useFileDropListener, usePlatform } = require('stremio/common');
+const { FullscreenProvider, ToastProvider, TooltipProvider, ShortcutsProvider, DiscordProvider, CONSTANTS, useBinaryState, useProfile, withCoreSuspender, usePlatform } = require('stremio/common');
 const ServicesToaster = require('./ServicesToaster');
 const SearchParamsHandler = require('./SearchParamsHandler');
 const DeepLinkHandler = require('./DeepLinkHandler');
+const { default: ShellOpenHandler } = require('./ShellOpenHandler');
 const { default: UpdaterBanner } = require('./UpdaterBanner');
 const { default: ShortcutsModal } = require('./ShortcutsModal');
 const { default: GamepadModal } = require('./GamepadModal');
@@ -19,7 +20,6 @@ const styles = require('./styles');
 
 const ProtectedRoutes = withCoreSuspender(Routes);
 const NAVIGATE_TABS_ROUTES = ['/', '/discover', '/library', '/calendar', '/addons', '/settings'];
-const TORRENT_FILE_TYPES = ['application/x-bittorrent'];
 
 const App = () => {
     const core = useCore();
@@ -31,10 +31,7 @@ const App = () => {
     const navigate = useNavigate();
     const goBack = useGoBack();
     const locationPath = createPath(location);
-    const locationRef = React.useRef(location);
-    locationRef.current = location;
     const previousPathRef = React.useRef(locationPath);
-    const appReadySentRef = React.useRef(false);
     const [gamepadSupportEnabled, setGamepadSupportEnabled] = React.useState(false);
     const services = React.useMemo(() => {
         return {
@@ -74,18 +71,6 @@ const App = () => {
         }
     }, [toggleShortcutModal, toggleGamepadModal, changeInterfaceScale, navigate, goBack]);
 
-    const onTorrentDrop = React.useCallback((file, buffer) => {
-        core.transport.dispatch({
-            action: 'StreamingServer',
-            args: {
-                action: 'CreateTorrent',
-                args: Array.from(new Uint8Array(buffer))
-            }
-        });
-    }, [core.transport]);
-
-    useFileDropListener(TORRENT_FILE_TYPES, onTorrentDrop);
-
     React.useEffect(() => {
         const prevPath = previousPathRef.current;
         previousPathRef.current = locationPath;
@@ -118,34 +103,6 @@ const App = () => {
             services.chromecast.off('stateChanged', onChromecastStateChange);
         };
     }, [services]);
-
-    React.useEffect(() => {
-        const onOpenMedia = (data) => {
-            try {
-                const { protocol, hostname, pathname, searchParams } = new URL(data);
-                if (protocol === CONSTANTS.PROTOCOL) {
-                    if (hostname.length) {
-                        const transportUrl = `https://${hostname}${pathname}`;
-                        navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
-                    } else {
-                        const search = searchParams.toString();
-                        const path = search ? `${pathname}?${search}` : pathname;
-                        navigateToRoute(navigate, locationRef.current, path);
-                    }
-                }
-            } catch (e) {
-                console.error('Failed to open media:', e);
-            }
-        };
-
-        shell.on('open-media', onOpenMedia);
-        if (shell.state.initialized && !appReadySentRef.current) {
-            appReadySentRef.current = true;
-            shell.send('app-ready');
-        }
-
-        return () => shell.off('open-media', onOpenMedia);
-    }, [navigate, shell]);
 
     React.useEffect(() => {
         if (typeof profile.settings?.interfaceLanguage === 'string') {
@@ -215,6 +172,7 @@ const App = () => {
                                     <ServicesToaster />
                                     <SearchParamsHandler />
                                     <DeepLinkHandler />
+                                    <ShellOpenHandler />
                                     <UpdaterBanner className={styles['updater-banner-container']} />
                                     <ProtectedRoutes />
                                 </DiscordProvider>

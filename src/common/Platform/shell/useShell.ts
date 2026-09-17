@@ -36,6 +36,18 @@ type ShellMessage = {
     data: string;
 };
 
+const send = (method: string, ...args: (string | number | object)[]) => {
+    try {
+        IPC?.postMessage(JSON.stringify({
+            id: 0,
+            type: ShellEventType.INVOKE_METHOD,
+            args: [method, ...args],
+        }));
+    } catch (e) {
+        console.error('Shell', 'Failed to send event', e);
+    }
+};
+
 const useShell = (): Shell => {
     const [state, setState] = useState<ShellState>({
         initialized: false,
@@ -50,18 +62,6 @@ const useShell = (): Shell => {
         cacheDirectoryPicker: false,
         nativeInterfaceScale: false,
     });
-
-    const send = (method: string, ...args: (string | number | object)[]) => {
-        try {
-            IPC?.postMessage(JSON.stringify({
-                id: 0,
-                type: ShellEventType.INVOKE_METHOD,
-                args: [method, ...args],
-            }));
-        } catch (e) {
-            console.error('Shell', 'Failed to send event', e);
-        }
-    };
 
     useEffect(() => {
         const onWindowVisibilityChanged = (data: WindowVisibility) => {
