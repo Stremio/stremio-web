@@ -4,6 +4,7 @@ declare const usePlayer: (urlParams: UrlParams) => [
     Player,
     videoParamsChanged: (videoParams: { hash: string | null, size: number | null, filename: string | null }) => void,
     streamStateChanged: (state: Partial<StreamState>) => void,
+    audioPreferenceChanged: (preference: AudioPreference) => void,
     subtitlePreferenceChanged: (preference: SubtitlePreference) => void,
     videoScaleChanged: (videoScale: VideoScale) => void,
     timeChanged: (time: number, duration: number | null, device: string) => void,
