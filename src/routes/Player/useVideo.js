@@ -16,6 +16,7 @@ const useVideo = () => {
         paused: null,
         time: null,
         duration: null,
+        live: null,
         buffering: null,
         buffered: null,
         volume: null,
@@ -205,11 +206,12 @@ const useVideo = () => {
     };
 
     const onImplementationChanged = (manifest) => {
-        manifest.props.forEach((propName) => dispatch(({ type: 'observeProp', propName })));
         setState((state) => ({
             ...state,
-            manifest
+            manifest,
+            live: null,
         }));
+        manifest.props.forEach((propName) => dispatch(({ type: 'observeProp', propName })));
 
         events.emit('implementationChanged', manifest);
     };

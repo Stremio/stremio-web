@@ -1,0 +1,41 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.choice {
+    flex: none;
+
+    > label {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        min-height: 3.75rem;
+        padding: 1rem;
+        cursor: pointer;
+    }
+}
+
+.choice-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.description {
+    font-size: 0.85rem;
+    opacity: 0.55;
+}
+
+.empty {
+    padding: 2rem 1rem;
+    opacity: 0.6;
+    text-align: center;
+}

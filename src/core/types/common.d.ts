@@ -1,3 +1,5 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
 type UrlParams = Record<string, string> & {
     path: string,
 };
@@ -54,6 +56,7 @@ type BehaviorHints = {
     defaultVideoId: string | null,
     featuredVideoId: string | null,
     hasScheduledVideos: boolean,
+    isLive?: boolean,
 };
 
 type PosterShape = 'square' | 'landscape' | 'poster' | null;

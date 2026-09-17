@@ -1,0 +1,49 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/MetaItem/styles.less') {
+    poster-container: poster-container;
+    poster-image-layer: poster-image-layer;
+    poster-image: poster-image;
+}
+
+.live-item {
+    --landscape-shape-ratio: 0.75;
+
+    &.channel-card .poster-container .poster-image-layer .poster-image {
+        padding: 1.5rem;
+        object-fit: contain;
+    }
+}
+
+.channel-badge {
+    position: absolute;
+    z-index: -2;
+    top: 0.6rem;
+    right: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    max-width: calc(100% - 3rem);
+    min-height: 2rem;
+    padding: 0.35rem 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.5rem;
+    background: rgba(16, 13, 32, 0.85);
+    color: var(--primary-foreground-color);
+
+    > img {
+        flex: none;
+        width: 1.75rem;
+        height: 1.25rem;
+        object-fit: contain;
+    }
+
+    > span {
+        min-width: 0;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.3;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}

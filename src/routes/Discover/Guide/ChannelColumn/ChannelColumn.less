@@ -1,0 +1,48 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.channel-column {
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.inner {
+    will-change: transform;
+}
+
+.cell {
+    position: relative;
+    background: var(--overlay-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin: 0 4px 4px 0;
+}
+
+.skeleton {
+    display: block;
+    width: 60%;
+    height: 18px;
+    border-radius: 0.3rem;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.09) 50%,
+        rgba(255, 255, 255, 0.04) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+}

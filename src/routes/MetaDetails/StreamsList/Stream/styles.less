@@ -21,11 +21,14 @@
     margin-bottom: 0.5rem;
     border-radius: var(--border-radius);
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         background-color: var(--overlay-color);
     }
 
-    &:hover, &:focus, &:global(.selected) {
+    &:hover,
+    &:focus,
+    &:global(.selected) {
         .icon {
             opacity: 1;
         }
@@ -100,7 +103,7 @@
         text-overflow: ellipsis;
         color: var(--primary-foreground-color);
     }
-    
+
     .icon {
         flex: none;
         width: 3rem;
@@ -111,6 +114,18 @@
         color: var(--primary-foreground-color);
         background-color: var(--secondary-accent-color);
     }
+}
+
+.stream-container,
+.stream-action {
+    .context-menu-container {
+        max-width: calc(90% - 1.5rem);
+        z-index: 2;
+    }
+}
+
+.context-menu-content {
+    --spatial-navigation-contain: contain;
 
     .menu-icon {
         flex: none;
@@ -120,42 +135,42 @@
         color: var(--color-placeholder);
     }
 
-	.context-menu-container {
-		max-width: calc(90% - 1.5rem);
-		z-index: 2;
-	
-		.context-menu-content {
-			--spatial-navigation-contain: contain;
+    .context-menu-title {
+        font-size: 0.9rem;
+        padding: 1rem 1.5rem;
+        font-weight: 100;
+        border-bottom: 1px solid var(--color-placeholder);
+        color: var(--primary-foreground-color);
+        white-space: break-spaces;
+    }
 
-            .context-menu-title {
-                font-size: 0.9rem;
-                padding: 1rem 1.5rem;
-                font-weight: 100;
-                border-bottom: 1px solid var(--color-placeholder);
-                color: var(--primary-foreground-color);
-                white-space: break-spaces;
-            }
-	
-			.context-menu-option-container {
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				padding: 1rem 1.5rem;
-	
-				&:hover,
-				&:focus {
-					background-color: var(--overlay-color);
-				}
-	
-				.context-menu-option-label {
-					font-size: 1rem;
-					font-weight: 300;
-					color: var(--primary-foreground-color);
-                    text-transform: capitalize;
-				}
-			}
-		}
-	}
+    .context-menu-option-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 1rem 1.5rem;
+
+        &:hover,
+        &:focus {
+            background-color: var(--overlay-color);
+        }
+
+        .context-menu-option-label {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--primary-foreground-color);
+            text-transform: capitalize;
+        }
+    }
+}
+
+.epg-menu {
+    width: 20rem;
+}
+
+.stream-action .context-menu-container {
+    width: 20rem;
+    max-width: calc(100vw - 3rem);
 }
 
 @media only screen and (max-width: @small) {
@@ -180,7 +195,7 @@
             }
         }
 
-		.context-menu-container {
+        .context-menu-container {
             &.menu-direction-top-left,
             &.menu-direction-bottom-left {
                 right: 1.5rem;

@@ -16,8 +16,9 @@ const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHr
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, ...props }) => {
+const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
     const { t } = useTranslation();
+    const artwork = poster && typeof poster === 'object' ? poster : { src: poster, shape: posterShape, changeCursor: posterChangeCursor };
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const href = React.useMemo(() => {
@@ -74,9 +75,9 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     ), []);
     const hasOptions = Array.isArray(options) && options.length > 0;
     return (
-        <div className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${posterShape}`], { 'active': menuOpen })}>
+        <div className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen })}>
             <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick}>
-                <div className={classnames(styles['poster-container'], { 'poster-change-cursor': posterChangeCursor })}>
+                <div className={classnames(styles['poster-container'], { 'poster-change-cursor': artwork.changeCursor })}>
                     {
                         onDismissClick ?
                             <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={dismissOnClick}>
@@ -97,11 +98,20 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                     <div className={styles['poster-image-layer']}>
                         <Image
                             className={styles['poster-image']}
-                            src={poster}
+                            src={artwork.src}
                             alt={' '}
                             renderFallback={renderPosterFallback}
                         />
+                        {
+                            live ?
+                                <div className={styles['live-badge-layer']}>
+                                    <div className={styles['live-badge-label']}>{t('PLAYER_LIVE', { defaultValue: 'Live' })}</div>
+                                </div>
+                                :
+                                null
+                        }
                     </div>
+                    {artwork.overlay}
                     {
                         onPlayClick ?
                             <div title={t('CONTINUE_WATCHING')} className={styles['play-icon-layer']} onClick={playOnClick}>
@@ -185,7 +195,15 @@ MetaItem.propTypes = {
     className: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
-    poster: PropTypes.string,
+    poster: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+            src: PropTypes.string,
+            shape: PropTypes.oneOf(['poster', 'landscape', 'square']),
+            changeCursor: PropTypes.bool,
+            overlay: PropTypes.node,
+        }),
+    ]),
     posterShape: PropTypes.oneOf(['poster', 'landscape', 'square']),
     posterChangeCursor: PropTypes.bool,
     progress: PropTypes.number,
@@ -203,7 +221,8 @@ MetaItem.propTypes = {
     onDismissClick: PropTypes.func,
     onPlayClick: PropTypes.func,
     onClick: PropTypes.func,
-    watched: PropTypes.bool
+    watched: PropTypes.bool,
+    live: PropTypes.bool
 };
 
 module.exports = MetaItem;

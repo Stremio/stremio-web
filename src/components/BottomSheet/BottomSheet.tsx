@@ -1,90 +1,201 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import { Modal, useModalsContainer } from 'stremio-router';
+import useRouteFocused, { useRouteActive } from 'stremio/common/useRouteFocused';
 import useOrientation from 'stremio/common/useOrientation';
-import { getInterfaceScale } from 'stremio/common/interfaceScale';
+import useSheetDrag from './useSheetDrag';
 import styles from './BottomSheet.less';
 
-const CLOSE_THRESHOLD = 100;
+const ANIMATION_DURATION = Number.parseInt(styles.animationDurationMs, 10) || 250;
+
+type Phase = 'idle' | 'entering' | 'entered' | 'exiting';
 
 type Props = {
-    children: JSX.Element,
-    title: string,
+    children: React.ReactNode,
+    className?: string,
+    title?: string,
+    ariaLabel?: string,
     show: boolean,
-    onClose: () => void,
+    onCloseRequest: () => void,
+    onExited?: () => void,
+    closeOnContentClick?: boolean,
+    closeOnOrientationChange?: boolean,
+    flush?: boolean,
 };
 
-const BottomSheetContent = ({ children, title, onClose }: Omit<Props, 'show'>) => {
+const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseRequest, onExited, closeOnContentClick = true, closeOnOrientationChange = true, flush = false }: Props) => {
+    const { t } = useTranslation();
+    const routeFocused = useRouteFocused();
+    const routeActive = useRouteActive();
+    const modalsContainer = useModalsContainer();
+    const modalRef = useRef<HTMLElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const onCloseRequestRef = useRef(onCloseRequest);
+    const onExitedRef = useRef(onExited);
+    const phaseRef = useRef<Phase>('idle');
     const orientation = useOrientation();
     const previousOrientationRef = useRef(orientation);
-    const [startOffset, setStartOffset] = useState(0);
-    const [offset, setOffset] = useState(0);
+    const [phase, setPhase] = useState<Phase>('idle');
 
-    const containerStyle = useMemo(() => ({
-        transform: `translateY(${offset}px)`
-    }), [offset]);
+    useLayoutEffect(() => {
+        onCloseRequestRef.current = onCloseRequest;
+        onExitedRef.current = onExited;
+    }, [onCloseRequest, onExited]);
 
-    const containerHeight = () => containerRef.current?.offsetHeight ?? 0;
+    const setPhaseState = useCallback((next: Phase) => {
+        phaseRef.current = next;
+        setPhase(next);
+    }, []);
 
-    const onCloseRequest = () => setOffset(containerHeight());
+    const labelledBy = typeof title === 'string' && title.length > 0 ? title : ariaLabel;
+    const open = phase === 'entered';
+    const mounted = phase !== 'idle';
 
-    const onTouchStart = ({ touches }: React.TouchEvent<HTMLDivElement>) => {
-        const { clientY } = touches[0];
-        setStartOffset(clientY);
-    };
-
-    const onTouchMove = useCallback(({ touches }: React.TouchEvent<HTMLDivElement>) => {
-        const { clientY } = touches[0];
-        setOffset(Math.max(0, (clientY - startOffset) / getInterfaceScale()));
-    }, [startOffset]);
-
-    const onTouchEnd = () => {
-        setOffset((offset) => offset > CLOSE_THRESHOLD ? containerHeight() : 0);
-        setStartOffset(0);
-    };
-
-    const onTransitionEnd = useCallback((event: React.TransitionEvent<HTMLDivElement>) => {
-        if (event.target === containerRef.current && event.propertyName === 'transform' && offset === containerHeight()) {
-            onClose();
+    const requestClose = useCallback(() => {
+        if (phaseRef.current === 'idle' || phaseRef.current === 'exiting') {
+            return;
         }
-    }, [offset, onClose]);
+
+        onCloseRequestRef.current();
+    }, []);
 
     useEffect(() => {
-        if (previousOrientationRef.current !== orientation) {
-            previousOrientationRef.current = orientation;
-            onClose();
-        }
-    }, [orientation, onClose]);
+        if (!routeActive) requestClose();
+    }, [routeActive, requestClose]);
 
-    return createPortal((
-        <div className={styles['bottom-sheet']}>
-            <div className={styles['backdrop']} onClick={onCloseRequest} />
+    const isExiting = useCallback(() => phaseRef.current === 'exiting', []);
+    const { offset, dragging, reset: resetDrag } = useSheetDrag({ containerRef, enabled: mounted, isExiting, onDismiss: requestClose });
+
+    useEffect(() => {
+        if (show) {
+            resetDrag();
+            setPhaseState('entering');
+            return undefined;
+        }
+
+        if (phaseRef.current === 'idle') {
+            return undefined;
+        }
+
+        resetDrag();
+        setPhaseState('exiting');
+        return undefined;
+    }, [show, setPhaseState, resetDrag]);
+
+    useEffect(() => {
+        if (phase !== 'entering') {
+            return undefined;
+        }
+
+        const node = containerRef.current;
+        if (node !== null) {
+            node.getBoundingClientRect();
+        }
+
+        const frame = requestAnimationFrame(() => {
+            if (phaseRef.current === 'entering') {
+                setPhaseState('entered');
+            }
+        });
+
+        return () => window.cancelAnimationFrame(frame);
+    }, [phase, setPhaseState]);
+
+    useEffect(() => {
+        if (phase !== 'exiting') {
+            return undefined;
+        }
+
+        const timeout = window.setTimeout(() => {
+            setPhaseState('idle');
+            resetDrag();
+            onExitedRef.current?.();
+        }, ANIMATION_DURATION);
+
+        return () => window.clearTimeout(timeout);
+    }, [phase, setPhaseState, resetDrag]);
+
+    useEffect(() => {
+        if (!mounted || !routeFocused || !(modalsContainer instanceof HTMLElement)) {
+            return undefined;
+        }
+
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.code !== 'Escape') {
+                return;
+            }
+
+            if (modalsContainer.childNodes[modalsContainer.childElementCount - 2] !== modalRef.current) {
+                return;
+            }
+
+            requestClose();
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [mounted, routeFocused, modalsContainer, requestClose]);
+
+    useEffect(() => {
+        if (!closeOnOrientationChange) {
+            previousOrientationRef.current = orientation;
+            return undefined;
+        }
+
+        if (previousOrientationRef.current !== orientation && phaseRef.current !== 'idle') {
+            requestClose();
+        }
+
+        previousOrientationRef.current = orientation;
+        return undefined;
+    }, [orientation, closeOnOrientationChange, requestClose]);
+
+    if (phase === 'idle') {
+        return null;
+    }
+
+    return (
+        <Modal
+            ref={modalRef}
+            className={classNames(styles['bottom-sheet'], className, { [styles['open']]: open })}
+            autoFocus
+        >
+            <button
+                className={styles['backdrop']}
+                aria-label={t('BUTTON_CLOSE')}
+                onClick={requestClose}
+            />
             <div
                 ref={containerRef}
-                className={classNames(styles['container'], { [styles['dragging']]: startOffset }, 'animation-slide-up')}
-                style={containerStyle}
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                onTransitionEnd={onTransitionEnd}
+                className={classNames(styles['container'], {
+                    [styles['dragging']]: dragging,
+                    [styles['flush']]: flush,
+                })}
+                style={{ transform: open ? `translateY(${offset}px)` : 'translateY(100%)' }}
+                role={'dialog'}
+                aria-modal={'true'}
+                aria-label={labelledBy}
             >
-                <div className={styles['heading']}>
-                    <div className={styles['handle']} />
-                    <div className={styles['title']}>
-                        {title}
-                    </div>
-                </div>
-                <div className={styles['content']} onClick={onCloseRequest}>
+                <div className={styles['handle']} />
+                {
+                    typeof title === 'string' && title.length > 0 ?
+                        <div className={styles['heading']}>
+                            <div className={styles['title']}>
+                                {title}
+                            </div>
+                        </div>
+                        :
+                        null
+                }
+                <div className={styles['content']} onClick={closeOnContentClick ? requestClose : undefined}>
                     {children}
                 </div>
             </div>
-        </div>
-    ), document.body);
+        </Modal>
+    );
 };
-
-const BottomSheet = ({ show, ...props }: Props) => show ? <BottomSheetContent {...props} /> : null;
 
 export default BottomSheet;
