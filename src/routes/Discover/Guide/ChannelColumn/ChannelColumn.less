@@ -22,6 +22,7 @@
 }
 
 .cell {
+    position: relative;
     background: var(--overlay-color);
     display: flex;
     align-items: center;
@@ -29,27 +30,6 @@
     padding: 0.5rem;
     border-radius: 0.5rem;
     margin: 0 4px 4px 0;
-}
-
-.logo {
-    width: 5.5rem;
-    height: 2.6rem;
-    object-fit: contain;
-    object-position: center;
-}
-
-.name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--primary-foreground-color);
-    text-align: center;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
 }
 
 .skeleton {
@@ -65,18 +45,4 @@
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
-}
-
-@media only screen and (max-width: @xsmall) {
-    .logo {
-        width: 3.5rem;
-        height: 1.8rem;
-    }
-}
-
-@media only screen and (max-width: @minimum) {
-    .logo {
-        width: 3rem;
-        height: 1.6rem;
-    }
 }
