@@ -79,11 +79,14 @@ const Timeline = ({ viewportRef, viewport, scale, start, end, programs, now, sel
                         const programWidth = position(endTime) - left;
                         const contentWidth = Math.min(programWidth, viewport.width);
                         const inView = left + programWidth > viewport.left && left < viewport.left + viewport.width;
+                        const isCurrent = startTime <= now && now < endTime;
                         return (
                             <div
                                 key={program.id ?? startTime}
                                 className={classNames(styles['program'], {
                                     [styles['visible']]: inView,
+                                    [styles['selected']]: program === selected,
+                                    [styles['current']]: isCurrent,
                                     [styles['compact']]: programWidth < COMPACT_WIDTH_PX,
                                     [styles['icon-only']]: programWidth < ICON_ONLY_WIDTH_PX,
                                     [styles['tiny']]: programWidth < TINY_WIDTH_PX,
@@ -101,7 +104,7 @@ const Timeline = ({ viewportRef, viewport, scale, start, end, programs, now, sel
                                         '--preview-space': `${viewport.width - Math.max(0, left - viewport.left)}px`,
                                     }}
                                     tabIndex={programWidth < TINY_WIDTH_PX ? -1 : 0}
-                                    aria-current={startTime <= now && now < endTime ? 'true' : undefined}
+                                    aria-current={isCurrent ? 'true' : undefined}
                                     aria-pressed={program === selected}
                                     aria-label={`${program.title} · ${timeRange(program)} · ${duration(program)}`}
                                     onClick={() => onSelect(program)}
