@@ -198,7 +198,7 @@
     }
 }
 
-@media (max-height: 750px) {
+@media (max-height: @short) {
     .hero {
         padding: 0.75rem 0 1.25rem;
     }
@@ -213,7 +213,7 @@
     }
 }
 
-@media (max-height: 650px) {
+@media (max-height: @xshort) {
     .hero-content {
         gap: 0.75rem;
     }
@@ -221,37 +221,6 @@
     .title {
         font-size: clamp(1.5rem, 4.8vh, 2.5rem);
         margin-top: 0.5rem;
-    }
-}
-
-@media (max-height: 500px) {
-    .hero {
-        align-items: center;
-        padding: 0.25rem 0 0.75rem;
-    }
-
-    .hero-content {
-        gap: 0.5rem;
-    }
-
-    .channel-logo {
-        width: 1.75rem;
-        height: 1.75rem;
-    }
-
-    .channel-identity {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-
-    .channel-name {
-        margin: 0;
-        font-size: 0.9rem;
-    }
-
-    .current-time {
-        font-size: 0.7rem;
     }
 }
 

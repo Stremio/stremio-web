@@ -252,24 +252,6 @@
     }
 }
 
-@media (max-height: 500px) {
-    .days {
-        height: 1.4rem;
-    }
-
-    .times {
-        height: 1.6rem;
-    }
-
-    .programs {
-        height: 3.5rem;
-    }
-
-    .now-line {
-        top: 1.4rem;
-    }
-}
-
 @media @phone-landscape {
     .viewport {
         flex: 1;
@@ -285,15 +267,24 @@
         min-height: 6.5rem;
     }
 
-    .days,
+    .days {
+        flex: none;
+        height: 1.4rem;
+    }
+
     .times {
         flex: none;
+        height: 1.6rem;
     }
 
     .programs {
         flex: 1;
         min-height: 3.5rem;
         height: auto;
+    }
+
+    .now-line {
+        top: 1.4rem;
     }
 
     .card {
