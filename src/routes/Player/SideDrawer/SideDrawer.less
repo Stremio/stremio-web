@@ -19,7 +19,7 @@
     flex-direction: column;
     padding: @padding;
     padding-top: calc(@padding + var(--safe-area-inset-top));
-    height: 100dvh;
+    height: var(--dynamic-viewport-height);
     max-width: 35rem;
     overflow-y: auto;
     position: relative;
@@ -107,7 +107,7 @@
 
 @media @phone-portrait {
     .side-drawer {
-        max-width: 100dvw;
+        max-width: var(--dynamic-viewport-width);
 
         .close-button {
             display: block;
@@ -117,10 +117,10 @@
 
 @media @phone-landscape {
     .side-drawer {
-        max-width: 50dvw;
+        max-width: calc(var(--dynamic-viewport-width) / 2);
 
         .info {
-            max-height: 40dvh;
+            max-height: calc(var(--dynamic-viewport-height) * 0.4);
         }
 
         .dropdown.open {

@@ -7,6 +7,7 @@ const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useBinaryState } = require('stremio/common');
+const { getInterfaceScale } = require('stremio/common/interfaceScale');
 const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
@@ -34,7 +35,8 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
 
         const { x, y, width } = sliderRef.current.getBoundingClientRect();
         const position = Math.min(Math.max((event.clientX - x) / width, 0), 1);
-        setHover({ time: position * duration, x: x + position * width, y });
+        const scale = getInterfaceScale();
+        setHover({ time: position * duration, x: (x + position * width) / scale, y: y / scale });
     }, [disabled, duration]);
     const onMouseLeave = React.useCallback(() => {
         setHover(null);

@@ -5,7 +5,6 @@ const { useParams, useNavigate } = require('react-router');
 const { useSearchParams } = require('react-router-dom');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
-const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useCore } = require('stremio/core');
@@ -13,6 +12,7 @@ const { useServices, useGamepad } = require('stremio/services');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const { useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, usePlatform, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('stremio/common');
 const { default: toPath } = require('stremio-router/toPath');
+const { useGoBack } = require('stremio-router');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const { default: Buffering } = require('./Buffering');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -33,14 +33,12 @@ const { default: useKeyboardSeek } = require('./useKeyboardSeek');
 const { default: usePlaybackSpeedHold } = require('./usePlaybackSpeedHold');
 const { default: useStatistics } = require('./useStatistics');
 const useVideo = require('./useVideo');
+const { default: useAudio } = require('./useAudio');
 const { default: useSubtitles } = require('./useSubtitles');
 const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
-
-const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
-const findTrackById = (tracks, id) => tracks.find((track) => track.id === id);
 
 const GAMEPAD_HANDLER_ID = 'player';
 
@@ -58,6 +56,7 @@ const Player = () => {
     }), [stream, streamTransportUrl, metaTransportUrl, type, id, videoId]);
     const [queryParams] = useSearchParams();
     const navigate = useNavigate();
+    const goBack = useGoBack();
     const { t } = useTranslation();
     const services = useServices();
     const core = useCore();
@@ -66,7 +65,7 @@ const Player = () => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const profile = useProfile();
-    const [player, videoParamsChanged, streamStateChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
+    const [player, videoParamsChanged, streamStateChanged, audioPreferenceChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
@@ -163,6 +162,14 @@ const Player = () => {
         }
     }, [castDevicesMenuOpen, refreshCastDevices]);
 
+    const onAudioTrackSelected = useAudio({
+        player,
+        video,
+        settings,
+        streamStateChanged,
+        audioPreferenceChanged,
+    });
+
     const {
         streamSubtitles,
         allSubtitleTracks,
@@ -181,7 +188,6 @@ const Player = () => {
         toggleSubtitlesMenu,
     });
 
-    const defaultAudioTrackSelected = React.useRef(false);
     const playingOnExternalDevice = React.useRef(false);
     const requestedVideoScale = React.useRef(null);
     const persistedVideoScale = React.useRef({ stream: null, scale: null });
@@ -211,7 +217,7 @@ const Player = () => {
                     navigate(toPath(deepLinks.metaDetailsStreams), { replace: true });
                 }
             } else {
-                navigate(-1);
+                goBack();
             }
 
         } else {
@@ -221,7 +227,7 @@ const Player = () => {
                 navigate(toPath(deepLinks.metaDetailsStreams), { replace: true });
             }
         }
-    }, []);
+    }, [navigate, goBack]);
 
     const onEnded = React.useCallback(() => {
         ended();
@@ -231,9 +237,9 @@ const Player = () => {
             const deepLinks = player.nextVideo.deepLinks;
             handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, true);
         } else {
-            navigate(-1);
+            goBack();
         }
-    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation]);
+    }, [player.nextVideo, profile.settings.bingeWatching, handleNextVideoNavigation, ended, nextVideo, goBack]);
 
     const onError = React.useCallback((error) => {
         console.error('Player', error);
@@ -345,15 +351,6 @@ const Player = () => {
         }
         streamStateChanged({ videoScale: nextScale });
     }, [player.videoScale, video.state.stream, video.state.videoScale, streamStateChanged, videoScaleChanged]);
-
-    const onAudioTrackSelected = React.useCallback((id) => {
-        video.setAudioTrack(id);
-        streamStateChanged({
-            audioTrack: {
-                id,
-            },
-        });
-    }, [streamStateChanged]);
 
     const onDismissNextVideoPopup = React.useCallback(() => {
         setNextVideoPopupDismissal({ stream: video.state.stream });
@@ -556,22 +553,7 @@ const Player = () => {
         videoParamsChanged(video.state.videoParams);
     }, [video.state.videoParams]);
 
-    // Auto audio track selection
     React.useEffect(() => {
-        if (!defaultAudioTrackSelected.current) {
-            const savedTrackId = player.streamState?.audioTrack?.id;
-            const savedTrack = savedTrackId ? findTrackById(video.state.audioTracks, savedTrackId) : null;
-            const audioTrack = savedTrack ?? findTrackByLang(video.state.audioTracks, settings.audioLanguage);
-
-            if (audioTrack && audioTrack.id) {
-                video.setAudioTrack(audioTrack.id);
-                defaultAudioTrackSelected.current = true;
-            }
-        }
-    }, [video.state.audioTracks, player.streamState]);
-
-    React.useEffect(() => {
-        defaultAudioTrackSelected.current = false;
         playingOnExternalDevice.current = false;
     }, [video.state.stream]);
 
@@ -823,8 +805,8 @@ const Player = () => {
         if (settings.escExitFullscreen && fullscreen) {
             return;
         }
-        navigate(-1);
-    }, [closeMenus, settings.escExitFullscreen, fullscreen, navigate]));
+        goBack();
+    }, [closeMenus, settings.escExitFullscreen, fullscreen, goBack]));
 
     React.useLayoutEffect(() => {
         if (!routeFocused) {

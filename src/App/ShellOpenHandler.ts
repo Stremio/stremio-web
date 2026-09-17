@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
+import { navigateToRoute } from 'stremio-router';
 import { CONSTANTS, useFileDropListener, usePlatform, withCoreSuspender } from 'stremio/common';
 import useStreamingServer from 'stremio/common/useStreamingServer';
 import useToast from 'stremio/common/Toast/useToast';
@@ -18,6 +19,10 @@ const ShellOpenHandler = () => {
     const { shell } = usePlatform();
     const { on, off, send, state: { initialized } } = shell;
     const navigate = useNavigate();
+    const location = useLocation();
+    const locationRef = useRef(location);
+    locationRef.current = location;
+    const appReadySentRef = useRef(false);
     const toast = useToast();
     const streamingServer = useStreamingServer();
     const { createTorrent } = useTorrent();
@@ -46,7 +51,9 @@ const ShellOpenHandler = () => {
                         const transportUrl = `https://${hostname}${pathname}`;
                         navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
                     } else {
-                        navigate(`${pathname}?${searchParams.toString()}`);
+                        const search = searchParams.toString();
+                        const path = search ? `${pathname}?${search}` : pathname;
+                        navigateToRoute(navigate, locationRef.current, path);
                     }
                 } else if (protocol === 'magnet:') {
                     setPendingTorrent(input);
@@ -84,7 +91,8 @@ const ShellOpenHandler = () => {
     }, [on, off, navigate, toast]);
 
     useEffect(() => {
-        if (initialized) {
+        if (initialized && !appReadySentRef.current) {
+            appReadySentRef.current = true;
             send('app-ready');
         }
     }, [initialized, send]);
