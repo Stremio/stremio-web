@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Option from './Option';
 import Icon from '@stremio/stremio-icons/react';
+import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import styles from './Dropdown.less';
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
 const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props) => {
     const { t } = useTranslation();
     const optionsRef = useRef(new Map());
-    const containerRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const selectedOptionValue = options.find((opt) => opt.value === value)?.value;
 
     const handleSetOptionRef = useCallback((optionValue: any) => (node: HTMLButtonElement | null) => {
@@ -36,14 +37,14 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
     }, [setLevel, level]);
 
     useEffect(() => {
-        if (menuOpen && selectedOptionValue !== undefined && containerRef.current) {
-            const selectedNode = optionsRef.current.get(selectedOptionValue);
-            if (selectedNode) {
-                selectedNode.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+        const container = containerRef.current;
+        if (!menuOpen || selectedOptionValue === undefined || !container) return;
+        const selectedNode = optionsRef.current.get(selectedOptionValue);
+        if (!selectedNode) return;
+        const listBounds = getInterfaceRect(container);
+        const optionBounds = getInterfaceRect(selectedNode);
+        if (optionBounds.top < listBounds.top || optionBounds.bottom > listBounds.bottom) {
+            container.scrollBy({ top: optionBounds.top - listBounds.top, behavior: 'smooth' });
         }
     }, [menuOpen, selectedOptionValue]);
 
