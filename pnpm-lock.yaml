@@ -27,8 +27,8 @@ importers:
         specifier: 5.15.0
         version: 5.15.0
       '@stremio/stremio-video':
-        specifier: 0.0.97
-        version: 0.0.97
+        specifier: 0.0.98
+        version: 0.0.98
       a-color-picker:
         specifier: 1.2.1
         version: 1.2.1(patch_hash=3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af)
@@ -1436,8 +1436,8 @@ packages:
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
 
-  '@stremio/stremio-video@0.0.97':
-    resolution: {integrity: sha512-LD5onilulO7cGhAJ7hQ4SpXmNciFxTNpmO3J7+l2JdyxKpSnnzYmr1HbupLfU4Zb3SIHOQsu9RHc89S+0iL22g==}
+  '@stremio/stremio-video@0.0.98':
+    resolution: {integrity: sha512-1VlitVo7wOxME0q6sm144bJSGM+zu3koy1DGwF6QUzxXY31HWe+PFtmApyk1t8yd9l+DH/6guHPBMBTKdip1KQ==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6525,7 +6525,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.15.0': {}
 
-  '@stremio/stremio-video@0.0.97':
+  '@stremio/stremio-video@0.0.98':
     dependencies:
       '@stremio/libass-wasm': https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.6/stremio-libass-wasm-4.2.6.tgz
       buffer: 6.0.3
