@@ -781,6 +781,8 @@ const Player = () => {
         }
     }, [video.state.playbackSpeed, onPlaybackSpeedChanged]), !menusOpen);
 
+    useShortcut('videoScale', onVideoScaleChanged, !menusOpen && video.state.videoScale !== null);
+
     const selectedStream = player.selected?.stream;
     const statisticsMenuAvailable = streamingServer?.statistics?.type !== 'Err'
         && typeof selectedStream?.infoHash === 'string'
