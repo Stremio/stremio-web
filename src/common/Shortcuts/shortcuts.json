@@ -85,6 +85,11 @@
                 "combos": [["["], ["]"]]
             },
             {
+                "name": "videoScale",
+                "label": "SETTINGS_SHORTCUT_VIDEO_SCALE",
+                "combos": [["V"]]
+            },
+            {
                 "name": "toggleSubtitles",
                 "label": "SETTINGS_SHORTCUT_TOGGLE_SUBTITLES",
                 "combos": [["C"]]
