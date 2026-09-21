@@ -97,14 +97,10 @@ const useServiceWorkerUpdater = () => {
             });
         };
         const onControlling = (event: WorkboxLifecycleEvent) => {
-            if (!event.isUpdate) {
-                return;
-            }
-
             clearApplyTimeout(runtime);
             if (runtime.applying) {
                 window.location.reload();
-            } else {
+            } else if (event.isUpdate || event.isExternal) {
                 setDismissed(false);
                 setState({ status: 'reload-ready' });
             }
