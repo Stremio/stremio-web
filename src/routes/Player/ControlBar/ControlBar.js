@@ -36,6 +36,8 @@ const ControlBar = React.forwardRef(({
     onPlayRequested,
     onPauseRequested,
     onNextVideoRequested,
+    skipIntroAvailable,
+    onSkipIntroRequested,
     onMuteRequested,
     onUnmuteRequested,
     onVolumeChangeRequested,
@@ -160,6 +162,19 @@ const ControlBar = React.forwardRef(({
                         :
                         null
                 }
+                {
+                    skipIntroAvailable ?
+                        <Button
+                            className={classnames(styles['control-bar-button'], styles['skip-intro-button'])}
+                            title={t('PLAYER_SKIP_INTRO')}
+                            tabIndex={0}
+                            onClick={onSkipIntroRequested}
+                        >
+                            <span className={styles['skip-intro-label']}>{t('PLAYER_SKIP_INTRO')}</span>
+                        </Button>
+                        :
+                        null
+                }
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof muted !== 'boolean' })} title={muted ? t('PLAYER_UNMUTE') : t('PLAYER_MUTE')} tabIndex={-1} onClick={onMuteButtonClick}>
                     <Icon
                         className={styles['icon']}
@@ -251,6 +266,8 @@ ControlBar.propTypes = {
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onNextVideoRequested: PropTypes.func,
+    skipIntroAvailable: PropTypes.bool,
+    onSkipIntroRequested: PropTypes.func,
     onMuteRequested: PropTypes.func,
     onUnmuteRequested: PropTypes.func,
     onVolumeChangeRequested: PropTypes.func,

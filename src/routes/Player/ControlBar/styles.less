@@ -48,6 +48,28 @@
             }
         }
 
+        .skip-intro-button {
+            width: auto;
+            min-width: 7.5rem;
+            padding: 0 1rem;
+            border: 0.1rem solid var(--primary-foreground-color);
+
+            .skip-intro-label {
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--primary-foreground-color);
+                white-space: nowrap;
+            }
+
+            &:hover, &:focus {
+                background-color: var(--primary-foreground-color);
+
+                .skip-intro-label {
+                    color: var(--primary-background-color);
+                }
+            }
+        }
+
         .volume-slider {
             --track-size: 0.35rem;
             --thumb-size: 1rem;

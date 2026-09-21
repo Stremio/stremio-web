@@ -41,6 +41,7 @@ const styles = require('./styles');
 const Video = require('./Video');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
+const getSkipIntroTarget = require('./getSkipIntroTarget');
 
 const GAMEPAD_HANDLER_ID = 'player';
 
@@ -312,6 +313,26 @@ const Player = () => {
         video.setTime(target);
         seek(target, video.state.duration, video.state.manifest?.name);
     }, [canSeek, seekStart, seekEnd, video.state.duration, video.state.manifest]);
+    const intro = player.introOutro?.intro ?? null;
+    const currentVideoMatches = player.libraryItem !== null &&
+        player.selected?.streamRequest?.path?.id !== undefined &&
+        player.libraryItem.state.video_id === player.selected.streamRequest.path.id;
+    const skipIntroTarget = getSkipIntroTarget({
+        intro,
+        time: video.state.time,
+        duration: video.state.duration,
+        livePlayback,
+        canSeek,
+        streamReady: player.stream?.type === 'Ready' &&
+            video.state.stream !== null &&
+            video.state.loaded === true,
+        currentVideoMatches,
+    });
+    const onSkipIntroRequested = React.useCallback(() => {
+        if (skipIntroTarget !== null) {
+            commitSeek(skipIntroTarget);
+        }
+    }, [skipIntroTarget, commitSeek]);
     const {
         time: keyboardSeekTime,
         seekBy: seekByKeyboard,
@@ -1067,6 +1088,8 @@ const Player = () => {
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onNextVideoRequested={onNextVideoRequested}
+                skipIntroAvailable={skipIntroTarget !== null}
+                onSkipIntroRequested={onSkipIntroRequested}
                 onMuteRequested={onMuteRequested}
                 onUnmuteRequested={onUnmuteRequested}
                 onVolumeChangeRequested={onVolumeChangeRequested}
