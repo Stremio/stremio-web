@@ -2,18 +2,12 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import * as AColorPicker from 'a-color-picker';
+import { HexAlphaColorPicker } from 'react-colorful';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'stremio/components';
 import ModalDialog from 'stremio/components/ModalDialog';
 import useBinaryState from 'stremio/common/useBinaryState';
-import ColorPicker from './ColorPicker';
 import styles from './ColorInput.less';
-
-const parseColor = (value: string) => {
-    const color = AColorPicker.parseColor(value, 'hexcss4');
-    return typeof color === 'string' ? color : '#ffffffff';
-};
 
 type Props = {
     className: string,
@@ -30,9 +24,7 @@ type DialogProps = {
 
 const ColorInputDialog = ({ value, onChange, onClose }: DialogProps) => {
     const { t } = useTranslation();
-    const [tempValue, setTempValue] = useState(() => {
-        return parseColor(value);
-    });
+    const [tempValue, setTempValue] = useState(value);
 
     const modalDialogOnClick = useCallback((event: React.MouseEvent) => {
         // @ts-expect-error: Property 'openModalPrevented' does not exist on type 'MouseEvent'.
@@ -56,15 +48,11 @@ const ColorInputDialog = ({ value, onChange, onClose }: DialogProps) => {
                 }
             }
         ];
-    }, [tempValue, onChange, onClose, t]);
-
-    const colorPickerOnInput = useCallback((color: string) => {
-        setTempValue(parseColor(color));
-    }, []);
+    }, [tempValue, onChange]);
 
     return (
         <ModalDialog title={t('CHOOSE_COLOR')} buttons={modalButtons} onCloseRequest={onClose} onClick={modalDialogOnClick}>
-            <ColorPicker className={styles['color-picker-container']} value={tempValue} onInput={colorPickerOnInput} />
+            <HexAlphaColorPicker color={value} onChangeEnd={setTempValue} />
         </ModalDialog>
     );
 };
@@ -78,7 +66,8 @@ const ColorInput = ({ className, value, onChange, ...props }: Props) => {
     }), [value]);
 
     const isTransparent = useMemo(() => {
-        return parseColor(value).endsWith('00');
+        const hex = value.replace('#', '');
+        return hex.length === 8 && hex.endsWith('00');
     }, [value]);
 
     const labelButtonOnClick = useCallback((event: React.MouseEvent) => {
@@ -90,7 +79,7 @@ const ColorInput = ({ className, value, onChange, ...props }: Props) => {
         if (!event.nativeEvent.openModalPrevented) {
             openModal();
         }
-    }, [props.onClick, openModal]);
+    }, [props.onClick]);
 
     return (
         <Button title={isTransparent ? t('BUTTON_COLOR_TRANSPARENT') : value} {...props} style={labelButtonStyle} className={classnames(className, styles['color-input-container'])} onClick={labelButtonOnClick}>

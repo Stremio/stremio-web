@@ -19,7 +19,6 @@ WORKDIR /var/www/stremio-web
 FROM base AS app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /var/www/stremio-web
-COPY patches/ /var/www/stremio-web/patches
 RUN pnpm i --frozen-lockfile
 
 COPY . /var/www/stremio-web
