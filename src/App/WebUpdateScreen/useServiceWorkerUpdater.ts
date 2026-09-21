@@ -6,14 +6,13 @@ import { usePlatform } from 'stremio/common';
 import usePWA from 'stremio/common/usePWA';
 
 const UPDATE_CHECK_INTERVAL = 30 * 60 * 1000;
-const APPLY_TIMEOUT = 15 * 1000;
+const APPLY_TIMEOUT = 3 * 1000;
 
 type UpdaterState =
     | { status: 'idle' }
     | { status: 'ready', autoApply: boolean }
     | { status: 'applying' }
-    | { status: 'reload-ready' }
-    | { status: 'failed' };
+    | { status: 'reload-ready' };
 
 type Runtime = {
     workbox: Workbox | null,
@@ -53,21 +52,17 @@ const useServiceWorkerUpdater = () => {
         }
 
         const runtime = runtimeRef.current;
-        if (
-            runtime.applying ||
-            runtime.workbox === null ||
-            (state.status !== 'ready' && state.status !== 'failed')
-        ) {
+        if (runtime.applying || runtime.workbox === null || state.status !== 'ready') {
             return;
         }
 
         runtime.applying = true;
         clearApplyTimeout(runtime);
         setState({ status: 'applying' });
+        // Chrome only swaps workers once the old one is idle; unloading the page guarantees that.
         runtime.timeout = setTimeout(() => {
             runtime.timeout = null;
-            runtime.applying = false;
-            setState({ status: 'failed' });
+            window.location.reload();
         }, APPLY_TIMEOUT);
         runtime.workbox.messageSkipWaiting();
     }, [state.status]);
