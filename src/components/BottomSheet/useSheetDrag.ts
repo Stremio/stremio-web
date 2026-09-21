@@ -79,6 +79,10 @@ const useSheetDrag = ({ containerRef, enabled, isExiting, onDismiss }: Options) 
                 return;
             }
 
+            if (event.target instanceof Element && event.target.closest('[role="slider"], input[type="range"]') !== null) {
+                return;
+            }
+
             const touch = event.touches[0];
             dragRef.current = {
                 id: touch.identifier,
