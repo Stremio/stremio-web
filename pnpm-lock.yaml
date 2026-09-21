@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  a-color-picker@1.2.1: 3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af
-
 importers:
 
   .:
@@ -29,9 +26,6 @@ importers:
       '@stremio/stremio-video':
         specifier: 0.0.98
         version: 0.0.98
-      a-color-picker:
-        specifier: 1.2.1
-        version: 1.2.1(patch_hash=3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af)
       bowser:
         specifier: 2.14.1
         version: 2.14.1
@@ -77,6 +71,9 @@ importers:
       react:
         specifier: 18.3.1
         version: 18.3.1
+      react-colorful:
+        specifier: ^5.8.1
+        version: 5.8.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
@@ -1698,9 +1695,6 @@ packages:
 
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
-
-  a-color-picker@1.2.1:
-    resolution: {integrity: sha512-aMCUKd2zTDWK2YWnjz0k3YhFc9XL0jZlPIywF6XkP6i3wdq2iHTEnl1BFPZkOVDV89M12t+zeZ8m23cfzn57/Q==}
 
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
@@ -4108,6 +4102,12 @@ packages:
     resolution: {integrity: sha512-ma2FePH0z3px2+WOu6h+YycZcEvFmmxIlAb62cF52bG86eMySciO/EQZeQMXd07kPCYB0a1dWDT5J+KE9mCDUw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
+  react-colorful@5.8.1:
+    resolution: {integrity: sha512-oz68bhsnFWnpDf1ZR8daiQbYpXUnM2h2J6hl9Zg2rTpM/DU6vCqe1E+CpqmqLnJucMZetHZeifSAfJ+geN9lcA==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
@@ -6899,10 +6899,6 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  a-color-picker@1.2.1(patch_hash=3adc6da1b89710d280ab97bfb0df3b61f4cac2acde4e40b76034139b89b3e7af):
-    dependencies:
-      is-plain-object: 2.0.4
-
   accepts@1.3.8:
     dependencies:
       mime-types: 2.1.35
@@ -9651,6 +9647,11 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.2
       react: 18.3.1
+
+  react-colorful@5.8.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
