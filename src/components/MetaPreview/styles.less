@@ -24,6 +24,12 @@
                 height: 6rem;
             }
 
+            .logo {
+                max-width: 100%;
+                object-fit: contain;
+                object-position: center;
+            }
+
             .runtime-release-info-container {
                 justify-content: space-between;
 
@@ -85,9 +91,11 @@
         }
 
         .logo {
+            width: auto;
             height: 9rem;
+            max-width: min(30rem, 100%);
             object-fit: contain;
-            object-position: center;
+            object-position: left center;
         }
 
         .logo-placeholder {

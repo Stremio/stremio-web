@@ -9,6 +9,7 @@
 
 :import('~stremio/components/MetaPreview/styles.less') {
     preview: meta-preview-container;
+    preview-compact: compact;
     preview-info: meta-info-container;
     preview-logo: logo;
     preview-logo-placeholder: logo-placeholder;
@@ -72,11 +73,17 @@
             .preview-info {
                 min-height: 0;
 
-                .preview-logo,
+                .preview-logo {
+                    width: auto;
+                    height: 3.5rem;
+                    max-width: min(18rem, 70vw);
+                    margin: 0 0 1rem;
+                    object-position: left center;
+                }
+
                 .preview-logo-placeholder {
                     height: 3.5rem;
                     margin: 0 0 1rem;
-                    object-position: left center;
                 }
 
                 .preview-runtime {
@@ -102,6 +109,14 @@
                     margin-bottom: 0;
                 }
             }
+        }
+
+        .preview.preview-compact .preview-info .preview-logo {
+            width: auto;
+            height: 3.5rem;
+            max-width: min(18rem, 70vw);
+            margin: 0 0 1rem;
+            object-position: left center;
         }
     }
 }
