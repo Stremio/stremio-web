@@ -17,6 +17,8 @@
     width: 65%;
     max-width: 48rem;
     min-width: 0;
+    max-height: 100%;
+    min-height: 0;
     overflow: visible;
 }
 
@@ -58,7 +60,14 @@
 }
 
 .current-information {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     overflow: visible;
+
+    > *:not(.description) {
+        flex: none;
+    }
 }
 
 .title {
@@ -120,11 +129,15 @@
 }
 
 .description {
-    max-width: 40rem;
+    flex: 0 1 auto;
+    max-height: clamp(6rem, 20vh, 14rem);
     margin: 1rem 0 0;
+    padding-right: 0.5rem;
     font-size: 0.95rem;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.7);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
 
     &:empty {
         display: none;
@@ -182,8 +195,11 @@
     }
 
     .description {
-        font-size: 0.85rem;
+        max-height: none;
         margin-top: 0.75rem;
+        padding-right: 0;
+        font-size: 0.85rem;
+        overflow: visible;
     }
 }
 
@@ -263,9 +279,13 @@
     }
 
     .description {
+        flex: none;
+        max-height: none;
         margin-top: 0.85rem;
+        padding-right: 0;
         font-size: 0.9rem;
         line-height: 1.5;
+        overflow: visible;
     }
 
     .genres {
@@ -281,5 +301,11 @@
     .current-information {
         padding-bottom: 0.75rem;
         mask-image: linear-gradient(#000 calc(100% - 0.75rem), transparent);
+    }
+}
+
+@media (min-width: (@xsmall + 1px)) and (min-height: 600px) {
+    .description {
+        min-height: 3.2rem;
     }
 }

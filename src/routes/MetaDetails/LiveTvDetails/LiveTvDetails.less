@@ -63,6 +63,13 @@
     }
 }
 
+@media (min-width: (@xsmall + 1px)) and (min-height: 600px) {
+    .channel-page {
+        grid-template-rows: minmax(0, 1fr) min-content;
+        overflow: hidden;
+    }
+}
+
 @media (max-width: @xxsmall) {
     .live-details .backdrop-shade {
         background: linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.6) 45%, #100d20 85%);
