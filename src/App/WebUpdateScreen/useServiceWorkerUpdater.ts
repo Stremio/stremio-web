@@ -7,6 +7,19 @@ import usePWA from 'stremio/common/usePWA';
 
 const UPDATE_CHECK_INTERVAL = 30 * 60 * 1000;
 const APPLY_TIMEOUT = 3 * 1000;
+const RELOADED_FOR_UPDATE_KEY = 'web-update-reloaded';
+
+const consumeReloadedForUpdate = () => {
+    try {
+        const reloaded = sessionStorage.getItem(RELOADED_FOR_UPDATE_KEY) !== null;
+        sessionStorage.removeItem(RELOADED_FOR_UPDATE_KEY);
+        return reloaded;
+    } catch {
+        return false;
+    }
+};
+
+const reloadedForUpdate = consumeReloadedForUpdate();
 
 type UpdaterState =
     | { status: 'idle' }
@@ -62,7 +75,11 @@ const useServiceWorkerUpdater = () => {
         // Chrome only swaps workers once the old one is idle; unloading the page guarantees that.
         runtime.timeout = setTimeout(() => {
             runtime.timeout = null;
-            window.location.reload();
+            try {
+                sessionStorage.setItem(RELOADED_FOR_UPDATE_KEY, '1');
+            } finally {
+                window.location.reload();
+            }
         }, APPLY_TIMEOUT);
         runtime.workbox.messageSkipWaiting();
     }, [state.status]);
@@ -88,12 +105,12 @@ const useServiceWorkerUpdater = () => {
             setDismissed(false);
             setState({
                 status: 'ready',
-                autoApply: appLike && event.wasWaitingBeforeRegister === true,
+                autoApply: appLike && event.wasWaitingBeforeRegister === true && !reloadedForUpdate,
             });
         };
         const onControlling = (event: WorkboxLifecycleEvent) => {
             clearApplyTimeout(runtime);
-            if (runtime.applying) {
+            if (runtime.applying || reloadedForUpdate) {
                 window.location.reload();
             } else if (event.isUpdate || event.isExternal) {
                 setDismissed(false);
