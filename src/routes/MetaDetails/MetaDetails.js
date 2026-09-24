@@ -6,7 +6,7 @@ const { useTranslation } = require('react-i18next');
 const classnames = require('classnames');
 const { useCore } = require('stremio/core');
 const { useContentGamepadNavigation } = require('stremio/services/GamepadNavigation');
-const { withCoreSuspender } = require('stremio/common');
+const { withCoreSuspender, useProfile } = require('stremio/common');
 const { useNavigateWithOrigin } = require('stremio-router');
 const { HorizontalNavBar, DelayedRenderer, Image, MetaPreview } = require('stremio/components');
 const StreamsList = require('./StreamsList');
@@ -29,6 +29,7 @@ const MetaDetails = () => {
     const videosScrollMemoryRef = React.useRef(null);
     const { t } = useTranslation();
     const core = useCore();
+    const profile = useProfile();
     const urlParams = React.useMemo(() => ({
         type,
         id,
@@ -36,7 +37,11 @@ const MetaDetails = () => {
     }), [type, id, videoId]);
     const metaDetails = useMetaDetails(urlParams);
     const readyMeta = metaDetails.metaItem?.content.type === 'Ready' ? metaDetails.metaItem.content.content : null;
-    const isLiveMeta = readyMeta !== null && (readyMeta.behaviorHints?.isLive === true || readyMeta.type === 'tv');
+    const metaAddonUrl = metaDetails.metaItem?.addon.transportUrl;
+    const isEpgProvider = React.useMemo(() => {
+        return profile.addons.some((addon) => addon.transportUrl === metaAddonUrl && addon.manifest.behaviorHints?.epgProvider === true);
+    }, [profile.addons, metaAddonUrl]);
+    const isLiveMeta = isEpgProvider && readyMeta !== null && (readyMeta.behaviorHints?.isLive === true || readyMeta.type === 'tv');
     useExternalPlayerCallback(urlParams, metaDetails);
     const [season, setSeason] = useSeason(urlParams);
     const [metaPath, streamPath] = React.useMemo(() => {
@@ -133,7 +138,7 @@ const MetaDetails = () => {
     ), [metaPath, metaDetails]);
     const originPath = React.useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
-    if (type === 'tv' && (metaDetails.selected === null || metaDetails.metaItem?.content.type === 'Loading')) {
+    if (type === 'tv' && (metaDetails.selected === null || (isEpgProvider && metaDetails.metaItem?.content.type === 'Loading'))) {
         return (
             <div className={styles['metadetails-container']}>
                 <HorizontalNavBar
