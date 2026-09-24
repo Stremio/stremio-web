@@ -121,7 +121,7 @@ const Stream = ({ className = '', compact = false, isEpg = false, videoId = unde
         if (isEpg) closeMenu();
 
         if (profile.settings.playerType !== null) {
-            if (profile.settings.playerType !== 'infuse' || !externalPlayerCallbackCanMarkWatched) {
+            if (profile.settings.playerType !== 'infuse' || !platform.shell.active || !externalPlayerCallbackCanMarkWatched) {
                 markVideoAsWatched();
             }
             toast.show({
@@ -134,7 +134,7 @@ const Stream = ({ className = '', compact = false, isEpg = false, videoId = unde
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick, profile.settings.playerType, externalPlayerCallbackCanMarkWatched, markVideoAsWatched, isEpg, closeMenu]);
+    }, [props.onClick, profile.settings.playerType, platform.shell.active, externalPlayerCallbackCanMarkWatched, markVideoAsWatched, isEpg, closeMenu]);
 
     const copyMagnetLink = React.useCallback((event) => {
         event.preventDefault();

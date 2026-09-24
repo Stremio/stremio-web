@@ -62,6 +62,15 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                                     stream
                                 }
                             });
+                            if (profile.settings.playerType !== null) {
+                                core.transport.dispatch({
+                                    action: 'MetaDetails',
+                                    args: {
+                                        action: 'ExternalPlayerStreamOpened',
+                                        args: stream
+                                    }
+                                });
+                            }
                         },
                         addonName: streams.addon.manifest.name
                     }))
@@ -69,7 +78,7 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
 
                 return streamsByAddon;
             }, {});
-    }, [props.streams]);
+    }, [props.streams, profile.settings.playerType]);
     const effectiveSelectedAddon = Object.prototype.hasOwnProperty.call(streamsByAddon, selectedAddon) ? selectedAddon : ALL_ADDONS_KEY;
     const filteredStreams = React.useMemo(() => {
         return effectiveSelectedAddon === ALL_ADDONS_KEY ?
