@@ -1,0 +1,158 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.selection {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+    color: var(--primary-foreground-color);
+
+    button {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            outline-offset: calc(-1 * var(--focus-outline-size));
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+    }
+}
+
+.header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.75rem 1rem 0.75rem;
+}
+
+.heading {
+    flex: 1;
+    min-width: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: start;
+    font-weight: inherit;
+    border-radius: var(--border-radius);
+    background: transparent;
+
+    &:active {
+        background: var(--overlay-color);
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            background: var(--overlay-color);
+        }
+    }
+}
+
+.back-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.back-icon,
+.heading-icon {
+    flex: none;
+    width: 3.25rem;
+    height: 3.25rem;
+}
+
+.back-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+}
+
+.heading-icon {
+    padding: 0.85rem;
+    color: var(--primary-accent-color);
+}
+
+.search {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    margin: 0 1.25rem 1rem;
+    padding: 0 1rem;
+    border-radius: var(--border-radius);
+    background: var(--overlay-color);
+
+    svg {
+        flex: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        opacity: 0.5;
+    }
+
+    input {
+        flex: 1;
+        min-width: 0;
+        height: 3.25rem;
+        color: inherit;
+        background: transparent;
+    }
+}
+
+.body {
+    flex: 1;
+    min-height: 0;
+    padding: 0.15rem 1.25rem 1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.footer {
+    flex: none;
+    padding: 1rem 1.25rem calc(1rem + var(--safe-area-inset-bottom));
+    border-top: 1px solid var(--overlay-color);
+}
+
+.done {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    background: var(--primary-accent-color);
+}
+
+@media @phone-landscape {
+    .header {
+        padding-bottom: 0.5rem;
+    }
+
+    .footer {
+        padding-top: 0.75rem;
+    }
+}

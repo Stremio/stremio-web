@@ -12,17 +12,27 @@ const { Button, Image, Popup } = require('stremio/components');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useProfile = require('stremio/common/useProfile');
 const { usePlatform } = require('stremio/common/Platform');
+const { formatEpgTimeRange } = require('stremio/common/EPG');
+const { getInterfaceRect } = require('stremio/common/interfaceScale');
 const VideoPlaceholder = require('./VideoPlaceholder');
 const styles = require('./styles');
 
 const VideoLabel = React.forwardRef(({ shouldScroll, ...props }, ref) => {
     React.useEffect(() => {
         if (shouldScroll && ref.current) {
-            ref.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'start'
-            });
+            // Keep selection scrolling inside the list. scrollIntoView also
+            // scrolls outer containers while a drawer is translated offscreen.
+            let container = ref.current.parentElement;
+            while (container && !['auto', 'scroll', 'overlay'].includes(getComputedStyle(container).overflowY)) {
+                container = container.parentElement;
+            }
+            if (container) {
+                const itemBounds = getInterfaceRect(ref.current);
+                const listBounds = getInterfaceRect(container);
+                const top = itemBounds.top < listBounds.top ? itemBounds.top - listBounds.top
+                    : Math.max(0, itemBounds.bottom - listBounds.bottom);
+                if (top !== 0) container.scrollBy({ top, behavior: 'smooth' });
+            }
         }
     }, [shouldScroll, ref]);
 
@@ -33,7 +43,7 @@ VideoLabel.propTypes = {
     shouldScroll: PropTypes.bool,
 };
 
-const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, onSelect, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
+const Video = ({ className, id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, seasonWatched, selected, deepLinks, isEpg, isNow, startTime, endTime, onSelect, onMarkVideoAsWatched, onMarkSeasonAsWatched, ...props }) => {
     const routeFocused = useRouteFocused();
     const profile = useProfile();
     const navigate = useNavigate();
@@ -112,6 +122,10 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
     }, []);
     const renderLabel = React.useMemo(() => function renderLabel({ className, id, title, thumbnail, episode, released, upcoming, watched, progress, scheduled, children, ref, ...props }) {
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
+        const epgTimeRange = isEpg ?
+            formatEpgTimeRange(startTime, endTime, profile.settings.interfaceLanguage)
+            :
+            null;
 
         return (
             <VideoLabel {...props} ref={ref} shouldScroll={selected && (!watched || !!progress)} className={classnames(className, styles['video-container'], { [styles['selected']]: selected, 'active': menuOpen })} title={title}>
@@ -149,21 +163,26 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
                     </div>
                     <div className={styles['flex-row-container']}>
                         {
-                            released instanceof Date && !isNaN(released.getTime()) ?
+                            epgTimeRange !== null ?
                                 <div className={styles['released-container']}>
-                                    {released.toLocaleString(profile.settings.interfaceLanguage, { year: 'numeric', month: 'short', day: 'numeric' })}
+                                    {epgTimeRange}
                                 </div>
                                 :
-                                scheduled ?
-                                    <div className={styles['released-container']} title={t('TBA')}>
-                                        {t('TBA')}
+                                released instanceof Date && !isNaN(released.getTime()) ?
+                                    <div className={styles['released-container']}>
+                                        {released.toLocaleString(profile.settings.interfaceLanguage, { year: 'numeric', month: 'short', day: 'numeric' })}
                                     </div>
                                     :
-                                    null
+                                    scheduled ?
+                                        <div className={styles['released-container']} title={t('TBA')}>
+                                            {t('TBA')}
+                                        </div>
+                                        :
+                                        null
                         }
                         <div className={styles['upcoming-watched-container']}>
                             {
-                                upcoming && !watched ?
+                                upcoming && !watched && !isNow ?
                                     <div className={styles['upcoming-container']}>
                                         <div className={styles['flag-label']}>{t('UPCOMING')}</div>
                                     </div>
@@ -171,7 +190,17 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
                                     null
                             }
                             {
-                                watched ?
+                                isNow ?
+                                    <div className={styles['live-container']}>
+                                        <div className={styles['flag-label']}>
+                                            {t('PLAYER_LIVE', { defaultValue: 'Live' })}
+                                        </div>
+                                    </div>
+                                    :
+                                    null
+                            }
+                            {
+                                watched && !isNow ?
                                     <div className={styles['watched-container']}>
                                         <Icon className={styles['flag-icon']} name={'eye'} />
                                         <div className={styles['flag-label']}>{t('CTX_WATCHED')}</div>
@@ -198,7 +227,7 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
                 {children}
             </VideoLabel>
         );
-    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen]);
+    }, [deepLinks, playButtonOnClick, playButtonOnKeyDown, selected, menuOpen, endTime, isEpg, isNow, profile.settings.hideSpoilers, profile.settings.interfaceLanguage, season, startTime, t]);
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
@@ -231,6 +260,10 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
             watched={watched}
             progress={progress}
             scheduled={scheduled}
+            isEpg={isEpg}
+            isNow={isNow}
+            startTime={startTime}
+            endTime={endTime}
             onClick={videoButtonOnClick}
             {...props}
             onMouseUp={popupLabelOnMouseUp}
@@ -258,6 +291,16 @@ Video.propTypes = {
     watched: PropTypes.bool,
     progress: PropTypes.number,
     scheduled: PropTypes.bool,
+    isEpg: PropTypes.bool,
+    isNow: PropTypes.bool,
+    startTime: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(Date)
+    ]),
+    endTime: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.instanceOf(Date)
+    ]),
     seasonWatched: PropTypes.bool,
     selected: PropTypes.bool,
     deepLinks: PropTypes.shape({

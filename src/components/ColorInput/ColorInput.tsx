@@ -2,18 +2,15 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import * as AColorPicker from 'a-color-picker';
+import { HexAlphaColorPicker } from 'react-colorful';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'stremio/components';
+import BottomSheet from 'stremio/components/BottomSheet';
 import ModalDialog from 'stremio/components/ModalDialog';
 import useBinaryState from 'stremio/common/useBinaryState';
-import ColorPicker from './ColorPicker';
+import useMediaQuery from 'stremio/common/useMediaQuery';
+import screenSizes from 'stremio/common/screen-sizes.less';
 import styles from './ColorInput.less';
-
-const parseColor = (value: string) => {
-    const color = AColorPicker.parseColor(value, 'hexcss4');
-    return typeof color === 'string' ? color : '#ffffffff';
-};
 
 type Props = {
     className: string,
@@ -22,93 +19,81 @@ type Props = {
     onClick?: (event: React.MouseEvent) => void,
 };
 
-type DialogProps = {
-    value: string,
-    onChange?: (value: string) => void,
-    onClose: () => void,
-};
-
-const ColorInputDialog = ({ value, onChange, onClose }: DialogProps) => {
+const ColorInput = ({ className, value, onChange, onClick, ...props }: Props) => {
     const { t } = useTranslation();
-    const [tempValue, setTempValue] = useState(() => {
-        return parseColor(value);
-    });
-
-    const modalDialogOnClick = useCallback((event: React.MouseEvent) => {
-        // @ts-expect-error: Property 'openModalPrevented' does not exist on type 'MouseEvent'.
-        event.nativeEvent.openModalPrevented = true;
-    }, []);
-
-    const modalButtons = useMemo(() => {
-        const selectButtonOnClick = () => {
-            if (typeof onChange === 'function') {
-                onChange(tempValue);
-            }
-
-            onClose();
-        };
-        return [
-            {
-                label: t('SELECT'),
-                props: {
-                    'data-autofocus': true,
-                    onClick: selectButtonOnClick
-                }
-            }
-        ];
-    }, [tempValue, onChange, onClose, t]);
-
-    const colorPickerOnInput = useCallback((color: string) => {
-        setTempValue(parseColor(color));
-    }, []);
-
-    return (
-        <ModalDialog title={t('CHOOSE_COLOR')} buttons={modalButtons} onCloseRequest={onClose} onClick={modalDialogOnClick}>
-            <ColorPicker className={styles['color-picker-container']} value={tempValue} onInput={colorPickerOnInput} />
-        </ModalDialog>
-    );
-};
-
-const ColorInput = ({ className, value, onChange, ...props }: Props) => {
-    const { t } = useTranslation();
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
     const [modalOpen, openModal, closeModal] = useBinaryState(false);
+    const [tempValue, setTempValue] = useState(value);
 
     const labelButtonStyle = useMemo(() => ({
         backgroundColor: value
     }), [value]);
 
     const isTransparent = useMemo(() => {
-        return parseColor(value).endsWith('00');
+        const hex = value.replace('#', '');
+        return hex.length === 8 && hex.endsWith('00');
     }, [value]);
 
     const labelButtonOnClick = useCallback((event: React.MouseEvent) => {
-        if (typeof props.onClick === 'function') {
-            props.onClick(event);
+        if (typeof onClick === 'function') {
+            onClick(event);
         }
 
-        // @ts-expect-error: Property 'openModalPrevented' does not exist on type 'MouseEvent'.
-        if (!event.nativeEvent.openModalPrevented) {
-            openModal();
+        setTempValue(value);
+        openModal();
+    }, [onClick, value, openModal]);
+
+    const selectButtonOnClick = useCallback(() => {
+        if (typeof onChange === 'function') {
+            onChange(tempValue);
         }
-    }, [props.onClick, openModal]);
+
+        closeModal();
+    }, [onChange, tempValue, closeModal]);
+
+    const modalButtons = useMemo(() => [
+        {
+            label: t('SELECT'),
+            props: {
+                'data-autofocus': true,
+                onClick: selectButtonOnClick
+            }
+        }
+    ], [selectButtonOnClick, t]);
+
+    const picker = (
+        <HexAlphaColorPicker className={styles['color-picker']} color={tempValue} onChange={setTempValue} />
+    );
 
     return (
-        <Button title={isTransparent ? t('BUTTON_COLOR_TRANSPARENT') : value} {...props} style={labelButtonStyle} className={classnames(className, styles['color-input-container'])} onClick={labelButtonOnClick}>
+        <React.Fragment>
+            <Button title={isTransparent ? t('BUTTON_COLOR_TRANSPARENT') : value} {...props} style={labelButtonStyle} className={classnames(className, styles['color-input-container'])} onClick={labelButtonOnClick}>
+                {
+                    isTransparent ?
+                        <div className={styles['transparent-label-container']}>
+                            <div className={styles['transparent-label']}>{ t('BUTTON_COLOR_TRANSPARENT') }</div>
+                        </div>
+                        :
+                        null
+                }
+            </Button>
             {
-                isTransparent ?
-                    <div className={styles['transparent-label-container']}>
-                        <div className={styles['transparent-label']}>{ t('BUTTON_COLOR_TRANSPARENT') }</div>
-                    </div>
+                isMobile ?
+                    <BottomSheet className={styles['color-sheet']} title={t('CHOOSE_COLOR')} show={modalOpen} onCloseRequest={closeModal} closeOnContentClick={false}>
+                        {picker}
+                        <Button className={styles['select-button']} onClick={selectButtonOnClick}>
+                            {t('SELECT')}
+                        </Button>
+                    </BottomSheet>
                     :
-                    null
+                    modalOpen ?
+                        <ModalDialog title={t('CHOOSE_COLOR')} buttons={modalButtons} onCloseRequest={closeModal}>
+                            {picker}
+                        </ModalDialog>
+                        :
+                        null
             }
-            {
-                modalOpen ?
-                    <ColorInputDialog key={value} value={value} onChange={onChange} onClose={closeModal} />
-                    :
-                    null
-            }
-        </Button>
+        </React.Fragment>
     );
 };
 

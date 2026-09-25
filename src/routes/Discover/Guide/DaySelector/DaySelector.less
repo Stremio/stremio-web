@@ -1,0 +1,106 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.day-selector {
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1.5rem 1rem 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &.compact {
+        padding: 0;
+    }
+}
+
+.arrow {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    color: var(--primary-foreground-color);
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.15s, background-color 0.15s;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+        background-color: var(--overlay-color);
+    }
+}
+
+.arrow-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    color: var(--primary-foreground-color);
+}
+
+.day {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    min-width: 5rem;
+    padding: 0.5rem 0.8rem;
+    border: 1.5px solid transparent;
+    border-radius: 0.8rem;
+    color: var(--primary-foreground-color);
+    background-color: transparent;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background-color 0.15s, opacity 0.15s;
+
+    &:hover {
+        opacity: 0.85;
+        background-color: var(--overlay-color);
+    }
+
+    &.active {
+        opacity: 1;
+        border-color: rgba(255, 255, 255, 0.55);
+        background-color: rgba(255, 255, 255, 0.07);
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+.weekday {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 100%;
+    color: var(--primary-foreground-color);
+    opacity: 0.5;
+}
+
+.date {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--primary-foreground-color);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@media only screen and (max-width: @minimum) {
+    .day-selector {
+        padding: 0.5rem 1rem 0.75rem 1rem;
+    }
+}

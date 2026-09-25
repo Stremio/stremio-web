@@ -110,7 +110,7 @@
 @media (orientation: landscape) and (max-width: @xsmall) {
     .modal-container, .popup-menu-container {
         .menu-container {
-            max-height: calc(100dvh - var(--horizontal-nav-bar-size) - @parent-height);
+            max-height: calc(var(--dynamic-viewport-height) - var(--horizontal-nav-bar-size) - @parent-height);
         }
     }
 }

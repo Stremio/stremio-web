@@ -1,0 +1,108 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.live-details {
+    position: relative;
+    isolation: isolate;
+    background: #100d20;
+
+    .backdrop,
+    .backdrop-image,
+    .backdrop-shade {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .backdrop {
+        z-index: -1;
+    }
+
+    .backdrop-image {
+        object-fit: cover;
+        object-position: center 20%;
+        opacity: 0.3;
+
+        &.channel-artwork {
+            opacity: 0.18;
+        }
+    }
+
+    .backdrop-shade {
+        background: linear-gradient(90deg, rgba(16, 13, 32, 0.8), rgba(16, 13, 32, 0.1) 70%),
+            linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.4) 45%, #100d20 90%);
+    }
+}
+
+.channel-page {
+    display: grid;
+    grid-template-rows: minmax(min-content, 1fr) min-content;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 clamp(1.5rem, 5vw, 6rem) max(2rem, var(--safe-area-inset-bottom));
+    color: var(--primary-foreground-color);
+    overflow-y: auto;
+}
+
+.guide-layout {
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+}
+
+@media (min-width: (@xsmall + 1px)) {
+    .guide-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(18rem, 25vw, 24rem);
+        gap: 1.75rem;
+        min-height: 12rem;
+    }
+}
+
+@media (min-width: (@xsmall + 1px)) and (min-height: 600px) {
+    .channel-page {
+        grid-template-rows: minmax(0, 1fr) min-content;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: @xxsmall) {
+    .live-details .backdrop-shade {
+        background: linear-gradient(180deg, rgba(16, 13, 32, 0.05), rgba(16, 13, 32, 0.6) 45%, #100d20 85%);
+    }
+
+    .channel-page {
+        padding: 0 1.5rem max(1.5rem, var(--safe-area-inset-bottom));
+    }
+}
+
+@media @phone-landscape {
+    .channel-page {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        grid-template-rows: minmax(0, 1fr);
+        gap: 1.5rem;
+        padding: 0.5rem 1.5rem max(1.5rem, var(--safe-area-inset-bottom));
+        overflow: hidden;
+    }
+
+    .guide-layout {
+        padding-left: 1.5rem;
+        border-left: 1px solid var(--overlay-color);
+    }
+}
+
+@media @small-phone-landscape {
+    .channel-page {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.25fr);
+        column-gap: 1rem;
+        padding: 0.25rem 1rem max(1rem, var(--safe-area-inset-bottom));
+    }
+
+    .guide-layout {
+        padding-left: 1rem;
+    }
+}

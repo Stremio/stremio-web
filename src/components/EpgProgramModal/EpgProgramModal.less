@@ -1,0 +1,61 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/ModalDialog/styles.less') {
+    modal-dialog: modal-dialog-container;
+    modal-content: modal-dialog-content;
+    modal-body: body-container;
+}
+
+:import('~stremio/components/MetaPreview/styles.less') {
+    preview-background: background-image;
+}
+
+.preview {
+    .genres {
+        margin-top: 1.5rem;
+    }
+
+    .channel-button {
+        height: 4rem;
+    }
+}
+
+.modal {
+    .preview {
+        padding: 2rem;
+        max-height: inherit;
+        min-height: 0;
+        color: var(--primary-foreground-color);
+
+        .preview-background {
+            filter: blur(1px);
+        }
+    }
+
+    .modal-dialog {
+        width: 38rem;
+        max-width: calc(100vw - 3rem);
+        max-height: min(48rem, calc(100dvh - 4rem));
+        padding: 0;
+        overflow: hidden;
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            max-height: inherit;
+            overflow: hidden;
+
+            .modal-body,
+            .modal-body:last-child {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                max-height: inherit;
+                overflow: hidden;
+                padding: 0;
+                margin: 0;
+            }
+        }
+    }
+}

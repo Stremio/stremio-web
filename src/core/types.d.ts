@@ -30,7 +30,8 @@ type NewStateEvent = {
 
 type CoreEvent = {
     event: 'UserPulledFromAPI' | 'UserLibraryMissing' | 'UserAuthenticated' | 'UserAddonsLocked' |
-        'LibraryItemsPulledFromAPI' | 'LibraryItemsPushedToStorage' | 'LibrarySyncWithAPIPlanned',
+        'LibraryItemsPulledFromAPI' | 'LibraryItemsPushedToStorage' | 'LibrarySyncWithAPIPlanned' |
+        'PlayingOnDevice' | 'StoppedCasting' | 'CastingSubtitlesChanged',
     args: object,
 };
 

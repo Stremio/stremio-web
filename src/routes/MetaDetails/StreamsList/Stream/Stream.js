@@ -8,11 +8,12 @@ const { t } = require('i18next');
 const { useCore } = require('stremio/core');
 const { useProfile, usePlatform, useToast, useBinaryState } = require('stremio/common');
 const { Button, Image, Popup } = require('stremio/components');
+const ActionButton = require('stremio/components/MetaPreview/ActionButton');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
 
-const Stream = ({ className, videoId, videoReleased, addonName, name, description, thumbnail, progress, deepLinks, ...props }) => {
+const Stream = ({ className = '', compact = false, isEpg = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, externalPlayerCallbackCanMarkWatched, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
@@ -117,8 +118,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             return;
         }
 
+        if (isEpg) closeMenu();
+
         if (profile.settings.playerType !== null) {
-            markVideoAsWatched();
+            if (profile.settings.playerType !== 'infuse' || !platform.shell.active || !externalPlayerCallbackCanMarkWatched) {
+                markVideoAsWatched();
+            }
             toast.show({
                 type: 'success',
                 title: 'Stream opened in external player',
@@ -129,7 +134,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
         if (typeof props.onClick === 'function') {
             props.onClick(event);
         }
-    }, [props.onClick, profile.settings, markVideoAsWatched]);
+    }, [props.onClick, profile.settings.playerType, platform.shell.active, externalPlayerCallbackCanMarkWatched, markVideoAsWatched, isEpg, closeMenu]);
 
     const copyMagnetLink = React.useCallback((event) => {
         event.preventDefault();
@@ -202,6 +207,12 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     ), []);
 
     const renderLabel = React.useMemo(() => function renderLabel({ className, children, ...props }) {
+        if (compact) {
+            return <ActionButton className={classnames(className, styles['stream-action'])} icon={'play'} label={name || addonName} variant={'wide'} href={href} target={target} download={download} onClick={onClick} {...props}>
+                {children}
+            </ActionButton>;
+        }
+
         return (
             <Button className={classnames(className, styles['stream-container'], { 'active': menuOpen })} title={addonName} href={href} target={target} download={download} onClick={onClick} {...props}>
                 <div className={styles['info-container']}>
@@ -235,7 +246,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 {children}
             </Button>
         );
-    }, [thumbnail, progress, addonName, name, description, href, target, download, onClick, menuOpen]);
+    }, [compact, thumbnail, progress, addonName, name, description, href, target, download, onClick, menuOpen]);
 
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
@@ -243,7 +254,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 <div className={styles['context-menu-title']}>
                     {description}
                 </div>
-                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
+                <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')} href={isEpg ? href : undefined} target={isEpg ? target : undefined} download={isEpg ? download : undefined} onClick={isEpg ? onClick : undefined}>
                     <Icon className={styles['menu-icon']} name={'play'} />
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
@@ -255,14 +266,14 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                         </Button>
                 }
                 {
-                    magnetLink &&
+                    !isEpg && magnetLink &&
                         <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_MAGNET_LINK')} onClick={copyMagnetLink}>
                             <Icon className={styles['menu-icon']} name={'magnet-link'} />
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_MAGNET_LINK')}</div>
                         </Button>
                 }
                 {
-                    downloadLink &&
+                    !isEpg && downloadLink &&
                         <Button className={styles['context-menu-option-container']} title={t('CTX_DOWNLOAD_VIDEO')} onClick={copyDownloadLink}>
                             <Icon className={styles['menu-icon']} name={'download'} />
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
@@ -270,7 +281,7 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
                 }
             </div>
         );
-    }, [copyStreamLink, onClick]);
+    }, [copyStreamLink, onClick, isEpg, href, target, download]);
 
     React.useEffect(() => {
         if (!routeFocused) {
@@ -285,6 +296,8 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
             onLongPress={popupLabelOnLongPress}
             onContextMenu={popupLabelOnContextMenu}
             open={menuOpen}
+            portal={isEpg}
+            menuClassName={isEpg ? styles['epg-menu'] : undefined}
             onCloseRequest={closeMenu}
             renderLabel={renderLabel}
             renderMenu={renderMenu}
@@ -296,6 +309,8 @@ Stream.Placeholder = StreamPlaceholder;
 
 Stream.propTypes = {
     className: PropTypes.string,
+    compact: PropTypes.bool,
+    isEpg: PropTypes.bool,
     videoId: PropTypes.string,
     videoReleased: PropTypes.instanceOf(Date),
     addonName: PropTypes.string,
@@ -321,6 +336,7 @@ Stream.propTypes = {
             })
         })
     }),
+    externalPlayerCallbackCanMarkWatched: PropTypes.bool,
     onClick: PropTypes.func
 };
 

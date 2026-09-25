@@ -26,6 +26,7 @@ const Option = forwardRef<HTMLButtonElement, Props>(({ option, selectedValue, on
             key={option.id}
             onClick={handleClick}
             aria-selected={selected}
+            data-autofocus={selected || undefined}
         >
             <div className={styles['label']}>{ option.label }</div>
             {

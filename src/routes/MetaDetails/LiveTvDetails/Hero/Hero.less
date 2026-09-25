@@ -1,0 +1,311 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.hero {
+    display: flex;
+    align-items: center;
+    min-height: 0;
+    padding: 1.5rem 0 2rem;
+    overflow: visible;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.8rem, 2.2vh, 1.75rem);
+    width: 65%;
+    max-width: 48rem;
+    min-width: 0;
+    max-height: 100%;
+    min-height: 0;
+    overflow: visible;
+}
+
+.channel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.channel-logo {
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+
+    > img,
+    > svg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.channel-identity {
+    min-width: 0;
+}
+
+.channel-name {
+    margin: 0 0 0.2rem;
+    font-size: 1.1rem;
+    line-height: 1.25;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.addon-name {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.current-information {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: visible;
+
+    > *:not(.description) {
+        flex: none;
+    }
+}
+
+.title {
+    margin: 0.8rem 0 0;
+    max-width: 17em;
+    font-size: clamp(2rem, 5.2vh, 3.8rem);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
+}
+
+.current-time {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.65);
+
+    > div {
+        font-size: inherit;
+    }
+}
+
+.program-status {
+    color: var(--primary-accent-color);
+}
+
+.content-rating {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-foreground-color);
+
+    > img {
+        max-width: 2rem;
+        height: 1.2rem;
+        object-fit: contain;
+    }
+}
+
+.live-badge {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #ff7e93;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.live-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.description {
+    flex: 0 1 auto;
+    max-height: clamp(6rem, 20vh, 14rem);
+    margin: 1rem 0 0;
+    padding-right: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.genres {
+    margin-top: 1rem;
+}
+
+.broadcast-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 29rem;
+    margin-top: 1.2rem;
+
+    > div:last-child {
+        flex: none;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+.progress-track {
+    flex: 1;
+    height: 0.2rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.14);
+
+    > div {
+        height: 100%;
+        border-radius: inherit;
+        background: var(--primary-accent-color);
+    }
+}
+
+@media (max-width: @xxsmall) {
+    .hero {
+        align-items: flex-end;
+        padding: 1rem 0 1.75rem;
+    }
+
+    .hero-content {
+        width: 100%;
+    }
+
+    .channel-logo {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .title {
+        font-size: clamp(1.6rem, 6.5vw, 2.5rem);
+    }
+
+    .description {
+        max-height: none;
+        margin-top: 0.75rem;
+        padding-right: 0;
+        font-size: 0.85rem;
+        overflow: visible;
+    }
+}
+
+@media (max-height: @short) {
+    .hero {
+        padding: 0.75rem 0 1.25rem;
+    }
+
+    .hero-content {
+        gap: 0.9rem;
+    }
+
+    .description,
+    .broadcast-progress {
+        margin-top: 0.75rem;
+    }
+}
+
+@media (max-height: @xshort) {
+    .hero-content {
+        gap: 0.75rem;
+    }
+
+    .title {
+        font-size: clamp(1.5rem, 4.8vh, 2.5rem);
+        margin-top: 0.5rem;
+    }
+}
+
+@media @phone-landscape {
+    .hero {
+        min-width: 0;
+        padding: 0;
+    }
+
+    .hero-content {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: clamp(0.75rem, 3vh, 1.25rem);
+        width: 100%;
+        height: 100%;
+    }
+
+    .channel-logo {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .channel-identity {
+        display: block;
+    }
+
+    .channel-name {
+        margin-bottom: 0.2rem;
+        font-size: 1rem;
+    }
+
+    .addon-name {
+        font-size: 0.75rem;
+    }
+
+    .current-information {
+        min-height: 0;
+        padding-right: 0.5rem;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+    }
+
+    .current-time {
+        gap: 0.4rem 0.65rem;
+        font-size: 0.75rem;
+    }
+
+    .title {
+        margin-top: 0.75rem;
+        font-size: clamp(1.6rem, 6vh, 2.15rem);
+    }
+
+    .description {
+        flex: none;
+        max-height: none;
+        margin-top: 0.85rem;
+        padding-right: 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        overflow: visible;
+    }
+
+    .genres {
+        margin-top: 0.85rem;
+    }
+
+    .broadcast-progress {
+        margin-top: 1rem;
+    }
+}
+
+@media @small-phone-landscape {
+    .current-information {
+        padding-bottom: 0.75rem;
+        mask-image: linear-gradient(#000 calc(100% - 0.75rem), transparent);
+    }
+}
+
+@media (min-width: (@xsmall + 1px)) and (min-height: 600px) {
+    .description {
+        min-height: 3.2rem;
+    }
+}

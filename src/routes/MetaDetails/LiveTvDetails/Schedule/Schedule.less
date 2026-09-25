@@ -1,0 +1,177 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.schedule {
+    --schedule-height: 10rem;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+
+    [hidden] {
+        display: none;
+    }
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.view-controls,
+.program-navigation,
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    > [role='button'] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--border-radius);
+        color: var(--primary-foreground-color);
+        font-size: 0.9rem;
+        line-height: 1;
+
+        &:hover,
+        &:focus {
+            background-color: var(--overlay-color);
+        }
+
+        &[aria-pressed='true'] {
+            color: var(--primary-accent-color);
+            background-color: var(--overlay-color);
+        }
+
+        > svg {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+}
+
+.zoom-controls[aria-hidden='true'] {
+    visibility: hidden;
+}
+
+.zoom-icon {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+
+    &::before,
+    &.zoom-in::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1rem;
+        height: 1.5px;
+        background: currentColor;
+        transform: translate(-50%, -50%);
+    }
+
+    &.zoom-in::after {
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+}
+
+.empty {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 5rem;
+    color: rgba(255, 255, 255, 0.5);
+
+    > svg {
+        flex: none;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    > div {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: @xxsmall) {
+    .title {
+        font-size: 1.05rem;
+    }
+}
+
+@media (pointer: coarse) {
+    .view-controls,
+    .program-navigation,
+    .zoom-controls {
+        > [role='button'] {
+            min-width: 44px;
+            min-height: 44px;
+        }
+    }
+}
+
+@media @phone-landscape {
+    .schedule {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .header,
+    .navigation {
+        flex: none;
+    }
+
+    .header {
+        flex-wrap: nowrap;
+        margin: 0;
+    }
+
+    .title {
+        font-size: 1.05rem;
+    }
+
+    .navigation {
+        order: 1;
+        margin: 0;
+    }
+
+    .view-controls,
+    .program-navigation,
+    .zoom-controls {
+        > [role='button'] {
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+    }
+
+    .empty {
+        flex: 1;
+    }
+}

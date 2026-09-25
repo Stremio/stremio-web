@@ -2,6 +2,10 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    sheet-content: content;
+}
+
 .color-input-container {
     position: relative;
     z-index: 0;
@@ -29,6 +33,59 @@
     }
 }
 
-.color-picker-container {
-    margin: 1rem 0;
+.color-picker {
+    &:global(.react-colorful) {
+        width: 24rem;
+        height: auto;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    :global(.react-colorful__saturation) {
+        height: 14rem;
+        border-bottom: none;
+        border-radius: var(--border-radius);
+    }
+
+    :global(.react-colorful__hue),
+    :global(.react-colorful__alpha) {
+        height: 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    :global(.react-colorful__pointer) {
+        width: 1.75rem;
+        height: 1.75rem;
+        border: 0.2rem solid @color-surface-light5;
+        box-shadow: 0 0.1rem 0.4rem @color-background-dark5-60;
+    }
+}
+
+.color-sheet {
+    display: flex !important;
+
+    .sheet-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 0 1.5rem max(1rem, var(--safe-area-inset-bottom));
+    }
+
+    .color-picker {
+        width: auto;
+        padding: 0;
+    }
+
+    .select-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 3.25rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+        background: var(--primary-accent-color);
+    }
 }

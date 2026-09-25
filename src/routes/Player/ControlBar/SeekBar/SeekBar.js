@@ -5,18 +5,28 @@ const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
+const { useTranslation } = require('react-i18next');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { useBinaryState } = require('stremio/common');
+const { getInterfaceScale } = require('stremio/common/interfaceScale');
 const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 
-const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbackSpeed }) => {
-    const disabled = time === null || isNaN(time) || duration === null || isNaN(duration);
+const formatLiveDelay = (delay) => `−${formatTime(Math.max(0, delay)).replace(/^00:/, '').replace(/^0(?=\d:)/, '')}`;
+
+const SeekBar = ({ className, time, duration, buffered, onSeekRequested, onPlayRequested, playbackSpeed, live, liveTiming, seekable, paused, buffering }) => {
+    const { t } = useTranslation();
+    const minimum = live && seekable ? liveTiming.start : 0;
+    const maximum = live ? seekable ? liveTiming.end : 100 : duration;
+    const disabled = !seekable || !Number.isFinite(time) || !Number.isFinite(maximum) || maximum <= minimum;
     const routeFocused = useRouteFocused();
     const sliderRef = React.useRef(null);
     const [seekTime, setSeekTime] = React.useState(null);
     const [hover, setHover] = React.useState(null);
+    const displayedTime = seekTime !== null ? seekTime : time;
+    const behindLive = live && seekable && Number.isFinite(displayedTime) && maximum - displayedTime > liveTiming.tolerance;
+    const currentTime = live && !behindLive ? maximum : displayedTime;
 
     const [remainingTimeMode,,, toggleRemainingTimeMode] = useBinaryState(false);
     const resetTimeDebounced = React.useCallback(debounce(() => {
@@ -34,8 +44,9 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
 
         const { x, y, width } = sliderRef.current.getBoundingClientRect();
         const position = Math.min(Math.max((event.clientX - x) / width, 0), 1);
-        setHover({ time: position * duration, x: x + position * width, y });
-    }, [disabled, duration]);
+        const scale = getInterfaceScale();
+        setHover({ time: minimum + position * (maximum - minimum), x: (x + position * width) / scale, y: y / scale });
+    }, [disabled, minimum, maximum]);
     const onMouseLeave = React.useCallback(() => {
         setHover(null);
     }, []);
@@ -46,6 +57,11 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
             onSeekRequested(time);
         }
     }, [onSeekRequested]);
+    const goLive = () => {
+        if (disabled) return;
+        onComplete(maximum);
+        if (typeof onPlayRequested === 'function') onPlayRequested();
+    };
     React.useLayoutEffect(() => {
         if (!routeFocused || disabled) {
             resetTimeDebounced.cancel();
@@ -60,19 +76,37 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
     }, []);
     return (
         <div className={classnames(className, styles['seek-bar-container'], { 'active': seekTime !== null })}>
-            <div className={styles['label']}>{formatTime(seekTime !== null ? seekTime : time)}</div>
+            <div className={styles['label']}>
+                {
+                    live ?
+                        behindLive ? <span className={styles['live-delay']}>{formatLiveDelay(maximum - displayedTime)}</span> :
+                            <div className={classnames(styles['live-badge-layer'], { [styles['at-live']]: paused === false && !buffering })}>
+                                <div className={styles['live-badge-label']}>{t('PLAYER_LIVE')}</div>
+                            </div>
+                        :
+                        formatTime(currentTime)
+                }
+            </div>
             <div ref={sliderRef} className={styles['slider-wrapper']} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave}>
                 <Slider
-                    className={classnames(styles['slider'], { 'active': seekTime !== null })}
+                    className={classnames(styles['slider'], { 'active': seekTime !== null, [styles['live-slider']]: live })}
                     value={
                         !disabled ?
-                            seekTime !== null ? seekTime : time
+                            currentTime
                             :
-                            0
+                            live ?
+                                maximum
+                                :
+                                0
                     }
-                    buffered={buffered}
-                    minimumValue={0}
-                    maximumValue={duration}
+                    buffered={
+                        live ?
+                            null
+                            :
+                            buffered
+                    }
+                    minimumValue={minimum}
+                    maximumValue={maximum}
                     disabled={disabled}
                     onSlide={onSlide}
                     onComplete={onComplete}
@@ -81,7 +115,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
                     hover !== null && seekTime === null && !disabled ?
                         ReactDOM.createPortal(
                             <div className={styles['seek-tooltip']} style={{ left: `${hover.x}px`, top: `${hover.y}px` }}>
-                                {formatTime(hover.time)}
+                                {live ? maximum - hover.time <= liveTiming.tolerance ? t('PLAYER_LIVE') : formatLiveDelay(maximum - hover.time) : formatTime(hover.time)}
                             </div>,
                             document.body
                         )
@@ -89,13 +123,17 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, playbac
                         null
                 }
             </div>
-            <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
-                <div className={styles['label']}>
-                    {remainingTimeMode && duration !== null && !isNaN(duration)
-                        ? formatTime((duration - time)/playbackSpeed, '-')
-                        : formatTime(duration) }
+            {live ?
+                <div className={styles['live-action']}>
+                    {seekable && (behindLive || paused) && <Button className={styles['go-live']} role={'button'} onClick={goLive}>{t('PLAYER_GO_LIVE', { defaultValue: 'Go live' })}</Button>}
                 </div>
-            </Button>
+                : <Button onClick={toggleRemainingTimeMode} tabIndex={-1}>
+                    <div className={styles['label']}>
+                        {remainingTimeMode && duration !== null && !isNaN(duration)
+                            ? formatTime((duration - currentTime)/playbackSpeed, '-')
+                            : formatTime(duration) }
+                    </div>
+                </Button>}
         </div>
     );
 };
@@ -106,7 +144,13 @@ SeekBar.propTypes = {
     duration: PropTypes.number,
     buffered: PropTypes.number,
     onSeekRequested: PropTypes.func,
-    playbackSpeed: PropTypes.number
+    onPlayRequested: PropTypes.func,
+    playbackSpeed: PropTypes.number,
+    live: PropTypes.bool,
+    liveTiming: PropTypes.shape({ start: PropTypes.number, end: PropTypes.number, tolerance: PropTypes.number }),
+    seekable: PropTypes.bool,
+    paused: PropTypes.bool,
+    buffering: PropTypes.bool
 };
 
 module.exports = SeekBar;
