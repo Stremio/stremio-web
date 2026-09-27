@@ -58,9 +58,9 @@ const Discover = () => {
     const [addonModalOpen, openAddonModal, closeAddonModal] = useBinaryState(false);
     const [mobilePreviewOpen, openMobilePreview, closeMobilePreview] = useBinaryState(false);
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
-    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
+    const isMobile = useMediaQuery(`${screenSizes.phoneLandscape}, ${screenSizes.phonePortrait}`);
 
-    const compactEpgDate = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: 500px) and (orientation: landscape)`);
+    const compactEpgDate = useMediaQuery(screenSizes.phoneLandscape);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&
