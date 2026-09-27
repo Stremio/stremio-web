@@ -1,7 +1,5 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
-
 .overview {
     display: flex;
     flex-direction: column;
@@ -62,7 +60,7 @@
     }
 }
 
-@media @phone-landscape {
+@media (orientation: landscape) {
     .overview {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -1,7 +1,5 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
-
 :import('~stremio/components/BottomSheet/BottomSheet.less') {
     sheet-container: container;
     sheet-content: content;
@@ -123,7 +121,12 @@
 
 @media (orientation: landscape) {
     .sheet .preview {
+        height: auto;
         padding: 1.5rem;
+
+        .preview-info .preview-logo {
+            object-position: left center;
+        }
     }
 }
 
@@ -148,8 +151,9 @@
         }
     }
 
-    @media @phone-landscape {
+    @media (orientation: landscape) {
         .sheet-container {
+            height: auto;
             max-width: min(56rem, calc(100% - 3rem - var(--safe-area-inset-left) - var(--safe-area-inset-right)));
         }
     }
