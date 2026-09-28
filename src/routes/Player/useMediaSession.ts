@@ -23,7 +23,7 @@ const useMediaSession = (
     // Playback state
     useEffect(() => {
         if (navigator.mediaSession) {
-            const playbackState = videoState.paused === null ? 'none' : videoState.paused ? 'paused' : 'playing';
+            const playbackState = !videoState.loaded || typeof videoState.paused !== 'boolean' ? 'none' : videoState.paused ? 'paused' : 'playing';
             navigator.mediaSession.playbackState = playbackState;
         }
 
