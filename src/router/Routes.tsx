@@ -5,6 +5,7 @@ import { flushSync } from 'react-dom';
 import { Routes as RRoutes, Route as RRoute, useLocation, useNavigate, useNavigationType, matchPath } from 'react-router';
 import type { Location } from 'react-router';
 import { useProfile } from 'stremio/common';
+import { supportsViewTransitions } from 'stremio/common/Platform/device';
 import routerPaths from './routerPaths';
 import Route from './Route';
 
@@ -74,6 +75,7 @@ const Routes = () => {
 
         if (
             navigationType === 'PUSH' &&
+            supportsViewTransitions &&
             typeof document.startViewTransition === 'function' &&
             window.matchMedia('(pointer: fine)').matches &&
             !window.matchMedia('(prefers-reduced-motion: reduce)').matches

@@ -33,7 +33,11 @@ const os = bowser.getOSName().toLowerCase();
 const name = isVisionOS ? 'visionos' : isIOS ? 'ios' : os || 'unknown';
 const isMobile = ['ios', 'android'].includes(name);
 
+// WebKitGTK crashes or stops responding when a view transition starts on navigation.
+const supportsViewTransitions = !(os === 'linux' && bowser.getEngineName() === 'WebKit');
+
 export {
     name,
     isMobile,
+    supportsViewTransitions,
 };
