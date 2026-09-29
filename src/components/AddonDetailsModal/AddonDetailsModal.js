@@ -9,6 +9,7 @@ const { withCoreSuspender } = require('stremio/common/CoreSuspender');
 const { usePlatform } = require('stremio/common/Platform');
 const AddonDetailsWithRemoteAndLocalAddon = withRemoteAndLocalAddon(require('./AddonDetails'));
 const useAddonDetails = require('./useAddonDetails');
+const receivesWatchActivity = require('./receivesWatchActivity');
 const styles = require('./styles');
 
 function withRemoteAndLocalAddon(AddonDetails) {
@@ -36,6 +37,7 @@ function withRemoteAndLocalAddon(AddonDetails) {
                 types={addon.manifest.types}
                 transportUrl={addon.transportUrl}
                 official={addon.flags.official}
+                receivesWatchActivity={receivesWatchActivity(addon.manifest)}
             />
         );
     };
@@ -48,6 +50,18 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const core = useCore();
     const platform = usePlatform();
     const addonDetails = useAddonDetails(transportUrl);
+    const [watchActivityTrusted, setWatchActivityTrusted] = React.useState(false);
+    const requiresWatchActivityTrust = addonDetails.localAddon === null &&
+        addonDetails.remoteAddon !== null &&
+        addonDetails.remoteAddon.content.type === 'Ready' &&
+        receivesWatchActivity(addonDetails.remoteAddon.content.content.manifest);
+    const modalCheckboxes = React.useMemo(() => requiresWatchActivityTrust ? [
+        {
+            label: t('ADDON_WATCH_ACTIVITY_TRUST'),
+            checked: watchActivityTrusted,
+            onChange: () => setWatchActivityTrusted((value) => !value),
+        }
+    ] : [], [t, requiresWatchActivityTrust, watchActivityTrusted]);
     const modalButtons = React.useMemo(() => {
         const cancelButton = {
             className: styles['cancel-button'],
@@ -117,7 +131,11 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                     className: styles['install-button'],
                     label: t('ADDON_INSTALL'),
                     props: {
+                        disabled: requiresWatchActivityTrust && !watchActivityTrusted,
                         onClick: (event) => {
+                            if (requiresWatchActivityTrust && !watchActivityTrusted) {
+                                return;
+                            }
                             core.transport.dispatch({
                                 action: 'Ctx',
                                 args: {
@@ -138,12 +156,12 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 :
                 null;
         return configureButton && toggleButton ? [cancelButton, configureButton, toggleButton] : configureButton ? [cancelButton, configureButton] : toggleButton ? [cancelButton, toggleButton] : [cancelButton];
-    }, [addonDetails, onCloseRequest]);
+    }, [addonDetails, onCloseRequest, requiresWatchActivityTrust, watchActivityTrusted]);
     const modalBackground = React.useMemo(() => {
         return addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background : null;
     }, [addonDetails.remoteAddon]);
     return (
-        <ModalDialog className={styles['addon-details-modal-container']} title={t('STREMIO_COMMUNITY_ADDON')} buttons={modalButtons} background={modalBackground} onCloseRequest={onCloseRequest}>
+        <ModalDialog className={styles['addon-details-modal-container']} title={t('STREMIO_COMMUNITY_ADDON')} checkboxes={modalCheckboxes} buttons={modalButtons} background={modalBackground} onCloseRequest={onCloseRequest}>
             {
                 addonDetails.selected === null ?
                     <div className={styles['addon-details-message-container']}>

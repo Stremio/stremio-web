@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: 0.63.2
-        version: 0.63.2
+        specifier: 0.64.0
+        version: 0.64.0
       '@stremio/stremio-icons':
         specifier: 5.15.0
         version: 5.15.0
@@ -96,8 +96,8 @@ importers:
         specifier: github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6
         version: https://codeload.github.com/Stremio/spatial-navigation/tar.gz/64871b1422466f5f45d24ebc8bbd315b2ebab6a6
       stremio-translations:
-        specifier: github:Stremio/stremio-translations#83fa4e8ef0d19a0cf51a5e2d9784ac9ad3539214
-        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/83fa4e8ef0d19a0cf51a5e2d9784ac9ad3539214
+        specifier: github:Stremio/stremio-translations#779d9b141f3d0b4c2c24fec5686bb5581635f27e
+        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/779d9b141f3d0b4c2c24fec5686bb5581635f27e
       url:
         specifier: 0.11.4
         version: 0.11.4
@@ -1427,8 +1427,8 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@0.63.2':
-    resolution: {integrity: sha512-DkTsFfBWS367T7eYqs2Q+0NA+aKjCkGld3d0bD6g5abit78arjiAVXKwV+Qy74hRs6VC9yTvc6bKwpLC5LYt3Q==}
+  '@stremio/stremio-core-web@0.64.0':
+    resolution: {integrity: sha512-sMIbI6wP+ET+q5Rm8j5/Tx18KXvay7Oa24kEkdhWUYLfBAlkLd/Lpwp3uGcww/5VKL0/N8lTW8BqdVhRDuLMQg==}
 
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
@@ -4483,9 +4483,9 @@ packages:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/83fa4e8ef0d19a0cf51a5e2d9784ac9ad3539214:
-    resolution: {gitHosted: true, integrity: sha512-6lsRwzyV5t2kP9Mnc5dU6IK5UKci+L3XlH7bsaH3YIPobGhKmPBxpDDO/6J6oMfBGKKunl0Ghq0FfoX8iMKjcQ==, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/83fa4e8ef0d19a0cf51a5e2d9784ac9ad3539214}
-    version: 1.53.3
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/779d9b141f3d0b4c2c24fec5686bb5581635f27e:
+    resolution: {gitHosted: true, integrity: sha512-EczW2PqN65mrc6uLYqYvwOJmVTWyOtgxIbhb7/2fQ7Td9dfspFfwW2LyzZp0+l+nGSdepw6gcWHlIX2a5NLMkg==, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/779d9b141f3d0b4c2c24fec5686bb5581635f27e}
+    version: 1.53.5
 
   string-length@4.0.2:
     resolution: {integrity: sha512-+l6rNN5fYHNhZZy41RXsYptCjA2Igmq4EG7kZAYFQI1E1VTXarr6ZPXBg6eq7Y6eK4FEhY6AJlyuFIb/v/S0VQ==}
@@ -6519,7 +6519,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@0.63.2':
+  '@stremio/stremio-core-web@0.64.0':
     dependencies:
       '@babel/runtime': 7.24.1
 
@@ -10106,7 +10106,7 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/83fa4e8ef0d19a0cf51a5e2d9784ac9ad3539214: {}
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/779d9b141f3d0b4c2c24fec5686bb5581635f27e: {}
 
   string-length@4.0.2:
     dependencies:
