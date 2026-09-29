@@ -73,17 +73,6 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
 
     return (
         <div className={styles['guide']}>
-            {
-                error !== null ?
-                    <div className={styles['error']}>
-                        <div className={styles['error-message']}>{error}</div>
-                        <Button className={styles['error-retry']} onClick={onRetry}>
-                            {t('TRY_AGAIN')}
-                        </Button>
-                    </div>
-                    :
-                    null
-            }
             <Header
                 headerRef={headerRef}
                 channelColumnWidth={CHANNEL_COLUMN_WIDTH}
@@ -156,6 +145,17 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
                     !initialLoading && channels.length === 0 && error === null ?
                         <div className={styles['empty']} role={'status'}>
                             {t('NO_STREAM')}
+                        </div>
+                        :
+                        null
+                }
+                {
+                    error !== null ?
+                        <div className={styles['error']}>
+                            <div className={styles['error-message']}>{error}</div>
+                            <Button className={styles['error-retry']} onClick={onRetry}>
+                                {t('TRY_AGAIN')}
+                            </Button>
                         </div>
                         :
                         null

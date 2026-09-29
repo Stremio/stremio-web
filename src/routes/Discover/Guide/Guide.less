@@ -60,21 +60,27 @@
 }
 
 .error {
+    position: absolute;
+    inset: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    padding: 2rem;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    pointer-events: none;
 }
 
 .error-message {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     color: var(--primary-foreground-color);
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 .error-retry {
     flex: none;
+    pointer-events: auto;
     padding: 0.5rem 1.5rem;
     border-radius: 3rem;
     font-size: 1.1rem;
