@@ -31,7 +31,7 @@ const ALLOWED_LINK_REDIRECTS = [
 const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, metadata, children, actions, showIcon = 'play', onShowClick }, ref) => {
     const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
-    const isMobileLandscape = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: 500px) and (orientation: landscape)`);
+    const isMobileLandscape = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: ${screenSizes['phone-landscape-size']}) and (orientation: landscape)`);
     const iconActions = compact && isMobileLandscape;
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
