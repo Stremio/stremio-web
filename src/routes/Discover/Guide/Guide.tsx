@@ -71,19 +71,17 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
         }
     }, [hasNextPage, loading, nearEnd, loadNextPage]);
 
+    const errorContent = (
+        <>
+            <div className={styles['error-message']}>{error}</div>
+            <Button className={styles['error-retry']} onClick={onRetry}>
+                {t('TRY_AGAIN')}
+            </Button>
+        </>
+    );
+
     return (
         <div className={styles['guide']}>
-            {
-                error !== null ?
-                    <div className={styles['error']}>
-                        <div className={styles['error-message']}>{error}</div>
-                        <Button className={styles['error-retry']} onClick={onRetry}>
-                            {t('TRY_AGAIN')}
-                        </Button>
-                    </div>
-                    :
-                    null
-            }
             <Header
                 headerRef={headerRef}
                 channelColumnWidth={CHANNEL_COLUMN_WIDTH}
@@ -150,12 +148,28 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
                                 :
                                 null
                         }
+                        {
+                            error !== null && channels.length > 0 ?
+                                <div className={styles['next-page-error']}>
+                                    {errorContent}
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                 </div>
                 {
                     !initialLoading && channels.length === 0 && error === null ?
                         <div className={styles['empty']} role={'status'}>
                             {t('NO_STREAM')}
+                        </div>
+                        :
+                        null
+                }
+                {
+                    error !== null && channels.length === 0 ?
+                        <div className={styles['error']}>
+                            {errorContent}
                         </div>
                         :
                         null
