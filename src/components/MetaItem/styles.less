@@ -122,6 +122,10 @@
             opacity: 0;
             transition: opacity 0.1s ease-in;
 
+            @media (any-pointer: coarse) {
+                display: none;
+            }
+
             .dismiss-icon {
                 z-index: 1;
                 position: relative;
@@ -393,6 +397,10 @@
         opacity: 0;
         transform: translateX(1rem);
         transition: opacity 0.1s ease-out;
+
+        @media (any-pointer: coarse) {
+            opacity: 1;
+        }
 
         .icon {
             display: block;
