@@ -71,6 +71,15 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
         }
     }, [hasNextPage, loading, nearEnd, loadNextPage]);
 
+    const errorContent = (
+        <>
+            <div className={styles['error-message']}>{error}</div>
+            <Button className={styles['error-retry']} onClick={onRetry}>
+                {t('TRY_AGAIN')}
+            </Button>
+        </>
+    );
+
     return (
         <div className={styles['guide']}>
             <Header
@@ -139,6 +148,14 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
                                 :
                                 null
                         }
+                        {
+                            error !== null && channels.length > 0 ?
+                                <div className={styles['next-page-error']}>
+                                    {errorContent}
+                                </div>
+                                :
+                                null
+                        }
                     </div>
                 </div>
                 {
@@ -150,12 +167,9 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
                         null
                 }
                 {
-                    error !== null ?
+                    error !== null && channels.length === 0 ?
                         <div className={styles['error']}>
-                            <div className={styles['error-message']}>{error}</div>
-                            <Button className={styles['error-retry']} onClick={onRetry}>
-                                {t('TRY_AGAIN')}
-                            </Button>
+                            {errorContent}
                         </div>
                         :
                         null
