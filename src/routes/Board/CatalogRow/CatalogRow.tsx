@@ -2,7 +2,6 @@
 
 import React, { useMemo } from 'react';
 import classnames from 'classnames';
-import Icon from '@stremio/stremio-icons/react';
 import RowHeader from '../RowHeader';
 import useRowScroll from '../useRowScroll';
 import styles from './CatalogRow.less';
@@ -12,7 +11,6 @@ const MetaItem: React.ComponentType<Record<string, unknown>> = require('stremio/
 
 const MAX_ITEMS = 20;
 const PLACEHOLDER_ITEMS = 10;
-const IMDB_LINK_CATEGORY = 'imdb';
 
 type Props = {
     className?: string,
@@ -31,25 +29,13 @@ const getErrorMessage = (error: LoadableError) => {
 };
 
 const InfoStrip = ({ item }: { item: MetaItemPreviewCatalogsWithExtra }) => {
-    const rating = item.links?.find(({ category }) => category === IMDB_LINK_CATEGORY)?.name ?? null;
-    const year = typeof item.releaseInfo === 'string' && item.releaseInfo.length > 0 ? item.releaseInfo : null;
-
-    if (rating === null && year === null) {
+    if (typeof item.releaseInfo !== 'string' || item.releaseInfo.length === 0) {
         return null;
     }
 
     return (
         <div className={styles['info-strip']}>
-            {year !== null ? <div className={styles['info-item']}>{year}</div> : null}
-            {
-                rating !== null ?
-                    <div className={classnames(styles['info-item'], styles['rating'])}>
-                        <Icon className={styles['rating-icon']} name={'imdb'} />
-                        {rating}
-                    </div>
-                    :
-                    null
-            }
+            <div className={styles['info-item']}>{item.releaseInfo}</div>
         </div>
     );
 };

@@ -11,7 +11,6 @@ import styles from './BoardHero.less';
 
 const MAX_SLIDES = 5;
 const ROTATE_INTERVAL = 8000;
-const IMDB_LINK_CATEGORY = 'imdb';
 const GENRES_LINK_CATEGORY = 'Genres';
 
 type Catalogs = Catalog<Loadable<MetaItemPreviewCatalogsWithExtra[]>, DiscoverDeepLinks>[] | null;
@@ -52,10 +51,6 @@ const BoardHero = ({ className, slides }: Props) => {
     const [paused, setPaused] = useState(false);
 
     const slide = slides[Math.min(selected, slides.length - 1)] ?? null;
-
-    const rating = useMemo(() => {
-        return slide?.links?.find(({ category }) => category === IMDB_LINK_CATEGORY)?.name ?? null;
-    }, [slide]);
 
     const genres = useMemo(() => {
         return (slide?.links ?? [])
@@ -125,15 +120,6 @@ const BoardHero = ({ className, slides }: Props) => {
                     }
                 </div>
                 <div className={styles['meta-info']}>
-                    {
-                        rating !== null ?
-                            <div className={styles['rating']}>
-                                <Icon className={styles['rating-icon']} name={'imdb'} />
-                                <div className={styles['rating-label']}>{rating}</div>
-                            </div>
-                            :
-                            null
-                    }
                     {
                         typeof slide.releaseInfo === 'string' && slide.releaseInfo.length > 0 ?
                             <div className={styles['meta-info-item']}>{slide.releaseInfo}</div>

@@ -31,10 +31,6 @@ type Props = {
     item: ContinueWatchingItem,
 };
 
-const getBackdrop = (id: string) => {
-    return IMDB_ID_REGEXP.test(id) ? `https://images.metahub.space/background/medium/${id}/img` : null;
-};
-
 // Video ids are `tt<id>:<season>:<episode>` for IMDb series and `kitsu:<id>:<episode>` for anime.
 const getEpisodeLabel = (videoId: string | null | undefined) => {
     const parts = (videoId ?? '').split(':');
@@ -56,7 +52,6 @@ const ContinueWatchingCard = ({ className, item }: Props) => {
     const navigate = useNavigate();
     const { navigateWithOrigin } = useNavigateWithOrigin();
 
-    const backdrop = useMemo(() => getBackdrop(item._id), [item._id]);
     const episodeLabel = useMemo(() => getEpisodeLabel(item.state?.videoId), [item.state]);
     const detailsHref = useMemo(() => getMetaDetailsHref(item.deepLinks), [item.deepLinks]);
     const playerHref = typeof item.deepLinks?.player === 'string' ? item.deepLinks.player : null;
@@ -97,19 +92,11 @@ const ContinueWatchingCard = ({ className, item }: Props) => {
         });
     }, [item._id, core.transport]);
 
-    const renderPosterFallback = useCallback(() => (
-        <Image className={classnames(styles['image'], styles['poster-fallback'])} src={item.poster ?? undefined} alt={' '} />
-    ), [item.poster]);
-
     return (
         <Button className={classnames(className, styles['card'])} href={detailsHref ?? undefined} title={item.name} onClick={onClick}>
             <div className={styles['artwork']}>
-                {
-                    backdrop !== null ?
-                        <Image className={styles['image']} src={backdrop} alt={' '} renderFallback={renderPosterFallback} />
-                        :
-                        renderPosterFallback()
-                }
+                <Image className={styles['backdrop']} src={item.poster ?? undefined} alt={' '} />
+                <Image className={styles['poster']} src={item.poster ?? undefined} alt={' '} />
                 <div className={styles['artwork-shade']} />
                 {
                     newVideos > 0 ?
