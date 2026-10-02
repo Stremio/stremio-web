@@ -74,5 +74,22 @@
                 font-style: italic;
             }
         }
+
+        &.watch-activity-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            background-color: var(--overlay-color);
+
+            .watch-activity-icon {
+                flex: none;
+                width: 1.5rem;
+                height: 1.5rem;
+                color: var(--primary-foreground-color);
+            }
+        }
     }
 }
