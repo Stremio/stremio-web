@@ -51,5 +51,6 @@ type Calendar = {
     selectable: CalendarSelectable,
     selected: CalendarSelected,
     monthInfo: CalendarMonthInfo,
+    metaItems: Loadable<void>[],
     items: CalendarItem[],
 };
