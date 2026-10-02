@@ -5,12 +5,15 @@ const classnames = require('classnames');
 const useTranslate = require('stremio/common/useTranslate');
 const { default: useVisibleCatalogs } = require('stremio/common/useVisibleCatalogs');
 const { useStreamingServer, useNotifications, withCoreSuspender, useProfile } = require('stremio/common');
-const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
+const { EventModal, LiveTvContinueWatchingItem, MainNavBars, MetaRow } = require('stremio/components');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
+const { default: BoardHero, pickSlides } = require('./BoardHero');
+const { default: ContinueWatchingRow } = require('./ContinueWatchingRow');
+const { default: CatalogRow } = require('./CatalogRow');
 
 const THRESHOLD = 5;
 
@@ -26,7 +29,9 @@ const Board = () => {
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
+    const heroSlides = React.useMemo(() => pickSlides(board.catalogs), [board.catalogs]);
     const boardCatalogsOffset =
+        (heroSlides.length > 0 ? 1 : 0) +
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
     const showStreamingServerWarning = React.useMemo(() => {
@@ -46,13 +51,18 @@ const Board = () => {
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
+                        heroSlides.length > 0 ?
+                            <BoardHero className={classnames(styles['board-hero'], 'animation-fade-in')} slides={heroSlides} />
+                            :
+                            null
+                    }
+                    {
                         continueWatchingPreview.items.length > 0 ?
-                            <MetaRow
-                                className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
+                            <ContinueWatchingRow
+                                className={classnames(styles['board-row'], 'animation-fade-in')}
                                 title={t.string('BOARD_CONTINUE_WATCHING')}
-                                catalog={continueWatchingPreview}
-                                itemComponent={ContinueWatchingItem}
-                                notifications={notifications}
+                                items={continueWatchingPreview.items}
+                                href={continueWatchingPreview.deepLinks?.library}
                             />
                             :
                             null
@@ -69,43 +79,15 @@ const Board = () => {
                             :
                             null
                     }
-                    {catalogRows.map(({ catalog, index }) => {
-                        switch (catalog.content?.type) {
-                            case 'Ready': {
-                                return (
-                                    <MetaRow
-                                        key={index}
-                                        className={classnames(styles['board-row'], styles[`board-row-${catalog.content.content[0].posterShape}`], 'animation-fade-in')}
-                                        catalog={catalog}
-                                        itemComponent={MetaItem}
-                                    />
-                                );
-                            }
-                            case 'Err': {
-                                if (catalog.content.content !== 'EmptyContent') {
-                                    return (
-                                        <MetaRow
-                                            key={index}
-                                            className={classnames(styles['board-row'], 'animation-fade-in')}
-                                            catalog={catalog}
-                                            message={catalog.content.content}
-                                        />
-                                    );
-                                }
-                                return null;
-                            }
-                            default: {
-                                return (
-                                    <MetaRow.Placeholder
-                                        key={index}
-                                        className={classnames(styles['board-row'], styles['board-row-poster'], 'animation-fade-in')}
-                                        catalog={catalog}
-                                        title={t.catalogTitle(catalog)}
-                                    />
-                                );
-                            }
-                        }
-                    })}
+                    {catalogRows.map(({ catalog, index }) => (
+                        <CatalogRow
+                            key={index}
+                            className={classnames(styles['board-row'], 'animation-fade-in')}
+                            title={t.catalogTitle(catalog)}
+                            source={catalog.addon?.manifest?.name}
+                            catalog={catalog}
+                        />
+                    ))}
                 </div>
             </MainNavBars>
             {

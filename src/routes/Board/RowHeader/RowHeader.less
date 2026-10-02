@@ -1,0 +1,109 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.row-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 1rem;
+    margin-bottom: 0.25rem;
+
+    .title {
+        flex: 0 1 auto;
+        min-width: 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .source {
+        flex: none;
+        max-width: 12rem;
+        padding: 0.2rem 0.7rem;
+        border-radius: 1rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--primary-foreground-color);
+        background-color: var(--overlay-color);
+        opacity: 0.7;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    .arrows {
+        display: flex;
+        gap: 0.5rem;
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
+            background-color: var(--overlay-color);
+
+            .arrow-icon {
+                width: 1.1rem;
+                height: 1.1rem;
+                color: var(--primary-foreground-color);
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.12);
+            }
+
+            &:global(.disabled) {
+                opacity: 0.3;
+                pointer-events: none;
+            }
+        }
+    }
+
+    .see-all {
+        display: flex;
+        align-items: center;
+        height: 2.25rem;
+        padding: 0 0.25rem 0 0.75rem;
+        border-radius: 2.25rem;
+        opacity: 0.55;
+
+        &:hover, &:focus {
+            outline: none;
+            background-color: var(--overlay-color);
+            opacity: 1;
+        }
+
+        .see-all-label {
+            white-space: nowrap;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+        }
+
+        .see-all-icon {
+            height: 1.25rem;
+            margin-left: 0.25rem;
+            color: var(--primary-foreground-color);
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .row-header {
+        padding: 0 0.5rem;
+
+        .arrows, .source {
+            display: none;
+        }
+    }
+}

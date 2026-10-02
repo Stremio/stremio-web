@@ -1,0 +1,237 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+@gap: 1.5rem;
+
+.row {
+    --columns: 4;
+
+    .list {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: calc((100% - (var(--columns) - 1) * @gap) / var(--columns));
+        gap: @gap;
+        padding: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding: 0 1rem;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+    scroll-snap-align: start;
+
+    .artwork {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        background-color: var(--color-placeholder-background);
+        transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+
+        // Preview items only carry a poster: a blurred copy fills the card behind the sharp poster.
+        .backdrop {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 25%;
+            filter: blur(1.5rem) brightness(0.7);
+            transform: scale(1.3);
+        }
+
+        .poster {
+            position: absolute;
+            top: 0.75rem;
+            bottom: 0.75rem;
+            left: 50%;
+            height: calc(100% - 1.5rem);
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: calc(var(--border-radius) * 0.75);
+            box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.5);
+            transform: translateX(-50%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .artwork-shade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 0%, transparent 45%);
+        }
+
+        .new-videos {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+            background-color: var(--primary-accent-color);
+
+            .new-videos-icon {
+                width: 0.9rem;
+                height: 0.9rem;
+                color: var(--primary-foreground-color);
+            }
+        }
+
+        .dismiss {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            transition: opacity 0.15s ease-out;
+
+            .dismiss-icon {
+                width: 1rem;
+                height: 1rem;
+                color: var(--primary-foreground-color);
+            }
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        .play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background-color: var(--primary-accent-color);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.85);
+            transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+
+            .play-icon {
+                width: 1.6rem;
+                height: 1.6rem;
+                margin-left: 0.2rem;
+                color: var(--primary-foreground-color);
+            }
+
+            &:hover {
+                transform: translate(-50%, -50%) scale(1.08);
+            }
+        }
+
+        .episode {
+            position: absolute;
+            left: 1rem;
+            bottom: 1.1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+        }
+
+        .progress {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 0.3rem;
+            background-color: rgba(255, 255, 255, 0.2);
+
+            .progress-bar {
+                height: 100%;
+                background-color: var(--primary-accent-color);
+            }
+        }
+    }
+
+    .name {
+        padding: 0 0.25rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible .artwork {
+        box-shadow: 0 0 0 0.2rem var(--primary-foreground-color);
+    }
+
+    &:hover .artwork {
+        transform: translateY(-0.25rem);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.45);
+    }
+
+    &:hover, &:focus-visible {
+        .artwork {
+            .poster {
+                transform: translateX(-50%) scale(1.04);
+            }
+
+            .dismiss, .play {
+                opacity: 1;
+            }
+
+            .play {
+                transform: translate(-50%, -50%) scale(1);
+
+                &:hover {
+                    transform: translate(-50%, -50%) scale(1.08);
+                }
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card .artwork .poster {
+        transition: none;
+    }
+}
+
+@media only screen and (max-width: @small) {
+    .row {
+        --columns: 3;
+    }
+}
+
+@media only screen and (max-width: @xxsmall) {
+    .row {
+        --columns: 2;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .row {
+        --columns: 1.3;
+    }
+}

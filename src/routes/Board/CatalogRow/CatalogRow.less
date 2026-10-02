@@ -1,0 +1,197 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/components/MetaItem/styles.less') {
+    meta-item-container: meta-item-container;
+    poster-container: poster-container;
+}
+
+.catalog-row {
+    --columns: 8;
+
+    &.shape-square {
+        --columns: 8;
+    }
+
+    &.shape-landscape {
+        --columns: 5;
+    }
+
+    .list {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: calc(100% / var(--columns));
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .item {
+            min-width: 0;
+            scroll-snap-align: start;
+
+            .poster-container {
+                transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            }
+
+            .info-strip {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem;
+                padding: 1.5rem 0.75rem 0.6rem;
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+                background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+                opacity: 0;
+                transform: translateY(0.25rem);
+                transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+                pointer-events: none;
+
+                .info-item {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    white-space: nowrap;
+                    color: var(--primary-foreground-color);
+                }
+            }
+
+            // Mouse hover lifts the card; the white ring stays for keyboard focus only.
+            &.meta-item-container:hover:not(:focus-within) .poster-container {
+                box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.45);
+                transform: translateY(-0.25rem);
+            }
+
+            &:hover, &:focus-within {
+                .info-strip {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+        }
+
+        &.placeholder {
+            overflow: hidden;
+
+            .placeholder-item {
+                padding: 1rem;
+
+                .placeholder-poster {
+                    padding-top: calc(100% * var(--poster-shape-ratio));
+                    border-radius: var(--border-radius);
+                }
+
+                .placeholder-title {
+                    width: 60%;
+                    height: 1.2rem;
+                    margin: 0.8rem auto 0;
+                    border-radius: var(--border-radius);
+                }
+
+                .placeholder-poster, .placeholder-title {
+                    background: linear-gradient(90deg, var(--color-placeholder-background) 0%, rgba(255, 255, 255, 0.08) 50%, var(--color-placeholder-background) 100%);
+                    background-size: 200% 100%;
+                    animation: placeholder-shimmer 1.4s ease-in-out infinite;
+                }
+            }
+        }
+    }
+
+    &.shape-landscape .list.placeholder .placeholder-item .placeholder-poster {
+        padding-top: calc(100% * var(--landscape-shape-ratio));
+    }
+
+    .message {
+        max-height: 3.6em;
+        padding: 0.5rem 1rem;
+        font-size: 1.2rem;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+    }
+}
+
+@keyframes placeholder-shimmer {
+    from {
+        background-position: 100% 0;
+    }
+
+    to {
+        background-position: -100% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .catalog-row .list {
+        .item .poster-container, .item .info-strip {
+            transition: none;
+        }
+
+        &.placeholder .placeholder-item .placeholder-poster, &.placeholder .placeholder-item .placeholder-title {
+            animation: none;
+        }
+    }
+}
+
+@media only screen and (max-width: @medium) {
+    .catalog-row {
+        --columns: 7;
+
+        &.shape-landscape {
+            --columns: 4;
+        }
+    }
+}
+
+@media only screen and (max-width: @small) {
+    .catalog-row {
+        --columns: 6;
+
+        &.shape-landscape {
+            --columns: 4;
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .catalog-row {
+        --columns: 5;
+
+        &.shape-landscape {
+            --columns: 3;
+        }
+    }
+}
+
+@media only screen and (max-width: @xxsmall) {
+    .catalog-row {
+        --columns: 4;
+
+        &.shape-landscape {
+            --columns: 2;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .catalog-row {
+        --columns: 3.2;
+
+        &.shape-landscape {
+            --columns: 1.8;
+        }
+
+        .list .placeholder-item, .list .item {
+            padding: 0.5rem;
+        }
+    }
+}
