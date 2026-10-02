@@ -97,9 +97,9 @@ type Statistics = {
     unique: number,
     connectionTries: number,
     peerSearchRunning: boolean,
-    streamLen: number,
-    streamName: string,
-    streamProgress: number,
+    streamLen: number | null,
+    streamName: string | null,
+    streamProgress: number | null,
     swarmConnections: number,
     swarmPaused: boolean,
     swarmSize: number,
@@ -123,7 +123,7 @@ type Selected = {
     transportUrl: string,
     statistics: {
         infoHash: string,
-        fileIdx: number,
+        fileIdx: number | null,
     } | null
 };
 
