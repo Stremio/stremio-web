@@ -10,6 +10,7 @@ const { useCore } = require('stremio/core');
 const { usePlatform, useBinaryState, withCoreSuspender } = require('stremio/common');
 const { AddonDetailsModal, Button, Image, MainNavBars, ModalDialog, SearchBar, SharePrompt, TextInput, MultiselectMenu } = require('stremio/components');
 const useToast = require('stremio/common/Toast/useToast');
+const receivesWatchActivity = require('stremio/components/AddonDetailsModal/receivesWatchActivity');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
@@ -81,6 +82,10 @@ const Addons = () => {
         setSharedAddon(event.dataset.addon);
     }, []);
     const onAddonInstall = React.useCallback((event) => {
+        if (receivesWatchActivity(event.dataset.addon.manifest)) {
+            setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
+            return;
+        }
         core.transport.dispatch({
             action: 'Ctx',
             args: {
@@ -88,7 +93,7 @@ const Addons = () => {
                 args: event.dataset.addon,
             }
         });
-    }, []);
+    }, [setAddonDetailsTransportUrl]);
     const onAddonUninstall = React.useCallback((event) => {
         core.transport.dispatch({
             action: 'Ctx',
