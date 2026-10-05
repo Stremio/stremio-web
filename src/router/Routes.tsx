@@ -77,7 +77,6 @@ const Routes = () => {
             navigationType === 'PUSH' &&
             supportsViewTransitions &&
             typeof document.startViewTransition === 'function' &&
-            window.matchMedia('(pointer: fine)').matches &&
             !window.matchMedia('(prefers-reduced-motion: reduce)').matches
         ) {
             document.startViewTransition(() => flushSync(updateViews));
@@ -89,7 +88,7 @@ const Routes = () => {
     const visibleViews = views.filter((view): view is CachedView => view !== null);
 
     return (
-        <div className={'routes-container'} data-navigation={navigationType.toLowerCase()}>
+        <div className={'routes-container'}>
             {
                 visibleViews.map((view, index) => (
                     <RRoutes key={view.key} location={view.location}>
