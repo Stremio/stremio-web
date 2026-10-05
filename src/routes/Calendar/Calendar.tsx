@@ -29,6 +29,8 @@ const Calendar = () => {
 
     const detailsTitle = useMemo(() => toDayMonth(selected), [selected, toDayMonth]);
 
+    const loading = calendar.metaItems.some(({ type }) => type === 'Loading');
+
     const onDetailsClose = () => {
         setSelected(null);
     };
@@ -53,6 +55,7 @@ const Calendar = () => {
                         </div>
                         <List
                             items={calendar.items}
+                            loading={loading}
                             selected={selected}
                             monthInfo={calendar.monthInfo}
                             profile={profile}
