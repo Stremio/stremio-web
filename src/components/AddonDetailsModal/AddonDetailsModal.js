@@ -54,6 +54,7 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const requiresWatchActivityTrust = addonDetails.localAddon === null &&
         addonDetails.remoteAddon !== null &&
         addonDetails.remoteAddon.content.type === 'Ready' &&
+        !addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurationRequired &&
         receivesWatchActivity(addonDetails.remoteAddon.content.content.manifest);
     const modalCheckboxes = React.useMemo(() => requiresWatchActivityTrust ? [
         {
