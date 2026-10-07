@@ -20,7 +20,7 @@
     padding: 1rem;
     overflow: visible;
 
-    &:hover, &:focus-within, &:global(.active), &:global(.selected) {
+    &:global(.hovered), &:focus-within, &:global(.active), &:global(.selected) {
         outline-style: none;
         transition: background-color 100ms ease-out;
 
@@ -29,6 +29,7 @@
 
             .dismiss-icon-layer {
                 opacity: 1;
+                pointer-events: auto;
             }
 
             .poster-image-layer {
@@ -120,11 +121,8 @@
             width: 1.5rem;
             border-radius: 100%;
             opacity: 0;
+            pointer-events: none;
             transition: opacity 0.1s ease-in;
-
-            @media (any-pointer: coarse) {
-                display: none;
-            }
 
             .dismiss-icon {
                 z-index: 1;

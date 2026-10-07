@@ -40,6 +40,7 @@
         "magnet-uri": "6.2.0",
         "prop-types": "15.8.1",
         "react": "18.3.1",
+        "react-aria": "3.52.1",
         "react-colorful": "^5.8.1",
         "react-dom": "18.3.1",
         "react-focus-lock": "2.13.7",

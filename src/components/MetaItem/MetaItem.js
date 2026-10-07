@@ -4,6 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
+const { useHover } = require('react-aria/useHover');
 const filterInvalidDOMProps = require('filter-invalid-dom-props').default;
 const { useNavigateWithOrigin } = require('stremio-router');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -21,6 +22,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const artwork = poster && typeof poster === 'object' ? poster : { src: poster, shape: posterShape, changeCursor: posterChangeCursor };
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
+    const { hoverProps, isHovered } = useHover({});
     const href = React.useMemo(() => {
         return typeof customHref === 'string' ? customHref : getMetaDetailsHref(deepLinks);
     }, [customHref, deepLinks]);
@@ -75,7 +77,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     ), []);
     const hasOptions = Array.isArray(options) && options.length > 0;
     return (
-        <div className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen })}>
+        <div {...hoverProps} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })}>
             <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick}>
                 <div className={classnames(styles['poster-container'], { 'poster-change-cursor': artwork.changeCursor })}>
                     {
