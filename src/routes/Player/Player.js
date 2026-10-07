@@ -565,6 +565,10 @@ const Player = () => {
                         streamingServer.selected.transportUrl
                     :
                     null,
+                streamingServerSettings: streamingServer.settings?.type === 'Ready' ?
+                    streamingServer.settings.content
+                    :
+                    null,
                 seriesInfo: player.seriesInfo,
             }, {
                 chromecastTransport: services.chromecast.active ? services.chromecast.transport : null,
