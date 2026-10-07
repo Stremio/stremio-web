@@ -38,7 +38,7 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
                 case 'watched':
                     return typeof watched !== 'undefined' && typeof detailsHref === 'string';
                 case 'dismiss':
-                    return typeof _id === 'string' && props.progress !== null && !isNaN(props.progress) && props.progress > 0;
+                    return typeof _id === 'string' && (typeof props.onDismissClick === 'function' || props.progress !== null && !isNaN(props.progress) && props.progress > 0);
                 case 'remove':
                     return typeof _id === 'string' && removable;
             }
@@ -46,7 +46,7 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
             ...option,
             label: t(option.label)
         }));
-    }, [_id, removable, props.progress, playerHref, detailsHref, watched]);
+    }, [_id, removable, props.progress, props.onDismissClick, playerHref, detailsHref, watched]);
 
     const optionOnSelect = React.useCallback((event) => {
         if (typeof props.optionOnSelect === 'function') {
@@ -155,7 +155,8 @@ LibItem.propTypes = {
         metaDetailsStreams: PropTypes.string,
         player: PropTypes.string
     }),
-    optionOnSelect: PropTypes.func
+    optionOnSelect: PropTypes.func,
+    onDismissClick: PropTypes.func
 };
 
 module.exports = LibItem;
