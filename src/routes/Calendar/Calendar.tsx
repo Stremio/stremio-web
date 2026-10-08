@@ -67,6 +67,7 @@ const Calendar = () => {
                             <Details
                                 selected={selected}
                                 items={calendar.items}
+                                hideSpoilers={profile.settings.hideSpoilers}
                             />
                         </BottomSheet>
                     </div>
