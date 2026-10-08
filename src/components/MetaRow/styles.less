@@ -3,6 +3,50 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+.visible-items(@rows, @landscape-rows) {
+    .hide-from(@items, @landscape-items) {
+        @{rows} {
+            .meta-item, .meta-item-placeholder {
+                &:nth-child(n+@{items}) {
+                    display: none;
+                }
+            }
+        }
+
+        @{landscape-rows} {
+            .meta-item, .meta-item-placeholder {
+                &:nth-child(n+@{landscape-items}) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: @large) {
+        .hide-from(10, 9);
+    }
+
+    @media only screen and (max-width: @normal) {
+        .hide-from(9, 8);
+    }
+
+    @media only screen and (max-width: @medium) {
+        .hide-from(8, 7);
+    }
+
+    @media only screen and (max-width: @small) {
+        .hide-from(7, 6);
+    }
+
+    @media only screen and (max-width: @xsmall) {
+        .hide-from(6, 5);
+    }
+
+    @media only screen and (max-width: @xxsmall) {
+        .hide-from(5, 4);
+    }
+}
+
 .meta-row-container {
     overflow: visible;
 

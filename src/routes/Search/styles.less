@@ -2,6 +2,7 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) '~stremio/components/MetaRow/styles.less';
 
 :import('~stremio/components/MetaRow/styles.less') {
     meta-item: meta-item;
@@ -116,47 +117,9 @@
     }
 }
 
-@media only screen and (max-width: @large) {
-    .search-container {
-        .search-content {
-            .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+10) {
-                        display: none;
-                    }
-                }
-            }
-
-            .search-row-landscape {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+9) {
-                        display: none;
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: @normal) {
-    .search-container {
-        .search-content {
-            .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+9) {
-                        display: none;
-                    }
-                }
-            }
-
-            .search-row-landscape {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+8) {
-                        display: none;
-                    }
-                }
-            }
-        }
+.search-container {
+    .search-content {
+        .visible-items(~".search-row-poster, .search-row-square", ~".search-row-landscape");
     }
 }
 
@@ -166,21 +129,6 @@
             .search-hints-wrapper {
                 .search-hints-container {
                     max-width: 70%;
-                }
-            }
-            .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+8) {
-                        display: none;
-                    }
-                }
-            }
-
-            .search-row-landscape {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+7) {
-                        display: none;
-                    }
                 }
             }
         }
@@ -195,43 +143,6 @@
                     max-width: 90%;
                 }
             }
-            .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+7) {
-                        display: none;
-                    }
-                }
-            }
-
-            .search-row-landscape {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+6) {
-                        display: none;
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: @xsmall) {
-    .search-container {
-        .search-content {
-            .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+6) {
-                        display: none;
-                    }
-                }
-            }
-
-            .search-row-landscape {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+5) {
-                        display: none;
-                    }
-                }
-            }
         }
     }
 }
@@ -244,21 +155,6 @@
                     max-width: 100%;
                     .search-hint-container {
                         flex: 0 0 50%;
-                    }
-                }
-            }
-            .search-row-poster, .search-row-square {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+5) {
-                        display: none;
-                    }
-                }
-            }
-
-            .search-row-landscape {
-                .meta-item, .meta-item-placeholder {
-                    &:nth-child(n+4) {
-                        display: none;
                     }
                 }
             }
