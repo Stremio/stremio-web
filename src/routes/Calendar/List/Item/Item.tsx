@@ -1,10 +1,9 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useEffect, useMemo, useRef } from 'react';
-import Icon from '@stremio/stremio-icons/react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { useNavigateWithOrigin } from 'stremio-router';
-import { Button } from 'stremio/components';
+import Episode from '../../Episode';
 import useCalendarDate from '../../useCalendarDate';
 import styles from './Item.less';
 
@@ -31,11 +30,11 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
         onClick && onClick(date);
     };
 
-    const onVideoClick = (event: React.MouseEvent<HTMLDivElement>, target: string) => {
+    const onVideoClick = useCallback((event: React.MouseEvent<HTMLDivElement>, target: string) => {
         event.preventDefault();
         event.stopPropagation();
         navigateWithOrigin(target);
-    };
+    }, [navigateWithOrigin]);
 
     useEffect(() => {
         active && ref.current?.scrollIntoView({
@@ -56,16 +55,13 @@ const Item = ({ selected, monthInfo, date, items, profile, onClick }: Props) => 
             </div>
             <div className={styles['body']}>
                 {
-                    items.map(({ id, name, season, episode, deepLinks }) => (
-                        <Button className={styles['video']} key={id} href={deepLinks.metaDetailsStreams} onClick={(event) => onVideoClick(event, deepLinks.metaDetailsStreams)}>
-                            <div className={styles['name']}>
-                                {name}
-                            </div>
-                            <div className={styles['info']}>
-                                S{season}E{episode}
-                            </div>
-                            <Icon className={styles['icon']} name={'play'} />
-                        </Button>
+                    items.map((video) => (
+                        <Episode
+                            key={video.id}
+                            {...video}
+                            hideSpoilers={profile.settings.hideSpoilers}
+                            onClick={onVideoClick}
+                        />
                     ))
                 }
             </div>
