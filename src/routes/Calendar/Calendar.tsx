@@ -2,7 +2,8 @@
 
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router';
-import { useProfile, withCoreSuspender } from 'stremio/common';
+import { useMediaQuery, useProfile, withCoreSuspender } from 'stremio/common';
+import screenSizes from 'stremio/common/screen-sizes.less';
 import { MainNavBars, BottomSheet } from 'stremio/components';
 import Selector from './Selector';
 import Table from './Table';
@@ -26,6 +27,7 @@ const Calendar = () => {
     const { toDayMonth } = useCalendarDate(profile);
 
     const [selected, setSelected] = useState<CalendarDate | null>(null);
+    const detailsInSheet = useMediaQuery(`(max-width: ${screenSizes.small}) and (orientation: portrait), (max-width: ${screenSizes.xsmall}) and (orientation: landscape)`);
 
     const detailsTitle = useMemo(() => toDayMonth(selected), [selected, toDayMonth]);
 
@@ -61,7 +63,7 @@ const Calendar = () => {
                             profile={profile}
                             onChange={setSelected}
                         />
-                        <BottomSheet title={detailsTitle} show={!!selected} onCloseRequest={onDetailsClose}>
+                        <BottomSheet title={detailsTitle} show={detailsInSheet && !!selected} onCloseRequest={onDetailsClose}>
                             <Details
                                 selected={selected}
                                 items={calendar.items}

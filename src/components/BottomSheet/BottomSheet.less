@@ -1,7 +1,5 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
-
 @animation-duration-ms: 250;
 
 :export {
@@ -126,18 +124,6 @@
             touch-action: pan-y;
             border-radius: 2rem 2rem 0 0;
         }
-    }
-}
-
-@media only screen and (min-width: @small) and (orientation: portrait) {
-    .bottom-sheet {
-        display: none;
-    }
-}
-
-@media only screen and (min-width: @xsmall) and (orientation: landscape) {
-    .bottom-sheet {
-        display: none;
     }
 }
 
