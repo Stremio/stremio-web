@@ -3,15 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-}
-
-:import('~stremio/components/ModalDialog/styles.less') {
-    selectable-inputs-modal-container: modal-dialog-container;
-    selectable-inputs-modal-content: modal-dialog-content;
-}
-
 .library-container {
     height: calc(100% - var(--safe-area-inset-bottom));
     background-color: transparent;
@@ -46,10 +37,6 @@
 
                 &:not(:last-child) {
                     margin-right: 1.5rem;
-                }
-
-                .multiselect-menu-container {
-                    overflow: auto;
                 }
             }
         }
@@ -95,24 +82,6 @@
             align-items: center;
             grid-gap: 0.5rem;
             overflow-y: auto;
-        }
-    }
-}
-
-.selectable-inputs-modal {
-    .selectable-inputs-modal-container {
-        overflow: visible;
-
-        .selectable-inputs-modal-content {
-            overflow: visible;
-
-            .select-input-container {
-                height: 3.5rem;
-
-                &:not(:last-child) {
-                    margin-bottom: 1rem;
-                }
-            }
         }
     }
 }

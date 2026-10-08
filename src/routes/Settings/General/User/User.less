@@ -48,40 +48,11 @@
             }
         }
     }
-
-    .user-panel-container {
-        flex: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 10rem;
-        height: 3.5rem;
-        border-radius: 3.5rem;
-        background-color: var(--overlay-color);
-
-        &:hover {
-            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-            background-color: transparent;
-        }
-
-        .user-panel-label {
-            flex: 1;
-            max-height: 2.4em;
-            padding: 0 0.5rem;
-            font-weight: 500;
-            text-align: center;
-            color: var(--primary-foreground-color);
-        }
-    }
 }
 
 @media only screen and (max-width: @minimum) {
     .user {
         flex-direction: column;
         align-items: flex-start;
-
-        .user-panel-container {
-            width: 100% !important;
-        }
     }
 }

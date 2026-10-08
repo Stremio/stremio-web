@@ -3,10 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-}
-
 :import('~stremio/components/ModalDialog/styles.less') {
     share-modal-content: modal-dialog-content;
 }
@@ -95,10 +91,6 @@
                 flex-shrink: 1;
                 flex-basis: 15rem;
                 margin-right: 1.5rem;
-
-                .multiselect-menu-container {
-                    overflow: auto;
-                }
             }
 
             .spacing {
@@ -161,10 +153,6 @@
 
             .select-input-container {
                 height: 3rem;
-
-                .multiselect-menu-container {
-                    overflow: auto;
-                }
 
                 &:not(:last-child) {
                     margin-bottom: 1rem;

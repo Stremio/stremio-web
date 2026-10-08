@@ -3,12 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-    multiselect-label: label;
-    multiselect-icon: icon;
-}
-
 .seasons-bar-container {
     display: flex;
     flex-direction: row;
@@ -26,11 +20,6 @@
         height: 3rem;
         border-radius: 3rem;
         padding: 0.5rem;
-
-        &.disabled {
-            pointer-events: none;
-            opacity: 0.5;
-        }
 
         &:hover, &:focus {
             background-color: var(--overlay-color);
@@ -58,23 +47,6 @@
 
     .seasons-popup-label-container {
         flex: 0 1 auto;
-        background: none;
-
-        &:hover, &:focus, &:global(.active) {
-            background-color: var(--overlay-color);
-        }
-
-        &>.multiselect-label {
-            color: var(--primary-foreground-color);
-        }
-
-        &>.multiselect-icon {
-            color: var(--primary-foreground-color);
-        }
-
-        .multiselect-menu-container {
-            overflow: auto;
-        }
     }
 }
 

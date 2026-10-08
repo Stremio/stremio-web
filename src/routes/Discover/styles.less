@@ -3,14 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-    multiselect-modal-container: modal-container;
-    multiselect-option-container: option-container;
-    multiselect-icon: icon;
-    multiselect-label: label;
-}
-
 :import('~stremio/components/MultiselectMenu/Label/Label.less') {
     multiselect-button: button;
 }
@@ -77,10 +69,6 @@
                                 display: flex;
                             }
                         }
-                    }
-
-                    .multiselect-menu-container {
-                        overflow: auto;
                     }
                 }
 
@@ -314,11 +302,6 @@
                     &:not(:last-child) {
                         margin-bottom: 1rem;
                     }
-                }
-
-                .multiselect-menu-container {
-                    max-height: calc(3rem * 3);
-                    overflow: auto;
                 }
             }
         }
