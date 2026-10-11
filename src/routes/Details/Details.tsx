@@ -22,6 +22,7 @@ import Background from './Background';
 import HeroArt from './HeroArt';
 import Hero from './Hero';
 import Actions from './Actions';
+import Toolbar from './Actions/Toolbar';
 import Videos from './Videos';
 import type { ScrollMemory } from './Videos';
 import Streams from './Streams';
@@ -174,6 +175,7 @@ const Details = () => {
                                                 onToggleWatched={actions.toggleWatched}
                                                 ratingInfo={details.ratingInfo}
                                                 shareUrl={share?.href ?? null}
+                                                toggles={!isMobile}
                                             />
                                         </Hero>
                     }
@@ -206,6 +208,18 @@ const Details = () => {
                             null
                 }
             </div>
+            {
+                isMobile && metaItem !== null ?
+                    <Toolbar
+                        inLibrary={metaItem.inLibrary}
+                        onToggleLibrary={actions.toggleLibrary}
+                        watched={metaItem.watched}
+                        onToggleWatched={actions.toggleWatched}
+                        ratingInfo={details.ratingInfo}
+                    />
+                    :
+                    null
+            }
         </div>
     );
 };

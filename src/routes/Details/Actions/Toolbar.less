@@ -1,0 +1,44 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.toolbar {
+    position: absolute;
+    right: calc(1.25rem + var(--safe-area-inset-right));
+    bottom: calc(1rem + var(--safe-area-inset-bottom));
+    left: calc(1.25rem + var(--safe-area-inset-left));
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    overflow: visible;
+    animation: toolbar-enter 0.45s @ease-spring both;
+
+    .group {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        height: 3.5rem;
+        padding: 0 0.5rem;
+        border-radius: 999px;
+        background-color: @glass-background;
+        backdrop-filter: blur(24px) saturate(1.2);
+        pointer-events: auto;
+        overflow: visible;
+    }
+}
+
+@keyframes toolbar-enter {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toolbar {
+        animation: none;
+    }
+}

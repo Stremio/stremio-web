@@ -49,6 +49,10 @@
         &.round {
             width: 3.5rem;
             padding: 0;
+
+            .label {
+                display: none;
+            }
         }
 
         .icon {
@@ -101,6 +105,7 @@
         gap: 0.875rem;
 
         .secondary {
+            justify-content: center;
             gap: 0.75rem;
         }
 
@@ -109,15 +114,15 @@
         }
 
         .button {
-            width: 3rem;
-            padding: 0;
+            padding: 0 1.25rem;
 
             &.round {
-                width: 3rem;
-            }
+                width: auto;
+                padding: 0 1.25rem;
 
-            .label {
-                display: none;
+                .label {
+                    display: block;
+                }
             }
         }
     }

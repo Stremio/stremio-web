@@ -7,12 +7,11 @@ import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import ModalDialog from 'stremio/components/ModalDialog';
 import SharePrompt from 'stremio/components/SharePrompt';
-import useRating from 'stremio/components/MetaPreview/Ratings/useRating';
 import { Tooltip } from 'stremio/common/Tooltips';
 import useBinaryState from 'stremio/common/useBinaryState';
 import PlayButton from './PlayButton';
-import ToggleButton from './ToggleButton';
-import RateButton from './RateButton';
+import Groups from './Groups';
+import type { GroupsProps } from './Groups';
 import styles from './Actions.less';
 
 export type PrimaryAction = {
@@ -23,22 +22,18 @@ export type PrimaryAction = {
     disabled?: boolean,
 };
 
-type Props = {
+type Props = GroupsProps & {
     className?: string,
     primary: PrimaryAction | null,
     trailerHref?: string | null,
-    inLibrary: boolean,
-    onToggleLibrary: () => void,
-    watched?: boolean,
-    onToggleWatched?: () => void,
-    ratingInfo?: Loadable<RatingInfo> | null,
     shareUrl?: string | null,
+    toggles?: boolean,
 };
 
-const Actions = ({ className, primary, trailerHref = null, inLibrary, onToggleLibrary, watched, onToggleWatched, ratingInfo = null, shareUrl = null }: Props) => {
+const Actions = ({ className, primary, trailerHref = null, inLibrary, onToggleLibrary, watched, onToggleWatched, ratingInfo = null, shareUrl = null, toggles = true }: Props) => {
     const { t } = useTranslation();
     const [shareOpen, openShare, closeShare] = useBinaryState(false);
-    const { onLiked, onLoved, liked, loved } = useRating(ratingInfo ?? undefined);
+    const hasSecondary = typeof trailerHref === 'string' || toggles || typeof shareUrl === 'string';
 
     return (
         <div className={classNames(className, styles['actions'])}>
@@ -55,66 +50,45 @@ const Actions = ({ className, primary, trailerHref = null, inLibrary, onToggleLi
                     :
                     null
             }
-            <div className={styles['secondary']}>
-                {
-                    typeof trailerHref === 'string' ?
-                        <Button className={styles['button']} title={t('TRAILER')} aria-label={t('TRAILER')} href={trailerHref}>
-                            <Icon className={styles['icon']} name={'trailer'} />
-                            <div className={styles['label']}>{t('TRAILER')}</div>
-                        </Button>
-                        :
-                        null
-                }
-                <div className={styles['group']} role={'group'}>
-                    <ToggleButton
-                        variant={'library'}
-                        on={inLibrary}
-                        label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                        onClick={onToggleLibrary}
-                    />
-                    {
-                        typeof onToggleWatched === 'function' ?
-                            <ToggleButton
-                                variant={'watched'}
-                                on={watched === true}
-                                label={watched ? t('CTX_MARK_UNWATCHED') : t('CTX_MARK_WATCHED')}
-                                onClick={onToggleWatched}
-                            />
-                            :
-                            null
-                    }
-                </div>
-                {
-                    ratingInfo !== null ?
-                        <div className={styles['group']} role={'group'}>
-                            <RateButton
-                                icon={liked ? 'thumbs-up' : 'thumbs-up-outline'}
-                                on={liked}
-                                disabled={ratingInfo.type !== 'Ready'}
-                                label={liked ? t('RATING_UNLIKE') : t('RATING_LIKE')}
-                                onClick={onLiked}
-                            />
-                            <RateButton
-                                icon={loved ? 'heart' : 'heart-outline'}
-                                on={loved}
-                                disabled={ratingInfo.type !== 'Ready'}
-                                label={loved ? t('RATING_UNLOVE') : t('RATING_LOVE')}
-                                onClick={onLoved}
-                            />
-                        </div>
-                        :
-                        null
-                }
-                {
-                    typeof shareUrl === 'string' ?
-                        <Button className={classNames(styles['button'], styles['round'])} aria-label={t('CTX_SHARE')} onClick={openShare}>
-                            <Tooltip label={t('CTX_SHARE')} position={'top'} />
-                            <Icon className={styles['icon']} name={'share'} />
-                        </Button>
-                        :
-                        null
-                }
-            </div>
+            {
+                hasSecondary ?
+                    <div className={styles['secondary']}>
+                        {
+                            typeof trailerHref === 'string' ?
+                                <Button className={styles['button']} title={t('TRAILER')} aria-label={t('TRAILER')} href={trailerHref}>
+                                    <Icon className={styles['icon']} name={'trailer'} />
+                                    <div className={styles['label']}>{t('TRAILER')}</div>
+                                </Button>
+                                :
+                                null
+                        }
+                        {
+                            toggles ?
+                                <Groups
+                                    className={styles['group']}
+                                    inLibrary={inLibrary}
+                                    onToggleLibrary={onToggleLibrary}
+                                    watched={watched}
+                                    onToggleWatched={onToggleWatched}
+                                    ratingInfo={ratingInfo}
+                                />
+                                :
+                                null
+                        }
+                        {
+                            typeof shareUrl === 'string' ?
+                                <Button className={classNames(styles['button'], styles['round'])} aria-label={t('CTX_SHARE')} onClick={openShare}>
+                                    <Tooltip label={t('CTX_SHARE')} position={'top'} />
+                                    <Icon className={styles['icon']} name={'share'} />
+                                    <div className={styles['label']}>{t('CTX_SHARE')}</div>
+                                </Button>
+                                :
+                                null
+                        }
+                    </div>
+                    :
+                    null
+            }
             {
                 shareOpen && typeof shareUrl === 'string' ?
                     <ModalDialog title={t('CTX_SHARE')} onCloseRequest={closeShare}>
