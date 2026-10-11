@@ -70,7 +70,7 @@ const Details = () => {
 
     useExternalPlayerCallback({ type, id, videoId }, details);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
-    useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta);
+    useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta && metaItem !== null);
 
     const onEpisodeSearch = useCallback((season: number, episode: number) => {
         const nextVideoId = encodeURIComponent(`${id}:${season}:${episode}`);
@@ -128,26 +128,26 @@ const Details = () => {
                     :
                     null
             }
-            {
-                isMobile && metaItem !== null ?
-                    <HeroArt
-                        art={video?.thumbnail || metaItem.background}
-                        logo={metaItem.logo}
-                        name={metaItem.name}
-                        label={
-                            video !== null && typeof video.season === 'number' && typeof video.episode === 'number' ?
-                                `${metaItem.name} · ${t('SEASON_NUMBER', { season: video.season })} · ${t('EPISODE')} ${video.episode}`
-                                :
-                                video !== null ? metaItem.name : null
-                        }
-                        title={video !== null ? video.title || video.id : null}
-                        blurred={video !== null && typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, profile.settings.hideSpoilers)}
-                    />
-                    :
-                    null
-            }
             {navBar}
             <div ref={contentRef} className={styles['content']}>
+                {
+                    isMobile && metaItem !== null ?
+                        <HeroArt
+                            art={video?.thumbnail || metaItem.background}
+                            logo={metaItem.logo}
+                            name={metaItem.name}
+                            label={
+                                video !== null && typeof video.season === 'number' && typeof video.episode === 'number' ?
+                                    `${metaItem.name} · ${t('SEASON_NUMBER', { season: video.season })} · ${t('EPISODE')} ${video.episode}`
+                                    :
+                                    video !== null ? metaItem.name : null
+                            }
+                            title={video !== null ? video.title || video.id : null}
+                            blurred={video !== null && typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, profile.settings.hideSpoilers)}
+                        />
+                        :
+                        null
+                }
                 <div className={styles['hero']}>
                     {
                         metaPath === null ?

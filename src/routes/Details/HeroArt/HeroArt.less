@@ -2,24 +2,29 @@
 
 @import (reference) '../variables.less';
 
+@hero-base: var(--hero-base, 32.5rem);
+@hero-limit: var(--hero-limit, 16rem);
+
 .hero-art {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
+    position: relative;
     z-index: 1;
-    height: calc(var(--hero-base, 32.5rem) - var(--hero-shrink, 0px));
-    transform: translate3d(0, calc(-1 * var(--hero-out, 0px)), 0);
-    opacity: var(--hero-opacity, 1);
+    height: @hero-limit;
     overflow: visible;
-    will-change: height, transform, opacity;
+
+    .pin {
+        position: sticky;
+        top: 0;
+        height: 0;
+        overflow: visible;
+    }
 
     .art {
         position: absolute;
         top: 0;
         right: 0;
-        bottom: 0;
         left: 0;
+        height: calc(@hero-base - var(--hero-shrink, 0px));
+        opacity: var(--hero-opacity, 1);
         overflow: hidden;
         mask-image: linear-gradient(180deg, #000000 0%, #000000 52%, rgba(0, 0, 0, 0.55) 74%, transparent 100%);
 
@@ -46,17 +51,34 @@
                 transform: scale(1.1);
             }
         }
-    }
 
-    .copy {
-        position: absolute;
-        right: 1.25rem;
-        bottom: 0.625rem;
-        left: 1.25rem;
-        transform: scale(var(--hero-copy-scale, 1));
-        transform-origin: left bottom;
-        opacity: var(--hero-copy-opacity, 1);
-        overflow: visible;
+        .scrim {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: calc(@nav-size + 1.5rem);
+            background: linear-gradient(180deg, fade(@scrim-color, 70%) 0%, fade(@scrim-color, 35%) 45%, fade(@scrim-color, 0%) 100%);
+        }
+    }
+}
+
+.copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: calc(@hero-base - @hero-limit);
+    padding: 0 1.25rem 0.625rem;
+    text-align: center;
+    transform: scale(var(--hero-copy-scale, 1));
+    transform-origin: center bottom;
+    opacity: var(--hero-copy-opacity, 1);
+    overflow: visible;
+
+    > * {
+        flex: none;
     }
 
     .label {
@@ -79,36 +101,30 @@
     }
 }
 
-.scrim {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 8;
-    height: calc(@nav-size + 1.5rem);
-    background: linear-gradient(180deg, fade(@scrim-color, 70%) 0%, fade(@scrim-color, 35%) 45%, fade(@scrim-color, 0%) 100%);
-    opacity: var(--hero-opacity, 1);
-    pointer-events: none;
-}
-
 .bar {
-    position: absolute;
+    position: sticky;
     top: 0;
-    right: 0;
-    left: 0;
     z-index: 9;
-    height: calc(@nav-size + 1rem);
-    background: linear-gradient(41deg, fade(@scrim-color, 84%) 0%, fade(#1a173e, 84%) 100%);
-    backdrop-filter: blur(24px);
-    mask-image: linear-gradient(180deg, #000000 calc(100% - 1rem), transparent);
-    opacity: var(--hero-bar-opacity, 0);
+    height: 0;
+    overflow: visible;
     pointer-events: none;
+
+    .bar-content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: @nav-size;
+        background-color: @bar-background;
+        backdrop-filter: blur(24px);
+        opacity: var(--hero-bar-opacity, 0);
+    }
 
     .bar-title {
         position: absolute;
         top: var(--safe-area-inset-top);
         right: 4rem;
-        bottom: 1rem;
+        bottom: 0;
         left: 4rem;
         display: flex;
         align-items: center;
