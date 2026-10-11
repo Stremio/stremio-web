@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
@@ -19,14 +19,16 @@ type Props = {
     value: string | null,
     ariaLabel: string,
     size?: 'medium' | 'large',
+    stretch?: boolean,
     onSelect: (value: string) => void,
 };
 
-const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium', onSelect }: Props) => {
+const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium', stretch = false, onSelect }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const indicatorRef = useRef<HTMLDivElement>(null);
     const placedValueRef = useRef<string | null>(null);
+    const [scrollable, setScrollable] = useState(false);
 
     const onClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         const { value } = event.currentTarget.dataset;
@@ -35,7 +37,7 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
         }
     }, [onSelect]);
 
-    useLayoutEffect(() => {
+    const place = useCallback((animate: boolean) => {
         const container = containerRef.current;
         const track = trackRef.current;
         const indicator = indicatorRef.current;
@@ -43,39 +45,62 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
             return;
         }
 
-        const place = (animate: boolean) => {
-            const option = track.querySelector<HTMLElement>('[aria-selected="true"]');
-            if (!option) {
-                indicator.style.opacity = '0';
-                return;
-            }
+        const option = track.querySelector<HTMLElement>('[aria-selected="true"]');
+        if (!option) {
+            indicator.style.opacity = '0';
+            return;
+        }
 
-            indicator.style.transition = animate ? '' : 'none';
-            indicator.style.opacity = '1';
-            indicator.style.width = `${option.offsetWidth}px`;
-            indicator.style.transform = `translateX(${option.offsetLeft}px)`;
-            if (!animate) {
-                indicator.getBoundingClientRect();
-                indicator.style.transition = '';
-            }
+        indicator.style.transition = animate ? '' : 'none';
+        indicator.style.opacity = '1';
+        indicator.style.width = `${option.offsetWidth}px`;
+        indicator.style.transform = `translateX(${option.offsetLeft}px)`;
+        if (!animate) {
+            indicator.getBoundingClientRect();
+            indicator.style.transition = '';
+        }
 
-            if (placedValueRef.current !== value) {
-                placedValueRef.current = value;
-                container.scrollTo({
-                    left: Math.max(0, option.offsetLeft - (container.clientWidth - option.offsetWidth) / 2),
-                    behavior: animate ? 'smooth' : 'auto',
-                });
-            }
-        };
+        const nextValue = option.dataset.value ?? null;
+        if (placedValueRef.current !== nextValue) {
+            placedValueRef.current = nextValue;
+            container.scrollTo({
+                left: Math.max(0, option.offsetLeft - (container.clientWidth - option.offsetWidth) / 2),
+                behavior: animate ? 'smooth' : 'auto',
+            });
+        }
+    }, []);
 
+    useLayoutEffect(() => {
         place(placedValueRef.current !== null);
-        const observer = new ResizeObserver(() => place(false));
+    }, [options, value, place]);
+
+    useLayoutEffect(() => {
+        const container = containerRef.current;
+        const track = trackRef.current;
+        if (!container || !track) {
+            return;
+        }
+
+        let width = track.offsetWidth;
+        const observer = new ResizeObserver(() => {
+            setScrollable(container.scrollWidth > container.clientWidth + 1);
+            if (track.offsetWidth !== width) {
+                width = track.offsetWidth;
+                place(false);
+            }
+        });
+        observer.observe(container);
         observer.observe(track);
         return () => observer.disconnect();
-    }, [options, value]);
+    }, [place]);
 
     return (
-        <div ref={containerRef} className={classNames(className, styles['segmented-control'], styles[size])} role={'tablist'} aria-label={ariaLabel}>
+        <div
+            ref={containerRef}
+            className={classNames(className, styles['segmented-control'], styles[size], { [styles['stretch']]: stretch, [styles['scrollable']]: scrollable })}
+            role={'tablist'}
+            aria-label={ariaLabel}
+        >
             <div ref={trackRef} className={styles['track']}>
                 <div ref={indicatorRef} className={styles['indicator']} aria-hidden={'true'} />
                 {

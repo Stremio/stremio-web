@@ -4,6 +4,9 @@
 
 .segmented-control {
     position: relative;
+    flex: none;
+    width: fit-content;
+    max-width: 100%;
     padding: 0.25rem;
     border-radius: 999px;
     background-color: var(--overlay-color);
@@ -13,6 +16,14 @@
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    &.stretch {
+        width: 100%;
+    }
+
+    &.scrollable {
+        mask-image: linear-gradient(90deg, #000000 calc(100% - 1.75rem), transparent);
     }
 
     .track {
@@ -40,7 +51,7 @@
     .option {
         position: relative;
         z-index: 1;
-        flex: 1 0 auto;
+        flex: none;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -82,6 +93,10 @@
         &.selected .count {
             color: rgba(255, 255, 255, 0.78);
         }
+    }
+
+    &.stretch .option {
+        flex: 1 0 auto;
     }
 
     &.large .option {
