@@ -47,14 +47,14 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
 
         const option = track.querySelector<HTMLElement>('[aria-selected="true"]');
         if (!option) {
-            indicator.style.opacity = '0';
+            indicator.style.visibility = 'hidden';
             return;
         }
 
         indicator.style.transition = animate ? '' : 'none';
-        indicator.style.opacity = '1';
+        indicator.style.visibility = 'visible';
         indicator.style.width = `${option.offsetWidth}px`;
-        indicator.style.transform = `translateX(${option.offsetLeft}px)`;
+        indicator.style.left = `${option.offsetLeft}px`;
         if (!animate) {
             indicator.getBoundingClientRect();
             indicator.style.transition = '';

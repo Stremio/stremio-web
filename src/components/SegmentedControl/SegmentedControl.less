@@ -44,8 +44,8 @@
         width: 0;
         border-radius: 999px;
         background-color: var(--primary-accent-color);
-        opacity: 0;
-        transition: transform 0.32s @ease, width 0.32s @ease, opacity 0.2s ease-out;
+        visibility: hidden;
+        transition: left 0.32s @ease, width 0.32s @ease;
     }
 
     .option {
@@ -81,10 +81,12 @@
 
         .label {
             flex: none;
+            font-size: 0.875rem;
         }
 
         .count {
             flex: none;
+            font-size: 0.875rem;
             color: rgba(255, 255, 255, 0.46);
             font-variant-numeric: tabular-nums;
             transition: color 0.25s @ease;
