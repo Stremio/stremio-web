@@ -31,19 +31,34 @@
     }
 
     .icon {
-        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         opacity: 0.7;
         transform-origin: 0 0;
-        transition: opacity 0.15s @ease, transform 0.25s @ease-spring;
+        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.25s @ease;
     }
 
     &:hover .icon, &:focus .icon, &.on .icon {
         opacity: 1;
     }
 
-    .badge {
+    .fill {
+        clip-path: inset(100% 0 0 0);
+    }
+
+    &.on .fill {
+        clip-path: inset(0 0 0 0);
+        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.3s @ease 0.1s;
+    }
+
+    &.library .icon, &.on .icon {
+        transform: scale(0.82);
+    }
+
+    .ring, .disc {
         position: absolute;
         right: -0.25rem;
         bottom: -0.25rem;
@@ -52,124 +67,97 @@
         width: 0.875rem;
         height: 0.875rem;
         border-radius: 50%;
-        color: #ffffff;
-        opacity: 0;
-        transform: scale(0);
         overflow: visible;
-        transition: background-color 0.2s @ease, color 0.2s @ease, opacity 0.15s @ease, transform 0.25s @ease-spring, box-shadow 0.2s @ease;
     }
 
-    .badge-icon {
+    .ring-icon, .disc-icon {
         grid-area: 1 / 1;
+    }
+
+    .ring {
+        opacity: 0.75;
+        box-shadow: inset 0 0 0 1.5px currentColor;
+        transition: opacity 0.15s @ease, transform 0.3s @ease-pop 0.1s;
+    }
+
+    .ring-icon {
+        width: 0.5rem;
+        height: 0.5rem;
+    }
+
+    &:hover .ring {
+        opacity: 1;
+    }
+
+    &.on .ring, &.watched:not(.on) .ring {
+        transform: scale(0);
+        transition: opacity 0.15s @ease, transform 0.12s ease-in;
+    }
+
+    .disc {
+        color: @scrim-color;
+        background-color: #ffffff;
+        transform: scale(0);
+        transition: transform 0.12s ease-in;
+    }
+
+    &.watched .disc {
+        background-color: var(--tertiary-accent-color);
+    }
+
+    &.on .disc {
+        transform: scale(1);
+        transition: transform 0.3s @ease-pop 0.1s;
+    }
+
+    .disc-icon {
         width: 0.625rem;
         height: 0.625rem;
-        opacity: 0;
-        transform: scale(0.4);
-        transition: opacity 0.15s @ease, transform 0.25s @ease-spring;
     }
 
-    &.library .icon, &.on .icon {
-        transform: scale(0.82);
+    .check {
+        transition: transform 0.25s @ease-pop 0.1s;
     }
 
-    &.library:not(.on) {
-        .badge {
-            opacity: 0.75;
-            transform: none;
-            box-shadow: inset 0 0 0 1.5px currentColor;
-        }
-
-        &:hover .badge {
-            opacity: 1;
-        }
-
-        .add {
-            width: 0.5rem;
-            height: 0.5rem;
-            opacity: 1;
-            transform: none;
-        }
+    .remove {
+        transform: scale(0);
+        transition: transform 0.1s ease-in;
     }
 
-    &.watched:not(.on) {
-        @media (hover: hover) {
-            &:hover {
-                .icon {
-                    transform: scale(0.82);
-                }
+    @media (hover: hover) {
+        &.watched:not(.on):hover {
+            .icon {
+                transform: scale(0.82);
+            }
 
-                .badge {
-                    opacity: 1;
-                    transform: none;
-                    box-shadow: inset 0 0 0 1.5px currentColor;
-                }
-
-                .check {
-                    width: 0.5rem;
-                    height: 0.5rem;
-                    opacity: 0.9;
-                    transform: none;
-                }
+            .ring {
+                transform: scale(1);
+                transition: opacity 0.15s @ease, transform 0.3s @ease-pop;
             }
         }
-    }
 
-    &.on {
-        .badge {
-            opacity: 1;
-            transform: none;
-            background-color: #ffffff;
-            color: @scrim-color;
-            animation: toggle-pop 0.36s @ease-spring;
+        &.watched.fresh:not(.on):hover .ring {
+            transition-delay: 0s, 0.1s;
         }
 
-        .check {
-            opacity: 1;
-            transform: none;
-        }
+        &.on:not(.fresh):hover {
+            .check {
+                transform: scale(0);
+                transition: transform 0.1s ease-in;
+            }
 
-        &.watched .badge {
-            background-color: var(--tertiary-accent-color);
-        }
-
-        @media (hover: hover) {
-            &:not(.fresh):hover {
-                .check {
-                    opacity: 0;
-                    transform: scale(0.4);
-                }
-
-                .remove {
-                    opacity: 1;
-                    transform: none;
-                }
+            .remove {
+                transform: scale(1);
+                transition: transform 0.25s @ease-pop 0.1s;
             }
         }
-    }
-}
-
-@keyframes toggle-pop {
-    0% {
-        transform: scale(0.6);
-    }
-
-    55% {
-        transform: scale(1.18);
-    }
-
-    100% {
-        transform: scale(1);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .toggle-button {
-        .glyph, .icon, .badge, .badge-icon {
+        .glyph, .icon, .ring, .disc, .check, .remove {
             transition: none;
-        }
-
-        &.on .badge {
-            animation: none;
         }
     }
 }

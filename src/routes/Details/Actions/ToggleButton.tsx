@@ -16,12 +16,13 @@ type Props = {
 };
 
 const ICONS = {
-    library: { off: 'library-outline', on: 'library' },
-    watched: { off: 'eye', on: 'eye' },
+    library: { base: 'library-outline', fill: 'library', ring: 'add' },
+    watched: { base: 'eye', fill: null, ring: 'checkmark' },
 };
 
 const ToggleButton = ({ className, variant, on, label, onClick }: Props) => {
     const [fresh, setFresh] = useState(false);
+    const icons = ICONS[variant];
 
     const onButtonClick = useCallback(() => {
         setFresh(true);
@@ -42,11 +43,19 @@ const ToggleButton = ({ className, variant, on, label, onClick }: Props) => {
         >
             <Tooltip label={label} position={'top'} />
             <div className={styles['glyph']}>
-                <Icon className={styles['icon']} name={on ? ICONS[variant].on : ICONS[variant].off} />
-                <div className={styles['badge']} aria-hidden={'true'}>
-                    <Icon className={classNames(styles['badge-icon'], styles['add'])} name={'add'} />
-                    <Icon className={classNames(styles['badge-icon'], styles['check'])} name={'checkmark'} />
-                    <Icon className={classNames(styles['badge-icon'], styles['remove'])} name={'remove'} />
+                <Icon className={styles['icon']} name={icons.base} />
+                {
+                    icons.fill !== null ?
+                        <Icon className={classNames(styles['icon'], styles['fill'])} name={icons.fill} />
+                        :
+                        null
+                }
+                <div className={styles['ring']} aria-hidden={'true'}>
+                    <Icon className={styles['ring-icon']} name={icons.ring} />
+                </div>
+                <div className={styles['disc']} aria-hidden={'true'}>
+                    <Icon className={classNames(styles['disc-icon'], styles['check'])} name={'checkmark'} />
+                    <Icon className={classNames(styles['disc-icon'], styles['remove'])} name={'remove'} />
                 </div>
             </div>
         </Button>
