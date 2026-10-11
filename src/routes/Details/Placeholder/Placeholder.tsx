@@ -7,7 +7,7 @@ import styles from './Placeholder.less';
 
 type Props = {
     className?: string,
-    variant: 'hero' | 'list',
+    variant: 'hero' | 'control' | 'list',
 };
 
 const ROWS = [0, 1, 2, 3, 4, 5];
@@ -20,8 +20,10 @@ const Placeholder = ({ className, variant }: Props) => {
             {
                 variant === 'hero' ?
                     <React.Fragment>
-                        <div className={styles['logo']} />
-                        <div className={styles['row']}>
+                        <div className={styles['art']}>
+                            <div className={styles['logo']} />
+                        </div>
+                        <div className={classNames(styles['row'], styles['facts'])}>
                             <div className={styles['fact']} />
                             <div className={styles['fact']} />
                             <div className={styles['fact']} />
@@ -29,33 +31,31 @@ const Placeholder = ({ className, variant }: Props) => {
                         <div className={styles['line']} />
                         <div className={styles['line']} />
                         <div className={classNames(styles['line'], styles['short'])} />
-                        <div className={styles['row']}>
+                        <div className={classNames(styles['row'], styles['links'])}>
                             <div className={styles['pill']} />
                             <div className={styles['pill']} />
                             <div className={styles['pill']} />
                         </div>
                         <div className={styles['spacer']} />
-                        <div className={styles['row']}>
+                        <div className={classNames(styles['row'], styles['actions'])}>
                             <div className={styles['action']} />
-                            <div className={styles['circle']} />
+                            <div className={styles['group']} />
                             <div className={styles['circle']} />
                         </div>
                     </React.Fragment>
                     :
-                    <React.Fragment>
-                        <div className={styles['control']} />
-                        {
-                            ROWS.map((row) => (
-                                <div key={row} className={styles['item']}>
-                                    <div className={styles['thumbnail']} />
-                                    <div className={styles['text']}>
-                                        <div className={styles['line']} />
-                                        <div className={classNames(styles['line'], styles['short'])} />
-                                    </div>
+                    variant === 'control' ?
+                        <div className={styles['bar']} />
+                        :
+                        ROWS.map((row) => (
+                            <div key={row} className={styles['item']}>
+                                <div className={styles['thumbnail']} />
+                                <div className={styles['text']}>
+                                    <div className={styles['line']} />
+                                    <div className={classNames(styles['line'], styles['short'])} />
                                 </div>
-                            ))
-                        }
-                    </React.Fragment>
+                            </div>
+                        ))
             }
         </div>
     );

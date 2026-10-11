@@ -78,7 +78,7 @@ const Videos = ({
 
     if (metaItem === null && !error) {
         return (
-            <Panel ariaLabel={t('VIDEOS')}>
+            <Panel ariaLabel={t('VIDEOS')} header={<Placeholder variant={'control'} />}>
                 <Placeholder variant={'list'} />
             </Panel>
         );

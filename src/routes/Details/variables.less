@@ -8,8 +8,10 @@
 @overlay-strong: rgba(255, 255, 255, 0.15);
 @live-color: #e50914;
 @panel-background: rgba(12, 11, 17, 0.62);
-@bar-background: rgba(12, 11, 17, 0.84);
 @glass-background: rgba(30, 28, 44, 0.78);
+@hero-base-fallback: ~"min(calc(var(--dynamic-viewport-width) * 4 / 3), calc(var(--dynamic-viewport-height) * 0.7))";
+@hero-base: ~"var(--hero-base, @{hero-base-fallback})";
+@hero-limit: ~"var(--hero-limit, calc(@{hero-base-fallback} * 0.493))";
 @scrim-color: rgb(12, 11, 17);
 @ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 @ease-spring: cubic-bezier(0.33, 1, 0.68, 1);
@@ -27,3 +29,10 @@
 @desktop-narrow: ~"only screen and (min-width: @{desktop-min}) and (max-width: @{xsmall})";
 @desktop-short: ~"only screen and (min-width: @{desktop-min}) and (max-height: @{phone-landscape-size})";
 @mobile: ~"only screen and (max-width: @{xxsmall})";
+
+.glass(@offset: 0) {
+    background-image: linear-gradient(41deg, fade(@scrim-color, 78%) 0%, fade(#1a173e, 78%) 100%);
+    background-size: var(--dynamic-viewport-width) var(--dynamic-viewport-height);
+    background-position: 0 @offset;
+    backdrop-filter: blur(24px) saturate(1.2);
+}

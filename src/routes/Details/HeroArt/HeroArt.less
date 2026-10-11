@@ -2,9 +2,6 @@
 
 @import (reference) '../variables.less';
 
-@hero-base: var(--hero-base, 32.5rem);
-@hero-limit: var(--hero-limit, 16rem);
-
 .hero-art {
     position: relative;
     z-index: 1;
@@ -115,9 +112,8 @@
         right: 0;
         left: 0;
         height: @nav-size;
-        background-color: @bar-background;
-        backdrop-filter: blur(24px);
         opacity: var(--hero-bar-opacity, 0);
+        .glass();
     }
 
     .bar-title {

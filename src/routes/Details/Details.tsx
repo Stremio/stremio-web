@@ -71,7 +71,7 @@ const Details = () => {
 
     useExternalPlayerCallback({ type, id, videoId }, details);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
-    useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta && metaItem !== null);
+    useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta);
 
     const onEpisodeSearch = useCallback((season: number, episode: number) => {
         const nextVideoId = encodeURIComponent(`${id}:${season}:${episode}`);

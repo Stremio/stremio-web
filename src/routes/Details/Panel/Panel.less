@@ -45,7 +45,6 @@
         border-radius: @panel-radius;
         background-color: @panel-background;
         backdrop-filter: blur(8px) saturate(1.2);
-        animation: panel-enter 0.45s @ease-spring both;
 
         .header {
             padding: 1.25rem 1.25rem 0;
@@ -93,13 +92,6 @@
     }
 }
 
-@keyframes panel-enter {
-    from {
-        opacity: 0;
-        transform: translateY(1rem);
-    }
-}
-
 @media @mobile {
     .panel {
         display: flow-root;
@@ -127,11 +119,9 @@
                 bottom: 0;
                 left: 0;
                 z-index: -1;
-                background-color: @bar-background;
-                backdrop-filter: blur(24px);
-                mask-image: linear-gradient(180deg, #000000 calc(100% - 1rem), transparent);
                 opacity: 0;
                 transition: opacity 0.25s @ease;
+                .glass(~"calc(-1 * var(--panel-header-inset, 0px))");
             }
 
             &.stuck::before {
@@ -142,11 +132,5 @@
         .body {
             padding: 0 0.75rem 3rem;
         }
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .panel {
-        animation: none;
     }
 }

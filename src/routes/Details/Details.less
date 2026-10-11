@@ -29,6 +29,20 @@
         bottom: 0;
         left: var(--safe-area-inset-left);
         z-index: 1;
+        animation: content-enter 0.45s @ease-spring both;
+    }
+}
+
+@keyframes content-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .details .content {
+        animation: none;
     }
 }
 

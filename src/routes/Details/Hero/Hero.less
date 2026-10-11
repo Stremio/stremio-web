@@ -9,7 +9,6 @@
     min-width: 0;
     min-height: 0;
     overflow: visible;
-    animation: hero-enter 0.45s @ease-spring both;
 
     .logo {
         flex: none;
@@ -72,13 +71,6 @@
     }
 }
 
-@keyframes hero-enter {
-    from {
-        opacity: 0;
-        transform: translateY(0.5rem);
-    }
-}
-
 @media @mobile {
     .hero {
         .facts {
@@ -125,11 +117,5 @@
         .spacer {
             min-height: 0.75rem;
         }
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero {
-        animation: none;
     }
 }
