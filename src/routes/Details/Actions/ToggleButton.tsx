@@ -16,8 +16,8 @@ type Props = {
 };
 
 const ICONS = {
-    library: { base: 'library-outline', fill: 'library', ring: 'add' },
-    watched: { base: 'eye', fill: null, ring: 'checkmark' },
+    library: { off: 'add-to-library', on: 'library', undo: 'remove-from-library' },
+    watched: { off: 'eye', on: 'eye', undo: 'eye-off' },
 };
 
 const ToggleButton = ({ className, variant, on, label, onClick }: Props) => {
@@ -43,20 +43,9 @@ const ToggleButton = ({ className, variant, on, label, onClick }: Props) => {
         >
             <Tooltip label={label} position={'top'} />
             <div className={styles['glyph']}>
-                <Icon className={styles['icon']} name={icons.base} />
-                {
-                    icons.fill !== null ?
-                        <Icon className={classNames(styles['icon'], styles['fill'])} name={icons.fill} />
-                        :
-                        null
-                }
-                <div className={styles['ring']} aria-hidden={'true'}>
-                    <Icon className={styles['ring-icon']} name={icons.ring} />
-                </div>
-                <div className={styles['disc']} aria-hidden={'true'}>
-                    <Icon className={classNames(styles['disc-icon'], styles['check'])} name={'checkmark'} />
-                    <Icon className={classNames(styles['disc-icon'], styles['remove'])} name={'remove'} />
-                </div>
+                <Icon className={classNames(styles['icon'], styles['icon-off'])} name={icons.off} />
+                <Icon className={classNames(styles['icon'], styles['icon-on'])} name={icons.on} />
+                <Icon className={classNames(styles['icon'], styles['icon-undo'])} name={icons.undo} />
             </div>
         </Button>
     );

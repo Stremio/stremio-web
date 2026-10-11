@@ -2,6 +2,9 @@
 
 @import (reference) '../variables.less';
 
+@enter: opacity 0.2s @ease 0.06s, transform 0.3s @ease-pop 0.06s, color 0.2s @ease;
+@leave: opacity 0.12s ease-in, transform 0.12s ease-in, color 0.2s @ease;
+
 .toggle-button {
     position: relative;
     flex: none;
@@ -36,127 +39,62 @@
         left: 0;
         width: 100%;
         height: 100%;
+        opacity: 0;
+        transform: scale(0.7);
+        transition: @leave;
+    }
+
+    .icon-off {
         opacity: 0.7;
-        transform-origin: 0 0;
-        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.25s @ease;
+        transform: none;
+        transition: @enter;
     }
 
-    &:hover .icon, &:focus .icon, &.on .icon {
+    &:hover .icon-off, &:focus .icon-off {
         opacity: 1;
+        transition: opacity 0.15s @ease;
     }
 
-    .fill {
-        clip-path: inset(100% 0 0 0);
-    }
-
-    &.on .fill {
-        clip-path: inset(0 0 0 0);
-        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.3s @ease 0.1s;
-    }
-
-    &.library .icon, &.on .icon {
-        transform: scale(0.82);
-    }
-
-    .ring, .disc {
-        position: absolute;
-        right: -0.25rem;
-        bottom: -0.25rem;
-        display: grid;
-        place-items: center;
-        width: 0.875rem;
-        height: 0.875rem;
-        border-radius: 50%;
-        overflow: visible;
-    }
-
-    .ring-icon, .disc-icon {
-        grid-area: 1 / 1;
-    }
-
-    .ring {
-        opacity: 0.75;
-        box-shadow: inset 0 0 0 1.5px currentColor;
-        transition: opacity 0.15s @ease, transform 0.3s @ease-pop 0.1s;
-    }
-
-    .ring-icon {
-        width: 0.5rem;
-        height: 0.5rem;
-    }
-
-    &:hover .ring {
-        opacity: 1;
-    }
-
-    &.on .ring, &.watched:not(.on) .ring {
-        transform: scale(0);
-        transition: opacity 0.15s @ease, transform 0.12s ease-in;
-    }
-
-    .disc {
-        color: @scrim-color;
-        background-color: #ffffff;
-        transform: scale(0);
-        transition: transform 0.12s ease-in;
-    }
-
-    &.watched .disc {
-        background-color: var(--tertiary-accent-color);
-    }
-
-    &.on .disc {
-        transform: scale(1);
-        transition: transform 0.3s @ease-pop 0.1s;
-    }
-
-    .disc-icon {
-        width: 0.625rem;
-        height: 0.625rem;
-    }
-
-    .check {
-        transition: transform 0.25s @ease-pop 0.1s;
-    }
-
-    .remove {
-        transform: scale(0);
-        transition: transform 0.1s ease-in;
-    }
-
-    @media (hover: hover) {
-        &.watched:not(.on):hover {
-            .icon {
-                transform: scale(0.82);
-            }
-
-            .ring {
-                transform: scale(1);
-                transition: opacity 0.15s @ease, transform 0.3s @ease-pop;
-            }
+    &.on {
+        .icon-off {
+            opacity: 0;
+            transform: scale(0.7);
+            transition: @leave;
         }
 
-        &.watched.fresh:not(.on):hover .ring {
-            transition-delay: 0s, 0.1s;
+        .icon-on {
+            opacity: 1;
+            transform: none;
+            transition: @enter;
         }
 
-        &.on:not(.fresh):hover {
-            .check {
-                transform: scale(0);
-                transition: transform 0.1s ease-in;
-            }
+        @media (hover: hover) {
+            &:not(.fresh):hover {
+                .icon-on {
+                    opacity: 0;
+                    transform: scale(0.7);
+                    transition: @leave;
+                }
 
-            .remove {
-                transform: scale(1);
-                transition: transform 0.25s @ease-pop 0.1s;
+                .icon-undo {
+                    opacity: 1;
+                    transform: none;
+                    transition: @enter;
+                }
             }
+        }
+    }
+
+    &.watched {
+        .icon-on, .icon-undo {
+            color: var(--tertiary-accent-color);
         }
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .toggle-button {
-        .glyph, .icon, .ring, .disc, .check, .remove {
+        .glyph, .icon {
             transition: none;
         }
     }
