@@ -59,7 +59,9 @@
         margin: 0.75rem 0.25rem 0;
         border-radius: 2px;
         background-color: rgba(255, 255, 255, 0.06);
+        opacity: 0;
         overflow: hidden;
+        transition: opacity 0.3s @ease;
 
         &::after {
             content: '';
@@ -69,7 +71,14 @@
             width: 30%;
             border-radius: inherit;
             background-color: var(--primary-accent-color);
-            animation: streams-loading 1.4s @ease infinite;
+        }
+
+        &.active {
+            opacity: 1;
+
+            &::after {
+                animation: streams-loading 1.4s @ease infinite;
+            }
         }
     }
 
@@ -77,12 +86,20 @@
         display: flex;
         flex-direction: column;
         gap: 1.125rem;
+
+        > * {
+            flex: none;
+        }
     }
 
     .group {
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
+
+        > * {
+            flex: none;
+        }
 
         .group-label {
             padding: 0.5rem 1.125rem 0.25rem;
@@ -103,6 +120,10 @@
         flex-direction: column;
         align-items: center;
         gap: 1rem;
+
+        > * {
+            flex: none;
+        }
 
         .episode-picker {
             align-self: stretch;
@@ -172,7 +193,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .streams {
-        .loading-line::after {
+        .loading-line.active::after {
             animation-duration: 3s;
         }
     }

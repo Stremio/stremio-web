@@ -16,12 +16,13 @@ type Props = {
     className?: string,
     metaItem: MetaItemMetaDetails,
     video: Video | null,
+    streams?: boolean,
     libraryItem: LibraryItem | null,
     compact?: boolean,
     children?: React.ReactNode,
 };
 
-const Hero = ({ className, metaItem, video, libraryItem, compact = false, children }: Props) => {
+const Hero = ({ className, metaItem, video, streams = false, libraryItem, compact = false, children }: Props) => {
     const { t, i18n } = useTranslation();
     const { groups, imdb } = useMetaLinks(metaItem.links);
     const released = parseDate(metaItem.released);
@@ -34,7 +35,7 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                     <React.Fragment>
                         {
                             !compact ?
-                                <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} />
+                                <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={streams} />
                                 :
                                 null
                         }

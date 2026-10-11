@@ -18,11 +18,11 @@ type Props = {
 
 const RateButton = ({ className, icon, on, disabled = false, label, onClick }: Props) => (
     <Button
-        className={classNames(className, styles['rate-button'], { [styles['on']]: on })}
+        className={classNames(className, styles['rate-button'], { [styles['on']]: on, [styles['pending']]: disabled })}
         aria-pressed={on}
         aria-label={label}
-        disabled={disabled}
-        onClick={onClick}
+        aria-disabled={disabled}
+        onClick={disabled ? undefined : onClick}
     >
         <Tooltip label={label} position={'top'} />
         <Icon className={styles['icon']} name={icon} />

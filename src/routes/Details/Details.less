@@ -56,6 +56,25 @@
     }
 }
 
+@media @desktop-narrow {
+    .details {
+        .hero {
+            left: @hero-gutter-narrow;
+            bottom: @panel-gap-narrow;
+            width: calc(100% - @panel-width-narrow - @panel-gap-narrow - @hero-gutter-narrow * 2);
+        }
+    }
+}
+
+@media @desktop-short {
+    .details {
+        .hero {
+            top: calc(@nav-size + 0.25rem);
+            bottom: 1rem;
+        }
+    }
+}
+
 @media @mobile {
     .details {
         .content {
@@ -71,24 +90,19 @@
             &::-webkit-scrollbar {
                 display: none;
             }
+
+            > * {
+                flex: none;
+            }
         }
 
         .hero {
             position: relative;
             z-index: 2;
-            flex: none;
             display: flex;
             flex-direction: column;
             padding: calc(var(--hero-base, 32.5rem) + 0.875rem) 1.25rem 0;
             overflow: visible;
-        }
-    }
-}
-
-@media @mobile and (orientation: landscape) {
-    .details {
-        .hero {
-            padding-top: calc(var(--hero-base, 32.5rem) + 0.5rem);
         }
     }
 }

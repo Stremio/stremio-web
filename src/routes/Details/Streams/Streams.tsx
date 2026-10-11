@@ -2,6 +2,7 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useGoBack, toPath } from 'stremio-router';
 import Icon from '@stremio/stremio-icons/react';
@@ -115,7 +116,7 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
                     null
             }
             {
-                groups.length > 1 ?
+                streams.length > 1 ?
                     <SegmentedControl
                         className={styles['addons']}
                         options={options}
@@ -127,12 +128,7 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
                     :
                     null
             }
-            {
-                loadingCount > 0 ?
-                    <div className={styles['loading-line']} role={'status'} aria-label={loadingLabel} />
-                    :
-                    null
-            }
+            <div className={classNames(styles['loading-line'], { [styles['active']]: loadingCount > 0 })} role={'status'} aria-label={loadingCount > 0 ? loadingLabel : undefined} aria-hidden={loadingCount === 0} />
         </React.Fragment>
     );
 

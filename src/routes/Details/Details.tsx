@@ -31,7 +31,7 @@ import styles from './Details.less';
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
 
-const useIsMobile = () => useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
+const useIsMobile = () => useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
 
 const Details = () => {
     const { type, id, videoId } = useParams();
@@ -162,7 +162,7 @@ const Details = () => {
                                     metaItem === null ?
                                         <Placeholder variant={'hero'} />
                                         :
-                                        <Hero metaItem={metaItem} video={video} libraryItem={details.libraryItem} compact={isMobile}>
+                                        <Hero metaItem={metaItem} video={video} streams={streamPath !== null} libraryItem={details.libraryItem} compact={isMobile}>
                                             <Actions
                                                 primary={primary}
                                                 trailerHref={trailerHref}

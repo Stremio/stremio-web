@@ -64,11 +64,16 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                     hasProgrammes={programmes.length > 0}
                     canPrevious={guide.canPrevious}
                     canNext={guide.canNext}
+                    canZoomIn={guide.canZoomIn}
+                    canZoomOut={guide.canZoomOut}
                     isMobile={isMobile}
                     onViewSelect={guide.onViewSelect}
                     onPrevious={guide.onPrevious}
                     onNow={guide.onNow}
                     onNext={guide.onNext}
+                    onZoomIn={guide.onZoomIn}
+                    onZoomOut={guide.onZoomOut}
+                    onFit={guide.onFit}
                 />
             }
         >
@@ -78,8 +83,11 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                 now={now}
                 selectedKey={selectedProgrammeKey}
                 nowToken={guide.nowToken}
+                fitToken={guide.fitToken}
+                scale={guide.scale}
                 isMobile={isMobile}
                 onSelect={onSelect}
+                onScale={guide.onScale}
             />
         </Panel>
     );

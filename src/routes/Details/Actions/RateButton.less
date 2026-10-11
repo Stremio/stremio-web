@@ -37,6 +37,10 @@
     &.on .icon {
         animation: rate-pop 0.36s @ease-spring;
     }
+
+    &.pending {
+        cursor: default;
+    }
 }
 
 @keyframes rate-pop {
@@ -53,7 +57,7 @@
     }
 }
 
-@media @mobile {
+@media @desktop-short, @mobile {
     .rate-button {
         width: 3rem;
         height: 3rem;

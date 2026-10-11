@@ -7,6 +7,10 @@
     flex-direction: column;
     min-width: 0;
 
+    > * {
+        flex: none;
+    }
+
     .subtitle {
         flex: none;
         display: flex;
@@ -30,10 +34,18 @@
         gap: 1.25rem;
         padding-bottom: 2rem;
 
+        > * {
+            flex: none;
+        }
+
         .group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+
+            > * {
+                flex: none;
+            }
 
             .group-label {
                 display: flex;

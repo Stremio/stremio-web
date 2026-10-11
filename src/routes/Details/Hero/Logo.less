@@ -5,14 +5,14 @@
 .logo {
     display: block;
     width: auto;
-    height: 7rem;
-    max-width: min(27.5rem, 100%);
+    height: 8rem;
+    max-width: min(32rem, 100%);
     object-fit: contain;
     object-position: left center;
 
     &.small {
-        height: 3.5rem;
-        max-width: min(16rem, 100%);
+        height: 4rem;
+        max-width: min(18rem, 100%);
     }
 }
 
@@ -27,6 +27,17 @@
     &.small {
         font-size: 1.5rem;
         line-height: 1.25;
+    }
+}
+
+@media @desktop-short {
+    .logo, .logo.small {
+        height: 3.5rem;
+        max-width: min(16rem, 100%);
+    }
+
+    .name, .name.small {
+        font-size: 1.5rem;
     }
 }
 

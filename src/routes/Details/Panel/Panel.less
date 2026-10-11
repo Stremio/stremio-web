@@ -4,6 +4,7 @@
 
 .panel {
     position: relative;
+    flex: none;
     display: flex;
     flex-direction: column;
 
@@ -26,6 +27,10 @@
         display: flex;
         flex-direction: column;
         min-height: 0;
+
+        > * {
+            flex: none;
+        }
     }
 }
 
@@ -56,6 +61,34 @@
             &::-webkit-scrollbar {
                 display: none;
             }
+        }
+    }
+}
+
+@media @desktop-narrow {
+    .panel {
+        right: @panel-gap-narrow;
+        bottom: @panel-gap-narrow;
+        width: @panel-width-narrow;
+
+        .header {
+            padding: 1rem 1rem 0;
+        }
+    }
+}
+
+@media @desktop-short {
+    .panel {
+        top: calc(@nav-size + 0.25rem);
+        right: @panel-gap-narrow;
+        bottom: 1rem;
+
+        .header {
+            padding: 0.875rem 1rem 0;
+        }
+
+        .body {
+            padding-bottom: 1rem;
         }
     }
 }

@@ -31,14 +31,40 @@
             max-width: 50rem;
             min-height: 0;
 
+            > * {
+                flex: none;
+            }
+
             .spacer {
                 flex: 1;
                 min-height: 1.5rem;
             }
 
             .playback {
-                flex: none;
                 margin-top: 2rem;
+            }
+        }
+    }
+}
+
+@media @desktop-narrow {
+    .live {
+        .main {
+            left: @hero-gutter-narrow;
+            bottom: @panel-gap-narrow;
+            width: calc(100% - @panel-width-narrow - @panel-gap-narrow - @hero-gutter-narrow * 2);
+        }
+    }
+}
+
+@media @desktop-short {
+    .live {
+        .main {
+            top: calc(@nav-size + 0.25rem);
+            bottom: 1rem;
+
+            .playback {
+                margin-top: 1rem;
             }
         }
     }
@@ -59,6 +85,10 @@
 
             &::-webkit-scrollbar {
                 display: none;
+            }
+
+            > * {
+                flex: none;
             }
         }
 

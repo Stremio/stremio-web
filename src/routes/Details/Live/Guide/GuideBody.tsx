@@ -15,11 +15,14 @@ type Props = {
     now: number,
     selectedKey: string | null,
     nowToken: number,
+    fitToken: number,
+    scale: number,
     isMobile: boolean,
     onSelect: (programme: EPGProgram) => void,
+    onScale: (scale: number) => void,
 };
 
-const GuideBody = ({ view, programmes, now, selectedKey, nowToken, isMobile, onSelect }: Props) => {
+const GuideBody = ({ view, programmes, now, selectedKey, nowToken, fitToken, scale, isMobile, onSelect, onScale }: Props) => {
     const { t } = useTranslation();
 
     const onKeySelect = useCallback((key: string) => {
@@ -48,7 +51,10 @@ const GuideBody = ({ view, programmes, now, selectedKey, nowToken, isMobile, onS
             now={now}
             selectedKey={selectedKey}
             nowToken={nowToken}
+            fitToken={fitToken}
+            scale={scale}
             onSelect={onKeySelect}
+            onScale={onScale}
         />;
 };
 

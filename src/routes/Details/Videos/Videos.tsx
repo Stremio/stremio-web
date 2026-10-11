@@ -48,7 +48,7 @@ const Videos = ({
     scrollMemoryRef,
 }: Props) => {
     const { t, i18n } = useTranslation();
-    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
     const [search, setSearch] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
 
@@ -97,7 +97,7 @@ const Videos = ({
         <Panel
             ariaLabel={t('VIDEOS')}
             header={
-                seasons.length > 0 ?
+                seasons.length > 1 ?
                     <SegmentedControl
                         options={options}
                         value={selectedSeason !== null ? String(selectedSeason) : null}
@@ -106,7 +106,10 @@ const Videos = ({
                         onSelect={handleSeasonSelect}
                     />
                     :
-                    null
+                    options.length === 1 ?
+                        <div className={styles['season']}>{options[0].label}</div>
+                        :
+                        null
             }
             resetKey={`${metaItem.id}:${selectedSeason}`}
         >

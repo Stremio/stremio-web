@@ -93,6 +93,37 @@
     }
 }
 
+@media @desktop-short {
+    .hero {
+        .still, .links {
+            display: none;
+        }
+
+        .label {
+            margin-top: 0.5rem;
+        }
+
+        .title {
+            margin-top: 0.25rem;
+            font-size: 1.5rem;
+        }
+
+        .facts {
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+        .description {
+            margin-top: 0.75rem;
+            -webkit-line-clamp: 2;
+        }
+
+        .spacer {
+            min-height: 0.75rem;
+        }
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .hero {
         animation: none;

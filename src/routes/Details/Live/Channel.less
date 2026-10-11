@@ -61,6 +61,26 @@
         text-overflow: ellipsis;
     }
 
+    @media @desktop-short {
+        grid-template-columns: 2.25rem minmax(0, 1fr);
+
+        .mark {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 0.5rem;
+        }
+
+        .name {
+            font-size: 0.875rem;
+            line-height: 1.125rem;
+        }
+
+        .addon {
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+    }
+
     &.compact {
         grid-template-columns: 2rem auto minmax(0, 1fr);
         grid-template-areas: 'mark name addon';
