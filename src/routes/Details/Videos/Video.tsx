@@ -13,7 +13,7 @@ import Image from 'stremio/components/Image';
 import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
 import useRowMenu from '../useRowMenu';
-import { formatDate } from '../format';
+import { formatDate, hidesSpoiler } from '../format';
 import { getScrollParent } from './useScrollMemory';
 import styles from './Video.less';
 
@@ -47,7 +47,7 @@ const Video = ({ video, selected, seasonWatched, minutesLeft, onSelect, onMarkVi
 
     const { id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, deepLinks } = video;
     const hasProgress = typeof progress === 'number' && progress > 0;
-    const blurThumbnail = profile.settings.hideSpoilers && !!season && !!episode && !watched;
+    const blurThumbnail = hidesSpoiler(video, profile.settings.hideSpoilers);
     const releasedLabel = formatDate(released, i18n.language);
     const shouldScroll = selected && (!watched || hasProgress);
 

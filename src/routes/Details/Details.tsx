@@ -8,6 +8,7 @@ import { HorizontalNavBar } from 'stremio/components/NavBar';
 import DelayedRenderer from 'stremio/components/DelayedRenderer';
 import { useContentGamepadNavigation } from 'stremio/services/GamepadNavigation';
 import { useProfile, withCoreSuspender } from 'stremio/common';
+import { hidesSpoiler } from './format';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import useDetails from './useDetails';
@@ -140,6 +141,7 @@ const Details = () => {
                                 video !== null ? metaItem.name : null
                         }
                         title={video !== null ? video.title || video.id : null}
+                        blurred={video !== null && typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, profile.settings.hideSpoilers)}
                     />
                     :
                     null

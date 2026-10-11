@@ -13,17 +13,18 @@ type Props = {
     name: string,
     label?: string | null,
     title?: string | null,
+    blurred?: boolean,
 };
 
 const renderFallback = () => null;
 
-const HeroArt = ({ className, art, logo, name, label = null, title = null }: Props) => (
+const HeroArt = ({ className, art, logo, name, label = null, title = null, blurred = false }: Props) => (
     <React.Fragment>
         <header className={classNames(className, styles['hero-art'])}>
             <div className={styles['art']} aria-hidden={'true'}>
                 {
                     typeof art === 'string' && art.length > 0 ?
-                        <Image className={styles['image']} src={art} alt={''} renderFallback={renderFallback} />
+                        <Image className={classNames(styles['image'], { [styles['blurred']]: blurred })} src={art} alt={''} renderFallback={renderFallback} />
                         :
                         null
                 }

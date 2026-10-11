@@ -11,6 +11,7 @@ type Props = {
     className?: string,
     thumbnail: string | null,
     progress: number | null | undefined,
+    blurred?: boolean,
 };
 
 const renderFallback = () => (
@@ -19,11 +20,11 @@ const renderFallback = () => (
     </div>
 );
 
-const Still = ({ className, thumbnail, progress }: Props) => (
+const Still = ({ className, thumbnail, progress, blurred = false }: Props) => (
     <div className={classNames(className, styles['still'])}>
         {
             typeof thumbnail === 'string' && thumbnail.length > 0 ?
-                <Image className={styles['image']} src={thumbnail} alt={''} renderFallback={renderFallback} />
+                <Image className={classNames(styles['image'], { [styles['blurred']]: blurred })} src={thumbnail} alt={''} renderFallback={renderFallback} />
                 :
                 renderFallback()
         }

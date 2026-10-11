@@ -3,7 +3,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import { formatDate, getMinutesLeft, parseDate } from '../format';
+import { useProfile } from 'stremio/common';
+import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from '../format';
 import useMetaLinks from './useMetaLinks';
 import Logo from './Logo';
 import Still from './Still';
@@ -24,6 +25,7 @@ type Props = {
 
 const Hero = ({ className, metaItem, video, streams = false, libraryItem, compact = false, children }: Props) => {
     const { t, i18n } = useTranslation();
+    const profile = useProfile();
     const { groups, imdb } = useMetaLinks(metaItem.links);
     const released = parseDate(metaItem.released);
     const minutesLeft = video !== null ? getMinutesLeft(libraryItem, video.id) : null;
@@ -61,7 +63,7 @@ const Hero = ({ className, metaItem, video, streams = false, libraryItem, compac
                             !compact ?
                                 <React.Fragment>
                                     <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={true} />
-                                    <Still className={styles['still']} thumbnail={video.thumbnail} progress={video.progress} />
+                                    <Still className={styles['still']} thumbnail={video.thumbnail} progress={video.progress} blurred={hidesSpoiler(video, profile.settings.hideSpoilers)} />
                                     {
                                         typeof video.season === 'number' && typeof video.episode === 'number' ?
                                             <div className={styles['label']}>

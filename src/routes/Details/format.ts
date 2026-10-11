@@ -20,6 +20,10 @@ export const formatDate = (value: string | Date | null | undefined, language: st
     return date !== null ? date.toLocaleDateString(language, options) : null;
 };
 
+export const hidesSpoiler = ({ season, episode, watched }: Pick<Video, 'season' | 'episode' | 'watched'>, hideSpoilers: boolean): boolean => {
+    return hideSpoilers && typeof season === 'number' && typeof episode === 'number' && !watched;
+};
+
 export const getEpisodeLabel = ({ season, episode }: Pick<Video, 'season' | 'episode'>): string | null => {
     return typeof season === 'number' && typeof episode === 'number' ?
         `S${season} E${episode}`
