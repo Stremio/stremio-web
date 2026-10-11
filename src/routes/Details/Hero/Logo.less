@@ -1,0 +1,43 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.logo {
+    display: block;
+    width: auto;
+    height: 7rem;
+    max-width: min(27.5rem, 100%);
+    object-fit: contain;
+    object-position: left center;
+
+    &.small {
+        height: 3.5rem;
+        max-width: min(16rem, 100%);
+    }
+}
+
+.name {
+    font-size: 2.75rem;
+    line-height: 1.12;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--primary-foreground-color);
+    overflow-wrap: anywhere;
+
+    &.small {
+        font-size: 1.5rem;
+        line-height: 1.25;
+    }
+}
+
+@media @mobile {
+    .logo {
+        height: 4rem;
+        max-width: min(16rem, 70vw);
+        object-position: left bottom;
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+}

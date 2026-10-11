@@ -1,0 +1,61 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.rate-button {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    color: var(--primary-foreground-color);
+    overflow: visible;
+
+    &:focus {
+        outline-offset: -0.25rem;
+    }
+
+    .icon {
+        display: block;
+        width: 1.375rem;
+        height: 1.375rem;
+        opacity: 0.7;
+        transition: opacity 0.15s @ease, transform 0.15s @ease;
+    }
+
+    &:hover .icon, &:focus .icon, &.on .icon {
+        opacity: 1;
+    }
+
+    &:active .icon {
+        transform: scale(0.86);
+    }
+
+    &.on .icon {
+        animation: rate-pop 0.36s @ease-spring;
+    }
+}
+
+@keyframes rate-pop {
+    0% {
+        transform: scale(0.6);
+    }
+
+    55% {
+        transform: scale(1.18);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media @mobile {
+    .rate-button {
+        width: 3rem;
+        height: 3rem;
+    }
+}

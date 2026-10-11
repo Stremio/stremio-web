@@ -1,0 +1,32 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    max-width: 37.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.85;
+    font-weight: 400;
+    color: @text-secondary;
+    cursor: pointer;
+    transition: color 0.2s @ease;
+
+    &:hover {
+        color: var(--primary-foreground-color);
+    }
+
+    &.expanded {
+        -webkit-line-clamp: unset;
+    }
+}
+
+@media @mobile {
+    .description {
+        max-width: none;
+        font-size: 0.875rem;
+        line-height: 1.75;
+    }
+}

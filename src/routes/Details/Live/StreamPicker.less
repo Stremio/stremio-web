@@ -1,0 +1,44 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/ModalDialog/styles.less') {
+    modal-dialog: modal-dialog-container;
+    modal-content: modal-dialog-content;
+    modal-title: title-container;
+    modal-body: body-container;
+}
+
+.modal {
+    .modal-dialog {
+        width: 35rem;
+        max-width: calc(100vw - 3rem);
+        max-height: 80%;
+        overflow: hidden;
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            max-height: inherit;
+            overflow: hidden;
+
+            .modal-title {
+                height: auto;
+                padding: 1.75rem 2.5rem 0.5rem 0;
+                font-size: 1.25rem;
+                line-height: 1.625rem;
+                font-weight: 600;
+            }
+
+            .modal-body,
+            .modal-body:last-child {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-height: 0;
+                margin: 0;
+                padding: 0;
+                overflow-y: auto;
+            }
+        }
+    }
+}

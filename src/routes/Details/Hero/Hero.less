@@ -1,0 +1,100 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: visible;
+    animation: hero-enter 0.45s @ease-spring both;
+
+    .logo {
+        flex: none;
+    }
+
+    .still {
+        flex: none;
+        margin-top: 2.25rem;
+    }
+
+    .label {
+        flex: none;
+        margin-top: 1.75rem;
+        font-size: 0.8125rem;
+        line-height: 1.125rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: @text-tertiary;
+    }
+
+    .title {
+        flex: none;
+        margin-top: 0.625rem;
+        font-size: 1.875rem;
+        line-height: 1.2;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--primary-foreground-color);
+        overflow-wrap: anywhere;
+    }
+
+    .facts {
+        flex: none;
+        margin-top: 2.25rem;
+    }
+
+    .still ~ .facts, .title ~ .facts {
+        margin-top: 1.25rem;
+        font-size: 1rem;
+    }
+
+    .description {
+        flex: none;
+        margin-top: 1.5rem;
+    }
+
+    .title ~ .description {
+        margin-top: 1rem;
+    }
+
+    .links {
+        flex: none;
+        margin-top: 1.75rem;
+    }
+
+    .spacer {
+        flex: 1;
+        min-height: 1.5rem;
+    }
+}
+
+@keyframes hero-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+}
+
+@media @mobile {
+    .hero {
+        .facts {
+            margin-top: 0;
+        }
+
+        .description {
+            margin-top: 0.875rem;
+        }
+
+        .spacer {
+            min-height: 1.25rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero {
+        animation: none;
+    }
+}

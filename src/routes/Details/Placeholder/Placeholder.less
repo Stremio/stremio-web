@@ -1,0 +1,149 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    > *, .fact, .pill, .action, .circle, .thumbnail, .text > * {
+        position: relative;
+        border-radius: var(--border-radius);
+        background-color: var(--color-placeholder-background);
+        overflow: hidden;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+            transform: translateX(-100%);
+            animation: placeholder-shimmer 1.6s infinite;
+        }
+    }
+
+    .row {
+        display: flex;
+        gap: 1rem;
+        background: none;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    .spacer {
+        flex: 1;
+        background: none;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    .text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: none;
+
+        &::after {
+            display: none;
+        }
+    }
+
+    .logo {
+        width: 20rem;
+        height: 7rem;
+        max-width: 100%;
+    }
+
+    .fact {
+        width: 5rem;
+        height: 1.25rem;
+    }
+
+    .line {
+        width: 100%;
+        max-width: 36rem;
+        height: 0.875rem;
+
+        &.short {
+            max-width: 22rem;
+        }
+    }
+
+    .pill {
+        width: 6rem;
+        height: 2.125rem;
+        border-radius: 999px;
+    }
+
+    .action {
+        width: 12rem;
+        height: 3.5rem;
+        border-radius: 999px;
+    }
+
+    .circle {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 999px;
+    }
+
+    .control {
+        height: 2.75rem;
+        margin: 0 0.75rem;
+        border-radius: 999px;
+    }
+
+    .item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.625rem 0.75rem;
+        background: none;
+
+        &::after {
+            display: none;
+        }
+
+        .thumbnail {
+            flex: none;
+            width: 9rem;
+            aspect-ratio: 16 / 9;
+            border-radius: 0.375rem;
+        }
+
+        .line {
+            height: 0.75rem;
+        }
+    }
+
+    &.hero {
+        min-height: 0;
+    }
+}
+
+@keyframes placeholder-shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media @mobile {
+    .placeholder {
+        .logo {
+            height: 4rem;
+        }
+
+        .spacer {
+            display: none;
+        }
+    }
+}

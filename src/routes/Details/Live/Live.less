@@ -1,0 +1,158 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.live {
+    .content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+    }
+}
+
+@media @desktop {
+    .live {
+        .content {
+            overflow: hidden;
+        }
+
+        .main {
+            position: absolute;
+            top: calc(@nav-size + 1.5rem);
+            bottom: @panel-gap;
+            left: @hero-gutter;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - @panel-width - @panel-gap - @hero-gutter * 2);
+            max-width: 50rem;
+            min-height: 0;
+
+            .spacer {
+                flex: 1;
+                min-height: 1.5rem;
+            }
+
+            .playback {
+                flex: none;
+                margin-top: 2rem;
+            }
+        }
+    }
+}
+
+@media @mobile {
+    .live {
+        .content {
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+            padding-bottom: var(--safe-area-inset-bottom);
+            overflow-x: hidden;
+            overflow-y: auto;
+            overflow-anchor: none;
+            overscroll-behavior-y: contain;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        .hero-art {
+            position: relative;
+            z-index: 1;
+            flex: none;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            max-height: calc(var(--dynamic-viewport-height) * 0.7);
+
+            .art {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                overflow: hidden;
+                mask-image: linear-gradient(180deg, #000000 0%, #000000 52%, rgba(0, 0, 0, 0.55) 74%, transparent 100%);
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    background: linear-gradient(0deg, fade(@scrim-color, 75%) 0%, fade(@scrim-color, 30%) 36%, fade(@scrim-color, 0%) 58%, fade(@scrim-color, 45%) 100%);
+                }
+
+                .image {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: 46% 20%;
+                    animation: live-art-fade-in 0.6s ease-out;
+                }
+            }
+
+            .copy {
+                position: absolute;
+                right: 1.25rem;
+                bottom: 0.625rem;
+                left: 1.25rem;
+
+                .headline {
+                    margin-top: 1rem;
+                }
+            }
+        }
+
+        .scrim {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 8;
+            height: calc(@nav-size + 1.5rem);
+            background: linear-gradient(180deg, fade(@scrim-color, 70%) 0%, fade(@scrim-color, 35%) 45%, fade(@scrim-color, 0%) 100%);
+            pointer-events: none;
+        }
+
+        .summary {
+            position: relative;
+            z-index: 2;
+            flex: none;
+            display: flex;
+            flex-direction: column;
+            padding: 0.875rem 1.25rem 0;
+
+            .playback {
+                margin-top: 1.25rem;
+            }
+        }
+
+        .guide-title {
+            flex: none;
+            padding: 2rem 1.25rem 0.875rem;
+            font-size: 1.125rem;
+            line-height: 1.5rem;
+            font-weight: 600;
+        }
+    }
+}
+
+@keyframes live-art-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .live .hero-art .art .image {
+        animation: none;
+    }
+}

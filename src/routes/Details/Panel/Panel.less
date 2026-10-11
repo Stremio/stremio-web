@@ -1,0 +1,119 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    .sentinel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
+    .header {
+        flex: none;
+        overflow: visible;
+    }
+
+    .body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+}
+
+@media @desktop {
+    .panel {
+        position: absolute;
+        top: calc(@nav-size + 1rem);
+        right: @panel-gap;
+        bottom: @panel-gap;
+        z-index: 3;
+        width: @panel-width;
+        border-radius: @panel-radius;
+        background-color: @panel-background;
+        backdrop-filter: blur(8px) saturate(1.2);
+        animation: panel-enter 0.45s @ease-spring both;
+
+        .header {
+            padding: 1.25rem 1.25rem 0;
+        }
+
+        .body {
+            padding: 0.5rem 0.625rem 2rem;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: none;
+            mask-image: linear-gradient(180deg, transparent, #000000 0.75rem, #000000 calc(100% - 3rem), transparent);
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+}
+
+@keyframes panel-enter {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+}
+
+@media @mobile {
+    .panel {
+        display: flow-root;
+        min-height: calc(var(--dynamic-viewport-height) - @nav-size);
+        overflow: visible;
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            margin-top: calc(-1 * @nav-size);
+            padding: calc(@nav-size + 0.25rem) 1.25rem 1rem;
+            pointer-events: none;
+            overflow: visible;
+
+            > * {
+                pointer-events: auto;
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: -1;
+                background: linear-gradient(41deg, fade(@scrim-color, 84%) 0%, fade(#1a173e, 84%) 100%);
+                backdrop-filter: blur(24px);
+                mask-image: linear-gradient(180deg, #000000 calc(100% - 1rem), transparent);
+                opacity: 0;
+                transition: opacity 0.25s @ease;
+            }
+
+            &.stuck::before {
+                opacity: 1;
+            }
+        }
+
+        .body {
+            padding: 0 0.75rem 3rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .panel {
+        animation: none;
+    }
+}
