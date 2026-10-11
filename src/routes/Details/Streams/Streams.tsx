@@ -92,19 +92,12 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
     const header = (
         <React.Fragment>
             {
-                video || loadingCount > 0 ?
+                video ?
                     <div className={styles['title-row']}>
-                        {
-                            video ?
-                                <React.Fragment>
-                                    <Button className={styles['back-button']} title={t('BACK')} onClick={onBack}>
-                                        <Icon className={styles['back-icon']} name={'chevron-back'} />
-                                    </Button>
-                                    <div className={styles['title']} title={episodeTitle ?? undefined}>{episodeTitle}</div>
-                                </React.Fragment>
-                                :
-                                <div className={styles['title']} />
-                        }
+                        <Button className={styles['back-button']} title={t('BACK')} onClick={onBack}>
+                            <Icon className={styles['back-icon']} name={'chevron-back'} />
+                        </Button>
+                        <div className={styles['title']} title={episodeTitle ?? undefined}>{episodeTitle}</div>
                         {
                             loadingCount > 0 ?
                                 <div className={styles['loading-text']}>{loadingLabel}</div>

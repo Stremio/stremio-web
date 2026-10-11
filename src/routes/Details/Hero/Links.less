@@ -3,20 +3,15 @@
 @import (reference) '../variables.less';
 
 .links {
-    display: flex;
-    flex-direction: column;
-    gap: 1.125rem;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: 1.125rem 1.25rem;
     overflow: visible;
 
-    .group {
-        display: grid;
-        grid-template-columns: 4.5rem minmax(0, 1fr);
-        align-items: center;
-        gap: 1rem;
-        overflow: visible;
-    }
-
     .label {
+        min-width: 3.5rem;
+        white-space: nowrap;
         font-size: 0.8125rem;
         line-height: 1.125rem;
         font-weight: 700;

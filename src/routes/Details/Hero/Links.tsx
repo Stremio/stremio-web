@@ -25,7 +25,7 @@ const Links = ({ className, groups }: Props) => {
         <div className={classNames(className, styles['links'])}>
             {
                 groups.map(({ category, links }) => (
-                    <div key={category} className={styles['group']}>
+                    <React.Fragment key={category}>
                         <div className={styles['label']}>{stringWithPrefix(category.toUpperCase(), 'LINKS_')}</div>
                         <div className={styles['pills']}>
                             {
@@ -36,7 +36,7 @@ const Links = ({ className, groups }: Props) => {
                                 ))
                             }
                         </div>
-                    </div>
+                    </React.Fragment>
                 ))
             }
         </div>
