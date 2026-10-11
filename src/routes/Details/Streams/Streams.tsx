@@ -94,7 +94,7 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
             {
                 video ?
                     <div className={styles['title-row']}>
-                        <Button className={styles['back-button']} title={t('BACK')} onClick={onBack}>
+                        <Button className={styles['back-button']} aria-label={t('BACK')} onClick={onBack}>
                             <Icon className={styles['back-icon']} name={'chevron-back'} />
                         </Button>
                         <div className={styles['title']} title={episodeTitle ?? undefined}>{episodeTitle}</div>
