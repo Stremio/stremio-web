@@ -11,6 +11,7 @@ type Props = {
     disabled?: boolean,
     tabIndex?: number,
     children?: React.ReactNode,
+    onClick?: () => void,
 };
 
 const Toggle = forwardRef(({ className, checked, children, ...props }: Props, ref) => {

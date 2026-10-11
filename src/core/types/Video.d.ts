@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 type VideoDeepLinks = {
+    metaDetailsVideos: string,
     metaDetailsStreams: string,
     player: string | null,
     externalPlayer: ExternalPlayerLinks | null,
