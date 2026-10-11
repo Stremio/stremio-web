@@ -110,7 +110,7 @@
             bottom: 0;
             left: 0;
             height: 0.25rem;
-            background-color: @live-color;
+            background-color: var(--primary-accent-color);
         }
 
         &:hover .image, &:focus .image {
@@ -141,14 +141,15 @@
         height: 2px;
         background-color: @live-color;
         pointer-events: none;
+        overflow: visible;
 
         &::before {
             content: '';
             position: absolute;
-            top: -3px;
-            left: -4px;
-            width: 8px;
-            height: 8px;
+            top: -4px;
+            left: -5px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background-color: @live-color;
         }

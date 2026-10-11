@@ -7,11 +7,10 @@ import styles from './ProgressBar.less';
 type Props = {
     className?: string,
     value: number,
-    live?: boolean,
 };
 
-const ProgressBar = ({ className, value, live = false }: Props) => (
-    <div className={classNames(className, styles['progress-bar'], { [styles['live']]: live })} aria-hidden={'true'}>
+const ProgressBar = ({ className, value }: Props) => (
+    <div className={classNames(className, styles['progress-bar'])} aria-hidden={'true'}>
         <div className={styles['value']} style={{ width: `${Math.min(100, Math.max(0, value))}%` }} />
     </div>
 );

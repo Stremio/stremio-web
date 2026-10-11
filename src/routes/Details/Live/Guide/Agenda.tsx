@@ -110,7 +110,7 @@ const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect }: 
                                             </div>
                                             {
                                                 live ?
-                                                    <ProgressBar className={styles['progress']} value={progress} live={true} />
+                                                    <ProgressBar className={styles['progress']} value={progress} />
                                                     :
                                                     null
                                             }

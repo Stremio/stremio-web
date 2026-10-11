@@ -105,7 +105,7 @@ const Programme = ({ className, programme, now, part = 'full' }: Props) => {
                                 <div className={styles['timing']}>
                                     {
                                         live ?
-                                            <ProgressBar className={styles['progress']} value={progress} live={true} />
+                                            <ProgressBar className={styles['progress']} value={progress} />
                                             :
                                             null
                                     }
