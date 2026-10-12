@@ -22,8 +22,16 @@
         width: 100%;
     }
 
-    &.scrollable {
+    &.fade-start {
+        mask-image: linear-gradient(90deg, transparent, #000000 1.75rem);
+    }
+
+    &.fade-end {
         mask-image: linear-gradient(90deg, #000000 calc(100% - 1.75rem), transparent);
+    }
+
+    &.fade-start.fade-end {
+        mask-image: linear-gradient(90deg, transparent, #000000 1.75rem, #000000 calc(100% - 1.75rem), transparent);
     }
 
     .track {

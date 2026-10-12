@@ -28,7 +28,7 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
     const trackRef = useRef<HTMLDivElement>(null);
     const indicatorRef = useRef<HTMLDivElement>(null);
     const placedValueRef = useRef<string | null>(null);
-    const [scrollable, setScrollable] = useState(false);
+    const [fade, setFade] = useState({ start: false, end: false });
 
     const onClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         const { value } = event.currentTarget.dataset;
@@ -36,6 +36,17 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
             onSelect(value);
         }
     }, [onSelect]);
+
+    const updateFade = useCallback(() => {
+        const container = containerRef.current;
+        if (!container) {
+            return;
+        }
+
+        const start = container.scrollLeft > 1;
+        const end = container.scrollLeft + container.clientWidth < container.scrollWidth - 1;
+        setFade((fade) => fade.start === start && fade.end === end ? fade : { start, end });
+    }, []);
 
     const place = useCallback((animate: boolean) => {
         const container = containerRef.current;
@@ -83,7 +94,7 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
 
         let width = track.offsetWidth;
         const observer = new ResizeObserver(() => {
-            setScrollable(container.scrollWidth > container.clientWidth + 1);
+            updateFade();
             if (track.offsetWidth !== width) {
                 width = track.offsetWidth;
                 place(false);
@@ -92,14 +103,15 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
         observer.observe(container);
         observer.observe(track);
         return () => observer.disconnect();
-    }, [place]);
+    }, [place, updateFade]);
 
     return (
         <div
             ref={containerRef}
-            className={classNames(className, styles['segmented-control'], styles[size], { [styles['stretch']]: stretch, [styles['scrollable']]: scrollable })}
+            className={classNames(className, styles['segmented-control'], styles[size], { [styles['stretch']]: stretch, [styles['fade-start']]: fade.start, [styles['fade-end']]: fade.end })}
             role={'tablist'}
             aria-label={ariaLabel}
+            onScroll={updateFade}
         >
             <div ref={trackRef} className={styles['track']}>
                 <div ref={indicatorRef} className={styles['indicator']} aria-hidden={'true'} />
