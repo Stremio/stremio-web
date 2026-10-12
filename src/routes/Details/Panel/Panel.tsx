@@ -48,7 +48,7 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
             setStuck(!entry.isIntersecting && entry.rootBounds !== null && entry.boundingClientRect.top < entry.rootBounds.top);
         }, {
             root: getScrollParent(sentinel),
-            rootMargin: `-${Math.ceil(stickyOffset) + 5}px 0px 0px 0px`,
+            rootMargin: `-${Math.ceil(stickyOffset) + 2}px 0px 0px 0px`,
         });
         observer.observe(sentinel);
         return () => observer.disconnect();
