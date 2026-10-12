@@ -41,11 +41,16 @@
 
     .view-row {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         gap: 0.5rem;
         overflow: visible;
+
+    }
+
+    .segments {
+        flex: 0 1 auto;
+        min-width: 0;
     }
 
     .controls {
@@ -109,17 +114,20 @@
 
     .mobile-row {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
         gap: 0.5rem;
         overflow: visible;
     }
 
     .segments {
-        flex: 1;
+        flex: 0 1 auto;
         min-width: 0;
     }
 
     .now-pill {
         flex: none;
+        align-self: flex-end;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -138,13 +146,8 @@
         }
     }
 
-    .mobile-zoom {
-        display: flex;
-        justify-content: flex-end;
-        overflow: visible;
-    }
-
     .controls {
+        flex: none;
         display: flex;
         align-items: center;
         gap: 0.25rem;

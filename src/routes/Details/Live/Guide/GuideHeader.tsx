@@ -74,6 +74,9 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
     if (isMobile) {
         return (
             <div className={styles['mobile-header']}>
+                <Button className={styles['now-pill']} onClick={onNow}>
+                    {t('LIVE_TV_NOW')}
+                </Button>
                 <div className={styles['mobile-row']}>
                     <SegmentedControl
                         className={styles['segments']}
@@ -81,21 +84,10 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
                         value={view}
                         ariaLabel={t('LIVE_TV_SCHEDULE')}
                         size={'large'}
-                        stretch={true}
                         onSelect={onViewSelect}
                     />
-                    <Button className={styles['now-pill']} onClick={onNow}>
-                        {t('LIVE_TV_NOW')}
-                    </Button>
+                    {zoom}
                 </div>
-                {
-                    zoom !== null ?
-                        <div className={styles['mobile-zoom']}>
-                            {zoom}
-                        </div>
-                        :
-                        null
-                }
             </div>
         );
     }
@@ -132,10 +124,10 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
             </div>
             <div className={styles['view-row']}>
                 <SegmentedControl
+                    className={styles['segments']}
                     options={options}
                     value={view}
                     ariaLabel={t('LIVE_TV_SCHEDULE')}
-                    stretch={zoom === null}
                     onSelect={onViewSelect}
                 />
                 {zoom}
