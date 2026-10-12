@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
@@ -47,7 +47,7 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
     const { hour, timeRange } = useFormatters(now);
     const containerRef = useRef<HTMLDivElement>(null);
     const appliedScaleRef = useRef(scale);
-    const fitTokenRef = useRef(fitToken);
+    const fitTokenRef = useRef<number | null>(null);
     const revealAfterScaleRef = useRef(false);
 
     const { origin, total, hours } = useMemo(() => {
@@ -88,11 +88,12 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
         }
     }, [scale]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (fitTokenRef.current === fitToken) {
             return;
         }
 
+        const mounting = fitTokenRef.current === null;
         fitTokenRef.current = fitToken;
         const container = containerRef.current;
         const parent = container !== null ? getScrollParent(container) : null;
@@ -104,11 +105,13 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
 
         const target = (parent.clientHeight * FIT_FRACTION) / minutes / getRootFontSize();
         if (Math.abs(target - scale) < 0.0001) {
-            scrollToFraction(selected, FIT_ANCHOR, true);
+            if (!mounting) {
+                scrollToFraction(selected, FIT_ANCHOR, true);
+            }
             return;
         }
 
-        revealAfterScaleRef.current = true;
+        revealAfterScaleRef.current = !mounting;
         onScale(target);
     }, [fitToken, scale, onScale]);
 
