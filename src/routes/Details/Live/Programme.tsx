@@ -9,6 +9,7 @@ import { parseDate } from '../format';
 import Rating from './Rating';
 import useFormatters from './Guide/useFormatters';
 import getRelativeTime from './getRelativeTime';
+import linkStyles from '../Hero/Links.less';
 import styles from './Programme.less';
 
 type Props = {
@@ -34,6 +35,10 @@ const Programme = ({ className, programme, now, part = 'full' }: Props) => {
         :
         programme?.links?.filter(({ category }) => category === 'Genres').map(({ name }) => name) ?? [];
     const timeRange = programme !== null ? formatEpgTimeRange(programme.startTime, programme.endTime, i18n.language) : null;
+    const cast = programme?.cast?.length ?
+        programme.cast
+        :
+        programme?.links?.filter(({ category }) => category === 'Cast').map(({ name }) => name) ?? [];
     const overview = programme !== null ? programme.overview : t('LIVE_TV_NO_SCHEDULE');
 
     return (
@@ -53,6 +58,14 @@ const Programme = ({ className, programme, now, part = 'full' }: Props) => {
                                     <div className={styles['when']}>
                                         {dayLabel(programme.startTime)}{timeRange !== null ? ` · ${timeRange}` : ''}
                                     </div>
+                                    {
+                                        !live ?
+                                            <div className={styles['relative']}>
+                                                {getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter)}
+                                            </div>
+                                            :
+                                            null
+                                    }
                                 </div>
                                 :
                                 null
@@ -89,34 +102,32 @@ const Programme = ({ className, programme, now, part = 'full' }: Props) => {
                                 null
                         }
                         {
-                            genres.length > 0 ?
-                                <div className={styles['genres']}>
+                            genres.length > 0 || cast.length > 0 ?
+                                <div className={classNames(styles['metadata'], linkStyles['links'])}>
                                     {
-                                        genres.map((genre) => (
-                                            <div key={genre} className={styles['genre']}>{genre}</div>
-                                        ))
+                                        [{ category: 'GENRES', names: genres }, { category: 'CAST', names: cast }]
+                                            .filter(({ names }) => names.length > 0)
+                                            .map(({ category, names }) => (
+                                                <React.Fragment key={category}>
+                                                    <div className={linkStyles['label']}>{t(`LINKS_${category}`)}</div>
+                                                    <div className={linkStyles['pills']}>
+                                                        {
+                                                            names.map((name, index) => (
+                                                                <div key={index} className={classNames(linkStyles['pill'], styles['pill'])}>{name}</div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                </React.Fragment>
+                                            ))
                                     }
                                 </div>
                                 :
                                 null
                         }
                         {
-                            programme !== null ?
+                            live ?
                                 <div className={styles['timing']}>
-                                    {
-                                        live ?
-                                            <ProgressBar className={styles['progress']} value={progress} />
-                                            :
-                                            null
-                                    }
-                                    <div className={styles['relative']}>
-                                        {
-                                            live ?
-                                                t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })
-                                                :
-                                                getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter)
-                                        }
-                                    </div>
+                                    <ProgressBar className={styles['progress']} value={progress} />
                                 </div>
                                 :
                                 null

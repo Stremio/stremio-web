@@ -8,6 +8,7 @@
     min-width: 0;
 
     .headline, .details {
+        flex: none;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -17,6 +18,7 @@
 
     .status {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 1rem;
         max-width: 100%;
@@ -52,7 +54,7 @@
             color: @text-secondary;
         }
 
-        .when {
+        .when, .relative {
             min-width: 0;
             font-size: 0.875rem;
             line-height: 1.125rem;
@@ -81,7 +83,7 @@
         align-items: center;
         gap: 0.5rem 2.5rem;
         margin-top: 1.25rem;
-        font-size: 1rem;
+        font-size: 1.125rem;
         line-height: 1.5rem;
         font-weight: 600;
         color: var(--primary-foreground-color);
@@ -93,7 +95,7 @@
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         max-width: 37.5rem;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
         font-size: 0.9375rem;
         line-height: 1.85;
         font-weight: 400;
@@ -101,48 +103,19 @@
         overflow: hidden;
     }
 
-    .genres {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.625rem;
-        margin-top: 1.25rem;
-
-        .genre {
-            display: flex;
-            align-items: center;
-            height: 2.125rem;
-            padding: 0 1.125rem;
-            border-radius: 999px;
-            background-color: var(--overlay-color);
-            backdrop-filter: blur(5px);
-            font-size: 0.875rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-    }
-
-    .timing {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+    .metadata {
         width: 100%;
-        max-width: 28.75rem;
+        max-width: 100%;
         margin-top: 1.75rem;
 
-        .progress {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .relative {
-            flex: none;
-            font-size: 0.8125rem;
-            line-height: 1.125rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.75);
-            font-variant-numeric: tabular-nums;
+        .pill {
+            height: auto;
+            min-height: 2.125rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
     }
+
 }
 
 @media @desktop-short {
@@ -164,13 +137,10 @@
             -webkit-line-clamp: 2;
         }
 
-        .genres {
+        .metadata {
             display: none;
         }
 
-        .timing {
-            margin-top: 0.875rem;
-        }
     }
 }
 
@@ -179,7 +149,7 @@
         .status {
             gap: 0.625rem;
 
-            .when {
+            .when, .relative {
                 font-weight: 600;
                 color: rgba(255, 255, 255, 0.75);
             }
@@ -209,16 +179,10 @@
             line-height: 1.75;
         }
 
-        .genres {
-            gap: 0.5rem;
+        .metadata {
             margin-top: 1rem;
         }
 
-        .timing {
-            max-width: none;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
     }
 }
 
@@ -237,5 +201,15 @@
         .status .live::before {
             animation: none;
         }
+    }
+}
+
+.programme .timing {
+    width: 100%;
+    max-width: 28.75rem;
+    margin-top: 1.75rem;
+
+    .progress {
+        width: 100%;
     }
 }
