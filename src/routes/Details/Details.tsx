@@ -56,6 +56,8 @@ const Details = () => {
             :
             null;
     }, [metaItem, streamPath]);
+    const artwork = video?.thumbnail || metaItem?.background;
+    const blurArtwork = video !== null && typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, profile.settings.hideSpoilers);
     const addonUrl = details.metaItem?.addon.transportUrl;
     const isEpgProvider = useMemo(() => {
         return profile.addons.some((addon) => addon.transportUrl === addonUrl && addon.manifest.behaviorHints?.epgProvider === true);
@@ -124,7 +126,7 @@ const Details = () => {
         <div ref={rootRef} className={styles['details']}>
             {
                 !isMobile ?
-                    <Background src={metaItem?.background} />
+                    <Background src={artwork} blurred={blurArtwork} />
                     :
                     null
             }
@@ -133,7 +135,7 @@ const Details = () => {
                 {
                     isMobile && metaItem !== null ?
                         <HeroArt
-                            art={video?.thumbnail || metaItem.background}
+                            art={artwork ?? null}
                             logo={metaItem.logo}
                             name={metaItem.name}
                             label={
@@ -143,7 +145,7 @@ const Details = () => {
                                     video !== null ? metaItem.name : null
                             }
                             title={video !== null ? video.title || video.id : null}
-                            blurred={video !== null && typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, profile.settings.hideSpoilers)}
+                            blurred={blurArtwork}
                         />
                         :
                         null
@@ -164,7 +166,7 @@ const Details = () => {
                                     metaItem === null ?
                                         <Placeholder variant={'hero'} />
                                         :
-                                        <Hero metaItem={metaItem} video={video} streams={streamPath !== null} libraryItem={details.libraryItem} compact={isMobile}>
+                                        <Hero metaItem={metaItem} video={video} libraryItem={details.libraryItem} compact={isMobile}>
                                             <Actions
                                                 primary={primary}
                                                 trailerHref={trailerHref}

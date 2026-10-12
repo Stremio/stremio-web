@@ -14,50 +14,15 @@
         flex: none;
     }
 
-    .still {
-        flex: none;
-        margin-top: 2.25rem;
-    }
-
-    .label {
-        flex: none;
-        margin-top: 1.75rem;
-        font-size: 0.8125rem;
-        line-height: 1.125rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: @text-tertiary;
-    }
-
-    .title {
-        flex: none;
-        margin-top: 0.625rem;
-        font-size: 1.875rem;
-        line-height: 1.2;
-        font-weight: 600;
-        letter-spacing: -0.015em;
-        color: var(--primary-foreground-color);
-        overflow-wrap: anywhere;
-    }
-
     .facts {
         flex: none;
+        min-height: 2rem;
         margin-top: 2.25rem;
-    }
-
-    .still ~ .facts, .title ~ .facts {
-        margin-top: 1.25rem;
-        font-size: 1rem;
     }
 
     .description {
         flex: none;
         margin-top: 1.5rem;
-    }
-
-    .title ~ .description {
-        margin-top: 1rem;
     }
 
     .links {
@@ -75,6 +40,7 @@
     .hero {
         .facts {
             justify-content: center;
+            min-height: 0;
             margin-top: 0;
         }
 
@@ -91,17 +57,8 @@
 
 @media @desktop-short {
     .hero {
-        .still, .links {
+        .links {
             display: none;
-        }
-
-        .label {
-            margin-top: 0.5rem;
-        }
-
-        .title {
-            margin-top: 0.25rem;
-            font-size: 1.5rem;
         }
 
         .facts {

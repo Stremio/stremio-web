@@ -8,15 +8,16 @@ import styles from './Background.less';
 type Props = {
     className?: string,
     src: string | null | undefined,
+    blurred?: boolean,
 };
 
 const renderFallback = () => null;
 
-const Background = ({ className, src }: Props) => (
+const Background = ({ className, src, blurred = false }: Props) => (
     <div className={classNames(className, styles['background'])} aria-hidden={'true'}>
         {
             typeof src === 'string' && src.length > 0 ?
-                <Image className={styles['image']} src={src} alt={''} renderFallback={renderFallback} />
+                <Image className={classNames(styles['image'], { [styles['blurred']]: blurred })} src={src} alt={''} renderFallback={renderFallback} />
                 :
                 null
         }

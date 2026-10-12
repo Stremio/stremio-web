@@ -3,11 +3,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import { useProfile } from 'stremio/common';
-import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from '../format';
+import { formatDate, getMinutesLeft, parseDate } from '../format';
 import useMetaLinks from './useMetaLinks';
 import Logo from './Logo';
-import Still from './Still';
 import Facts from './Facts';
 import Description from './Description';
 import Links from './Links';
@@ -17,15 +15,13 @@ type Props = {
     className?: string,
     metaItem: MetaItemMetaDetails,
     video: Video | null,
-    streams?: boolean,
     libraryItem: LibraryItem | null,
     compact?: boolean,
     children?: React.ReactNode,
 };
 
-const Hero = ({ className, metaItem, video, streams = false, libraryItem, compact = false, children }: Props) => {
+const Hero = ({ className, metaItem, video, libraryItem, compact = false, children }: Props) => {
     const { t, i18n } = useTranslation();
-    const profile = useProfile();
     const { groups, imdb } = useMetaLinks(metaItem.links);
     const released = parseDate(metaItem.released);
     const minutesLeft = video !== null ? getMinutesLeft(libraryItem, video.id) : null;
@@ -33,14 +29,14 @@ const Hero = ({ className, metaItem, video, streams = false, libraryItem, compac
     return (
         <div className={classNames(className, styles['hero'], { [styles['compact']]: compact })}>
             {
+                !compact ?
+                    <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} />
+                    :
+                    null
+            }
+            {
                 video === null ?
                     <React.Fragment>
-                        {
-                            !compact ?
-                                <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={streams} />
-                                :
-                                null
-                        }
                         <Facts
                             className={styles['facts']}
                             items={[
@@ -59,24 +55,6 @@ const Hero = ({ className, metaItem, video, streams = false, libraryItem, compac
                     </React.Fragment>
                     :
                     <React.Fragment>
-                        {
-                            !compact ?
-                                <React.Fragment>
-                                    <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={true} />
-                                    <Still className={styles['still']} thumbnail={video.thumbnail} progress={video.progress} blurred={hidesSpoiler(video, profile.settings.hideSpoilers)} />
-                                    {
-                                        typeof video.season === 'number' && typeof video.episode === 'number' ?
-                                            <div className={styles['label']}>
-                                                {`${t('SEASON_NUMBER', { season: video.season })} · ${t('EPISODE')} ${video.episode}`}
-                                            </div>
-                                            :
-                                            null
-                                    }
-                                    <h1 className={styles['title']}>{video.title || video.id}</h1>
-                                </React.Fragment>
-                                :
-                                null
-                        }
                         <Facts
                             className={styles['facts']}
                             items={[
