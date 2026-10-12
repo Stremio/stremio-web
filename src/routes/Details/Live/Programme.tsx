@@ -3,7 +3,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import ProgressBar from 'stremio/components/ProgressBar';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
 import { parseDate } from '../format';
 import Rating from './Rating';
@@ -120,14 +119,6 @@ const Programme = ({ className, programme, now, part = 'full' }: Props) => {
                                                 </React.Fragment>
                                             ))
                                     }
-                                </div>
-                                :
-                                null
-                        }
-                        {
-                            live ?
-                                <div className={styles['timing']}>
-                                    <ProgressBar className={styles['progress']} value={progress} />
                                 </div>
                                 :
                                 null

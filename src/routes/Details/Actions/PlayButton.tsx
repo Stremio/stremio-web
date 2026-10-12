@@ -30,7 +30,7 @@ const PlayButton = ({ className, icon = 'play', label, sublabel = null, href = n
             typeof sublabel === 'string' && sublabel.length > 0 ?
                 <React.Fragment>
                     <div className={styles['separator']} />
-                    <div className={styles['sublabel']}>{sublabel}</div>
+                    <div className={styles['sublabel']} title={sublabel}>{sublabel}</div>
                 </React.Fragment>
                 :
                 null

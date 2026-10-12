@@ -15,32 +15,32 @@ type Props = {
     streams: MetaDetails['streams'],
     streamsOpen: boolean,
     inLibrary: boolean,
+    minutesLeft: number | null,
+    currentProgrammeTitle: string | null,
     onStreamsToggle: () => void,
     onToggleLibrary: () => void,
 };
 
-const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle, onToggleLibrary }: Props) => {
+const Playback = ({ className, streams, streamsOpen, inLibrary, minutesLeft, currentProgrammeTitle, onStreamsToggle, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
     const core = useCore();
 
     const readyStreams = useMemo(() => {
         return streams.flatMap((resource) => {
             return resource.content.type === 'Ready' ?
-                resource.content.content.map((stream) => ({ stream, addonName: resource.addon.manifest.name }))
+                resource.content.content
                 :
                 [];
         });
     }, [streams]);
     const loading = useMemo(() => streams.some((resource) => resource.content.type === 'Loading'), [streams]);
     const watchStream = useMemo(() => {
-        return readyStreams.find(({ stream }) => stream.lastUsed === true) ?? readyStreams[0] ?? null;
+        return readyStreams.find((stream) => stream.lastUsed === true) ?? readyStreams[0] ?? null;
     }, [readyStreams]);
-
-    const sublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name].filter((part) => part.length > 0).join(' · ') : null;
 
     const onWatchClick = useCallback(() => {
         if (watchStream !== null) {
-            core.transport.analytics({ event: 'StreamClicked', args: { stream: watchStream.stream } });
+            core.transport.analytics({ event: 'StreamClicked', args: { stream: watchStream } });
         }
     }, [core.transport, watchStream]);
 
@@ -51,8 +51,8 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
                     <PlayButton
                         className={styles['primary']}
                         label={t('LIVE_TV_WATCH_LIVE')}
-                        sublabel={sublabel}
-                        href={watchStream.stream.deepLinks?.player}
+                        sublabel={currentProgrammeTitle ?? (minutesLeft !== null ? t('CONTINUE_WATCHING_TIME_LEFT', { minutes: minutesLeft }) : null)}
+                        href={watchStream.deepLinks?.player}
                         onClick={onWatchClick}
                     />
                     :

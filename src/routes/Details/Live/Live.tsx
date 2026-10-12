@@ -103,6 +103,8 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
             streams={streams}
             streamsOpen={streamsOpen}
             inLibrary={meta.inLibrary}
+            minutesLeft={live && current !== null ? Math.ceil((current.endTime.getTime() - now) / 60000) : null}
+            currentProgrammeTitle={!live ? current?.title ?? null : null}
             onStreamsToggle={onStreamsToggle}
             onToggleLibrary={onToggleLibrary}
         />
