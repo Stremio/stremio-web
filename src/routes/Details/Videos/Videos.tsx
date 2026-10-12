@@ -87,7 +87,7 @@ const Videos = ({
     if (!ready) {
         return (
             <Panel ariaLabel={t('VIDEOS')}>
-                <EpisodePicker className={styles['episode-picker']} seriesId={metaItem?.id ?? ''} onSubmit={onEpisodeSearch} />
+                <EpisodePicker seriesId={metaItem?.id ?? ''} onSubmit={onEpisodeSearch} />
                 <Message label={t('ERR_NO_VIDEOS_FOR_META')} />
             </Panel>
         );

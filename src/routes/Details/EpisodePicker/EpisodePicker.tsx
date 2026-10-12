@@ -7,12 +7,11 @@ import { Button, NumberInput } from 'stremio/components';
 import styles from './EpisodePicker.less';
 
 type Props = {
-    className?: string,
     seriesId: string;
     onSubmit: (season: number, episode: number) => void;
 };
 
-const EpisodePicker = ({ className, onSubmit }: Props) => {
+const EpisodePicker = ({ onSubmit }: Props) => {
     const { t } = useTranslation();
     const location = useLocation();
 
@@ -47,7 +46,7 @@ const EpisodePicker = ({ className, onSubmit }: Props) => {
     const disabled = season === initialSeason && episode === initialEpisode;
 
     return (
-        <div className={className}>
+        <div className={styles['episode-picker']}>
             <NumberInput
                 min={0}
                 label={t('SEASON')}
@@ -63,7 +62,7 @@ const EpisodePicker = ({ className, onSubmit }: Props) => {
                 showButtons
             />
             <Button
-                className={styles['button-container']}
+                className={styles['button']}
                 onClick={handleSubmit}
                 disabled={disabled}
             >

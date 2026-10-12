@@ -1,29 +1,37 @@
-// Copyright (C) 2017-2025 Smart code 203358507
+// Copyright (C) 2017-2026 Smart code 203358507
 
-.button-container {
+@import (reference) '../variables.less';
+
+.episode-picker {
     flex: none;
-    align-self: stretch;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border: var(--focus-outline-size) solid var(--primary-accent-color);
-    background-color: var(--primary-accent-color);
-    height: 4rem;
-    padding: 0 2rem;
-    margin: 1rem auto;
-    border-radius: 2rem;
+    overflow: visible;
 
-    &:hover {
-        background-color: transparent;
+    > * {
+        flex: none;
     }
 
-    .label {
-        flex: 0 1 auto;
-        font-size: 1rem;
-        font-weight: 700;
-        max-height: 3.5rem;
-        text-align: center;
-        color: var(--primary-foreground-color);
-        margin-bottom: 0;
+    .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+        padding: 0 1.5rem;
+        border-radius: 1.5rem;
+        background-color: var(--primary-accent-color);
+        transition: background-color 0.15s @ease;
+
+        &:hover,
+        &:focus-visible {
+            background-color: #8f74f7;
+        }
+
+        .label {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
     }
 }

@@ -88,7 +88,7 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
         null;
 
     const episodePicker = type === 'series' && typeof onEpisodeSearch === 'function' ?
-        <EpisodePicker className={styles['episode-picker']} seriesId={video?.id ?? ''} onSubmit={onEpisodeSearch} />
+        <EpisodePicker seriesId={video?.id ?? ''} onSubmit={onEpisodeSearch} />
         :
         null;
 
