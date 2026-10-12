@@ -12,6 +12,7 @@ import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
+import WatchedBadge from 'stremio/components/WatchedBadge';
 import useRowMenu from '../useRowMenu';
 import { formatDate, hidesSpoiler } from '../format';
 import { getScrollParent } from './useScrollMemory';
@@ -112,9 +113,7 @@ const Video = ({ video, selected, seasonWatched, minutesLeft, onSelect, onMarkVi
                 />
                 {
                     watched ?
-                        <div className={styles['watched-badge']}>
-                            <Icon className={styles['watched-icon']} name={'checkmark'} />
-                        </div>
+                        <WatchedBadge className={styles['watched-badge']} />
                         :
                         null
                 }
