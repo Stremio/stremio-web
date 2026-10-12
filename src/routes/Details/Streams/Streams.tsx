@@ -23,12 +23,14 @@ type Props = {
     video: Video | null,
     type: string,
     canMarkWatched: boolean,
-    onEpisodeSearch: (season: number, episode: number) => void,
+    title?: string,
+    onBack?: () => void,
+    onEpisodeSearch?: (season: number, episode: number) => void,
 };
 
 const ALL_ADDONS_KEY = 'ALL';
 
-const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Props) => {
+const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisodeSearch }: Props) => {
     const { t } = useTranslation();
     const profile = useProfile();
     const navigate = useNavigate();
@@ -39,7 +41,7 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
 
     const showInstallAddons = !profile || profile.auth === null || (profile.auth?.user?.isNewUser === true && !video?.upcoming);
 
-    const onBack = useCallback(() => {
+    const onVideos = useCallback(() => {
         if (video && typeof video.deepLinks.metaDetailsVideos === 'string') {
             const query = typeof video.season === 'number' ? `?${new URLSearchParams({ season: String(video.season) })}` : '';
             navigate(toPath(`${video.deepLinks.metaDetailsVideos}${query}`), { replace: true });
@@ -75,6 +77,7 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
         const episodeLabel = getEpisodeLabel(video);
         return [episodeLabel, video.title].filter((part) => typeof part === 'string' && part.length > 0).join(' · ');
     }, [video]);
+    const heading = title ?? episodeTitle;
 
     const installAddons = showInstallAddons ?
         <Button className={styles['install-button']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
@@ -84,7 +87,7 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
         :
         null;
 
-    const episodePicker = type === 'series' ?
+    const episodePicker = type === 'series' && typeof onEpisodeSearch === 'function' ?
         <EpisodePicker className={styles['episode-picker']} seriesId={video?.id ?? ''} onSubmit={onEpisodeSearch} />
         :
         null;
@@ -92,12 +95,12 @@ const Streams = ({ streams, video, type, canMarkWatched, onEpisodeSearch }: Prop
     const header = (
         <React.Fragment>
             {
-                video ?
+                heading !== null ?
                     <div className={styles['title-row']}>
-                        <Button className={styles['back-button']} aria-label={t('BACK')} onClick={onBack}>
+                        <Button className={styles['back-button']} aria-label={t('BACK')} onClick={onBack ?? onVideos}>
                             <Icon className={styles['back-icon']} name={'chevron-back'} />
                         </Button>
-                        <div className={styles['title']} title={episodeTitle ?? undefined}>{episodeTitle}</div>
+                        <div className={styles['title']} title={heading}>{heading}</div>
                         {
                             loadingCount > 0 ?
                                 <div className={styles['loading-text']}>{loadingLabel}</div>

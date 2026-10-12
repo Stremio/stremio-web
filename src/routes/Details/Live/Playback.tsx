@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
@@ -8,24 +8,20 @@ import Button from 'stremio/components/Button';
 import { useCore } from 'stremio/core';
 import PlayButton from '../Actions/PlayButton';
 import ToggleButton from '../Actions/ToggleButton';
-import StreamPicker from './StreamPicker';
 import styles from './Playback.less';
 
 type Props = {
     className?: string,
     streams: MetaDetails['streams'],
-    programmeTitle: string | null,
-    channelName: string,
-    live: boolean,
-    isMobile: boolean,
+    streamsOpen: boolean,
     inLibrary: boolean,
+    onStreamsToggle: () => void,
     onToggleLibrary: () => void,
 };
 
-const Playback = ({ className, streams, programmeTitle, channelName, live, isMobile, inLibrary, onToggleLibrary }: Props) => {
+const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
     const core = useCore();
-    const [pickerOpen, setPickerOpen] = useState(false);
 
     const readyStreams = useMemo(() => {
         return streams.flatMap((resource) => {
@@ -46,9 +42,6 @@ const Playback = ({ className, streams, programmeTitle, channelName, live, isMob
             core.transport.analytics({ event: 'StreamClicked', args: { stream: watchStream.stream } });
         }
     }, [core.transport, watchStream]);
-
-    const openPicker = useCallback(() => setPickerOpen(true), []);
-    const closePicker = useCallback(() => setPickerOpen(false), []);
 
     return (
         <div className={classNames(className, styles['playback'])}>
@@ -80,7 +73,7 @@ const Playback = ({ className, streams, programmeTitle, channelName, live, isMob
             }
             {
                 readyStreams.length > 0 ?
-                    <Button className={styles['pill']} role={'button'} aria-haspopup={'dialog'} onClick={openPicker}>
+                    <Button className={classNames(styles['pill'], { [styles['open']]: streamsOpen })} role={'button'} aria-expanded={streamsOpen} onClick={onStreamsToggle}>
                         {t('STREAMS')}
                         <div className={styles['count']}>{readyStreams.length}</div>
                     </Button>
@@ -99,15 +92,6 @@ const Playback = ({ className, streams, programmeTitle, channelName, live, isMob
                 on={inLibrary}
                 label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
                 onClick={onToggleLibrary}
-            />
-            <StreamPicker
-                open={pickerOpen}
-                isMobile={isMobile}
-                streams={streams}
-                live={live}
-                programmeTitle={programmeTitle}
-                channelName={channelName}
-                onClose={closePicker}
             />
         </div>
     );
