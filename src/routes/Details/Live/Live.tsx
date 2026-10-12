@@ -7,9 +7,9 @@ import Image from 'stremio/components/Image';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { EPGProgram, useLiveRefresh } from 'stremio/common/EPG';
 import Background from '../Background';
+import Logo from '../Hero/Logo';
 import Panel from '../Panel';
 import Streams from '../Streams';
-import Channel from './Channel';
 import Programme from './Programme';
 import Playback from './Playback';
 import StreamPicker from './StreamPicker';
@@ -24,7 +24,6 @@ type Props = {
     className?: string,
     contentRef: React.RefObject<HTMLDivElement>,
     meta: MetaItemMetaDetails,
-    addonName: string,
     streams: MetaDetails['streams'],
     isMobile: boolean,
     onToggleLibrary: () => void,
@@ -33,7 +32,7 @@ type Props = {
 
 const renderFallback = () => null;
 
-const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onToggleLibrary, children }: Props) => {
+const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary, children }: Props) => {
     const { t } = useTranslation();
     const active = useRouteActive();
     const now = useLiveRefresh('MetaDetails', 'meta_details', active);
@@ -132,7 +131,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                                     }
                                 </div>
                                 <div className={styles['copy']}>
-                                    <Channel name={channel.name} logo={channel.logo} addonName={addonName} compact={true} />
+                                    <Logo name={channel.name} logo={meta.logo} />
                                     <Programme className={styles['headline']} programme={selected} now={now} part={'headline'} />
                                 </div>
                             </header>
@@ -155,7 +154,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                         :
                         <React.Fragment>
                             <div className={styles['main']}>
-                                <Channel name={channel.name} logo={channel.logo} addonName={addonName} />
+                                <Logo name={channel.name} logo={meta.logo} />
                                 <div className={styles['spacer']} />
                                 <Programme programme={selected} now={now} />
                                 {playback}

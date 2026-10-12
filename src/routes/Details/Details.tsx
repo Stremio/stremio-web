@@ -111,7 +111,6 @@ const Details = () => {
                 className={styles['details']}
                 contentRef={contentRef}
                 meta={metaItem}
-                addonName={details.metaItem?.addon.manifest.name ?? ''}
                 streams={details.streams}
                 isMobile={isMobile}
                 onToggleLibrary={actions.toggleLibrary}
