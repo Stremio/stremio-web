@@ -38,7 +38,7 @@
         gap: 1rem;
         width: 100%;
         padding: 0.625rem 0.75rem 0.625rem 0.625rem;
-        border-radius: 0.75rem;
+        border-radius: var(--border-radius);
         box-sizing: border-box;
         color: var(--primary-foreground-color);
         scroll-margin-top: 1rem;
@@ -50,7 +50,7 @@
         }
 
         &[aria-pressed='true'] {
-            background-color: @overlay-strong;
+            background-color: var(--overlay-color);
         }
 
         .start {
@@ -63,7 +63,7 @@
 
         .thumbnail {
             aspect-ratio: 16 / 9;
-            border-radius: 0.5rem;
+            border-radius: 0.375rem;
             background-color: var(--overlay-color);
             overflow: hidden;
 
@@ -141,9 +141,6 @@
                 gap: 0.5rem;
             }
 
-            &[aria-pressed='true'] {
-                background-color: rgba(255, 255, 255, 0.08);
-            }
         }
     }
 }

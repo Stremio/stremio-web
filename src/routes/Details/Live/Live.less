@@ -43,6 +43,13 @@
                 flex: none;
             }
 
+            .programme {
+                flex: 0 1 auto;
+                min-height: 0;
+                overflow-y: auto;
+                scrollbar-width: none;
+            }
+
             .spacer {
                 flex: 1;
                 min-height: 1.5rem;
@@ -69,7 +76,7 @@
     .live {
         .main {
             top: calc(@nav-size + 0.25rem);
-            bottom: 1rem;
+            bottom: calc(1rem + var(--safe-area-inset-bottom));
 
             .playback {
                 margin-top: 1rem;

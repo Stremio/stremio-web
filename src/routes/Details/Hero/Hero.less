@@ -17,7 +17,6 @@
     .facts {
         flex: none;
         min-height: 2rem;
-        margin-top: 2.25rem;
     }
 
     .description {
@@ -33,6 +32,20 @@
     .spacer {
         flex: 1;
         min-height: 1.5rem;
+    }
+
+    .information {
+        flex: 0 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        margin-bottom: 2rem;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    > :last-child {
+        flex: none;
     }
 }
 
@@ -50,7 +63,13 @@
         }
 
         .spacer {
-            min-height: 1.75rem;
+            display: none;
+        }
+
+        .information {
+            flex: none;
+            margin-bottom: 1.75rem;
+            overflow: visible;
         }
     }
 }
@@ -62,7 +81,6 @@
         }
 
         .facts {
-            margin-top: 1rem;
             font-size: 1rem;
         }
 
@@ -73,6 +91,10 @@
 
         .spacer {
             min-height: 0.75rem;
+        }
+
+        .information {
+            margin-bottom: 1rem;
         }
     }
 }

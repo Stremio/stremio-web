@@ -34,39 +34,41 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                     :
                     null
             }
-            {
-                video === null ?
-                    <React.Fragment>
-                        <Facts
-                            className={styles['facts']}
-                            items={[
-                                metaItem.releaseInfo || (released !== null ? String(released.getFullYear()) : null),
-                                metaItem.runtime,
-                            ]}
-                            imdb={imdb}
-                        />
-                        <Description className={styles['description']} text={metaItem.description} />
-                        {
-                            !compact ?
-                                <Links className={styles['links']} groups={groups} />
-                                :
-                                null
-                        }
-                    </React.Fragment>
-                    :
-                    <React.Fragment>
-                        <Facts
-                            className={styles['facts']}
-                            items={[
-                                formatDate(video.released, i18n.language),
-                                metaItem.runtime,
-                                minutesLeft !== null ? t('CONTINUE_WATCHING_TIME_LEFT', { minutes: minutesLeft }) : null,
-                            ]}
-                        />
-                        <Description className={styles['description']} text={video.overview || metaItem.description} />
-                    </React.Fragment>
-            }
             <div className={styles['spacer']} />
+            <div className={styles['information']}>
+                {
+                    video === null ?
+                        <React.Fragment>
+                            <Facts
+                                className={styles['facts']}
+                                items={[
+                                    metaItem.releaseInfo || (released !== null ? String(released.getFullYear()) : null),
+                                    metaItem.runtime,
+                                ]}
+                                imdb={imdb}
+                            />
+                            <Description className={styles['description']} text={metaItem.description} />
+                            {
+                                !compact ?
+                                    <Links className={styles['links']} groups={groups} />
+                                    :
+                                    null
+                            }
+                        </React.Fragment>
+                        :
+                        <React.Fragment>
+                            <Facts
+                                className={styles['facts']}
+                                items={[
+                                    formatDate(video.released, i18n.language),
+                                    metaItem.runtime,
+                                    minutesLeft !== null ? t('CONTINUE_WATCHING_TIME_LEFT', { minutes: minutesLeft }) : null,
+                                ]}
+                            />
+                            <Description className={styles['description']} text={video.overview || metaItem.description} />
+                        </React.Fragment>
+                }
+            </div>
             {children}
         </div>
     );

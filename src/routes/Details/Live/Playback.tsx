@@ -35,6 +35,7 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
     const watchStream = useMemo(() => {
         return readyStreams.find(({ stream }) => stream.lastUsed === true) ?? readyStreams[0] ?? null;
     }, [readyStreams]);
+
     const sublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name].filter((part) => part.length > 0).join(' · ') : null;
 
     const onWatchClick = useCallback(() => {
@@ -61,38 +62,43 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
                             {t('STREAM_LOADING')}
                         </div>
                         :
-                        <React.Fragment>
-                            <div className={classNames(styles['pill'], styles['status'], styles['primary'])} role={'status'}>
-                                {t('NO_STREAM')}
-                            </div>
-                            <Button className={styles['pill']} href={'#/addons'}>
-                                <Icon className={styles['icon']} name={'addons'} />
-                                {t('ADDON_CATALOGUE_MORE')}
-                            </Button>
-                        </React.Fragment>
-            }
-            {
-                readyStreams.length > 0 ?
-                    <Button className={classNames(styles['pill'], { [styles['open']]: streamsOpen })} role={'button'} aria-expanded={streamsOpen} onClick={onStreamsToggle}>
-                        {t('STREAMS')}
-                        <div className={styles['count']}>{readyStreams.length}</div>
-                    </Button>
-                    :
-                    loading ?
-                        <div className={classNames(styles['pill'], styles['status'])} aria-disabled={'true'}>
-                            {t('STREAMS')}
-                            <div className={classNames(styles['count'], styles['pending'])} />
+                        <div className={classNames(styles['pill'], styles['status'], styles['primary'])} role={'status'}>
+                            {t('NO_STREAM')}
                         </div>
+            }
+            <div className={styles['secondary']}>
+                {
+                    watchStream === null && !loading ?
+                        <Button className={styles['pill']} href={'#/addons'}>
+                            <Icon className={styles['icon']} name={'addons'} />
+                            {t('ADDON_CATALOGUE_MORE')}
+                        </Button>
                         :
                         null
-            }
-            <ToggleButton
-                className={styles['library']}
-                variant={'library'}
-                on={inLibrary}
-                label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                onClick={onToggleLibrary}
-            />
+                }
+                {
+                    readyStreams.length > 0 ?
+                        <Button className={classNames(styles['pill'], { [styles['open']]: streamsOpen })} role={'button'} aria-expanded={streamsOpen} onClick={onStreamsToggle}>
+                            {t('STREAMS')}
+                            <div className={styles['count']}>{readyStreams.length}</div>
+                        </Button>
+                        :
+                        loading ?
+                            <div className={classNames(styles['pill'], styles['status'])} aria-disabled={'true'}>
+                                {t('STREAMS')}
+                                <div className={classNames(styles['count'], styles['pending'])} />
+                            </div>
+                            :
+                            null
+                }
+                <ToggleButton
+                    className={styles['library']}
+                    variant={'library'}
+                    on={inLibrary}
+                    label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                    onClick={onToggleLibrary}
+                />
+            </div>
         </div>
     );
 };

@@ -156,7 +156,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                             <div className={styles['main']}>
                                 <Logo name={channel.name} logo={meta.logo} />
                                 <div className={styles['spacer']} />
-                                <Programme programme={selected} now={now} />
+                                <Programme className={styles['programme']} programme={selected} now={now} />
                                 {playback}
                             </div>
                             {
