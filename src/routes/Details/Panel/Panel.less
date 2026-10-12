@@ -95,7 +95,7 @@
 @media @mobile {
     .panel {
         display: flow-root;
-        min-height: calc(var(--dynamic-viewport-height) - @nav-size);
+        min-height: calc(var(--dynamic-viewport-height) - @nav-size - var(--panel-bottom-gap, 0px));
         overflow: visible;
 
         .header {
