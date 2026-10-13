@@ -11,11 +11,14 @@
     line-height: 1.85;
     font-weight: 400;
     color: @text-secondary;
-    cursor: pointer;
     transition: color 0.2s @ease;
 
-    &:hover {
-        color: var(--primary-foreground-color);
+    &.expandable {
+        cursor: pointer;
+
+        &:hover {
+            color: var(--primary-foreground-color);
+        }
     }
 
     &.expanded {

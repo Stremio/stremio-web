@@ -9,12 +9,21 @@ type Props = {
     text: string | null | undefined,
 };
 
+const isClamped = (element: HTMLElement) => element.scrollHeight > element.clientHeight + 1;
+
 const Description = ({ className, text }: Props) => {
     const [expanded, setExpanded] = useState(false);
+    const [clamped, setClamped] = useState(false);
 
-    const toggle = useCallback(() => {
-        setExpanded((expanded) => !expanded);
+    const onMouseEnter = useCallback((event: React.MouseEvent<HTMLParagraphElement>) => {
+        setClamped(isClamped(event.currentTarget));
     }, []);
+
+    const onClick = useCallback((event: React.MouseEvent<HTMLParagraphElement>) => {
+        if (expanded || isClamped(event.currentTarget)) {
+            setExpanded(!expanded);
+        }
+    }, [expanded]);
 
     useEffect(() => {
         setExpanded(false);
@@ -26,9 +35,10 @@ const Description = ({ className, text }: Props) => {
 
     return (
         <p
-            className={classNames(className, styles['description'], { [styles['expanded']]: expanded })}
+            className={classNames(className, styles['description'], { [styles['expandable']]: expanded || clamped, [styles['expanded']]: expanded })}
             aria-expanded={expanded}
-            onClick={toggle}
+            onMouseEnter={onMouseEnter}
+            onClick={onClick}
         >
             {text}
         </p>
