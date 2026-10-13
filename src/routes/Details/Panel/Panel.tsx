@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
+import useMediaQuery from 'stremio/common/useMediaQuery';
+import screenSizes from 'stremio/common/screen-sizes.less';
 import styles from './Panel.less';
 
 type Props = {
@@ -36,6 +38,8 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const sentinelRef = useRef<HTMLDivElement>(null);
     const [stuck, setStuck] = useState(false);
+    const hasHeader = header !== undefined && header !== null;
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
@@ -52,7 +56,7 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
         });
         observer.observe(sentinel);
         return () => observer.disconnect();
-    }, [header]);
+    }, [hasHeader, isMobile]);
 
     useEffect(() => {
         const panel = panelRef.current;
@@ -81,7 +85,7 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
         <section ref={panelRef} className={classNames(className, styles['panel'])} aria-label={ariaLabel}>
             <div ref={sentinelRef} className={styles['sentinel']} aria-hidden={'true'} />
             {
-                header !== undefined && header !== null ?
+                hasHeader ?
                     <div ref={headerRef} className={classNames(styles['header'], { [styles['stuck']]: stuck })}>
                         {header}
                     </div>
