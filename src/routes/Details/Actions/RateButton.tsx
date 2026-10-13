@@ -10,13 +10,14 @@ import styles from './RateButton.less';
 type Props = {
     className?: string,
     icon: string,
+    fill: string,
     on: boolean,
     disabled?: boolean,
     label: string,
     onClick: () => void,
 };
 
-const RateButton = ({ className, icon, on, disabled = false, label, onClick }: Props) => (
+const RateButton = ({ className, icon, fill, on, disabled = false, label, onClick }: Props) => (
     <Button
         className={classNames(className, styles['rate-button'], { [styles['on']]: on, [styles['pending']]: disabled })}
         aria-pressed={on}
@@ -25,7 +26,10 @@ const RateButton = ({ className, icon, on, disabled = false, label, onClick }: P
         onClick={disabled ? undefined : onClick}
     >
         <Tooltip label={label} position={'top'} />
-        <Icon className={styles['icon']} name={icon} />
+        <div className={styles['glyph']}>
+            <Icon className={styles['icon']} name={icon} />
+            <Icon className={classNames(styles['icon'], styles['fill'])} name={fill} />
+        </div>
     </Button>
 );
 

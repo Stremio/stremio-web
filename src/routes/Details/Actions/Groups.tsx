@@ -47,14 +47,16 @@ const Groups = ({ className, inLibrary, onToggleLibrary, watched, onToggleWatche
                 ratingInfo !== null ?
                     <div className={className} role={'group'}>
                         <RateButton
-                            icon={liked ? 'thumbs-up' : 'thumbs-up-outline'}
+                            icon={'thumbs-up-outline'}
+                            fill={'thumbs-up'}
                             on={liked}
                             disabled={ratingInfo.type !== 'Ready'}
                             label={liked ? t('RATING_UNLIKE') : t('RATING_LIKE')}
                             onClick={onLiked}
                         />
                         <RateButton
-                            icon={loved ? 'heart' : 'heart-outline'}
+                            icon={'heart-outline'}
+                            fill={'heart'}
                             on={loved}
                             disabled={ratingInfo.type !== 'Ready'}
                             label={loved ? t('RATING_UNLOVE') : t('RATING_LOVE')}
