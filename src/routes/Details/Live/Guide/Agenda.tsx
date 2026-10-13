@@ -87,19 +87,14 @@ const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect, on
                                         onClick={onRowClick}
                                     >
                                         <div className={styles['start']}>{time(programme.startTime)}</div>
-                                        {
-                                            !isMobile ?
-                                                <div className={styles['thumbnail']}>
-                                                    {
-                                                        typeof programme.thumbnail === 'string' && programme.thumbnail.length > 0 ?
-                                                            <Image className={styles['image']} src={programme.thumbnail} alt={''} renderFallback={renderFallback} />
-                                                            :
-                                                            null
-                                                    }
-                                                </div>
-                                                :
-                                                null
-                                        }
+                                        <div className={styles['thumbnail']}>
+                                            {
+                                                typeof programme.thumbnail === 'string' && programme.thumbnail.length > 0 ?
+                                                    <Image className={styles['image']} src={programme.thumbnail} alt={''} renderFallback={renderFallback} />
+                                                    :
+                                                    null
+                                            }
+                                        </div>
                                         <div className={styles['info']}>
                                             <div className={styles['title']}>{programme.title}</div>
                                             <div className={styles['meta']}>
