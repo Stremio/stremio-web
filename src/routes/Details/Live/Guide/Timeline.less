@@ -73,7 +73,7 @@
             background: linear-gradient(0deg, fade(@scrim-color, 92%) 0%, fade(@scrim-color, 55%) 38%, fade(@scrim-color, 8%) 72%, fade(@scrim-color, 0%) 100%);
         }
 
-        .title, .meta, .elapsed {
+        .title, .meta, .progress {
             position: relative;
         }
 
@@ -105,12 +105,8 @@
             }
         }
 
-        .elapsed {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 0.25rem;
-            background-color: var(--primary-accent-color);
+        .progress {
+            margin-top: 0.5rem;
         }
 
         &:hover .image, &:focus .image {

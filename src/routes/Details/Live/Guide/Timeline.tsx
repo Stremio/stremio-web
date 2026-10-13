@@ -4,6 +4,7 @@ import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
+import ProgressBar from 'stremio/components/ProgressBar';
 import { EPGProgram, getEpgProgress } from 'stremio/common/EPG';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import LiveFlag from '../LiveFlag';
@@ -175,7 +176,7 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
                             </div>
                             {
                                 live ?
-                                    <div className={styles['elapsed']} style={{ width: `${progress}%` }} />
+                                    <ProgressBar className={styles['progress']} value={progress} />
                                     :
                                     null
                             }
