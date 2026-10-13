@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import ProgressBar from 'stremio/components/ProgressBar';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
 import { parseDate } from '../format';
+import Links from '../Hero/Links';
+import useMetaLinks from '../Hero/useMetaLinks';
 import Rating from './Rating';
 import useFormatters from './Guide/useFormatters';
 import getRelativeTime from './getRelativeTime';
@@ -28,11 +30,20 @@ const Programme = ({ className, programme, now }: Props) => {
     const year = parseDate(programme?.released)?.getFullYear();
     const facts = [programme?.releaseInfo ?? year?.toString(), programme?.runtime].filter((fact): fact is string => typeof fact === 'string' && fact.length > 0);
     const ratings = programme?.ratings?.filter((rating) => rating.value.trim().length > 0) ?? [];
-    const genres = programme?.genres?.length ?
-        programme.genres
-        :
-        programme?.links?.filter(({ category }) => category === 'Genres').map(({ name }) => name) ?? [];
+    const { groups } = useMetaLinks(programme?.links);
+    const linkGroups = useMemo(() => {
+        const result = [...groups];
+        const add = (category: string, labels: string[] | undefined) => {
+            if (labels !== undefined && labels.length > 0 && !result.some((group) => group.category === category)) {
+                result.push({ category, links: labels.map((label) => ({ label })) });
+            }
+        };
+        add('Genres', programme?.genres);
+        add('Cast', programme?.cast);
+        return result;
+    }, [groups, programme]);
     const timeRange = programme !== null ? formatEpgTimeRange(programme.startTime, programme.endTime, i18n.language) : null;
+    const relative = programme !== null && !live ? getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter) : null;
     const overview = programme !== null ? programme.overview : t('LIVE_TV_NO_SCHEDULE');
 
     return (
@@ -48,7 +59,7 @@ const Programme = ({ className, programme, now }: Props) => {
                                     <div className={styles['aired']}>{past ? t('AIRED') : t('UPCOMING')}</div>
                             }
                             <div className={styles['when']}>
-                                {dayLabel(programme.startTime)}{timeRange !== null ? ` · ${timeRange}` : ''}
+                                {[dayLabel(programme.startTime), timeRange, relative].filter((part) => part !== null).join(' · ')}
                             </div>
                         </div>
                         :
@@ -80,34 +91,13 @@ const Programme = ({ className, programme, now }: Props) => {
                         :
                         null
                 }
+                <Links className={styles['links']} groups={linkGroups} />
                 {
-                    genres.length > 0 ?
-                        <div className={styles['genres']}>
-                            {
-                                genres.map((genre) => (
-                                    <div key={genre} className={styles['genre']}>{genre}</div>
-                                ))
-                            }
-                        </div>
-                        :
-                        null
-                }
-                {
-                    programme !== null ?
+                    programme !== null && progress !== null ?
                         <div className={styles['timing']}>
-                            {
-                                live ?
-                                    <ProgressBar className={styles['progress']} value={progress} />
-                                    :
-                                    null
-                            }
+                            <ProgressBar className={styles['progress']} value={progress} />
                             <div className={styles['relative']}>
-                                {
-                                    live ?
-                                        t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })
-                                        :
-                                        getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter)
-                                }
+                                {t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })}
                             </div>
                         </div>
                         :

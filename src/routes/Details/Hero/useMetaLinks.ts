@@ -5,7 +5,7 @@ import { CONSTANTS, routesRegexp } from 'stremio/common';
 
 export type MetaLink = {
     label: string,
-    href: string,
+    href?: string,
 };
 
 export type MetaLinkGroup = {
