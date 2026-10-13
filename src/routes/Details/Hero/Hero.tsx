@@ -17,13 +17,12 @@ type Props = {
     className?: string,
     metaItem: MetaItemMetaDetails,
     video: Video | null,
-    streams?: boolean,
     libraryItem: LibraryItem | null,
     compact?: boolean,
     children?: React.ReactNode,
 };
 
-const Hero = ({ className, metaItem, video, streams = false, libraryItem, compact = false, children }: Props) => {
+const Hero = ({ className, metaItem, video, libraryItem, compact = false, children }: Props) => {
     const { t, i18n } = useTranslation();
     const profile = useProfile();
     const { groups, imdb } = useMetaLinks(metaItem.links);
@@ -37,7 +36,7 @@ const Hero = ({ className, metaItem, video, streams = false, libraryItem, compac
                     <React.Fragment>
                         {
                             !compact ?
-                                <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={streams} />
+                                <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} />
                                 :
                                 null
                         }
@@ -62,7 +61,7 @@ const Hero = ({ className, metaItem, video, streams = false, libraryItem, compac
                         {
                             !compact ?
                                 <React.Fragment>
-                                    <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={true} />
+                                    <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} />
                                     <Still className={styles['still']} thumbnail={video.thumbnail} blurred={hidesSpoiler(video, profile.settings.hideSpoilers)} />
                                     <h1 className={styles['title']}>{video.title || video.id}</h1>
                                 </React.Fragment>

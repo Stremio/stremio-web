@@ -3,16 +3,30 @@
 @import (reference) '../variables.less';
 
 .logo {
-    display: block;
-    width: auto;
-    height: 11rem;
-    max-width: min(28.5rem, 100%);
-    object-fit: contain;
-    object-position: left center;
+    --logo-ratio: 2.58;
+    --logo-root: 0.6226;
+    --logo-scale: 1;
+    --logo-shift-x: 0;
+    --logo-center-y: 0.5;
+    position: relative;
+    align-self: flex-start;
+    height: ~"min(13rem, calc(36rem / var(--logo-ratio)), calc(17.3rem * var(--logo-root)))";
+    aspect-ratio: var(--logo-ratio);
+    max-width: 100%;
+    overflow: hidden;
+
+    .image {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: calc(100% * var(--logo-scale));
+        max-width: none;
+        height: auto;
+        transform: translate(calc(-100% * var(--logo-shift-x)), calc(-100% * var(--logo-center-y)));
+    }
 
     &.small {
-        height: 4rem;
-        max-width: min(18rem, 100%);
+        height: ~"min(5rem, calc(18rem / var(--logo-ratio)), calc(7.75rem * var(--logo-root)))";
     }
 }
 
@@ -32,8 +46,7 @@
 
 @media @desktop-short {
     .logo, .logo.small {
-        height: 3.5rem;
-        max-width: min(16rem, 100%);
+        height: ~"min(3.5rem, calc(16rem / var(--logo-ratio)), calc(6rem * var(--logo-root)))";
     }
 
     .name, .name.small {
@@ -43,10 +56,8 @@
 
 @media @mobile {
     .logo {
-        height: 4rem;
-        max-width: min(16rem, 70vw);
+        height: ~"min(5.5rem, calc(min(18rem, 80vw) / var(--logo-ratio)), calc(7rem * var(--logo-root)))";
         margin: 0 auto;
-        object-position: center bottom;
     }
 
     .name {

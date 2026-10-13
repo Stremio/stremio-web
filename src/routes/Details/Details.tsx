@@ -165,7 +165,7 @@ const Details = () => {
                                     metaItem === null ?
                                         <Placeholder variant={'hero'} />
                                         :
-                                        <Hero metaItem={metaItem} video={video} streams={streamPath !== null} libraryItem={details.libraryItem} compact={isMobile}>
+                                        <Hero metaItem={metaItem} video={video} libraryItem={details.libraryItem} compact={isMobile}>
                                             <Actions
                                                 primary={primary}
                                                 trailerHref={trailerHref}
