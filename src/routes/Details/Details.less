@@ -31,6 +31,10 @@
         z-index: 1;
         animation: content-enter 0.45s @ease-spring both;
     }
+
+    .hero {
+        .hero-column();
+    }
 }
 
 @keyframes content-enter {
@@ -53,35 +57,7 @@
         }
 
         .hero {
-            position: absolute;
-            top: calc(@nav-size + 1.5rem);
-            bottom: @panel-gap;
-            left: @hero-gutter;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            width: calc(100% - @panel-width - @panel-gap - @hero-gutter * 2);
-            max-width: 50rem;
             overflow: visible;
-        }
-    }
-}
-
-@media @desktop-narrow {
-    .details {
-        .hero {
-            left: @hero-gutter-narrow;
-            bottom: @panel-gap-narrow;
-            width: calc(100% - @panel-width-narrow - @panel-gap-narrow - @hero-gutter-narrow * 2);
-        }
-    }
-}
-
-@media @desktop-short {
-    .details {
-        .hero {
-            top: calc(@nav-size + 0.25rem);
-            bottom: calc(1rem + var(--safe-area-inset-bottom));
         }
     }
 }
