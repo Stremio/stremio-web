@@ -77,10 +77,8 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
     }, [hasLastUsed]);
 
     const loadingLabel = `${loadingCount} ${t('MOBILE_ADDONS_LOADING')}`;
-    const episodeLabel = video !== null ? getEpisodeLabel(video) : null;
-    const name = title ?? video?.title ?? null;
     const heading = video !== null || typeof title === 'string' ?
-        [episodeLabel, name].filter((part) => typeof part === 'string' && part.length > 0).join(' · ')
+        [video !== null ? getEpisodeLabel(video) : null, title ?? video?.title].filter((part) => typeof part === 'string' && part.length > 0).join(' · ')
         :
         null;
 
@@ -105,15 +103,7 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                         <Button className={styles['back-button']} aria-label={t('BACK')} onClick={onBack ?? onVideos}>
                             <Icon className={styles['back-icon']} name={'chevron-back'} />
                         </Button>
-                        <div className={styles['title']} title={heading}>
-                            {
-                                episodeLabel !== null ?
-                                    <span className={styles['episode']}>{episodeLabel}</span>
-                                    :
-                                    null
-                            }
-                            <span className={styles['name']}>{name}</span>
-                        </div>
+                        <div className={styles['title']} title={heading}>{heading}</div>
                         {
                             loadingCount > 0 ?
                                 <div className={styles['loading-text']}>{loadingLabel}</div>
