@@ -106,7 +106,7 @@ const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect }: 
                                                         :
                                                         null
                                                 }
-                                                <div className={styles['range']}>{timeRange(programme)} · {duration(programme)}</div>
+                                                <div className={styles['range']}>{duration(programme)}</div>
                                             </div>
                                             {
                                                 live ?
