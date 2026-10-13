@@ -55,6 +55,22 @@
         transition: opacity 0.15s @ease;
     }
 
+    @media (hover: hover) {
+        &:not(.on):hover {
+            .icon-off {
+                opacity: 0;
+                transform: scale(0.7);
+                transition: @leave;
+            }
+
+            .icon-on {
+                opacity: 1;
+                transform: none;
+                transition: @enter;
+            }
+        }
+    }
+
     &.on {
         .icon-off {
             opacity: 0;
