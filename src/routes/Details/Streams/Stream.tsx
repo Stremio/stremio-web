@@ -7,7 +7,6 @@ import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import Popup from 'stremio/components/Popup';
-import ProgressBar from 'stremio/components/ProgressBar';
 import { useCore } from 'stremio/core';
 import { usePlatform, useProfile } from 'stremio/common';
 import useToast from 'stremio/common/Toast/useToast';
@@ -51,7 +50,6 @@ const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkW
     const externalPlayer = stream.deepLinks?.externalPlayer;
     const name = stream.name || addonName;
     const lastUsed = stream.lastUsed === true;
-    const progress = typeof stream.progress === 'number' && stream.progress > 0 ? stream.progress : null;
     const thumbnail = typeof stream.thumbnail === 'string' && stream.thumbnail.length > 0 ? stream.thumbnail : null;
 
     const play = useCallback(() => {
@@ -158,19 +156,13 @@ const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkW
                         :
                         null
                 }
-                {
-                    progress !== null ?
-                        <ProgressBar className={styles['progress']} value={progress} />
-                        :
-                        null
-                }
             </div>
             <div className={styles['play']} aria-hidden={'true'}>
                 <Icon className={styles['icon']} name={external ? 'external-player' : 'play'} />
             </div>
             {children}
         </Button>
-    ), [lastUsed, card, addonName, href, target, download, onClick, thumbnail, name, stream.description, progress, external, t]);
+    ), [lastUsed, card, addonName, href, target, download, onClick, thumbnail, name, stream.description, external, t]);
 
     const renderMenu = useCallback(() => (
         <div className={styles['menu']} {...menuProps}>

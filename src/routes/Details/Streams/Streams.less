@@ -35,28 +35,14 @@
 
         .title {
             flex: 1;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            column-gap: 0.5rem;
             min-width: 0;
             font-size: 1rem;
             line-height: 1.5rem;
             font-weight: 600;
             color: var(--primary-foreground-color);
-
-            .episode {
-                flex: none;
-                color: @text-secondary;
-            }
-
-            .name {
-                flex: 1 1 auto;
-                min-width: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .loading-text {
