@@ -17,6 +17,7 @@ type Props = {
     canZoomIn: boolean,
     canZoomOut: boolean,
     isMobile: boolean,
+    currentVisible: boolean,
     onViewSelect: (value: string) => void,
     onPrevious: () => void,
     onNow: () => void,
@@ -26,7 +27,7 @@ type Props = {
     onFit: () => void,
 };
 
-const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, canZoomOut, isMobile, onViewSelect, onPrevious, onNow, onNext, onZoomIn, onZoomOut, onFit }: Props) => {
+const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, canZoomOut, isMobile, currentVisible, onViewSelect, onPrevious, onNow, onNext, onZoomIn, onZoomOut, onFit }: Props) => {
     const { t } = useTranslation();
     const options = useMemo(() => [
         { value: 'agenda', label: t('LIVE_TV_AGENDA'), icon: 'list' },
@@ -44,29 +45,45 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
             </div>;
     }
 
-    const zoom = view === 'timeline' ?
-        <div className={styles['controls']} role={'group'} aria-label={t('LIVE_TV_TIMELINE')}>
-            <Button
-                className={classNames(styles['round'], { [styles['inactive']]: !canZoomOut })}
-                title={t('LIVE_TV_ZOOM_OUT')}
-                aria-label={t('LIVE_TV_ZOOM_OUT')}
-                aria-disabled={!canZoomOut}
-                onClick={canZoomOut ? onZoomOut : undefined}
-            >
-                <Icon className={styles['icon']} name={'remove'} />
-            </Button>
-            <Button className={styles['round']} title={t('LIVE_TV_FIT_SELECTED')} aria-label={t('LIVE_TV_FIT_SELECTED')} onClick={onFit}>
-                <Icon className={styles['icon']} name={'aspect-ratio'} />
-            </Button>
-            <Button
-                className={classNames(styles['round'], { [styles['inactive']]: !canZoomIn })}
-                title={t('LIVE_TV_ZOOM_IN')}
-                aria-label={t('LIVE_TV_ZOOM_IN')}
-                aria-disabled={!canZoomIn}
-                onClick={canZoomIn ? onZoomIn : undefined}
-            >
-                <Icon className={styles['icon']} name={'add'} />
-            </Button>
+    const nowButton = isMobile ?
+        <Button
+            className={classNames(styles['round'], { [styles['hidden']]: currentVisible })}
+            role={'button'}
+            title={t('LIVE_TV_NOW')}
+            aria-label={t('LIVE_TV_NOW')}
+            onClick={onNow}
+        >
+            <Icon className={styles['icon']} name={'clock'} />
+        </Button>
+        :
+        null;
+
+    const zoom = view === 'timeline' || isMobile ?
+        <div className={styles['controls']} role={'group'} aria-label={t(view === 'timeline' ? 'LIVE_TV_TIMELINE' : 'LIVE_TV_NOW')}>
+            {nowButton}
+            {view === 'timeline' ? <React.Fragment>
+                <Button
+                    className={classNames(styles['round'], { [styles['inactive']]: !canZoomOut })}
+                    title={t('LIVE_TV_ZOOM_OUT')}
+                    aria-label={t('LIVE_TV_ZOOM_OUT')}
+                    aria-disabled={!canZoomOut}
+                    onClick={canZoomOut ? onZoomOut : undefined}
+                >
+                    <Icon className={styles['icon']} name={'remove'} />
+                </Button>
+                <Button className={styles['round']} title={t('LIVE_TV_FIT_SELECTED')} aria-label={t('LIVE_TV_FIT_SELECTED')} onClick={onFit}>
+                    <Icon className={styles['icon']} name={'aspect-ratio'} />
+                </Button>
+                <Button
+                    className={classNames(styles['round'], { [styles['inactive']]: !canZoomIn })}
+                    title={t('LIVE_TV_ZOOM_IN')}
+                    aria-label={t('LIVE_TV_ZOOM_IN')}
+                    aria-disabled={!canZoomIn}
+                    onClick={canZoomIn ? onZoomIn : undefined}
+                >
+                    <Icon className={styles['icon']} name={'add'} />
+                </Button>
+            </React.Fragment> : null}
         </div>
         :
         null;
@@ -74,9 +91,6 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
     if (isMobile) {
         return (
             <div className={styles['mobile-header']}>
-                <Button className={styles['now-pill']} onClick={onNow}>
-                    {t('LIVE_TV_NOW')}
-                </Button>
                 <div className={styles['mobile-row']}>
                     <SegmentedControl
                         className={styles['segments']}

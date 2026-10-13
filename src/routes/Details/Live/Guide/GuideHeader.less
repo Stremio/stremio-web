@@ -125,27 +125,6 @@
         min-width: 0;
     }
 
-    .now-pill {
-        flex: none;
-        align-self: flex-end;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 3rem;
-        padding: 0 1.25rem;
-        border-radius: 999px;
-        background-color: var(--overlay-color);
-        backdrop-filter: blur(5px);
-        color: var(--primary-foreground-color);
-        font-size: 0.875rem;
-        font-weight: 600;
-        transition: background-color 0.15s @ease;
-
-        &:hover, &:focus {
-            background-color: @overlay-hover;
-        }
-    }
-
     .controls {
         flex: none;
         display: flex;
@@ -153,8 +132,6 @@
         gap: 0.25rem;
         padding: 0.125rem;
         border-radius: 999px;
-        background-color: var(--overlay-color);
-        backdrop-filter: blur(5px);
         overflow: visible;
     }
 
@@ -177,6 +154,10 @@
 
         &.inactive {
             opacity: 0.35;
+        }
+
+        &.hidden {
+            visibility: hidden;
         }
     }
 }

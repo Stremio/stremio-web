@@ -41,6 +41,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     const { channel, programmes, current } = useProgrammes(meta, now);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [streamsOpen, setStreamsOpen] = useState(false);
+    const [currentVisible, setCurrentVisible] = useState(true);
     const rootRef = useRef<HTMLDivElement>(null);
     useHeroCollapse(rootRef, contentRef, isMobile);
 
@@ -76,6 +77,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                     canZoomIn={guide.canZoomIn}
                     canZoomOut={guide.canZoomOut}
                     isMobile={isMobile}
+                    currentVisible={currentVisible}
                     onViewSelect={guide.onViewSelect}
                     onPrevious={guide.onPrevious}
                     onNow={guide.onNow}
@@ -97,6 +99,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                 isMobile={isMobile}
                 onSelect={onSelect}
                 onScale={guide.onScale}
+                onCurrentVisible={setCurrentVisible}
             />
         </Panel>
     );
