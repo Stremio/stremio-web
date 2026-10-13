@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -67,6 +67,14 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
             :
             groups.filter(({ addon }) => addon.transportUrl === effectiveSelectedAddon);
     }, [groups, effectiveSelectedAddon]);
+
+    const groupsRef = useRef<HTMLDivElement>(null);
+    const hasLastUsed = visibleGroups.some(({ streams }) => streams.some((stream) => stream.lastUsed === true));
+    useEffect(() => {
+        if (hasLastUsed) {
+            groupsRef.current?.querySelector('[data-last-used]')?.scrollIntoView({ block: 'center' });
+        }
+    }, [hasLastUsed]);
 
     const loadingLabel = `${loadingCount} ${t('MOBILE_ADDONS_LOADING')}`;
     const episodeLabel = video !== null ? getEpisodeLabel(video) : null;
@@ -159,7 +167,7 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                         total === 0 ?
                             <Placeholder variant={'list'} />
                             :
-                            <div className={styles['groups']}>
+                            <div ref={groupsRef} className={styles['groups']}>
                                 {
                                     visibleGroups.map(({ addon, streams }) => (
                                         <section key={addon.transportUrl} className={styles['group']} aria-label={addon.manifest.name}>

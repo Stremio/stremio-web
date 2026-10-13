@@ -127,6 +127,7 @@ const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkW
             href={href ?? undefined}
             target={target}
             download={download}
+            data-last-used={lastUsed ? '' : undefined}
             onClick={onClick}
         >
             <div className={styles['info']}>
