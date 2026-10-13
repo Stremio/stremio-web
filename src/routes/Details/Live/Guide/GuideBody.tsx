@@ -20,9 +20,10 @@ type Props = {
     isMobile: boolean,
     onSelect: (programme: EPGProgram) => void,
     onScale: (scale: number) => void,
+    onLiveVisible?: (visible: boolean) => void,
 };
 
-const GuideBody = ({ view, programmes, now, selectedKey, nowToken, fitToken, scale, isMobile, onSelect, onScale }: Props) => {
+const GuideBody = ({ view, programmes, now, selectedKey, nowToken, fitToken, scale, isMobile, onSelect, onScale, onLiveVisible }: Props) => {
     const { t } = useTranslation();
 
     const onKeySelect = useCallback((key: string) => {
@@ -44,6 +45,7 @@ const GuideBody = ({ view, programmes, now, selectedKey, nowToken, fitToken, sca
             nowToken={nowToken}
             isMobile={isMobile}
             onSelect={onKeySelect}
+            onLiveVisible={onLiveVisible}
         />
         :
         <Timeline
@@ -55,6 +57,7 @@ const GuideBody = ({ view, programmes, now, selectedKey, nowToken, fitToken, sca
             scale={scale}
             onSelect={onKeySelect}
             onScale={onScale}
+            onLiveVisible={onLiveVisible}
         />;
 };
 

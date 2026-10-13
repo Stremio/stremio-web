@@ -100,49 +100,17 @@
 
 .mobile-header {
     display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
+    align-items: center;
+    gap: 0.5rem;
     overflow: visible;
 
     > * {
         flex: none;
     }
 
-    .mobile-row {
-        display: flex;
-        gap: 0.5rem;
-        overflow: visible;
-    }
-
     .segments {
         flex: 1;
         min-width: 0;
-    }
-
-    .now-pill {
-        flex: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 3rem;
-        padding: 0 1.25rem;
-        border-radius: 999px;
-        background-color: var(--overlay-color);
-        backdrop-filter: blur(5px);
-        color: var(--primary-foreground-color);
-        font-size: 0.875rem;
-        font-weight: 600;
-        transition: background-color 0.15s @ease;
-
-        &:hover, &:focus {
-            background-color: @overlay-hover;
-        }
-    }
-
-    .mobile-zoom {
-        display: flex;
-        justify-content: flex-end;
-        overflow: visible;
     }
 
     .controls {
@@ -156,7 +124,7 @@
         overflow: visible;
     }
 
-    .round {
+    .round, .now {
         flex: none;
         display: flex;
         align-items: center;
@@ -165,7 +133,7 @@
         height: 2.5rem;
         border-radius: 999px;
         color: var(--primary-foreground-color);
-        transition: opacity 0.15s @ease;
+        transition: opacity 0.15s @ease, background-color 0.15s @ease;
 
         .icon {
             width: 1.125rem;
@@ -175,6 +143,17 @@
 
         &.inactive {
             opacity: 0.35;
+        }
+    }
+
+    .now {
+        width: 2.75rem;
+        height: 2.75rem;
+        background-color: var(--overlay-color);
+        backdrop-filter: blur(5px);
+
+        &:hover, &:focus {
+            background-color: @overlay-hover;
         }
     }
 }

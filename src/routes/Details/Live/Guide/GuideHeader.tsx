@@ -17,6 +17,7 @@ type Props = {
     canZoomIn: boolean,
     canZoomOut: boolean,
     isMobile: boolean,
+    showNow: boolean,
     onViewSelect: (value: string) => void,
     onPrevious: () => void,
     onNow: () => void,
@@ -26,7 +27,7 @@ type Props = {
     onFit: () => void,
 };
 
-const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, canZoomOut, isMobile, onViewSelect, onPrevious, onNow, onNext, onZoomIn, onZoomOut, onFit }: Props) => {
+const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, canZoomOut, isMobile, showNow, onViewSelect, onPrevious, onNow, onNext, onZoomIn, onZoomOut, onFit }: Props) => {
     const { t } = useTranslation();
     const options = useMemo(() => [
         { value: 'agenda', label: t('LIVE_TV_AGENDA'), icon: 'list' },
@@ -74,25 +75,20 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
     if (isMobile) {
         return (
             <div className={styles['mobile-header']}>
-                <div className={styles['mobile-row']}>
-                    <SegmentedControl
-                        className={styles['segments']}
-                        options={options}
-                        value={view}
-                        ariaLabel={t('LIVE_TV_SCHEDULE')}
-                        size={'large'}
-                        stretch={true}
-                        onSelect={onViewSelect}
-                    />
-                    <Button className={styles['now-pill']} onClick={onNow}>
-                        {t('LIVE_TV_NOW')}
-                    </Button>
-                </div>
+                <SegmentedControl
+                    className={styles['segments']}
+                    options={options}
+                    value={view}
+                    ariaLabel={t('LIVE_TV_SCHEDULE')}
+                    stretch={true}
+                    onSelect={onViewSelect}
+                />
+                {zoom}
                 {
-                    zoom !== null ?
-                        <div className={styles['mobile-zoom']}>
-                            {zoom}
-                        </div>
+                    showNow ?
+                        <Button className={styles['now']} title={t('LIVE_TV_NOW')} aria-label={t('LIVE_TV_NOW')} onClick={onNow}>
+                            <Icon className={styles['icon']} name={'clock'} />
+                        </Button>
                         :
                         null
                 }

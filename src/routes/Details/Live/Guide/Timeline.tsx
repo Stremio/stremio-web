@@ -11,6 +11,7 @@ import LiveFlag from '../LiveFlag';
 import getProgrammeKey from '../getProgrammeKey';
 import useFormatters from './useFormatters';
 import useReveal from './useReveal';
+import useLiveVisible from './useLiveVisible';
 import { getScrollParent, scrollToFraction } from './scroll';
 import styles from './Timeline.less';
 
@@ -23,6 +24,7 @@ type Props = {
     scale: number,
     onSelect: (key: string) => void,
     onScale: (scale: number) => void,
+    onLiveVisible?: (visible: boolean) => void,
 };
 
 const MINUTE_IN_MS = 60000;
@@ -44,7 +46,7 @@ const getMinutes = (from: number, to: number) => (to - from) / MINUTE_IN_MS;
 
 const getRootFontSize = () => parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
 
-const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onSelect, onScale }: Props) => {
+const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onSelect, onScale, onLiveVisible }: Props) => {
     const { hour, timeRange } = useFormatters(now);
     const containerRef = useRef<HTMLDivElement>(null);
     const appliedScaleRef = useRef(scale);
@@ -65,6 +67,7 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
     }, [programmes]);
 
     useReveal(containerRef, selectedKey, nowToken, getAnchor, true);
+    useLiveVisible(containerRef, now, onLiveVisible);
 
     useLayoutEffect(() => {
         const container = containerRef.current;

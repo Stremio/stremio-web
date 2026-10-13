@@ -40,6 +40,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
     const rootRef = useRef<HTMLDivElement>(null);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [streamsOpen, setStreamsOpen] = useState(false);
+    const [liveVisible, setLiveVisible] = useState(true);
 
     const selected = useMemo(() => {
         return programmes.find((programme) => getProgrammeKey(programme) === selectedKey)
@@ -75,6 +76,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                     canZoomIn={guide.canZoomIn}
                     canZoomOut={guide.canZoomOut}
                     isMobile={isMobile}
+                    showNow={!liveVisible}
                     onViewSelect={guide.onViewSelect}
                     onPrevious={guide.onPrevious}
                     onNow={guide.onNow}
@@ -96,6 +98,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                 isMobile={isMobile}
                 onSelect={onSelect}
                 onScale={guide.onScale}
+                onLiveVisible={setLiveVisible}
             />
         </Panel>
     );

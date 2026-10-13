@@ -11,6 +11,7 @@ import LiveFlag from '../LiveFlag';
 import getProgrammeKey from '../getProgrammeKey';
 import useFormatters from './useFormatters';
 import useReveal from './useReveal';
+import useLiveVisible from './useLiveVisible';
 import styles from './Agenda.less';
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
     nowToken: number,
     isMobile: boolean,
     onSelect: (key: string) => void,
+    onLiveVisible?: (visible: boolean) => void,
 };
 
 type Day = {
@@ -32,7 +34,7 @@ const renderFallback = () => null;
 
 const getSelectedRow = (container: HTMLElement) => container.querySelector<HTMLElement>('[aria-pressed="true"]');
 
-const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect }: Props) => {
+const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect, onLiveVisible }: Props) => {
     const { time, timeRange, duration, dayLabel } = useFormatters(now);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +53,7 @@ const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect }: 
     }, [programmes, dayLabel]);
 
     useReveal(containerRef, selectedKey, nowToken, getSelectedRow, !isMobile);
+    useLiveVisible(containerRef, now, onLiveVisible);
 
     const onRowClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         const { key } = event.currentTarget.dataset;
