@@ -12,15 +12,19 @@ type Props = {
     label: string,
     sublabel?: string | null,
     href?: string | null,
+    target?: '_blank',
+    download?: string,
     disabled?: boolean,
     onClick?: () => void,
 };
 
-const PlayButton = ({ className, icon = 'play', label, sublabel = null, href = null, disabled = false, onClick }: Props) => (
+const PlayButton = ({ className, icon = 'play', label, sublabel = null, href = null, target, download, disabled = false, onClick }: Props) => (
     <Button
         className={classNames(className, styles['play-button'], { [styles['disabled']]: disabled })}
         title={label}
         href={href ?? undefined}
+        target={target}
+        download={download}
         disabled={disabled}
         onClick={onClick}
     >

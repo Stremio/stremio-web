@@ -1,12 +1,12 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
-import { useCore } from 'stremio/core';
 import PlayButton from '../Actions/PlayButton';
+import useStreamPlay from '../Streams/useStreamPlay';
 import ToggleButton from 'stremio/components/ToggleButton';
 import styles from './Playback.less';
 
@@ -21,7 +21,6 @@ type Props = {
 
 const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
-    const core = useCore();
 
     const readyStreams = useMemo(() => {
         return streams.flatMap((resource) => {
@@ -36,12 +35,7 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
         return readyStreams.find(({ stream }) => stream.lastUsed === true) ?? readyStreams[0] ?? null;
     }, [readyStreams]);
     const sublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name || ''].filter((part) => part.length > 0).join(' · ') : null;
-
-    const onWatchClick = useCallback(() => {
-        if (watchStream !== null) {
-            core.transport.analytics({ event: 'StreamClicked', args: { stream: watchStream.stream } });
-        }
-    }, [core.transport, watchStream]);
+    const { href, target, download, play } = useStreamPlay(watchStream?.stream ?? null);
 
     return (
         <div className={classNames(className, styles['playback'])}>
@@ -51,8 +45,10 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
                         className={styles['primary']}
                         label={t('LIVE_TV_WATCH_LIVE')}
                         sublabel={sublabel}
-                        href={watchStream.stream.deepLinks?.player}
-                        onClick={onWatchClick}
+                        href={href}
+                        target={target}
+                        download={download}
+                        onClick={play}
                     />
                     :
                     loading ?

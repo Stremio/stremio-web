@@ -8,11 +8,9 @@ import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
-import { useCore } from 'stremio/core';
-import { usePlatform, useProfile } from 'stremio/common';
 import useToast from 'stremio/common/Toast/useToast';
 import useRowMenu from '../useRowMenu';
-import useStreamHref from './useStreamHref';
+import useStreamPlay from './useStreamPlay';
 import styles from './Stream.less';
 
 type Props = {
@@ -42,52 +40,14 @@ const renderThumbnailFallback = () => <Icon className={styles['thumbnail-fallbac
 
 const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkWatched, card, onPlay }: Props) => {
     const { t } = useTranslation();
-    const core = useCore();
-    const profile = useProfile();
-    const platform = usePlatform();
     const toast = useToast();
     const { open, closeMenu, labelProps, menuProps } = useRowMenu();
-    const { href, target, download, external } = useStreamHref(stream.deepLinks);
+    const { href, target, download, external, play } = useStreamPlay(stream, { videoId, videoReleased, canMarkWatched, onPlay });
     const externalPlayer = stream.deepLinks?.externalPlayer;
     const name = stream.name || addonName;
     const lastUsed = stream.lastUsed === true;
     const progress = typeof stream.progress === 'number' && stream.progress > 0 ? stream.progress : null;
     const thumbnail = typeof stream.thumbnail === 'string' && stream.thumbnail.length > 0 ? stream.thumbnail : null;
-
-    const play = useCallback(() => {
-        if (profile.settings.playerType !== null) {
-            if (profile.settings.playerType !== 'infuse' || !platform.shell.active || !canMarkWatched) {
-                if (typeof videoId === 'string') {
-                    core.transport.dispatch({
-                        action: 'MetaDetails',
-                        args: {
-                            action: 'MarkVideoAsWatched',
-                            args: [{ id: videoId, released: videoReleased }, true],
-                        },
-                    });
-                }
-            }
-
-            core.transport.dispatch({
-                action: 'MetaDetails',
-                args: {
-                    action: 'ExternalPlayerStreamOpened',
-                    args: stream,
-                },
-            });
-            toast.show({
-                type: 'success',
-                title: 'Stream opened in external player',
-                timeout: 4000,
-            });
-        }
-
-        core.transport.analytics({
-            event: 'StreamClicked',
-            args: { stream },
-        });
-        onPlay?.(stream);
-    }, [core, profile.settings.playerType, platform.shell.active, canMarkWatched, videoId, videoReleased, stream, toast, onPlay]);
 
     const onClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         if (!(event.nativeEvent as Event & { togglePopupPrevented?: boolean }).togglePopupPrevented) {
