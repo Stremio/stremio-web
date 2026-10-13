@@ -2,17 +2,10 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
-@glyph: 1.375rem;
-@badge: 0.875rem;
-@overhang: 0.25rem;
-@box: (@glyph + @overhang);
-@inset: (@overhang / 2);
-@center: (@box - @badge / 2);
-@hole: (@badge / 2 + @inset);
-@shrunk: translate(-@inset, -@inset) scale(0.82);
 @ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 @ease-spring: cubic-bezier(0.33, 1, 0.68, 1);
 @ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+@shrunk: translate(calc(-1 * var(--inset)), calc(-1 * var(--inset))) scale(0.82);
 @desktop-min: (@xxsmall + 1px);
 @compact: ~"only screen and (max-width: @{xxsmall}), only screen and (min-width: @{desktop-min}) and (max-height: @{phone-landscape-size})";
 
@@ -23,6 +16,13 @@
 }
 
 .toggle-button {
+    --glyph: 1.375rem;
+    --badge: calc(var(--glyph) * 7 / 11);
+    --overhang: calc(var(--glyph) * 2 / 11);
+    --box: calc(var(--glyph) + var(--overhang));
+    --inset: calc(var(--overhang) / 2);
+    --center: calc(var(--box) - var(--badge) / 2);
+    --hole: calc(var(--badge) / 2 + var(--inset));
     position: relative;
     flex: none;
     display: flex;
@@ -40,8 +40,8 @@
 
     .glyph {
         position: relative;
-        width: @box;
-        height: @box;
+        width: var(--box);
+        height: var(--box);
         overflow: visible;
         transition: transform 0.15s @ease;
     }
@@ -57,16 +57,16 @@
         left: 0;
         width: 100%;
         height: 100%;
-        mask-image: radial-gradient(circle at @center @center, transparent var(--cutout), #000000 calc(var(--cutout) + 0.5px));
+        mask-image: radial-gradient(circle at var(--center) var(--center), transparent var(--cutout), #000000 calc(var(--cutout) + 0.5px));
         transition: --cutout 0.12s ease-in;
     }
 
     .icon {
         position: absolute;
-        top: @inset;
-        left: @inset;
-        width: @glyph;
-        height: @glyph;
+        top: var(--inset);
+        left: var(--inset);
+        width: var(--glyph);
+        height: var(--glyph);
         opacity: 0.7;
         transform-origin: 0 0;
         transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.25s @ease;
@@ -86,8 +86,8 @@
         bottom: 0;
         display: grid;
         place-items: center;
-        width: @badge;
-        height: @badge;
+        width: var(--badge);
+        height: var(--badge);
         border-radius: 50%;
         overflow: visible;
         transform: scale(0);
@@ -95,12 +95,12 @@
     }
 
     .ring {
-        box-shadow: inset 0 0 0 1.5px currentColor;
+        box-shadow: inset 0 0 0 calc(var(--glyph) / 14) currentColor;
     }
 
     .ring-icon {
-        width: 0.625rem;
-        height: 0.625rem;
+        width: calc(var(--glyph) * 5 / 11);
+        height: calc(var(--glyph) * 5 / 11);
     }
 
     .disc {
@@ -109,13 +109,13 @@
     }
 
     .disc-icon {
-        width: 0.6875rem;
-        height: 0.6875rem;
+        width: calc(var(--glyph) / 2);
+        height: calc(var(--glyph) / 2);
     }
 
     &.on {
         .art {
-            --cutout: @hole;
+            --cutout: var(--hole);
             transition: --cutout 0.3s @ease-pop 0.1s;
         }
 
@@ -137,7 +137,7 @@
     @media (hover: hover) {
         &:not(.on):hover {
             .art {
-                --cutout: @hole;
+                --cutout: var(--hole);
                 transition: --cutout 0.3s @ease-spring 0.1s;
             }
 
