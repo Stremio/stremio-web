@@ -8,13 +8,11 @@ type Props = {
     logo: string | null,
     name: string,
     title?: string | null,
-    visible?: boolean,
-    contentRef?: React.Ref<HTMLDivElement>,
 };
 
-const Bar = ({ logo, name, title = null, visible, contentRef }: Props) => (
+const Bar = ({ logo, name, title = null }: Props) => (
     <div className={styles['bar']} aria-hidden={'true'}>
-        <div ref={contentRef} className={styles['bar-content']} style={visible !== undefined ? { opacity: visible ? 1 : 0 } : undefined}>
+        <div className={styles['bar-content']}>
             <div className={styles['bar-title']}>
                 {
                     typeof title === 'string' ?

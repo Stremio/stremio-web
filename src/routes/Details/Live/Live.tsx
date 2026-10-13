@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import Image from 'stremio/components/Image';
@@ -9,6 +9,7 @@ import { EPGProgram, useLiveRefresh } from 'stremio/common/EPG';
 import Background from '../Background';
 import Logo from '../Hero/Logo';
 import Bar from '../HeroArt/Bar';
+import useHeroCollapse from '../useHeroCollapse';
 import Panel from '../Panel';
 import Streams from '../Streams';
 import Programme from './Programme';
@@ -40,27 +41,8 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     const { channel, programmes, current } = useProgrammes(meta, now);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [streamsOpen, setStreamsOpen] = useState(false);
-    const [barVisible, setBarVisible] = useState(false);
-    const logoRef = useRef<HTMLDivElement>(null);
-    const barRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const logo = logoRef.current;
-        const scroller = contentRef.current;
-        const bar = barRef.current;
-        if (!isMobile || !logo || !scroller || !bar) {
-            return;
-        }
-
-        const observer = new IntersectionObserver(([entry]) => {
-            setBarVisible(!entry.isIntersecting && entry.rootBounds !== null && entry.boundingClientRect.top < entry.rootBounds.top);
-        }, {
-            root: scroller,
-            rootMargin: `-${Math.ceil(bar.getBoundingClientRect().height)}px 0px 0px 0px`,
-        });
-        observer.observe(logo);
-        return () => observer.disconnect();
-    }, [isMobile, contentRef]);
+    const rootRef = useRef<HTMLDivElement>(null);
+    useHeroCollapse(rootRef, contentRef, isMobile);
 
     const selected = useMemo(() => {
         return programmes.find((programme) => getProgrammeKey(programme) === selectedKey)
@@ -133,7 +115,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     );
 
     return (
-        <div className={classNames(className, styles['live'])}>
+        <div ref={rootRef} className={classNames(className, styles['live'])}>
             {
                 !isMobile ?
                     <Background src={artwork} />
@@ -145,23 +127,23 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                 {
                     isMobile ?
                         <React.Fragment>
-                            <Bar logo={meta.logo} name={channel.name} visible={barVisible} contentRef={barRef} />
+                            <Bar logo={meta.logo} name={channel.name} />
                             <header className={styles['hero-art']}>
-                                <div className={styles['art']} aria-hidden={'true'}>
-                                    {
-                                        typeof artwork === 'string' && artwork.length > 0 ?
-                                            <Image key={artwork} className={styles['image']} src={artwork} alt={''} renderFallback={renderFallback} />
-                                            :
-                                            null
-                                    }
-                                </div>
-                                <div className={styles['copy']}>
-                                    <div ref={logoRef}>
-                                        <Logo name={channel.name} logo={meta.logo} />
+                                <div className={styles['pin']}>
+                                    <div className={styles['art']} aria-hidden={'true'}>
+                                        {
+                                            typeof artwork === 'string' && artwork.length > 0 ?
+                                                <Image key={artwork} className={styles['image']} src={artwork} alt={''} renderFallback={renderFallback} />
+                                                :
+                                                null
+                                        }
                                     </div>
-                                    <Programme className={styles['headline']} programme={selected} now={now} part={'headline'} />
                                 </div>
                             </header>
+                            <div className={styles['copy']}>
+                                <Logo name={channel.name} logo={meta.logo} />
+                                <Programme className={styles['headline']} programme={selected} now={now} part={'headline'} />
+                            </div>
                             <div className={styles['scrim']} aria-hidden={'true'} />
                             <section className={styles['summary']}>
                                 <Programme programme={selected} now={now} part={'details'} />
