@@ -69,15 +69,12 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
     }, [groups, effectiveSelectedAddon]);
 
     const loadingLabel = `${loadingCount} ${t('MOBILE_ADDONS_LOADING')}`;
-    const episodeTitle = useMemo(() => {
-        if (!video) {
-            return null;
-        }
-
-        const episodeLabel = getEpisodeLabel(video);
-        return [episodeLabel, video.title].filter((part) => typeof part === 'string' && part.length > 0).join(' · ');
-    }, [video]);
-    const heading = title ?? episodeTitle;
+    const episodeLabel = video !== null ? getEpisodeLabel(video) : null;
+    const name = title ?? video?.title ?? null;
+    const heading = video !== null || typeof title === 'string' ?
+        [episodeLabel, name].filter((part) => typeof part === 'string' && part.length > 0).join(' · ')
+        :
+        null;
 
     const installAddons = showInstallAddons ?
         <Button className={styles['install-button']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
@@ -100,7 +97,15 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                         <Button className={styles['back-button']} aria-label={t('BACK')} onClick={onBack ?? onVideos}>
                             <Icon className={styles['back-icon']} name={'chevron-back'} />
                         </Button>
-                        <div className={styles['title']} title={heading}>{heading}</div>
+                        <div className={styles['title']} title={heading}>
+                            {
+                                episodeLabel !== null ?
+                                    <span className={styles['episode']}>{episodeLabel}</span>
+                                    :
+                                    null
+                            }
+                            <span className={styles['name']}>{name}</span>
+                        </div>
                         {
                             loadingCount > 0 ?
                                 <div className={styles['loading-text']}>{loadingLabel}</div>
