@@ -1,9 +1,9 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { useNavigateWithOrigin } from 'stremio-router';
+import { useGoBack, useNavigateWithOrigin } from 'stremio-router';
 import { HorizontalNavBar } from 'stremio/components/NavBar';
 import DelayedRenderer from 'stremio/components/DelayedRenderer';
 import { useContentGamepadNavigation } from 'stremio/services/GamepadNavigation';
@@ -13,6 +13,7 @@ import useMediaQuery from 'stremio/common/useMediaQuery';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import useDetails from './useDetails';
 import useSeason from './useSeason';
+import useEpisodeNavigation from './useEpisodeNavigation';
 import useExternalPlayerCallback from './useExternalPlayerCallback';
 import useDetailsActions from './useDetailsActions';
 import usePrimaryAction from './usePrimaryAction';
@@ -68,10 +69,20 @@ const Details = () => {
     const actions = useDetailsActions(metaItem, details.libraryItem);
     const primary = usePrimaryAction(metaItem, video, details.libraryItem, details.streams, canMarkWatched);
     const originPath = useMemo(() => getStoredOrigin(), [getStoredOrigin]);
+    const leave = useGoBack(originPath);
+    const { fromVideos, insertVideos } = useEpisodeNavigation();
 
     useExternalPlayerCallback({ type, id, videoId }, details);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta);
+
+    const insertedVideosKeyRef = useRef<string | null>(null);
+    useEffect(() => {
+        if (video !== null && video.id === videoId && !fromVideos && !metaItem?.behaviorHints.defaultVideoId && insertedVideosKeyRef.current !== location.key) {
+            insertedVideosKeyRef.current = location.key;
+            insertVideos(video);
+        }
+    }, [video, videoId, fromVideos, metaItem, location.key, insertVideos]);
 
     const onEpisodeSearch = useCallback((season: number, episode: number) => {
         const nextVideoId = encodeURIComponent(`${id}:${season}:${episode}`);
@@ -80,8 +91,8 @@ const Details = () => {
             `${pathname}${pathname.endsWith('/') ? '' : '/'}${nextVideoId}`
             :
             pathname.replace(encodeURIComponent(videoId), nextVideoId);
-        navigate(nextPathname, { replace: true });
-    }, [id, videoId, location.pathname, navigate]);
+        navigate(nextPathname, { replace: true, state: location.state });
+    }, [id, videoId, location.pathname, location.state, navigate]);
 
     const navBar = (
         <HorizontalNavBar
@@ -89,7 +100,8 @@ const Details = () => {
             backButton={true}
             fullscreenButton={true}
             navMenu={true}
-            originPath={originPath}
+            originPath={fromVideos ? undefined : originPath}
+            onBackButtonClick={isMobile ? undefined : leave}
         />
     );
 

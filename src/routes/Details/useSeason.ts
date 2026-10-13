@@ -20,8 +20,8 @@ const useSeason = (): [number | null, (season: number) => void] => {
         const nextSearchParams = new URLSearchParams(searchParams);
         nextSearchParams.set('season', String(season));
         const pathname = location.pathname.replace(/\/$/, '');
-        navigate(`${pathname}?${nextSearchParams}`, { replace: true });
-    }, [location.pathname, searchParams, navigate]);
+        navigate(`${pathname}?${nextSearchParams}`, { replace: true, state: location.state });
+    }, [location.pathname, location.state, searchParams, navigate]);
 
     return [season, setSeason];
 };

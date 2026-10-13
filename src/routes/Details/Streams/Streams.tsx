@@ -1,16 +1,16 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { useGoBack, toPath } from 'stremio-router';
+import { useGoBack } from 'stremio-router';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import SegmentedControl from 'stremio/components/SegmentedControl';
 import { useProfile } from 'stremio/common';
 import { getEpisodeLabel } from '../format';
 import Panel from '../Panel';
+import useEpisodeNavigation from '../useEpisodeNavigation';
 import Placeholder from '../Placeholder';
 import Message from '../Message';
 import EpisodePicker from '../EpisodePicker';
@@ -33,8 +33,8 @@ const ALL_ADDONS_KEY = 'ALL';
 const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisodeSearch }: Props) => {
     const { t } = useTranslation();
     const profile = useProfile();
-    const navigate = useNavigate();
     const goBack = useGoBack();
+    const { openVideos } = useEpisodeNavigation();
     const { groups, loadingCount, total } = useStreamsByAddon(streams);
     const [selectedAddon, setSelectedAddon] = useState(ALL_ADDONS_KEY);
     const effectiveSelectedAddon = groups.some(({ addon }) => addon.transportUrl === selectedAddon) ? selectedAddon : ALL_ADDONS_KEY;
@@ -43,12 +43,11 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
 
     const onVideos = useCallback(() => {
         if (video && typeof video.deepLinks.metaDetailsVideos === 'string') {
-            const query = typeof video.season === 'number' ? `?${new URLSearchParams({ season: String(video.season) })}` : '';
-            navigate(toPath(`${video.deepLinks.metaDetailsVideos}${query}`), { replace: true });
+            openVideos(video);
         } else {
             goBack();
         }
-    }, [video, navigate, goBack]);
+    }, [video, openVideos, goBack]);
 
     const options = useMemo(() => {
         return [

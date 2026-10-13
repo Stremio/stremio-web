@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { useCore } from 'stremio/core';
 
 type UrlParams = {
@@ -15,6 +15,7 @@ const useExternalPlayerCallback = (
     metaDetails: MetaDetails,
 ) => {
     const core = useCore();
+    const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const callbackRef = React.useRef<string | null>(null);
 
@@ -57,8 +58,8 @@ const useExternalPlayerCallback = (
         const nextSearchParams = new URLSearchParams(searchParams);
         nextSearchParams.delete('position');
         nextSearchParams.delete('lastPlayedUrl');
-        setSearchParams(nextSearchParams, { replace: true });
-    }, [urlParams, searchParams, setSearchParams, metaDetails]);
+        setSearchParams(nextSearchParams, { replace: true, state: location.state });
+    }, [urlParams, searchParams, setSearchParams, metaDetails, location.state]);
 };
 
 export default useExternalPlayerCallback;

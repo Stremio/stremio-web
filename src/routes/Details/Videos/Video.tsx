@@ -1,12 +1,10 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React, { memo, useCallback, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
-import { toPath } from 'stremio-router';
-import { useProfile, usePlatform } from 'stremio/common';
+import { useProfile } from 'stremio/common';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
@@ -14,6 +12,7 @@ import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
 import WatchedBadge from 'stremio/components/WatchedBadge';
 import useRowMenu from '../useRowMenu';
+import useEpisodeNavigation from '../useEpisodeNavigation';
 import { formatDate, hidesSpoiler } from '../format';
 import { getScrollParent } from './useScrollMemory';
 import styles from './Video.less';
@@ -41,8 +40,7 @@ const renderThumbnailFallback = () => (
 const Video = ({ video, selected, seasonWatched, minutesLeft, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
     const { t, i18n } = useTranslation();
     const profile = useProfile();
-    const platform = usePlatform();
-    const navigate = useNavigate();
+    const { openEpisode } = useEpisodeNavigation();
     const { open, closeMenu, labelProps, menuProps } = useRowMenu();
     const rowRef = useRef<HTMLDivElement>(null);
 
@@ -72,8 +70,8 @@ const Video = ({ video, selected, seasonWatched, minutesLeft, onSelect, onMarkVi
 
     const handleClick = useCallback(() => {
         onSelect();
-        navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
-    }, [onSelect, navigate, deepLinks.metaDetailsStreams, platform.isMobile]);
+        openEpisode(deepLinks.metaDetailsStreams);
+    }, [onSelect, openEpisode, deepLinks.metaDetailsStreams]);
 
     const handleWatchClick = useCallback((event: React.MouseEvent) => {
         closeMenu();
