@@ -55,6 +55,7 @@
         align-items: center;
         gap: 0.125rem;
         overflow: visible;
+        transition: opacity 0.15s @ease, visibility 0s;
     }
 
     .round, .now {
@@ -122,6 +123,7 @@
         background-color: var(--overlay-color);
         backdrop-filter: blur(5px);
         overflow: visible;
+        transition: opacity 0.15s @ease, visibility 0s;
     }
 
     .round, .now {
@@ -151,9 +153,17 @@
         height: 2.75rem;
         background-color: var(--overlay-color);
         backdrop-filter: blur(5px);
+        transition: opacity 0.15s @ease, visibility 0s, background-color 0.15s @ease;
 
         &:hover, &:focus {
             background-color: @overlay-hover;
         }
     }
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s @ease, visibility 0s linear 0.15s;
 }

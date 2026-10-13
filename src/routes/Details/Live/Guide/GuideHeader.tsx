@@ -45,8 +45,8 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
             </div>;
     }
 
-    const zoom = view === 'timeline' ?
-        <div className={styles['controls']} role={'group'} aria-label={t('LIVE_TV_TIMELINE')}>
+    const zoom = (
+        <div className={classNames(styles['controls'], { [styles['hidden']]: view !== 'timeline' })} role={'group'} aria-label={t('LIVE_TV_TIMELINE')} aria-hidden={view !== 'timeline'}>
             <Button
                 className={classNames(styles['round'], { [styles['inactive']]: !canZoomOut })}
                 title={t('LIVE_TV_ZOOM_OUT')}
@@ -69,8 +69,7 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
                 <Icon className={styles['icon']} name={'add'} />
             </Button>
         </div>
-        :
-        null;
+    );
 
     if (isMobile) {
         return (
@@ -84,14 +83,9 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
                     onSelect={onViewSelect}
                 />
                 {zoom}
-                {
-                    showNow ?
-                        <Button className={styles['now']} title={t('LIVE_TV_NOW')} aria-label={t('LIVE_TV_NOW')} onClick={onNow}>
-                            <Icon className={styles['icon']} name={'clock'} />
-                        </Button>
-                        :
-                        null
-                }
+                <Button className={classNames(styles['now'], { [styles['hidden']]: !showNow })} title={t('LIVE_TV_NOW')} aria-label={t('LIVE_TV_NOW')} aria-hidden={!showNow} onClick={onNow}>
+                    <Icon className={styles['icon']} name={'clock'} />
+                </Button>
             </div>
         );
     }
@@ -131,7 +125,6 @@ const GuideHeader = ({ view, hasProgrammes, canPrevious, canNext, canZoomIn, can
                     options={options}
                     value={view}
                     ariaLabel={t('LIVE_TV_SCHEDULE')}
-                    stretch={zoom === null}
                     onSelect={onViewSelect}
                 />
                 {zoom}
