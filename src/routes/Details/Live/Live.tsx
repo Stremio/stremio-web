@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import Image from 'stremio/components/Image';
@@ -8,6 +8,7 @@ import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { EPGProgram, useLiveRefresh } from 'stremio/common/EPG';
 import Background from '../Background';
 import Logo from '../Hero/Logo';
+import Bar from '../HeroArt/Bar';
 import Panel from '../Panel';
 import Streams from '../Streams';
 import Programme from './Programme';
@@ -39,6 +40,27 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     const { channel, programmes, current } = useProgrammes(meta, now);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [streamsOpen, setStreamsOpen] = useState(false);
+    const [barVisible, setBarVisible] = useState(false);
+    const logoRef = useRef<HTMLDivElement>(null);
+    const barRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const logo = logoRef.current;
+        const scroller = contentRef.current;
+        const bar = barRef.current;
+        if (!isMobile || !logo || !scroller || !bar) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setBarVisible(!entry.isIntersecting && entry.rootBounds !== null && entry.boundingClientRect.top < entry.rootBounds.top);
+        }, {
+            root: scroller,
+            rootMargin: `-${Math.ceil(bar.getBoundingClientRect().height)}px 0px 0px 0px`,
+        });
+        observer.observe(logo);
+        return () => observer.disconnect();
+    }, [isMobile, contentRef]);
 
     const selected = useMemo(() => {
         return programmes.find((programme) => getProgrammeKey(programme) === selectedKey)
@@ -123,6 +145,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                 {
                     isMobile ?
                         <React.Fragment>
+                            <Bar logo={meta.logo} name={channel.name} visible={barVisible} contentRef={barRef} />
                             <header className={styles['hero-art']}>
                                 <div className={styles['art']} aria-hidden={'true'}>
                                     {
@@ -133,7 +156,9 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                                     }
                                 </div>
                                 <div className={styles['copy']}>
-                                    <Logo name={channel.name} logo={meta.logo} />
+                                    <div ref={logoRef}>
+                                        <Logo name={channel.name} logo={meta.logo} />
+                                    </div>
                                     <Programme className={styles['headline']} programme={selected} now={now} part={'headline'} />
                                 </div>
                             </header>

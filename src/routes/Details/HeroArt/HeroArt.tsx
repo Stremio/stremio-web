@@ -4,6 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Image from 'stremio/components/Image';
 import Logo from '../Hero/Logo';
+import Bar from './Bar';
 import styles from './HeroArt.less';
 
 type Props = {
@@ -20,18 +21,7 @@ const renderFallback = () => null;
 
 const HeroArt = ({ className, art, logo, name, label = null, title = null, blurred = false }: Props) => (
     <React.Fragment>
-        <div className={styles['bar']} aria-hidden={'true'}>
-            <div className={styles['bar-content']}>
-                <div className={styles['bar-title']}>
-                    {
-                        typeof title === 'string' ?
-                            title
-                            :
-                            <Logo className={styles['bar-logo']} logo={logo} name={name} small={true} />
-                    }
-                </div>
-            </div>
-        </div>
+        <Bar logo={logo} name={name} title={title} />
         <header className={classNames(className, styles['hero-art'])} aria-hidden={'true'}>
             <div className={styles['pin']}>
                 <div className={styles['art']}>
