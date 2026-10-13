@@ -150,6 +150,7 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
                                 height: `max(1.5rem, calc(var(--minute) * ${length} - 0.375rem))`,
                             }}
                             role={'button'}
+                            title={`${programme.title} · ${timeRange(programme)}`}
                             aria-pressed={key === selectedKey}
                             aria-current={live ? 'true' : undefined}
                             aria-label={`${programme.title}, ${timeRange(programme)}`}
