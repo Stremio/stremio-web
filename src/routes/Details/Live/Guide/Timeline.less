@@ -54,12 +54,6 @@
         scroll-margin-top: 2rem;
         scroll-margin-bottom: 3rem;
 
-        @container (max-height: 4.6rem) {
-            .title, .meta, .scrim {
-                display: none;
-            }
-        }
-
         .image {
             position: absolute;
             top: 0;
@@ -132,6 +126,12 @@
 
             .title {
                 color: rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        @container (max-height: 4.6rem) {
+            .title, .meta, .scrim {
+                display: none;
             }
         }
     }
