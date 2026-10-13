@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useRating from 'stremio/components/MetaPreview/Ratings/useRating';
-import ToggleButton from './ToggleButton';
+import ToggleButton from 'stremio/components/ToggleButton';
 import RateButton from './RateButton';
 
 export type GroupsProps = {

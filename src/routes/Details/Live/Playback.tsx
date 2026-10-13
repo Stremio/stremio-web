@@ -7,7 +7,7 @@ import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import { useCore } from 'stremio/core';
 import PlayButton from '../Actions/PlayButton';
-import ToggleButton from '../Actions/ToggleButton';
+import ToggleButton from 'stremio/components/ToggleButton';
 import styles from './Playback.less';
 
 type Props = {

@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
@@ -21,25 +21,14 @@ const ICONS = {
 };
 
 const ToggleButton = ({ className, variant, on, label, onClick }: Props) => {
-    const [fresh, setFresh] = useState(false);
     const icons = ICONS[variant];
-
-    const onButtonClick = useCallback(() => {
-        setFresh(true);
-        onClick();
-    }, [onClick]);
-
-    const onMouseLeave = useCallback(() => {
-        setFresh(false);
-    }, []);
 
     return (
         <Button
-            className={classNames(className, styles['toggle-button'], styles[variant], { [styles['on']]: on, [styles['fresh']]: fresh })}
+            className={classNames(className, styles['toggle-button'], { [styles['on']]: on })}
             aria-pressed={on}
             aria-label={label}
-            onClick={onButtonClick}
-            onMouseLeave={onMouseLeave}
+            onClick={onClick}
         >
             <Tooltip label={label} position={'top'} />
             <div className={styles['glyph']}>
@@ -56,8 +45,7 @@ const ToggleButton = ({ className, variant, on, label, onClick }: Props) => {
                     <Icon className={styles['ring-icon']} name={icons.ring} />
                 </div>
                 <div className={styles['disc']} aria-hidden={'true'}>
-                    <Icon className={classNames(styles['disc-icon'], styles['check'])} name={'checkmark'} />
-                    <Icon className={classNames(styles['disc-icon'], styles['remove'])} name={'remove'} />
+                    <Icon className={styles['disc-icon']} name={'checkmark'} />
                 </div>
             </div>
         </Button>
