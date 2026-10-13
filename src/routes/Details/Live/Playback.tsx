@@ -35,7 +35,7 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
     const watchStream = useMemo(() => {
         return readyStreams.find(({ stream }) => stream.lastUsed === true) ?? readyStreams[0] ?? null;
     }, [readyStreams]);
-    const sublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name].filter((part) => part.length > 0).join(' · ') : null;
+    const sublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name || ''].filter((part) => part.length > 0).join(' · ') : null;
 
     const onWatchClick = useCallback(() => {
         if (watchStream !== null) {
