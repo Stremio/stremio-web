@@ -1,12 +1,13 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import Image from 'stremio/components/Image';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { EPGProgram, useLiveRefresh } from 'stremio/common/EPG';
+import useHeroCollapse from '../useHeroCollapse';
 import Background from '../Background';
+import HeroArt from '../HeroArt';
 import Panel from '../Panel';
 import Streams from '../Streams';
 import Channel from './Channel';
@@ -31,13 +32,12 @@ type Props = {
     children: React.ReactNode,
 };
 
-const renderFallback = () => null;
-
 const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onToggleLibrary, children }: Props) => {
     const { t } = useTranslation();
     const active = useRouteActive();
     const now = useLiveRefresh('MetaDetails', 'meta_details', active);
     const { channel, programmes, current } = useProgrammes(meta, now);
+    const rootRef = useRef<HTMLDivElement>(null);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [streamsOpen, setStreamsOpen] = useState(false);
 
@@ -50,6 +50,8 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
     const selectedProgrammeKey = selected !== null ? getProgrammeKey(selected) : null;
     const live = selected !== null && selected === current;
     const artwork = selected?.thumbnail ?? meta.background;
+
+    useHeroCollapse(rootRef, contentRef, isMobile);
 
     const onSelect = useCallback((programme: EPGProgram | null) => {
         setSelectedKey(programme !== null ? getProgrammeKey(programme) : null);
@@ -110,7 +112,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
     );
 
     return (
-        <div className={classNames(className, styles['live'])}>
+        <div ref={rootRef} className={classNames(className, styles['live'])}>
             {
                 !isMobile ?
                     <Background src={artwork} />
@@ -122,23 +124,9 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                 {
                     isMobile ?
                         <React.Fragment>
-                            <header className={styles['hero-art']}>
-                                <div className={styles['art']} aria-hidden={'true'}>
-                                    {
-                                        typeof artwork === 'string' && artwork.length > 0 ?
-                                            <Image key={artwork} className={styles['image']} src={artwork} alt={''} renderFallback={renderFallback} />
-                                            :
-                                            null
-                                    }
-                                </div>
-                                <div className={styles['copy']}>
-                                    <Channel name={channel.name} logo={channel.logo} addonName={addonName} compact={true} />
-                                    <Programme className={styles['headline']} programme={selected} now={now} part={'headline'} />
-                                </div>
-                            </header>
-                            <div className={styles['scrim']} aria-hidden={'true'} />
+                            <HeroArt art={artwork} logo={channel.logo} name={channel.name} />
                             <section className={styles['summary']}>
-                                <Programme programme={selected} now={now} part={'details'} />
+                                <Programme programme={selected} now={now} />
                                 {playback}
                             </section>
                             <h2 className={styles['guide-title']}>{t('LIVE_TV_SCHEDULE')}</h2>

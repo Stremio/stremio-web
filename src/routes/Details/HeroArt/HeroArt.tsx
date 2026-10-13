@@ -37,7 +37,7 @@ const HeroArt = ({ className, art, logo, name, label = null, title = null, blurr
                 <div className={styles['art']}>
                     {
                         typeof art === 'string' && art.length > 0 ?
-                            <Image className={classNames(styles['image'], { [styles['blurred']]: blurred })} src={art} alt={''} renderFallback={renderFallback} />
+                            <Image key={art} className={classNames(styles['image'], { [styles['blurred']]: blurred })} src={art} alt={''} renderFallback={renderFallback} />
                             :
                             null
                     }

@@ -15,10 +15,9 @@ type Props = {
     className?: string,
     programme: EPGProgram | null,
     now: number,
-    part?: 'full' | 'headline' | 'details',
 };
 
-const Programme = ({ className, programme, now, part = 'full' }: Props) => {
+const Programme = ({ className, programme, now }: Props) => {
     const { t, i18n } = useTranslation();
     const { dayLabel } = useFormatters(now);
     const relativeFormatter = useMemo(() => new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }), [i18n.language]);
@@ -38,93 +37,83 @@ const Programme = ({ className, programme, now, part = 'full' }: Props) => {
 
     return (
         <div className={classNames(className, styles['programme'])} aria-live={'polite'}>
-            {
-                part !== 'details' ?
-                    <div className={styles['headline']}>
-                        {
-                            programme !== null ?
-                                <div className={styles['status']}>
-                                    {
-                                        live ?
-                                            <div className={styles['live']}>{t('PLAYER_LIVE')}</div>
-                                            :
-                                            <div className={styles['aired']}>{past ? t('AIRED') : t('UPCOMING')}</div>
-                                    }
-                                    <div className={styles['when']}>
-                                        {dayLabel(programme.startTime)}{timeRange !== null ? ` · ${timeRange}` : ''}
-                                    </div>
-                                </div>
-                                :
-                                null
-                        }
-                        <h1 className={styles['title']}>{programme?.title ?? t('LIVE_TV_NO_PROGRAM')}</h1>
-                    </div>
-                    :
-                    null
-            }
-            {
-                part !== 'headline' ?
-                    <div className={styles['details']}>
-                        {
-                            facts.length > 0 || ratings.length > 0 ?
-                                <div className={styles['facts']}>
-                                    {
-                                        facts.map((fact) => (
-                                            <div key={fact}>{fact}</div>
-                                        ))
-                                    }
-                                    {
-                                        ratings.map((rating, index) => (
-                                            <Rating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />
-                                        ))
-                                    }
-                                </div>
-                                :
-                                null
-                        }
-                        {
-                            typeof overview === 'string' && overview.length > 0 ?
-                                <p className={styles['overview']}>{overview}</p>
-                                :
-                                null
-                        }
-                        {
-                            genres.length > 0 ?
-                                <div className={styles['genres']}>
-                                    {
-                                        genres.map((genre) => (
-                                            <div key={genre} className={styles['genre']}>{genre}</div>
-                                        ))
-                                    }
-                                </div>
-                                :
-                                null
-                        }
-                        {
-                            programme !== null ?
-                                <div className={styles['timing']}>
-                                    {
-                                        live ?
-                                            <ProgressBar className={styles['progress']} value={progress} />
-                                            :
-                                            null
-                                    }
-                                    <div className={styles['relative']}>
-                                        {
-                                            live ?
-                                                t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })
-                                                :
-                                                getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter)
-                                        }
-                                    </div>
-                                </div>
-                                :
-                                null
-                        }
-                    </div>
-                    :
-                    null
-            }
+            <div className={styles['headline']}>
+                {
+                    programme !== null ?
+                        <div className={styles['status']}>
+                            {
+                                live ?
+                                    <div className={styles['live']}>{t('PLAYER_LIVE')}</div>
+                                    :
+                                    <div className={styles['aired']}>{past ? t('AIRED') : t('UPCOMING')}</div>
+                            }
+                            <div className={styles['when']}>
+                                {dayLabel(programme.startTime)}{timeRange !== null ? ` · ${timeRange}` : ''}
+                            </div>
+                        </div>
+                        :
+                        null
+                }
+                <h1 className={styles['title']}>{programme?.title ?? t('LIVE_TV_NO_PROGRAM')}</h1>
+            </div>
+            <div className={styles['details']}>
+                {
+                    facts.length > 0 || ratings.length > 0 ?
+                        <div className={styles['facts']}>
+                            {
+                                facts.map((fact) => (
+                                    <div key={fact}>{fact}</div>
+                                ))
+                            }
+                            {
+                                ratings.map((rating, index) => (
+                                    <Rating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />
+                                ))
+                            }
+                        </div>
+                        :
+                        null
+                }
+                {
+                    typeof overview === 'string' && overview.length > 0 ?
+                        <p className={styles['overview']}>{overview}</p>
+                        :
+                        null
+                }
+                {
+                    genres.length > 0 ?
+                        <div className={styles['genres']}>
+                            {
+                                genres.map((genre) => (
+                                    <div key={genre} className={styles['genre']}>{genre}</div>
+                                ))
+                            }
+                        </div>
+                        :
+                        null
+                }
+                {
+                    programme !== null ?
+                        <div className={styles['timing']}>
+                            {
+                                live ?
+                                    <ProgressBar className={styles['progress']} value={progress} />
+                                    :
+                                    null
+                            }
+                            <div className={styles['relative']}>
+                                {
+                                    live ?
+                                        t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })
+                                        :
+                                        getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter)
+                                }
+                            </div>
+                        </div>
+                        :
+                        null
+                }
+            </div>
         </div>
     );
 };

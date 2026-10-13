@@ -11,13 +11,12 @@ type Props = {
     name: string,
     logo: string | null,
     addonName: string,
-    compact?: boolean,
 };
 
 const renderFallback = () => <Icon className={styles['fallback']} name={'tv'} />;
 
-const Channel = ({ className, name, logo, addonName, compact = false }: Props) => (
-    <div className={classNames(className, styles['channel'], { [styles['compact']]: compact })}>
+const Channel = ({ className, name, logo, addonName }: Props) => (
+    <div className={classNames(className, styles['channel'])}>
         <div className={styles['mark']} aria-hidden={'true'}>
             {
                 typeof logo === 'string' && logo.length > 0 ?

@@ -80,36 +80,4 @@
             line-height: 1rem;
         }
     }
-
-    &.compact {
-        grid-template-columns: 2rem auto minmax(0, 1fr);
-        grid-template-areas: 'mark name addon';
-        column-gap: 0.625rem;
-
-        .mark {
-            width: 2rem;
-            height: 2rem;
-            border-radius: 0.5rem;
-
-            .logo {
-                padding: 0.25rem;
-            }
-
-            .fallback {
-                width: 1.125rem;
-                height: 1.125rem;
-            }
-        }
-
-        .name {
-            align-self: center;
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-        }
-
-        .addon {
-            align-self: center;
-            font-size: 0.75rem;
-        }
-    }
 }
