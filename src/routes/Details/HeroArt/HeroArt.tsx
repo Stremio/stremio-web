@@ -25,9 +25,9 @@ const HeroArt = ({ className, art, logo, name, label = null, title = null, blurr
                 <div className={styles['bar-title']}>
                     {
                         typeof title === 'string' ?
-                            title
+                            <div className={styles['bar-text']}>{title}</div>
                             :
-                            <Logo className={styles['bar-logo']} logo={logo} name={name} small={true} />
+                            <Logo logo={logo} name={name} small={true} />
                     }
                 </div>
             </div>

@@ -26,7 +26,7 @@
     }
 
     &.small {
-        height: ~"min(5rem, calc(18rem / var(--logo-ratio)), calc(7.75rem * var(--logo-root)))";
+        height: 100%;
     }
 }
 
@@ -39,8 +39,10 @@
     overflow-wrap: anywhere;
 
     &.small {
-        font-size: 1.5rem;
+        font-size: 1.125rem;
         line-height: 1.25;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
 
