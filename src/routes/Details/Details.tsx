@@ -66,7 +66,7 @@ const Details = () => {
     const trailerHref = metaItem?.trailerStreams[0]?.deepLinks.player ?? null;
     const [season, setSeason] = useSeason();
     const actions = useDetailsActions(metaItem, details.libraryItem);
-    const primary = usePrimaryAction(metaItem, video, details.libraryItem, details.streams);
+    const primary = usePrimaryAction(metaItem, video, details.libraryItem, details.streams, canMarkWatched);
     const originPath = useMemo(() => getStoredOrigin(), [getStoredOrigin]);
 
     useExternalPlayerCallback({ type, id, videoId }, details);

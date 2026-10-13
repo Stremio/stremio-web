@@ -3,10 +3,20 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { PrimaryAction } from './Actions';
+import useStreamPlay from './Streams/useStreamPlay';
 import { getEpisodeLabel, getMinutesLeft } from './format';
 
-const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | null, libraryItem: LibraryItem | null, streams: MetaDetails['streams']): PrimaryAction | null => {
+const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | null, libraryItem: LibraryItem | null, streams: MetaDetails['streams'], canMarkWatched: boolean): PrimaryAction | null => {
     const { t } = useTranslation();
+    const lastUsed = useMemo(() => {
+        return video !== null ?
+            streams
+                .flatMap((resource) => resource.content.type === 'Ready' ? resource.content.content : [])
+                .find((stream) => stream.lastUsed === true) ?? null
+            :
+            null;
+    }, [video, streams]);
+    const { href, target, download, play } = useStreamPlay(lastUsed, { videoId: video?.id, videoReleased: video?.released, canMarkWatched });
 
     return useMemo(() => {
         if (metaItem === null) {
@@ -14,18 +24,18 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
         }
 
         if (video !== null) {
-            const lastUsed = streams
-                .flatMap((resource) => resource.content.type === 'Ready' ? resource.content.content : [])
-                .find((stream) => stream.lastUsed === true) ?? null;
             const minutes = getMinutesLeft(libraryItem, video.id);
-            if (lastUsed === null || minutes === null || typeof lastUsed.deepLinks?.player !== 'string') {
+            if (minutes === null || href === null) {
                 return null;
             }
 
             return {
                 label: t('LIBRARY_RESUME'),
                 sublabel: t('CONTINUE_WATCHING_TIME_LEFT', { minutes }),
-                href: lastUsed.deepLinks.player,
+                href,
+                target,
+                download,
+                onClick: play,
             };
         }
 
@@ -41,7 +51,7 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
             sublabel: t('CONTINUE_WATCHING_TIME_LEFT', { minutes }),
             href: current.deepLinks.metaDetailsStreams,
         };
-    }, [metaItem, video, libraryItem, streams, t]);
+    }, [metaItem, video, libraryItem, href, target, download, play, t]);
 };
 
 export default usePrimaryAction;

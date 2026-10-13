@@ -19,7 +19,10 @@ export type PrimaryAction = {
     label: string,
     sublabel?: string | null,
     href?: string | null,
+    target?: '_blank',
+    download?: string,
     disabled?: boolean,
+    onClick?: () => void,
 };
 
 type Props = GroupsProps & {
@@ -45,7 +48,10 @@ const Actions = ({ className, primary, trailerHref = null, inLibrary, onToggleLi
                         label={primary.label}
                         sublabel={primary.sublabel}
                         href={primary.href}
+                        target={primary.target}
+                        download={primary.download}
                         disabled={primary.disabled}
+                        onClick={primary.onClick}
                     />
                     :
                     null
