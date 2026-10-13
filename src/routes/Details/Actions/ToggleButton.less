@@ -108,7 +108,7 @@
     .ring {
         opacity: 0.75;
         box-shadow: inset 0 0 0 1.5px currentColor;
-        transition: opacity 0.15s @ease, transform 0.3s @ease-pop 0.1s;
+        transition: opacity 0.15s @ease, transform 0.3s @ease-spring 0.1s;
     }
 
     .ring-icon {
@@ -155,7 +155,7 @@
         &.watched:not(.on):hover {
             .art {
                 --cutout: @hole;
-                transition: --cutout 0.3s @ease-pop;
+                transition: --cutout 0.3s @ease-spring;
             }
 
             .icon {
@@ -164,7 +164,7 @@
 
             .ring {
                 transform: scale(1);
-                transition: opacity 0.15s @ease, transform 0.3s @ease-pop;
+                transition: opacity 0.15s @ease, transform 0.3s @ease-spring;
             }
         }
 
