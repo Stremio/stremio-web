@@ -50,6 +50,7 @@
         border-radius: 0.875rem;
         background-color: var(--overlay-color);
         box-sizing: border-box;
+        container: timeline-programme / size;
         overflow: hidden;
         scroll-margin-top: 2rem;
         scroll-margin-bottom: 3rem;
@@ -153,6 +154,14 @@
             height: 10px;
             border-radius: 50%;
             background-color: @live-color;
+        }
+    }
+}
+
+@container timeline-programme (max-height: 3.25rem) {
+    .timeline .block {
+        .title, .meta, .scrim {
+            display: none;
         }
     }
 }

@@ -153,6 +153,7 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
                             aria-pressed={key === selectedKey}
                             aria-current={live ? 'true' : undefined}
                             aria-label={`${programme.title}, ${timeRange(programme)}`}
+                            title={`${programme.title}, ${timeRange(programme)}`}
                             data-key={key}
                             data-minutes={length}
                             onClick={onBlockClick}
