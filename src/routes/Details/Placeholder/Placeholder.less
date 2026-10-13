@@ -5,11 +5,14 @@
 .placeholder {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
 
-    > *, .logo, .fact, .pill, .action, .group, .circle, .thumbnail, .text > * {
+    > *, .lines > *, .link-row > *, .actions > *, .playback > *, .guide-row > *, .slot > * {
+        flex: none;
+    }
+
+    .bone {
         position: relative;
-        border-radius: var(--border-radius);
+        border-radius: 0.375rem;
         background-color: var(--color-placeholder-background);
         overflow: hidden;
 
@@ -26,54 +29,92 @@
         }
     }
 
-    .art, .row, .spacer, .text, .item {
-        background: none;
-
-        &::after {
-            display: none;
-        }
-    }
-
     .art {
         display: flex;
         align-items: flex-end;
         overflow: visible;
     }
 
-    .row {
+    .logo {
+        width: 22rem;
+        max-width: 100%;
+        height: 10.75rem;
+    }
+
+    .facts, .link-row, .actions, .playback, .guide-row {
         display: flex;
-        gap: 1rem;
+        align-items: center;
     }
 
-    .spacer {
-        flex: 1;
+    .facts {
+        gap: 2.5rem;
+        height: 1.5rem;
+        margin-top: 2.25rem;
+
+        .fact {
+            width: 4.25rem;
+            height: 1.125rem;
+        }
     }
 
-    .text {
-        flex: 1;
+    .lines {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .logo {
-        width: 20rem;
-        height: 8rem;
-        max-width: 100%;
-    }
-
-    .fact {
-        width: 5rem;
-        height: 1.25rem;
-    }
-
-    .line {
+        gap: 0.8rem;
         width: 100%;
-        max-width: 36rem;
-        height: 0.875rem;
+        max-width: 37.5rem;
+        margin-top: 1.9rem;
 
-        &.short {
-            max-width: 22rem;
+        .line, .short {
+            height: 0.9375rem;
+        }
+
+        .line {
+            width: 100%;
+        }
+
+        .short {
+            width: 60%;
+        }
+    }
+
+    .still {
+        width: 19rem;
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+        margin-top: 2.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .title {
+        width: 16rem;
+        max-width: 100%;
+        height: 1.875rem;
+        margin-top: 1.5rem;
+    }
+
+    .still ~ .facts, .title ~ .facts {
+        margin-top: 1.25rem;
+    }
+
+    .title ~ .lines {
+        margin-top: 1.4rem;
+    }
+
+    .links {
+        display: flex;
+        flex-direction: column;
+        gap: 1.125rem;
+        margin-top: 2.15rem;
+    }
+
+    .link-row {
+        gap: 0.625rem;
+
+        .label {
+            width: 3.5rem;
+            height: 0.8125rem;
+            margin-right: 0.625rem;
         }
     }
 
@@ -83,29 +124,136 @@
         border-radius: 999px;
     }
 
-    .action {
-        width: 7.5rem;
+    .spacer {
+        min-height: 2.5rem;
+    }
+
+    .actions, .playback {
+        gap: 0.875rem;
+    }
+
+    .action, .group, .circle, .watch {
         height: 3.5rem;
         border-radius: 999px;
+    }
+
+    .action {
+        width: 8.5rem;
     }
 
     .group {
         width: 7rem;
-        height: 3.5rem;
-        border-radius: 999px;
     }
 
     .circle {
         width: 3.5rem;
-        height: 3.5rem;
-        border-radius: 999px;
+    }
+
+    .watch {
+        width: 20rem;
+        max-width: 100%;
+    }
+
+    .channel {
+        display: grid;
+        grid-template-columns: 3rem minmax(0, 1fr);
+        align-items: center;
+        column-gap: 0.875rem;
+
+        .mark {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+        }
+
+        .lines {
+            gap: 0.375rem;
+            margin-top: 0;
+        }
+
+        .name {
+            width: 8rem;
+            height: 1rem;
+        }
+
+        .addon {
+            width: 5rem;
+            height: 0.8125rem;
+        }
+    }
+
+    .status {
+        width: 14rem;
+        height: 0.875rem;
+    }
+
+    .status ~ .title {
+        width: 24rem;
+        height: 2.5rem;
+        margin-top: 1.125rem;
+    }
+
+    .status ~ .lines {
+        margin-top: 1.4rem;
+
+        .line + .line {
+            display: none;
+        }
+    }
+
+    .lines + .link-row {
+        margin-top: 2.15rem;
+    }
+
+    .playback {
+        margin-top: 2.5rem;
+    }
+
+    .guide-title {
+        display: none;
     }
 
     .bar {
         width: 13rem;
         max-width: 100%;
+        height: 2.5rem;
+        border-radius: 999px;
+    }
+
+    .guide-row {
+        gap: 0.375rem;
+
+        .heading {
+            width: 9rem;
+            height: 1.125rem;
+            margin-right: auto;
+        }
+
+        .bar {
+            margin-right: auto;
+        }
+    }
+
+    .round, .now {
+        width: 2.25rem;
         height: 2.25rem;
         border-radius: 999px;
+    }
+
+    .now {
+        width: 3.5rem;
+    }
+
+    .search {
+        height: 2.5rem;
+        margin: 0 0.25rem 0.5rem;
+        border-radius: 999px;
+    }
+
+    .section {
+        width: 5.5rem;
+        height: 0.75rem;
+        margin: 0.875rem 1.125rem 0.5rem;
     }
 
     .item {
@@ -121,20 +269,96 @@
             border-radius: 0.375rem;
         }
 
-        .line {
-            height: 0.75rem;
+        .lines {
+            flex: 1;
+            gap: 0.625rem;
+            margin-top: 0;
+
+            .line, .short {
+                height: 0.75rem;
+            }
+        }
+
+        .time {
+            flex: none;
+            width: 2.75rem;
+            height: 0.875rem;
+        }
+
+        .circle {
+            flex: none;
+            width: 2.625rem;
+            height: 2.625rem;
         }
     }
 
-    &.hero {
+    .slot {
+        display: flex;
+        gap: 0.75rem;
+        height: 25rem;
+        padding-bottom: 0.375rem;
+
+        .hour {
+            width: 2.25rem;
+            height: 0.75rem;
+        }
+
+        .tile {
+            flex: 1;
+            height: 100%;
+            border-radius: 0.875rem;
+        }
+    }
+
+    &.hero, &.episode, &.live {
         flex: 1;
         min-height: 0;
         overflow: visible;
     }
 
-    &.list {
+    &.videos, &.streams, &.agenda {
         gap: 0.25rem;
         margin-top: 0.25rem;
+    }
+
+    &.streams .item {
+        padding: 1rem 0.875rem 1rem 1.125rem;
+
+        .lines {
+            gap: 0.625rem;
+
+            .line {
+                width: 60%;
+                height: 0.9375rem;
+            }
+
+            .short {
+                width: 40%;
+                height: 0.8125rem;
+            }
+        }
+    }
+
+    &.agenda .item {
+        gap: 1rem;
+
+        .thumbnail {
+            width: 7rem;
+        }
+    }
+
+    &.guide {
+        gap: 1rem;
+        padding: 0.25rem 0 0.25rem 0.25rem;
+    }
+
+    &.dock {
+        position: absolute;
+        bottom: calc(1rem + var(--safe-area-inset-bottom));
+        left: calc(1.25rem + var(--safe-area-inset-left));
+        z-index: 10;
+        border-radius: 999px;
+        background-color: var(--secondary-background-color);
     }
 }
 
@@ -144,17 +368,71 @@
     }
 }
 
+@media @desktop {
+    .placeholder {
+        .art, .channel {
+            margin-bottom: auto;
+        }
+
+        &.live .art {
+            display: none;
+        }
+    }
+}
+
+@media @desktop and (max-height: 700px) {
+    .placeholder .still {
+        display: none;
+    }
+}
+
 @media @desktop-short {
     .placeholder {
         .logo {
+            width: 10rem;
             height: 3.5rem;
         }
 
-        .links {
+        .still, .links, .link-row {
             display: none;
         }
 
-        .action, .group, .circle {
+        .title {
+            height: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .facts, .still ~ .facts, .title ~ .facts {
+            margin-top: 1rem;
+        }
+
+        .lines, .title ~ .lines, .status ~ .lines {
+            margin-top: 1.1rem;
+
+            .short {
+                display: none;
+            }
+        }
+
+        .spacer {
+            min-height: 0.75rem;
+        }
+
+        .channel .mark {
+            width: 2.25rem;
+            height: 2.25rem;
+        }
+
+        .status ~ .title {
+            height: 1.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .playback {
+            margin-top: 0.75rem;
+        }
+
+        .action, .group, .circle, .watch {
             height: 3rem;
         }
 
@@ -166,7 +444,7 @@
 
 @media @mobile {
     .placeholder {
-        &.hero {
+        &.hero, &.episode {
             align-items: center;
         }
 
@@ -185,21 +463,107 @@
             height: 4rem;
         }
 
+        .still, .links, .channel, .spacer, &.hero .title, &.episode .title {
+            display: none;
+        }
+
         .facts {
             justify-content: center;
+            gap: 1.75rem;
+            margin-top: 0.875rem;
+
+            .fact {
+                height: 1rem;
+            }
         }
 
-        .line.short {
-            max-width: 60%;
+        .lines {
+            margin-top: 1.25rem;
         }
 
-        .links, .spacer, .actions {
-            display: none;
+        &.hero .lines, &.episode .lines {
+            align-items: center;
+        }
+
+        .actions {
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+
+            .group {
+                display: none;
+            }
+
+            .action, .circle {
+                width: 7.25rem;
+                height: 3rem;
+            }
+        }
+
+        &.live {
+            .art {
+                align-self: center;
+                margin-bottom: 0.875rem;
+            }
+
+            .status ~ .title {
+                width: 75%;
+                height: 2rem;
+                margin-top: 0.75rem;
+            }
+
+            .status ~ .lines {
+                margin-top: 1rem;
+            }
+
+            .lines + .link-row {
+                margin-top: 1.25rem;
+            }
+
+            .playback {
+                gap: 0.625rem;
+                margin-top: 1.25rem;
+            }
+
+            .watch, .action, .circle {
+                height: 3.25rem;
+            }
+
+            .watch {
+                flex: 1;
+                width: auto;
+            }
+
+            .action {
+                width: 7rem;
+            }
+
+            .circle {
+                width: 3.25rem;
+            }
+
+            .guide-title {
+                display: block;
+                width: 9.5rem;
+                height: 1.125rem;
+                margin-top: 2.4rem;
+            }
         }
 
         .bar {
             width: 14rem;
-            height: 2.5rem;
+            height: 2.75rem;
+        }
+
+        &.guide {
+            .guide-row:first-child, .guide-row .round:not(:last-child) {
+                display: none;
+            }
+
+            .round {
+                width: 2.75rem;
+                height: 2.75rem;
+            }
         }
 
         .item {
@@ -208,6 +572,15 @@
 
             .thumbnail {
                 width: 8rem;
+            }
+        }
+
+        &.agenda .item {
+            min-height: 4rem;
+            padding: 0.625rem 0.625rem 0.625rem 0.75rem;
+
+            .thumbnail {
+                width: 5.5rem;
             }
         }
     }

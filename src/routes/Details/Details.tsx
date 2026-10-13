@@ -29,12 +29,27 @@ import type { ScrollMemory } from './Videos';
 import Streams from './Streams';
 import Live from './Live';
 import Placeholder from './Placeholder';
+import Panel from './Panel';
 import Message from './Message';
 import styles from './Details.less';
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
 
 const useIsMobile = () => useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
+
+const LivePlaceholder = () => {
+    const { t } = useTranslation();
+    const isMobile = useIsMobile();
+
+    return (
+        <div className={styles['content']}>
+            <Placeholder className={styles['hero']} variant={'live'} />
+            <Panel ariaLabel={t('LIVE_TV_SCHEDULE')} header={<Placeholder variant={'guide'} />}>
+                <Placeholder variant={isMobile ? 'agenda' : 'timeline'} />
+            </Panel>
+        </div>
+    );
+};
 
 const Details = () => {
     const { type, id, videoId } = useParams();
@@ -50,6 +65,7 @@ const Details = () => {
     const details = useDetails({ type, id, videoId });
     const metaItem = details.metaItem?.content.type === 'Ready' ? details.metaItem.content.content : null;
     const metaPath = details.selected?.metaPath ?? null;
+    const metaLoading = details.metaItem?.content.type === 'Loading';
     const streamPath = details.selected?.streamPath ?? null;
     const video = useMemo(() => {
         return streamPath !== null && metaItem !== null ?
@@ -109,9 +125,7 @@ const Details = () => {
         return (
             <div className={styles['details']}>
                 {navBar}
-                <div className={styles['content']}>
-                    <Placeholder className={styles['hero']} variant={'hero'} />
-                </div>
+                <LivePlaceholder />
             </div>
         );
     }
@@ -175,7 +189,7 @@ const Details = () => {
                                     <Message label={t('ERR_NO_META_FOUND')} />
                                     :
                                     metaItem === null ?
-                                        <Placeholder variant={'hero'} />
+                                        <Placeholder variant={streamPath !== null && type !== 'movie' ? 'episode' : 'hero'} />
                                         :
                                         <Hero metaItem={metaItem} video={video} libraryItem={details.libraryItem} compact={isMobile}>
                                             <Actions
@@ -202,22 +216,27 @@ const Details = () => {
                             onEpisodeSearch={onEpisodeSearch}
                         />
                         :
-                        metaPath !== null ?
-                            <Videos
-                                key={metaItem?.id}
-                                metaItem={metaItem}
-                                error={details.metaItem?.content.type === 'Err'}
-                                libraryItem={details.libraryItem}
-                                season={season}
-                                onSeasonSelect={setSeason}
-                                onToggleNotifications={actions.toggleNotifications}
-                                onMarkVideoWatched={actions.markVideoWatched}
-                                onMarkSeasonWatched={actions.markSeasonWatched}
-                                onEpisodeSearch={onEpisodeSearch}
-                                scrollMemoryRef={scrollMemoryRef}
-                            />
+                        metaPath !== null && type === 'movie' && metaLoading ?
+                            <Panel ariaLabel={t('STREAMS')} header={<Placeholder variant={'control'} />}>
+                                <Placeholder variant={'streams'} />
+                            </Panel>
                             :
-                            null
+                            metaPath !== null ?
+                                <Videos
+                                    key={metaItem?.id}
+                                    metaItem={metaItem}
+                                    error={details.metaItem?.content.type === 'Err'}
+                                    libraryItem={details.libraryItem}
+                                    season={season}
+                                    onSeasonSelect={setSeason}
+                                    onToggleNotifications={actions.toggleNotifications}
+                                    onMarkVideoWatched={actions.markVideoWatched}
+                                    onMarkSeasonWatched={actions.markSeasonWatched}
+                                    onEpisodeSearch={onEpisodeSearch}
+                                    scrollMemoryRef={scrollMemoryRef}
+                                />
+                                :
+                                null
                 }
             </div>
             {
@@ -230,7 +249,10 @@ const Details = () => {
                         ratingInfo={details.ratingInfo}
                     />
                     :
-                    null
+                    isMobile && metaLoading ?
+                        <Placeholder variant={'dock'} />
+                        :
+                        null
             }
         </div>
     );
@@ -249,9 +271,7 @@ const DetailsFallback = () => {
             />
             {
                 type === 'tv' ?
-                    <div className={styles['content']}>
-                        <Placeholder className={styles['hero']} variant={'hero'} />
-                    </div>
+                    <LivePlaceholder />
                     :
                     null
             }

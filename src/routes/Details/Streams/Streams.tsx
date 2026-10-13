@@ -154,7 +154,7 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                         </div>
                         :
                         total === 0 ?
-                            <Placeholder variant={'list'} />
+                            <Placeholder variant={'streams'} />
                             :
                             <div ref={groupsRef} className={styles['groups']}>
                                 {
