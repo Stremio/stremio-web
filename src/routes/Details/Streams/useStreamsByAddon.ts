@@ -10,7 +10,6 @@ type StreamGroup = {
 type StreamsByAddon = {
     groups: StreamGroup[],
     loadingCount: number,
-    allErrored: boolean,
     total: number,
 };
 
@@ -31,7 +30,6 @@ const useStreamsByAddon = (streams: MetaDetails['streams']): StreamsByAddon => {
         return {
             groups,
             loadingCount,
-            allErrored: streams.length > 0 && streams.every(({ content }) => content.type === 'Err'),
             total,
         };
     }, [streams]);

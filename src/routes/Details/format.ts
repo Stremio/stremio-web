@@ -39,12 +39,3 @@ export const getMinutesLeft = (libraryItem: LibraryItem | null, videoId: string 
 
     return Math.max(1, Math.ceil((state.duration - state.timeOffset) / 60000));
 };
-
-export const getMinutesLeftFromProgress = (progress: number | null | undefined, runtime: string | null | undefined): number | null => {
-    const minutes = typeof runtime === 'string' ? parseInt(runtime, 10) : NaN;
-    if (typeof progress !== 'number' || !(progress > 0) || Number.isNaN(minutes)) {
-        return null;
-    }
-
-    return Math.max(1, Math.ceil(minutes * (1 - progress / 100)));
-};
