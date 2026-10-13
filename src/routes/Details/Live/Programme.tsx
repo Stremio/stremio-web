@@ -3,7 +3,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import ProgressBar from 'stremio/components/ProgressBar';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
 import { parseDate } from '../format';
 import Links from '../Hero/Links';
@@ -24,8 +23,7 @@ const Programme = ({ className, programme, now }: Props) => {
     const { dayLabel } = useFormatters(now);
     const relativeFormatter = useMemo(() => new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }), [i18n.language]);
 
-    const progress = programme !== null ? getEpgProgress(programme, now) : null;
-    const live = progress !== null;
+    const live = programme !== null && getEpgProgress(programme, now) !== null;
     const past = programme !== null && programme.endTime.getTime() <= now;
     const year = parseDate(programme?.released)?.getFullYear();
     const facts = [programme?.releaseInfo ?? year?.toString(), programme?.runtime].filter((fact): fact is string => typeof fact === 'string' && fact.length > 0);
@@ -43,7 +41,13 @@ const Programme = ({ className, programme, now }: Props) => {
         return result;
     }, [groups, programme]);
     const timeRange = programme !== null ? formatEpgTimeRange(programme.startTime, programme.endTime, i18n.language) : null;
-    const relative = programme !== null && !live ? getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter) : null;
+    const relative = programme === null ?
+        null
+        :
+        live ?
+            t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })
+            :
+            getRelativeTime(past ? programme.endTime.getTime() : programme.startTime.getTime(), now, relativeFormatter);
     const overview = programme !== null ? programme.overview : t('LIVE_TV_NO_SCHEDULE');
 
     return (
@@ -92,17 +96,6 @@ const Programme = ({ className, programme, now }: Props) => {
                         null
                 }
                 <Links className={styles['links']} groups={linkGroups} />
-                {
-                    programme !== null && progress !== null ?
-                        <div className={styles['timing']}>
-                            <ProgressBar className={styles['progress']} value={progress} />
-                            <div className={styles['relative']}>
-                                {t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((programme.endTime.getTime() - now) / 60000) })}
-                            </div>
-                        </div>
-                        :
-                        null
-                }
             </div>
         </div>
     );

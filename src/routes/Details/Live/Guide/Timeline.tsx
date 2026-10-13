@@ -4,7 +4,6 @@ import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
-import ProgressBar from 'stremio/components/ProgressBar';
 import { EPGProgram, getEpgProgress } from 'stremio/common/EPG';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import LiveFlag from '../LiveFlag';
@@ -138,8 +137,7 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
             {
                 programmes.map((programme) => {
                     const key = getProgrammeKey(programme);
-                    const progress = getEpgProgress(programme, now);
-                    const live = progress !== null;
+                    const live = getEpgProgress(programme, now) !== null;
                     const past = programme.endTime.getTime() <= now;
                     const start = getMinutes(origin, programme.startTime.getTime());
                     const length = getMinutes(programme.startTime.getTime(), programme.endTime.getTime());
@@ -178,12 +176,6 @@ const Timeline = ({ programmes, now, selectedKey, nowToken, fitToken, scale, onS
                                 }
                                 <div className={styles['range']}>{timeRange(programme)}</div>
                             </div>
-                            {
-                                live ?
-                                    <ProgressBar className={styles['progress']} value={progress} />
-                                    :
-                                    null
-                            }
                         </Button>
                     );
                 })
