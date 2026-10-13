@@ -63,15 +63,7 @@ const Hero = ({ className, metaItem, video, streams = false, libraryItem, compac
                             !compact ?
                                 <React.Fragment>
                                     <Logo className={styles['logo']} logo={metaItem.logo} name={metaItem.name} small={true} />
-                                    <Still className={styles['still']} thumbnail={video.thumbnail} progress={video.progress} blurred={hidesSpoiler(video, profile.settings.hideSpoilers)} />
-                                    {
-                                        typeof video.season === 'number' && typeof video.episode === 'number' ?
-                                            <div className={styles['label']}>
-                                                {`${t('SEASON_NUMBER', { season: video.season })} · ${t('EPISODE')} ${video.episode}`}
-                                            </div>
-                                            :
-                                            null
-                                    }
+                                    <Still className={styles['still']} thumbnail={video.thumbnail} blurred={hidesSpoiler(video, profile.settings.hideSpoilers)} />
                                     <h1 className={styles['title']}>{video.title || video.id}</h1>
                                 </React.Fragment>
                                 :
