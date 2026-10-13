@@ -2,8 +2,20 @@
 
 @import (reference) '../variables.less';
 
-@enter: opacity 0.2s @ease 0.06s, transform 0.3s @ease-pop 0.06s, color 0.2s @ease;
-@leave: opacity 0.12s ease-in, transform 0.12s ease-in, color 0.2s @ease;
+@glyph: 1.375rem;
+@badge: 0.875rem;
+@overhang: 0.25rem;
+@box: (@glyph + @overhang);
+@inset: (@overhang / 2);
+@center: (@box - @badge / 2);
+@hole: (@badge / 2 + @inset);
+@shrink: 0.82;
+
+@property --cutout {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
 
 .toggle-button {
     position: relative;
@@ -23,8 +35,8 @@
 
     .glyph {
         position: relative;
-        width: 1.375rem;
-        height: 1.375rem;
+        width: @box;
+        height: @box;
         overflow: visible;
         transition: transform 0.15s @ease;
     }
@@ -33,68 +45,160 @@
         transform: scale(0.86);
     }
 
-    .icon {
+    .art {
+        --cutout: -1px;
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        opacity: 0;
-        transform: scale(0.7);
-        transition: @leave;
+        mask-image: radial-gradient(circle at @center @center, transparent var(--cutout), #000000 calc(var(--cutout) + 0.5px));
+        transition: --cutout 0.12s ease-in;
     }
 
-    .icon-off {
+    &.library .art, &.on .art {
+        --cutout: @hole;
+        transition: --cutout 0.3s @ease-pop 0.1s;
+    }
+
+    .icon {
+        position: absolute;
+        top: @inset;
+        left: @inset;
+        width: @glyph;
+        height: @glyph;
         opacity: 0.7;
-        transform: none;
-        transition: @enter;
+        transform-origin: 0 0;
+        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.25s @ease;
     }
 
-    &:hover .icon-off, &:focus .icon-off {
+    &:hover .icon, &:focus .icon, &.on .icon {
         opacity: 1;
-        transition: opacity 0.15s @ease;
     }
 
-    &.on {
-        .icon-off {
-            opacity: 0;
-            transform: scale(0.7);
-            transition: @leave;
-        }
+    .fill {
+        clip-path: inset(100% 0 0 0);
+    }
 
-        .icon-on {
-            opacity: 1;
-            transform: none;
-            transition: @enter;
-        }
+    &.on .fill {
+        clip-path: inset(0 0 0 0);
+        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.3s @ease 0.1s;
+    }
 
-        @media (hover: hover) {
-            &:not(.fresh):hover {
-                .icon-on {
-                    opacity: 0;
-                    transform: scale(0.7);
-                    transition: @leave;
-                }
+    &.library .icon, &.on .icon {
+        transform: translate(-@inset, -@inset) scale(@shrink);
+    }
 
-                .icon-undo {
-                    opacity: 1;
-                    transform: none;
-                    transition: @enter;
-                }
+    .ring, .disc {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        display: grid;
+        place-items: center;
+        width: @badge;
+        height: @badge;
+        border-radius: 50%;
+        overflow: visible;
+    }
+
+    .ring-icon, .disc-icon {
+        grid-area: 1 / 1;
+    }
+
+    .ring {
+        opacity: 0.75;
+        box-shadow: inset 0 0 0 1.5px currentColor;
+        transition: opacity 0.15s @ease, transform 0.3s @ease-pop 0.1s;
+    }
+
+    .ring-icon {
+        width: 0.625rem;
+        height: 0.625rem;
+    }
+
+    &:hover .ring, &:focus .ring {
+        opacity: 1;
+    }
+
+    &.on .ring, &.watched:not(.on) .ring {
+        transform: scale(0);
+        transition: opacity 0.15s @ease, transform 0.12s ease-in;
+    }
+
+    .disc {
+        color: var(--secondary-foreground-color);
+        background-color: #ffffff;
+        transform: scale(0);
+        transition: transform 0.12s ease-in;
+    }
+
+    &.watched .disc {
+        background-color: var(--tertiary-accent-color);
+    }
+
+    &.on .disc {
+        transform: scale(1);
+        transition: transform 0.3s @ease-pop 0.1s;
+    }
+
+    .disc-icon {
+        width: 0.6875rem;
+        height: 0.6875rem;
+    }
+
+    .check {
+        transition: transform 0.25s @ease-pop 0.1s;
+    }
+
+    .remove {
+        transform: scale(0);
+        transition: transform 0.1s ease-in;
+    }
+
+    @media (hover: hover) {
+        &.watched:not(.on):hover {
+            .art {
+                --cutout: @hole;
+                transition: --cutout 0.3s @ease-pop;
+            }
+
+            .icon {
+                transform: translate(-@inset, -@inset) scale(@shrink);
+            }
+
+            .ring {
+                transform: scale(1);
+                transition: opacity 0.15s @ease, transform 0.3s @ease-pop;
             }
         }
-    }
 
-    &.watched {
-        .icon-on, .icon-undo {
-            color: var(--tertiary-accent-color);
+        &.watched.fresh:not(.on):hover {
+            .art {
+                transition-delay: 0.1s;
+            }
+
+            .ring {
+                transition-delay: 0s, 0.1s;
+            }
+        }
+
+        &.on:not(.fresh):hover {
+            .check {
+                transform: scale(0);
+                transition: transform 0.1s ease-in;
+            }
+
+            .remove {
+                transform: scale(1);
+                transition: transform 0.25s @ease-pop 0.1s;
+            }
         }
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .toggle-button {
-        .glyph, .icon {
+        .glyph, .art, .icon, .ring, .disc, .check, .remove {
             transition: none;
         }
     }
