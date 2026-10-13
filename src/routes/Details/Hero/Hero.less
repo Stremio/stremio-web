@@ -80,13 +80,22 @@
 
 @media @desktop {
     .hero {
+        padding-bottom: 1.5rem;
+
         .logo {
             margin-bottom: auto;
         }
 
         .spacer {
             flex: none;
+            min-height: 2.5rem;
         }
+    }
+}
+
+@media @desktop and (max-height: 700px) {
+    .hero .still {
+        display: none;
     }
 }
 
