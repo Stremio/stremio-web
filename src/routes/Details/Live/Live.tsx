@@ -109,6 +109,9 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
             streams={streams}
             streamsOpen={streamsOpen}
             inLibrary={meta.inLibrary}
+            current={current}
+            live={live}
+            now={now}
             onStreamsToggle={onStreamsToggle}
             onToggleLibrary={onToggleLibrary}
         />

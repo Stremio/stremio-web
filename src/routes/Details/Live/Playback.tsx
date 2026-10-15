@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
+import { EPGProgram } from 'stremio/common/EPG';
 import PlayButton from '../Actions/PlayButton';
 import useStreamPlay from '../Streams/useStreamPlay';
 import ToggleButton from 'stremio/components/ToggleButton';
@@ -15,11 +16,14 @@ type Props = {
     streams: MetaDetails['streams'],
     streamsOpen: boolean,
     inLibrary: boolean,
+    current: EPGProgram | null,
+    live: boolean,
+    now: number,
     onStreamsToggle: () => void,
     onToggleLibrary: () => void,
 };
 
-const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle, onToggleLibrary }: Props) => {
+const Playback = ({ className, streams, streamsOpen, inLibrary, current, live, now, onStreamsToggle, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
 
     const readyStreams = useMemo(() => {
@@ -34,7 +38,18 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, onStreamsToggle,
     const watchStream = useMemo(() => {
         return readyStreams.find(({ stream }) => stream.lastUsed === true) ?? readyStreams[0] ?? null;
     }, [readyStreams]);
-    const sublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name || ''].filter((part) => part.length > 0).join(' · ') : null;
+    const streamSublabel = watchStream !== null ? [watchStream.addonName, watchStream.stream.name || ''].filter((part) => part.length > 0).join(' · ') : null;
+    const programmeSublabel = useMemo(() => {
+        if (current === null) {
+            return null;
+        }
+
+        return live ?
+            t('CONTINUE_WATCHING_TIME_LEFT', { minutes: Math.ceil((current.endTime.getTime() - now) / 60000) })
+            :
+            current.title.length > 0 ? current.title : null;
+    }, [current, live, now, t]);
+    const sublabel = programmeSublabel ?? streamSublabel;
     const { href, target, download, play } = useStreamPlay(watchStream?.stream ?? null);
 
     return (

@@ -52,9 +52,11 @@
     .sublabel {
         flex: 0 1 auto;
         min-width: 0;
+        max-width: 14rem;
         font-size: 0.9375rem;
         font-weight: 500;
         white-space: nowrap;
+        overflow: hidden;
         text-overflow: ellipsis;
         opacity: 0.8;
         font-variant-numeric: tabular-nums;
@@ -71,5 +73,9 @@
 @media @mobile {
     .play-button {
         height: 3.25rem;
+
+        .sublabel {
+            max-width: 9rem;
+        }
     }
 }
