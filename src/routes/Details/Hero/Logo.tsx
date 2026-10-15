@@ -91,7 +91,9 @@ const measureInk = (src: string): Promise<Ink> => {
 
 const Logo = ({ className, logo, name, small = false }: Props) => {
     const [metrics, setMetrics] = useState<Metrics | null>(null);
-    const [revealed, setRevealed] = useState<string | null>(null);
+    const [loaded, setLoaded] = useState<string | null>(null);
+    const [settled, setSettled] = useState<string | null>(null);
+    const [expired, setExpired] = useState<string | null>(null);
     const [broken, setBroken] = useState<string | null>(null);
     const revealTimeout = useRef<number | null>(null);
 
@@ -101,14 +103,12 @@ const Logo = ({ className, logo, name, small = false }: Props) => {
         }
 
         let cancelled = false;
-        const reveal = () => {
-            if (!cancelled) {
-                setRevealed(logo);
-            }
-        };
+        const keep = (current: string | null) => current === logo ? current : null;
 
         setMetrics((current) => current !== null && current.src === logo ? current : null);
-        setRevealed((current) => current === logo ? current : null);
+        setLoaded(keep);
+        setSettled(keep);
+        setExpired(keep);
         measureInk(logo)
             .then((ink) => {
                 if (!cancelled) {
@@ -116,7 +116,11 @@ const Logo = ({ className, logo, name, small = false }: Props) => {
                 }
             })
             .catch(() => null)
-            .then(reveal);
+            .then(() => {
+                if (!cancelled) {
+                    setSettled(logo);
+                }
+            });
         return () => {
             cancelled = true;
             if (revealTimeout.current !== null) {
@@ -132,8 +136,9 @@ const Logo = ({ className, logo, name, small = false }: Props) => {
             setMetrics((current) => current !== null && current.src === logo ? current : { src: logo as string, ratio: naturalWidth / naturalHeight, ink: null });
         }
 
+        setLoaded(logo);
         if (revealTimeout.current === null) {
-            revealTimeout.current = window.setTimeout(() => setRevealed(logo), REVEAL_TIMEOUT);
+            revealTimeout.current = window.setTimeout(() => setExpired(logo), REVEAL_TIMEOUT);
         }
     }, [logo]);
 
@@ -143,6 +148,7 @@ const Logo = ({ className, logo, name, small = false }: Props) => {
         return <div className={classNames(className, styles['name'], { [styles['small']]: small })}>{name}</div>;
     }
 
+    const revealed = (loaded === logo && settled === logo) || expired === logo;
     const resolved = metrics !== null && metrics.src === logo ? metrics : null;
     const ratio = resolved !== null ? resolved.ratio : DEFAULT_RATIO;
     const ink = resolved !== null ? resolved.ink : null;
@@ -161,7 +167,7 @@ const Logo = ({ className, logo, name, small = false }: Props) => {
     } as React.CSSProperties;
 
     return (
-        <div className={classNames(className, styles['logo'], { [styles['inked']]: ink !== null, [styles['revealed']]: revealed === logo, [styles['small']]: small })} style={style} title={name}>
+        <div className={classNames(className, styles['logo'], { [styles['inked']]: ink !== null, [styles['revealed']]: revealed, [styles['small']]: small })} style={style} title={name}>
             <Image className={styles['image']} src={logo} alt={name} onLoad={onLoad} onError={onError} />
         </div>
     );
