@@ -2,8 +2,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import Icon from '@stremio/stremio-icons/react';
-import Image from 'stremio/components/Image';
+import Logo from '../Hero/Logo';
 import styles from './Channel.less';
 
 type Props = {
@@ -13,19 +12,9 @@ type Props = {
     addonName: string,
 };
 
-const renderFallback = () => <Icon className={styles['fallback']} name={'tv'} />;
-
 const Channel = ({ className, name, logo, addonName }: Props) => (
     <div className={classNames(className, styles['channel'])}>
-        <div className={styles['mark']} aria-hidden={'true'}>
-            {
-                typeof logo === 'string' && logo.length > 0 ?
-                    <Image className={styles['logo']} src={logo} alt={''} renderFallback={renderFallback} />
-                    :
-                    renderFallback()
-            }
-        </div>
-        <div className={styles['name']}>{name}</div>
+        <Logo className={styles['logo']} logo={logo} name={name} />
         {
             addonName.length > 0 ?
                 <div className={styles['addon']}>{addonName}</div>

@@ -87,11 +87,7 @@ const renderContent = (variant: Variant) => {
                 <React.Fragment>
                     {renderArt()}
                     <div className={styles['channel']}>
-                        <Bone className={'mark'} />
-                        <div className={styles['lines']}>
-                            <Bone className={'name'} />
-                            <Bone className={'addon'} />
-                        </div>
+                        <Bone className={'addon'} />
                     </div>
                     <div className={styles['spacer']} />
                     <Bone className={'status'} />

@@ -155,30 +155,14 @@
     }
 
     .channel {
-        display: grid;
-        grid-template-columns: 3rem minmax(0, 1fr);
-        align-items: center;
-        column-gap: 0.875rem;
-
-        .mark {
-            width: 3rem;
-            height: 3rem;
-            border-radius: 0.75rem;
-        }
-
-        .lines {
-            gap: 0.375rem;
-            margin-top: 0;
-        }
-
-        .name {
-            width: 8rem;
-            height: 1rem;
-        }
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
 
         .addon {
             width: 5rem;
             height: 0.8125rem;
+            margin-top: 0.75rem;
         }
     }
 
@@ -375,7 +359,7 @@
         }
 
         &.live .art {
-            display: none;
+            margin-bottom: 0;
         }
     }
 }
@@ -418,9 +402,8 @@
             min-height: 0.75rem;
         }
 
-        .channel .mark {
-            width: 2.25rem;
-            height: 2.25rem;
+        .channel .addon {
+            margin-top: 0.5rem;
         }
 
         .status ~ .title {
