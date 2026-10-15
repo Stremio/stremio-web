@@ -1,0 +1,56 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+@text-secondary: rgba(255, 255, 255, 0.64);
+@text-tertiary: rgba(255, 255, 255, 0.46);
+@overlay-hover: rgba(255, 255, 255, 0.1);
+@overlay-strong: rgba(255, 255, 255, 0.15);
+@live-color: #e50914;
+@panel-background: rgba(12, 11, 17, 0.62);
+@hero-base-fallback: ~"min(calc(var(--dynamic-viewport-width) * 4 / 3), calc(var(--dynamic-viewport-height) * 0.7))";
+@hero-base: ~"var(--hero-base, @{hero-base-fallback})";
+@hero-limit: ~"var(--hero-limit, calc(@{hero-base-fallback} * 0.493))";
+@scrim-color: rgb(12, 11, 17);
+@ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+@ease-spring: cubic-bezier(0.33, 1, 0.68, 1);
+@ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+@panel-radius: 1.5rem;
+@panel-width: 27.5rem;
+@panel-width-narrow: 23rem;
+@panel-gap: 2rem;
+@panel-gap-narrow: 1.25rem;
+@hero-gutter: 3.5rem;
+@hero-gutter-narrow: 2rem;
+@nav-size: ~"calc(var(--horizontal-nav-bar-size) + var(--safe-area-inset-top))";
+@desktop-min: (@xxsmall + 1px);
+@desktop: ~"only screen and (min-width: @{desktop-min})";
+@desktop-narrow: ~"only screen and (min-width: @{desktop-min}) and (max-width: @{xsmall})";
+@desktop-short: ~"only screen and (min-width: @{desktop-min}) and (max-height: @{phone-landscape-size})";
+@mobile: ~"only screen and (max-width: @{xxsmall})";
+
+.hero-column() {
+    @media @desktop {
+        position: absolute;
+        top: calc(@nav-size + 1.5rem);
+        bottom: @panel-gap;
+        left: @hero-gutter;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - @panel-width - @panel-gap - @hero-gutter * 2);
+        max-width: 50rem;
+        padding-bottom: 1.5rem;
+    }
+
+    @media @desktop-narrow {
+        left: @hero-gutter-narrow;
+        bottom: @panel-gap-narrow;
+        width: calc(100% - @panel-width-narrow - @panel-gap-narrow - @hero-gutter-narrow * 2);
+    }
+
+    @media @desktop-short {
+        top: calc(@nav-size + 0.25rem);
+        bottom: calc(1rem + var(--safe-area-inset-bottom));
+    }
+}

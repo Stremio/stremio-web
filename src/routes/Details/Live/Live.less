@@ -1,0 +1,108 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.live {
+    .content {
+        position: absolute;
+        top: 0;
+        right: var(--safe-area-inset-right);
+        bottom: 0;
+        left: var(--safe-area-inset-left);
+        z-index: 1;
+        animation: live-enter 0.45s @ease-spring both;
+    }
+
+    .main {
+        .hero-column();
+    }
+}
+
+@keyframes live-enter {
+    from {
+        transform: translateY(0.75rem);
+    }
+}
+
+@media @desktop {
+    .live {
+        .content {
+            overflow: hidden;
+        }
+
+        .main {
+            min-height: 0;
+
+            > * {
+                flex: none;
+            }
+
+            .spacer {
+                flex: 1;
+                min-height: 1.5rem;
+            }
+
+            .playback {
+                margin-top: 2.5rem;
+            }
+        }
+    }
+}
+
+@media @desktop-short {
+    .live .main .playback {
+        margin-top: 0.75rem;
+    }
+}
+
+@media @mobile {
+    .live {
+        .content {
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+            --panel-bottom-gap: var(--safe-area-inset-bottom);
+            padding-bottom: var(--panel-bottom-gap);
+            overflow-x: hidden;
+            overflow-y: auto;
+            overflow-anchor: none;
+            overscroll-behavior-y: contain;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > * {
+                flex: none;
+            }
+        }
+
+        .summary {
+            position: relative;
+            z-index: 2;
+            flex: none;
+            display: flex;
+            flex-direction: column;
+            padding: 0.875rem 1.25rem 0;
+
+            .playback {
+                margin-top: 1.25rem;
+            }
+        }
+
+        .guide-title {
+            flex: none;
+            padding: 2rem 1.25rem 0.875rem;
+            font-size: 1.125rem;
+            line-height: 1.5rem;
+            font-weight: 600;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .live .content {
+        animation: none;
+    }
+}

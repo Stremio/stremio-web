@@ -1,0 +1,169 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+@ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+@ease-spring: cubic-bezier(0.33, 1, 0.68, 1);
+@ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+@shrunk: translate(calc(-1 * var(--inset)), calc(-1 * var(--inset))) scale(0.82);
+@desktop-min: (@xxsmall + 1px);
+@compact: ~"only screen and (max-width: @{xxsmall}), only screen and (min-width: @{desktop-min}) and (max-height: @{phone-landscape-size})";
+
+@property --cutout {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+
+.toggle-button {
+    --glyph: 1.375rem;
+    --badge: calc(var(--glyph) * 7 / 11);
+    --overhang: calc(var(--glyph) * 2 / 11);
+    --box: calc(var(--glyph) + var(--overhang));
+    --inset: calc(var(--overhang) / 2);
+    --center: calc(var(--box) - var(--badge) / 2);
+    --hole: calc(var(--badge) / 2 + var(--inset));
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    color: var(--primary-foreground-color);
+    overflow: visible;
+
+    &:focus {
+        outline-offset: -0.25rem;
+    }
+
+    .glyph {
+        position: relative;
+        width: var(--box);
+        height: var(--box);
+        overflow: visible;
+        transition: transform 0.15s @ease;
+    }
+
+    &:active .glyph {
+        transform: scale(0.86);
+    }
+
+    .art {
+        --cutout: -1px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        mask-image: radial-gradient(circle at var(--center) var(--center), transparent var(--cutout), #000000 calc(var(--cutout) + 0.5px));
+        transition: --cutout 0.12s ease-in;
+    }
+
+    .icon {
+        position: absolute;
+        top: var(--inset);
+        left: var(--inset);
+        width: var(--glyph);
+        height: var(--glyph);
+        opacity: 0.7;
+        transform-origin: 0 0;
+        transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.25s @ease;
+    }
+
+    &:hover .icon, &:focus .icon, &.on .icon {
+        opacity: 1;
+    }
+
+    .fill {
+        clip-path: inset(100% 0 0 0);
+    }
+
+    .ring, .disc {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        display: grid;
+        place-items: center;
+        width: var(--badge);
+        height: var(--badge);
+        border-radius: 50%;
+        overflow: visible;
+        transform: scale(0);
+        transition: transform 0.12s ease-in;
+    }
+
+    .ring {
+        box-shadow: inset 0 0 0 calc(var(--glyph) / 14) currentColor;
+    }
+
+    .ring-icon {
+        width: calc(var(--glyph) * 5 / 11);
+        height: calc(var(--glyph) * 5 / 11);
+    }
+
+    .disc {
+        color: var(--secondary-foreground-color);
+        background-color: var(--tertiary-accent-color);
+    }
+
+    .disc-icon {
+        width: calc(var(--glyph) / 2);
+        height: calc(var(--glyph) / 2);
+    }
+
+    &.on {
+        .art {
+            --cutout: var(--hole);
+            transition: --cutout 0.3s @ease-pop 0.1s;
+        }
+
+        .icon {
+            transform: @shrunk;
+        }
+
+        .fill {
+            clip-path: inset(0 0 0 0);
+            transition: opacity 0.15s @ease, transform 0.25s @ease-spring, clip-path 0.3s @ease 0.1s;
+        }
+
+        .disc {
+            transform: scale(1);
+            transition: transform 0.3s @ease-pop 0.1s;
+        }
+    }
+
+    @media (hover: hover) {
+        &:not(.on):hover {
+            .art {
+                --cutout: var(--hole);
+                transition: --cutout 0.3s @ease-spring 0.1s;
+            }
+
+            .icon {
+                transform: @shrunk;
+            }
+
+            .ring {
+                transform: scale(1);
+                transition: transform 0.3s @ease-spring 0.1s;
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toggle-button {
+        .glyph, .art, .icon, .ring, .disc {
+            transition: none;
+        }
+    }
+}
+
+@media @compact {
+    .toggle-button {
+        width: 3rem;
+        height: 3rem;
+    }
+}

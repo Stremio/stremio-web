@@ -17,6 +17,11 @@ const getInterfaceRect = (element: Element) => {
     return new DOMRect(x / cssScale, y / cssScale, width / cssScale, height / cssScale);
 };
 
+const scaleMediaQuery = (query: string, scale = cssScale) => query.replace(
+    /((?:min|max)-(?:width|height):\s*)([\d.]+)px/g,
+    (_, feature, value) => `${feature}${Number(value) * scale}px`
+);
+
 const setInterfaceScale = (scale: number) => {
     if (scale === cssScale) return;
 
@@ -38,10 +43,7 @@ const setInterfaceScale = (scale: number) => {
 
     // CSS zoom does not change viewport media queries like native page zoom does.
     mediaQueries.forEach((query, rule) => {
-        rule.media.mediaText = query.replace(
-            /((?:min|max)-(?:width|height):\s*)([\d.]+)px/g,
-            (_, feature, value) => `${feature}${Number(value) * scale}px`
-        );
+        rule.media.mediaText = scaleMediaQuery(query, scale);
     });
 
     cssScale = scale;
@@ -49,4 +51,4 @@ const setInterfaceScale = (scale: number) => {
     window.dispatchEvent(new Event('resize'));
 };
 
-export { normalizeInterfaceScale, getInterfaceScale, getInterfaceRect, setInterfaceScale };
+export { normalizeInterfaceScale, getInterfaceScale, getInterfaceRect, scaleMediaQuery, setInterfaceScale };

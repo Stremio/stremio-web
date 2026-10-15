@@ -7,7 +7,7 @@ import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
 import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, useEpgNow } from 'stremio/common/EPG';
 import { MetaPreview, Video } from 'stremio/components';
-import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
+import SeasonsBar from './SeasonsBar';
 import styles from './SideDrawer.less';
 
 type Props = {
