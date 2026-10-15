@@ -13,20 +13,43 @@
     height: ~"min(13rem, calc(36rem / var(--logo-ratio)), calc(17.3rem * var(--logo-root)))";
     aspect-ratio: var(--logo-ratio);
     max-width: 100%;
-    overflow: hidden;
 
     .image {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: calc(100% * var(--logo-scale));
-        max-width: none;
-        height: auto;
-        transform: translate(calc(-100% * var(--logo-shift-x)), calc(-100% * var(--logo-center-y)));
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: left center;
+        opacity: 0;
+    }
+
+    &.revealed .image {
+        opacity: 1;
+        transition: opacity 0.2s ease-out;
+    }
+
+    &.inked {
+        overflow: hidden;
+
+        .image {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: calc(100% * var(--logo-scale));
+            max-width: none;
+            height: auto;
+            object-fit: fill;
+            transform: translate(calc(-100% * var(--logo-shift-x)), calc(-100% * var(--logo-center-y)));
+        }
     }
 
     &.small {
         height: 100%;
+        max-width: ~"min(100%, 13rem, 62vw)";
+
+        .image {
+            object-position: center;
+        }
     }
 }
 
@@ -58,11 +81,21 @@
 
 @media @mobile {
     .logo {
-        height: ~"min(5.5rem, calc(min(18rem, 80vw) / var(--logo-ratio)), calc(7rem * var(--logo-root)))";
+        height: ~"min(5.5rem, calc(min(15rem, 68vw) / var(--logo-ratio)), calc(7rem * var(--logo-root)))";
         margin: 0 auto;
+
+        .image {
+            object-position: center;
+        }
     }
 
     .name {
         font-size: 2rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo.revealed .image {
+        transition: none;
     }
 }
