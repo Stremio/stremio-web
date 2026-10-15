@@ -11,9 +11,10 @@ import styles from './Links.less';
 type Props = {
     className?: string,
     groups: MetaLinkGroup[],
+    centered?: boolean,
 };
 
-const Links = ({ className, groups }: Props) => {
+const Links = ({ className, groups, centered = false }: Props) => {
     const { t } = useTranslation();
     const { stringWithPrefix } = useTranslate();
 
@@ -22,7 +23,7 @@ const Links = ({ className, groups }: Props) => {
     }
 
     return (
-        <div className={classNames(className, styles['links'])}>
+        <div className={classNames(className, styles['links'], { [styles['centered']]: centered })}>
             {
                 groups.map(({ category, links }) => (
                     <React.Fragment key={category}>

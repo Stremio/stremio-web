@@ -49,12 +49,7 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                             imdb={imdb}
                         />
                         <Description className={styles['description']} text={metaItem.description} />
-                        {
-                            !compact ?
-                                <Links className={styles['links']} groups={groups} />
-                                :
-                                null
-                        }
+                        <Links className={styles['links']} groups={groups} centered={compact} />
                     </React.Fragment>
                     :
                     <React.Fragment>

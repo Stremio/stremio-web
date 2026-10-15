@@ -48,4 +48,18 @@
             background-color: @overlay-hover;
         }
     }
+
+    &.centered {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        gap: 0.625rem 0;
+
+        .pills {
+            justify-content: center;
+        }
+
+        .pills + .label {
+            margin-top: 0.875rem;
+        }
+    }
 }
