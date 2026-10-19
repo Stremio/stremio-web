@@ -66,44 +66,51 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, current, live, n
                         onClick={play}
                     />
                     :
-                    loading ?
-                        <div className={classNames(styles['pill'], styles['status'], styles['primary'])} role={'status'}>
-                            <div className={styles['spinner']} aria-hidden={'true'} />
-                            {t('STREAM_LOADING')}
-                        </div>
-                        :
-                        <React.Fragment>
-                            <div className={classNames(styles['pill'], styles['status'], styles['primary'])} role={'status'}>
-                                {t('NO_STREAM')}
-                            </div>
-                            <Button className={styles['pill']} href={'#/addons'}>
-                                <Icon className={styles['icon']} name={'addons'} />
-                                {t('ADDON_CATALOGUE_MORE')}
-                            </Button>
-                        </React.Fragment>
+                    <div className={classNames(styles['pill'], styles['status'], styles['primary'])} role={'status'}>
+                        {
+                            loading ?
+                                <React.Fragment>
+                                    <div className={styles['spinner']} aria-hidden={'true'} />
+                                    {t('STREAM_LOADING')}
+                                </React.Fragment>
+                                :
+                                t('NO_STREAM')
+                        }
+                    </div>
             }
-            {
-                readyStreams.length > 0 ?
-                    <Button className={classNames(styles['pill'], { [styles['open']]: streamsOpen })} role={'button'} aria-expanded={streamsOpen} onClick={onStreamsToggle}>
-                        {t('STREAMS')}
-                        <div className={styles['count']}>{readyStreams.length}</div>
-                    </Button>
-                    :
-                    loading ?
-                        <div className={classNames(styles['pill'], styles['status'])} aria-disabled={'true'}>
-                            {t('STREAMS')}
-                            <div className={classNames(styles['count'], styles['pending'])} />
-                        </div>
+            <div className={styles['secondary']}>
+                {
+                    watchStream === null && !loading ?
+                        <Button className={styles['pill']} href={'#/addons'}>
+                            <Icon className={styles['icon']} name={'addons'} />
+                            {t('ADDON_CATALOGUE_MORE')}
+                        </Button>
                         :
                         null
-            }
-            <ToggleButton
-                className={styles['library']}
-                variant={'library'}
-                on={inLibrary}
-                label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
-                onClick={onToggleLibrary}
-            />
+                }
+                {
+                    readyStreams.length > 0 ?
+                        <Button className={classNames(styles['pill'], { [styles['open']]: streamsOpen })} role={'button'} aria-expanded={streamsOpen} onClick={onStreamsToggle}>
+                            {t('STREAMS')}
+                            <div className={styles['count']}>{readyStreams.length}</div>
+                        </Button>
+                        :
+                        loading ?
+                            <div className={classNames(styles['pill'], styles['status'])} aria-disabled={'true'}>
+                                {t('STREAMS')}
+                                <div className={classNames(styles['count'], styles['pending'])} />
+                            </div>
+                            :
+                            null
+                }
+                <ToggleButton
+                    className={styles['library']}
+                    variant={'library'}
+                    on={inLibrary}
+                    label={inLibrary ? t('REMOVE_FROM_LIB') : t('ADD_TO_LIB')}
+                    onClick={onToggleLibrary}
+                />
+            </div>
         </div>
     );
 };
