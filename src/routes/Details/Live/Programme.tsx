@@ -16,9 +16,10 @@ type Props = {
     className?: string,
     programme: EPGProgram | null,
     now: number,
+    centered?: boolean,
 };
 
-const Programme = ({ className, programme, now }: Props) => {
+const Programme = ({ className, programme, now, centered = false }: Props) => {
     const { t, i18n } = useTranslation();
     const { dayLabel } = useFormatters(now);
     const relativeFormatter = useMemo(() => new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }), [i18n.language]);
@@ -95,7 +96,7 @@ const Programme = ({ className, programme, now }: Props) => {
                         :
                         null
                 }
-                <Links className={styles['links']} groups={linkGroups} />
+                <Links className={styles['links']} groups={linkGroups} centered={centered} />
             </div>
         </div>
     );

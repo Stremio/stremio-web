@@ -132,7 +132,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                         <React.Fragment>
                             <HeroArt art={artwork} logo={channel.logo} name={channel.name} />
                             <section className={styles['summary']}>
-                                <Programme programme={selected} now={now} />
+                                <Programme programme={selected} now={now} centered={isMobile} />
                                 {playback}
                             </section>
                             <h2 className={styles['guide-title']}>{t('LIVE_TV_SCHEDULE')}</h2>
@@ -151,7 +151,7 @@ const Live = ({ className, contentRef, meta, addonName, streams, isMobile, onTog
                             <div className={styles['main']}>
                                 <Channel name={channel.name} logo={channel.logo} addonName={addonName} />
                                 <div className={styles['spacer']} />
-                                <Programme programme={selected} now={now} />
+                                <Programme programme={selected} now={now} centered={isMobile} />
                                 {playback}
                             </div>
                             {
