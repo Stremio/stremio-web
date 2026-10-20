@@ -1,0 +1,101 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.logo {
+    --logo-ratio: 2.58;
+    --logo-root: 0.6226;
+    --logo-scale: 1;
+    --logo-shift-x: 0;
+    --logo-center-y: 0.5;
+    position: relative;
+    align-self: flex-start;
+    height: ~"min(9rem, calc(30rem / var(--logo-ratio)), calc(15.3rem * var(--logo-root)))";
+    aspect-ratio: var(--logo-ratio);
+    max-width: 100%;
+
+    .image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: left center;
+        opacity: 0;
+    }
+
+    &.revealed .image {
+        opacity: 1;
+        transition: opacity 0.2s ease-out;
+    }
+
+    &.inked {
+        overflow: hidden;
+
+        .image {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: calc(100% * var(--logo-scale));
+            max-width: none;
+            height: auto;
+            object-fit: fill;
+            transform: translate(calc(-100% * var(--logo-shift-x)), calc(-100% * var(--logo-center-y)));
+        }
+    }
+
+    &.small {
+        height: 100%;
+        max-width: ~"min(100%, 10rem, 50vw)";
+
+        .image {
+            object-position: center;
+        }
+    }
+}
+
+.name {
+    font-size: 2.75rem;
+    line-height: 1.12;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--primary-foreground-color);
+    overflow-wrap: anywhere;
+
+    &.small {
+        font-size: 1.125rem;
+        line-height: 1.25;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+@media @desktop-short {
+    .logo, .logo.small {
+        height: ~"min(3.5rem, calc(16rem / var(--logo-ratio)), calc(6rem * var(--logo-root)))";
+    }
+
+    .name, .name.small {
+        font-size: 1.5rem;
+    }
+}
+
+@media @mobile {
+    .logo {
+        height: ~"min(3.875rem, calc(min(15rem, 68vw) / var(--logo-ratio)), calc(6.2rem * var(--logo-root)))";
+        margin: 0 auto;
+
+        .image {
+            object-position: center;
+        }
+    }
+
+    .name {
+        font-size: 2rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo.revealed .image {
+        transition: none;
+    }
+}

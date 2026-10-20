@@ -1,0 +1,136 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.panel {
+    position: relative;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+
+    .sentinel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
+    .header {
+        flex: none;
+        overflow: visible;
+    }
+
+    .body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+
+        > * {
+            flex: none;
+        }
+    }
+}
+
+@media @desktop {
+    .panel {
+        position: absolute;
+        top: calc(@nav-size + 1rem);
+        right: @panel-gap;
+        bottom: @panel-gap;
+        z-index: 3;
+        width: @panel-width;
+        border-radius: @panel-radius;
+        background-color: @panel-background;
+        backdrop-filter: blur(8px) saturate(1.2);
+
+        .header {
+            padding: 1.25rem 1.25rem 0;
+        }
+
+        .body {
+            padding: 0.5rem 0.625rem 2rem;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: none;
+            mask-image: linear-gradient(180deg, transparent, #000000 0.75rem, #000000 calc(100% - 3rem), transparent);
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+}
+
+@media @desktop-narrow {
+    .panel {
+        right: @panel-gap-narrow;
+        bottom: @panel-gap-narrow;
+        width: @panel-width-narrow;
+
+        .header {
+            padding: 1rem 1rem 0;
+        }
+    }
+}
+
+@media @desktop-short {
+    .panel {
+        top: calc(@nav-size + 0.25rem);
+        right: @panel-gap-narrow;
+        bottom: calc(1rem + var(--safe-area-inset-bottom));
+
+        .header {
+            padding: 0.875rem 1rem 0;
+        }
+
+        .body {
+            padding-bottom: 1rem;
+        }
+    }
+}
+
+@media @mobile {
+    .panel {
+        display: flow-root;
+        min-height: calc(var(--dynamic-viewport-height) - @nav-size - var(--panel-bottom-gap, 0px));
+        overflow: visible;
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            margin-top: calc(-1 * @nav-size);
+            padding: calc(@nav-size + 0.75rem) 1.25rem 1rem;
+            pointer-events: none;
+            overflow: visible;
+
+            > * {
+                pointer-events: auto;
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: -1;
+                opacity: 0;
+                transition: opacity 0.25s @ease;
+                background-color: var(--secondary-background-color);
+            }
+
+            &.stuck::before {
+                opacity: 1;
+            }
+        }
+
+        .body {
+            padding: 0 0.75rem 3rem;
+        }
+    }
+}

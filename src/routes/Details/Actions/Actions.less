@@ -1,0 +1,133 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.875rem;
+    overflow: visible;
+
+    .primary {
+        flex: none;
+        max-width: 100%;
+    }
+
+    .secondary {
+        flex: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.875rem;
+        overflow: visible;
+    }
+
+    .button, .group {
+        flex: none;
+        display: flex;
+        align-items: center;
+        height: 3.5rem;
+        border-radius: 999px;
+        background-color: var(--overlay-color);
+        backdrop-filter: blur(5px);
+        overflow: visible;
+    }
+
+    .button {
+        position: relative;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0 1.75rem;
+        color: var(--primary-foreground-color);
+        transition: background-color 0.15s @ease;
+
+        &:hover, &:focus {
+            background-color: @overlay-hover;
+        }
+
+        &.round {
+            width: 3.5rem;
+            padding: 0;
+
+            .label {
+                display: none;
+            }
+        }
+
+        .icon {
+            flex: none;
+            width: 1.375rem;
+            height: 1.375rem;
+            opacity: 0.9;
+        }
+
+        .label {
+            flex: none;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+    }
+}
+
+.share-prompt {
+    width: 30rem;
+    max-width: 100%;
+}
+
+@media @desktop-short {
+    .actions {
+        gap: 0.625rem;
+
+        .secondary {
+            gap: 0.625rem;
+        }
+
+        .button, .group {
+            height: 3rem;
+        }
+
+        .button {
+            padding: 0 1.25rem;
+
+            &.round {
+                width: 3rem;
+            }
+        }
+    }
+}
+
+@media @mobile {
+    .actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.875rem;
+
+        .secondary {
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .button, .group {
+            height: 3rem;
+        }
+
+        .button {
+            padding: 0 1.25rem;
+
+            &.round {
+                width: auto;
+                padding: 0 1.25rem;
+
+                .label {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .share-prompt {
+        width: auto;
+    }
+}

@@ -1,0 +1,40 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    animation: message-enter 0.35s @ease both;
+
+    .image {
+        flex: none;
+        width: 8rem;
+        height: 8rem;
+        max-width: 100%;
+        object-fit: contain;
+        object-position: center;
+        opacity: 0.9;
+    }
+
+    .label {
+        flex: none;
+        max-width: 24rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        font-weight: 500;
+        color: @text-secondary;
+    }
+}
+
+@keyframes message-enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.25rem);
+    }
+}
