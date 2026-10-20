@@ -24,7 +24,7 @@
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "0.65.1",
         "@stremio/stremio-icons": "5.15.0",
-        "@stremio/stremio-video": "0.0.98",
+        "@stremio/stremio-video": "0.0.101",
         "bowser": "2.14.1",
         "buffer": "6.0.3",
         "classnames": "2.5.1",
