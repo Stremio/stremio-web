@@ -71,7 +71,20 @@ const Player = () => {
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
-    const video = useVideo();
+    const localVideo = useVideo();
+    const playingOnExternalDevice = React.useRef(false);
+    const { streamingUrl: castStreamingUrl } = usePlayOnDevice(player.selected?.stream ?? null);
+    const castDevice = useCastDevice(castStreamingUrl, streamingServer.casting, localVideo, playingOnExternalDevice, streamingServer.selected?.transportUrl ?? streamingServer.baseUrl,
+        player.libraryItem && player.selected?.streamRequest?.path && player.libraryItem.state.video_id === player.selected.streamRequest.path.id ? player.libraryItem.state.timeOffset : 0);
+    const { castToDevice, isCasting } = castDevice;
+    const video = {
+        ...localVideo,
+        state: castDevice.state ? { ...localVideo.state, ...castDevice.state } : localVideo.state,
+        setPaused: (value) => { if (!castDevice.setPaused(value)) localVideo.setPaused(value); },
+        setTime: (value) => { if (!castDevice.setTime(value)) localVideo.setTime(value); },
+        setVolume: (value) => { if (!castDevice.setVolume(value)) localVideo.setVolume(value); },
+        setMuted: (value) => { if (!castDevice.setMuted(value)) localVideo.setMuted(value); },
+    };
     const routeFocused = useRouteFocused();
     const platform = usePlatform();
     const toast = useToast();
@@ -149,7 +162,6 @@ const Player = () => {
     }, [playbackDevices]);
     const [castDevicesSearching, setCastDevicesSearching] = React.useState(false);
     const castDevicesLoading = platform.shell.active && (castDevicesSearching || (streamingServer.playbackDevices !== null && streamingServer.playbackDevices.type === 'Loading'));
-    const { streamingUrl: castStreamingUrl } = usePlayOnDevice(player.selected?.stream ?? null);
     const shellCastSupported = platform.shell.active && castStreamingUrl !== null;
     const refreshCastDevices = React.useCallback(() => {
         if (platform.shell.active) {
@@ -201,8 +213,6 @@ const Player = () => {
         toggleSubtitlesMenu,
     });
 
-    const playingOnExternalDevice = React.useRef(false);
-    const { castToDevice, stopBeforeLocalPlay, isCasting } = useCastDevice(castStreamingUrl, streamingServer.casting, video, playingOnExternalDevice);
     const onCastDeviceSelected = (deviceId) => {
         castToDevice(deviceId);
         closeCastDevicesMenu();
@@ -280,8 +290,7 @@ const Player = () => {
 
     const onPlayRequested = React.useCallback(() => {
         setSeeking(false);
-        if (stopBeforeLocalPlay()) return;
-        playingOnExternalDevice.current = false;
+        if (!isCasting()) playingOnExternalDevice.current = false;
         video.setPaused(false);
     }, []);
 
@@ -574,16 +583,15 @@ const Player = () => {
     }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
 
     React.useEffect(() => {
-        !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
+        !seeking && timeChanged(video.state.time, video.state.duration, isCasting() ? 'casting' : video.state.manifest?.name);
     }, [video.state.time, video.state.duration, video.state.manifest, seeking]);
 
     React.useEffect(() => {
-        if (playingOnExternalDevice.current && video.state.paused === false) {
-            onPauseRequested();
-        } else if (video.state.paused !== null) {
-            pausedChanged(video.state.paused);
-        }
+        if (video.state.paused !== null) pausedChanged(video.state.paused);
     }, [video.state.paused]);
+    React.useEffect(() => {
+        if (playingOnExternalDevice.current && localVideo.state.paused === false) localVideo.setPaused(true);
+    }, [localVideo.state.paused, castDevice.state !== null]);
 
     React.useEffect(() => {
         videoParamsChanged(video.state.videoParams);
@@ -653,7 +661,7 @@ const Player = () => {
         const onCoreEvent = (name) => {
             if (name === 'PlayingOnDevice') {
                 playingOnExternalDevice.current = true;
-                onPauseRequested();
+                localVideo.setPaused(true);
             }
         };
         services.chromecast.on('stateChanged', onChromecastServiceStateChange);
@@ -673,7 +681,7 @@ const Player = () => {
     }, []);
 
     React.useEffect(() => {
-        if (settings.pauseOnMinimize && (platform.shell.state.windowClosed || platform.shell.state.windowHidden)) {
+        if (!isCasting() && settings.pauseOnMinimize && (platform.shell.state.windowClosed || platform.shell.state.windowHidden)) {
             onPauseRequested();
         }
     }, [settings.pauseOnMinimize, platform.shell.state.windowClosed, platform.shell.state.windowHidden]);
