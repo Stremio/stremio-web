@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
 
 :import('~stremio/components/Slider/styles.less') {
     slider-thumb: thumb;
@@ -11,58 +12,45 @@
     max-width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
 
     .title {
         flex: none;
-        align-self: stretch;
         font-weight: 700;
-        padding: 1rem;
-        text-align: center;
     }
 
-    .main-container {
+    .speed-title {
+        flex: none;
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.1;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .slider-container {
+        flex: none;
         display: flex;
-        flex-direction: column;
-        flex: 1;
-        padding-bottom: 1rem;
+        gap: 1rem;
 
-        .options-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-            padding: 0 1rem;
-
-            .speed-button {
-                flex: 1 0 3rem;
-                padding: 0.2rem 0.25rem;
-                border-radius: var(--border-radius);
-                text-align: center;
-                font-variant-numeric: tabular-nums;
-                transition: background-color 150ms ease, color 150ms ease;
-
-                &:hover, &:focus {
-                    background-color: var(--overlay-color);
-                }
-
-                &.active {
-                    background-color: var(--overlay-color);
-                    color: @color-secondaryvariant1-light4;
-                }
-            }
-        }
-
-        .top-container {
-            display: flex;
-            flex-direction: column;
+        .step-button {
             flex: none;
-            min-height: 3rem;
-            gap: 0.5rem;
-            padding: 0.5rem 0;
+            width: 2.75rem;
+            height: 2.75rem;
+            padding: 0.8rem;
+            border-radius: 100%;
+            background-color: var(--overlay-color);
+            transition: background-color 150ms ease;
 
-            .speed-title {
-                font-weight: 700;
-                text-align: center;
+            &:hover, &:focus {
+                background-color: @color-surface-light5-10;
+            }
+
+            .icon {
+                display: block;
+                width: 100%;
+                height: 100%;
             }
         }
 
@@ -70,11 +58,7 @@
             --track-size: 0.35rem;
             --thumb-size: 1rem;
 
-            flex: none;
-            min-height: calc(var(--thumb-size) * 2);
-            align-self: stretch;
-            margin: 0.5rem var(--thumb-size) 0;
-            position: relative;
+            flex: 1;
 
             .slider-thumb {
                 background-color: @color-secondaryvariant1-light4;
@@ -95,6 +79,62 @@
             &:hover .slider-thumb {
                 transform: translateX(-50%) scale(1.2);
             }
+        }
+    }
+
+    .options-container {
+        flex: none;
+        display: flex;
+        gap: 0.5rem;
+
+        .speed-button {
+            flex: 1;
+            line-height: 2.75rem;
+            border-radius: 2.75rem;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+            background-color: var(--overlay-color);
+            transition: background-color 150ms ease, color 150ms ease;
+
+            &:hover, &:focus {
+                background-color: @color-surface-light5-10;
+            }
+
+            &.active {
+                background-color: var(--primary-foreground-color);
+                color: var(--secondary-foreground-color);
+                outline-color: var(--primary-accent-color);
+            }
+        }
+    }
+}
+
+@media @phone-portrait {
+    .speed-menu-container {
+        padding: 1rem;
+
+        .options-container {
+            gap: 0.25rem;
+        }
+    }
+}
+
+@media @phone-landscape {
+    .speed-menu-container {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 0.75rem 1rem;
+        padding: 1rem 1.25rem;
+
+        .speed-title {
+            font-size: 1.5rem;
+        }
+
+        .slider-container, .options-container {
+            grid-column: 1 / -1;
         }
     }
 }
