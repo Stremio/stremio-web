@@ -1,0 +1,56 @@
+name: Deploy Elenio
+
+# Builds the app and publishes it to GitHub Pages (https://laggard00.github.io/elenio-web/)
+# Repo settings needed once: Pages > Source = "GitHub Actions", and elenio_dev allowed
+# under Environments > github-pages > Deployment branches.
+
+on:
+  push:
+    branches:
+      - elenio_dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: elenio-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 11.8.0
+          run_install: false
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: "pnpm"
+      - name: Install NPM dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm build
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
