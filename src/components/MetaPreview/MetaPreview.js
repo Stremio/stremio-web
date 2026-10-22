@@ -16,6 +16,7 @@ const { default: useMediaQuery } = require('stremio/common/useMediaQuery');
 const screenSizes = require('stremio/common/screen-sizes.less');
 const routesRegexp = require('stremio/common/routesRegexp');
 const useBinaryState = require('stremio/common/useBinaryState');
+const { useThemeLayout } = require('stremio/common/Theme');
 const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
@@ -28,11 +29,13 @@ const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.metadetails.regexp
 ];
 
-const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, metadata, children, actions, showIcon = 'play', onShowClick }, ref) => {
+const MetaPreview = React.forwardRef(({ className, compact, name, logo, poster, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, metadata, children, actions, showIcon = 'play', onShowClick }, ref) => {
     const { t } = useTranslation();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const isMobileLandscape = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: ${screenSizes['phone-landscape-size']}) and (orientation: landscape)`);
     const iconActions = compact && isMobileLandscape;
+    // The Letterboxd-style layout shows the poster beside a plain text title instead of the logo artwork
+    const filmLayout = useThemeLayout() === 'boxd' && !compact;
     const linksGroups = React.useMemo(() => {
         return Array.isArray(links) ?
             links
@@ -116,7 +119,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
         },
     ], [inLibrary, watched, toggleInLibrary, toggleWatched]);
     return (
-        <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact })} ref={ref}>
+        <div className={classnames(className, styles['meta-preview-container'], { [styles['compact']]: compact, 'film-layout': filmLayout })} ref={ref}>
             {
                 typeof background === 'string' && background.length > 0 ?
                     <div className={styles['background-image-layer']}>
@@ -127,7 +130,13 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
             }
             <div className={styles['meta-info-container']}>
                 {
-                    typeof logo === 'string' && logo.length > 0 ?
+                    filmLayout && typeof poster === 'string' && poster.length > 0 ?
+                        <Image className={styles['poster']} src={poster} alt={' '} renderFallback={() => null} />
+                        :
+                        null
+                }
+                {
+                    typeof logo === 'string' && logo.length > 0 && !filmLayout ?
                         <Image
                             className={styles['logo']}
                             src={logo}
@@ -299,6 +308,7 @@ MetaPreview.propTypes = {
     compact: PropTypes.bool,
     name: PropTypes.string,
     logo: PropTypes.string,
+    poster: PropTypes.string,
     background: PropTypes.string,
     runtime: PropTypes.string,
     releaseInfo: PropTypes.string,

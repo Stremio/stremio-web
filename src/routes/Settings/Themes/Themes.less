@@ -1,0 +1,178 @@
+@import (reference) '~stremio/common/screen-sizes.less';
+
+div.section {
+    max-width: 44rem;
+}
+
+.themes {
+    align-self: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    overflow: visible;
+
+    .theme {
+        display: flex;
+        flex-direction: column;
+        border-radius: var(--border-radius);
+        background-color: var(--overlay-color);
+        outline: var(--focus-outline-size) solid transparent;
+        overflow: hidden;
+        transition: outline-color 0.1s ease-out, transform 0.1s ease-out;
+
+        &:hover {
+            outline-color: var(--overlay-color);
+            transform: translateY(-2px);
+        }
+
+        &.selected {
+            outline-color: var(--primary-accent-color);
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.85rem 1rem 1rem;
+
+            .name {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-weight: 600;
+                color: var(--primary-foreground-color);
+
+                .check {
+                    flex: none;
+                    width: 1rem;
+                    height: 1rem;
+                    color: var(--primary-accent-color);
+                }
+            }
+
+            .description {
+                font-size: 0.85rem;
+                line-height: 1.3;
+                color: var(--primary-foreground-color);
+                opacity: 0.6;
+            }
+        }
+    }
+}
+
+// Miniature mock-up of each theme: a header strip and a row of posters
+.preview {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 7.5rem;
+
+    .preview-bar {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        height: 1.9rem;
+        padding: 0 0.6rem;
+
+        .preview-logo {
+            flex: none;
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 0.2rem;
+        }
+
+        .preview-dots {
+            flex: none;
+            display: flex;
+
+            span {
+                width: 0.65rem;
+                height: 0.65rem;
+                border-radius: 50%;
+
+                &:not(:first-child) {
+                    margin-left: -0.12rem;
+                }
+            }
+        }
+
+        .preview-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+    }
+
+    .preview-content {
+        flex: 1;
+        display: flex;
+        gap: 0.45rem;
+        padding: 0.65rem 0.6rem;
+
+        .preview-poster {
+            flex: 1;
+            border-radius: 0.2rem;
+            border: 1px solid transparent;
+        }
+    }
+
+    &.preview-letterboxd {
+        .preview-title {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .preview-poster {
+            box-shadow: inset 0 0 0 1px rgba(221, 238, 255, 0.25);
+        }
+    }
+
+    &.preview-elenio {
+        padding: 0 1.1rem;
+        background:
+            url('/assets/images/themes/eleinur/flora1.webp') left top / 2.4rem auto repeat-y,
+            url('/assets/images/themes/eleinur/flora2.webp') right top / 2.4rem auto repeat-y;
+
+        .preview-title {
+            font-family: 'GlassAntiqua', Georgia, serif;
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+    }
+
+    &.preview-flannel {
+        background: url('/assets/images/themes/flannel/plaid.webp') left top / 9rem repeat;
+
+        .preview-bar {
+            background-color: transparent !important;
+        }
+
+        .preview-logo {
+            display: none;
+        }
+
+        .preview-title {
+            padding: 0.1rem 0.45rem;
+            border-radius: 0.2rem;
+            font-family: 'ZillaSlab', Georgia, serif;
+            background-color: #6b472e;
+            outline: 1px dashed rgba(240, 226, 196, 0.7);
+            outline-offset: -0.15rem;
+        }
+
+        .preview-content {
+            margin-left: 0.6rem;
+            border-top-left-radius: 0.5rem;
+            background-color: rgba(32, 34, 27, 0.95) !important;
+            outline: 1px dashed rgba(236, 224, 200, 0.3);
+            outline-offset: -0.2rem;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .themes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

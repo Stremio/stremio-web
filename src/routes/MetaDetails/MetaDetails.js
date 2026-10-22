@@ -225,6 +225,7 @@ const MetaDetails = () => {
                                             className={classnames(styles['meta-preview'], 'animation-fade-in')}
                                             name={metaDetails.metaItem.content.content.name}
                                             logo={metaDetails.metaItem.content.content.logo}
+                                            poster={metaDetails.metaItem.content.content.poster}
                                             runtime={metaDetails.metaItem.content.content.runtime}
                                             releaseInfo={metaDetails.metaItem.content.content.releaseInfo}
                                             released={metaDetails.metaItem.content.content.released}

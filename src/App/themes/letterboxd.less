@@ -1,0 +1,70 @@
+// Letterboxd theme: slate greys with the green/orange/blue accents of letterboxd.com.
+// The layout itself lives in boxd.less; this file only supplies its colors and fonts.
+
+@lb-bg: #14181c;
+@lb-surface: #2c3440;
+@lb-border: #445566;
+@lb-text: #99aabb;
+@lb-text-light: #ddeeff;
+@lb-green: #00e054;
+@lb-green-button: #00ac1c;
+@lb-orange: #ff8000;
+@lb-blue: #40bcf4;
+
+html[data-theme="letterboxd"] {
+    --primary-background-color: @lb-bg;
+    --secondary-background-color: @lb-bg;
+    --primary-foreground-color: @lb-text-light;
+    --secondary-foreground-color: @lb-bg;
+    --primary-accent-color: @lb-green;
+    --secondary-accent-color: @lb-green-button;
+    --tertiary-accent-color: @lb-orange;
+    --quaternary-accent-color: @lb-blue;
+    --overlay-color: rgba(68, 85, 102, 0.4);
+    --modal-background-color: @lb-surface;
+    --outer-glow: 0 0 0 1px rgba(221, 238, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.55);
+    --border-radius: 4px;
+    --color-placeholder-background: @lb-surface;
+    --color-placeholder-text: @lb-text;
+
+    --boxd-bg: @lb-bg;
+    --boxd-header-bg: @lb-bg;
+    --boxd-header-rule: rgba(68, 85, 102, 0.35);
+    --boxd-band: #1d242b;
+    --boxd-surface: @lb-surface;
+    --boxd-surface-focus: @lb-border;
+    --boxd-rule: @lb-border;
+    --boxd-button: @lb-border;
+    --boxd-button-hover: #556677;
+    --boxd-chip: #283038;
+    --boxd-select-hover: rgba(68, 85, 102, 0.25);
+    --boxd-text: @lb-text;
+    --boxd-text-strong: @lb-text-light;
+    --boxd-title: #ffffff;
+    --boxd-title-font: 'SourceSerif', Georgia, 'Times New Roman', serif;
+    --boxd-title-weight: 700;
+    --boxd-body-font: 'SourceSerif', Georgia, 'Times New Roman', serif;
+    --boxd-accent: @lb-green;
+    --boxd-poster-frame: rgba(221, 238, 255, 0.25);
+    --boxd-shadow: rgba(0, 0, 0, 0.5);
+    --boxd-panel: fade(@lb-bg, 92%);
+    --boxd-panel-border: @lb-surface;
+    --boxd-nav-fade: rgba(20, 24, 28, 0.7);
+
+    font-family: 'Inter', 'PlusJakartaSans', 'Arial', 'TwemojiFlags', sans-serif;
+
+    body {
+        background: @lb-bg;
+    }
+
+    ::selection {
+        background-color: @lb-green;
+        color: @lb-bg;
+    }
+
+    // Login screen: cool blue glows instead of the purple ones
+    [class*="intro-container-"] > [class^="background-container-"] {
+        filter: blur(6rem) hue-rotate(-60deg) saturate(0.7);
+        opacity: 0.35;
+    }
+}

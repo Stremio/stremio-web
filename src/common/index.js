@@ -5,6 +5,7 @@ const { FullscreenProvider, useFullscreen } = require('./Fullscreen');
 const { PlatformProvider, usePlatform } = require('./Platform');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
+const { THEMES, setTheme, useTheme } = require('./Theme');
 const { ShortcutsProvider, useShortcuts, useShortcut, getKeyboardShortcutKey, getKeyboardShortcutKeys } = require('./Shortcuts');
 const { DiscordProvider, useDiscord, EMPTY_DISCORD_TIMESTAMPS, getPlaybackDiscordActivity } = require('./Discord');
 const CONSTANTS = require('./CONSTANTS');
@@ -49,6 +50,9 @@ module.exports = {
     useToast,
     TooltipProvider,
     Tooltip,
+    THEMES,
+    setTheme,
+    useTheme,
     DiscordProvider,
     useDiscord,
     EMPTY_DISCORD_TIMESTAMPS,

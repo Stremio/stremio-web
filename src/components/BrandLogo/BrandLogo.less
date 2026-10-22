@@ -1,0 +1,77 @@
+.brand-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+
+    .symbol {
+        flex: none;
+        width: 100%;
+        height: 100%;
+        object-position: center;
+        object-fit: contain;
+    }
+
+    &.letterboxd {
+        gap: 0.6rem;
+
+        .dots {
+            flex: none;
+            height: 1.35rem;
+            width: auto;
+        }
+
+        .wordmark {
+            flex: none;
+            font-family: 'Inter', 'PlusJakartaSans', 'Arial', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+    }
+
+    &.elenio {
+        .drop-cap {
+            flex: none;
+            height: 2.6rem;
+            width: auto;
+            margin-right: 0.15rem;
+        }
+
+        .wordmark {
+            flex: none;
+            font-family: 'GlassAntiqua', Georgia, serif;
+            font-size: 2.1rem;
+            line-height: 1;
+            color: #e2a6be;
+            text-shadow: 1px 2px 2px #b98698;
+            white-space: nowrap;
+            overflow: visible;
+        }
+    }
+
+    // A stitched leather label, like the one sewn onto a flannel shirt
+    &.flannel {
+        .patch {
+            flex: none;
+            padding: 0.35rem 0.9rem 0.4rem;
+            border-radius: 0.45rem;
+            font-family: 'ZillaSlab', Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0.02em;
+            color: #f0e2c4;
+            white-space: nowrap;
+            background: linear-gradient(160deg, #7a5236 0%, #5e3d27 100%);
+            outline: 1.5px dashed rgba(240, 226, 196, 0.75);
+            outline-offset: -0.3rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 5px rgba(0, 0, 0, 0.45);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+        }
+    }
+}

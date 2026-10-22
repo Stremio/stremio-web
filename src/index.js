@@ -5,6 +5,9 @@ if (typeof process.env.SENTRY_DSN === 'string') {
     Sentry.init({ dsn: process.env.SENTRY_DSN });
 }
 
+// Apply the saved theme before the first render so the default colors never flash
+require('./common/Theme').applyTheme();
+
 const Bowser = require('bowser');
 const browser = Bowser.parse(window.navigator?.userAgent || '');
 if (browser?.platform?.type === 'desktop') {

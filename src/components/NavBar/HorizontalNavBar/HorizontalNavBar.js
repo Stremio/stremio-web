@@ -1,11 +1,12 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { Link } = require('react-router-dom');
 const { useGoBack } = require('stremio-router');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button, Image } = require('stremio/components');
+const { Button, BrandLogo } = require('stremio/components');
 const { useFullscreen } = require('stremio/common/Fullscreen');
 const { useHorizontalNavGamepadNavigation } = require('stremio/services/GamepadNavigation');
 const SearchBar = require('./SearchBar');
@@ -13,7 +14,7 @@ const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 const { t } = require('i18next');
 
-const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, ...props }) => {
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, tabs, selectedTab, ...props }) => {
     const backButtonOnClick = useGoBack(originPath);
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
@@ -31,13 +32,37 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                         <Icon className={styles['icon']} name={'chevron-back'} />
                     </Button>
                     :
-                    <div className={styles['logo-container']}>
-                        <Image
-                            className={styles['logo']}
-                            src={require('/assets/images/stremio_symbol.png')}
-                            alt={' '}
-                        />
+                    <Link className={styles['logo-container']} to={'/'} tabIndex={-1}>
+                        <BrandLogo className={styles['logo']} />
+                    </Link>
+            }
+            {
+                Array.isArray(tabs) && tabs.length > 0 ?
+                    <div className={styles['tabs-container']}>
+                        {
+                            tabs.map((tab) => (
+                                <Link
+                                    key={tab.id}
+                                    className={classnames(styles['tab'], { 'selected': tab.id === selectedTab })}
+                                    to={tab.href}
+                                    tabIndex={-1}
+                                >
+                                    {
+                                        typeof tab.logo === 'string' && tab.logo.length > 0 ?
+                                            <img className={styles['tab-logo']} src={tab.logo} alt={''} />
+                                            :
+                                            typeof tab.icon === 'string' && tab.icon.length > 0 ?
+                                                <Icon className={styles['tab-icon']} name={tab.id === selectedTab ? tab.icon : `${tab.icon}-outline`} />
+                                                :
+                                                null
+                                    }
+                                    <span className={styles['tab-label']}>{t(tab.label)}</span>
+                                </Link>
+                            ))
+                        }
                     </div>
+                    :
+                    null
             }
             {
                 typeof title === 'string' && title.length > 0 ?
@@ -94,6 +119,14 @@ HorizontalNavBar.propTypes = {
     hdrInfo: PropTypes.shape({
         gamma: PropTypes.string,
     }),
+    tabs: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        label: PropTypes.string,
+        href: PropTypes.string,
+        logo: PropTypes.string,
+        icon: PropTypes.string,
+    })),
+    selectedTab: PropTypes.string,
 };
 
 module.exports = HorizontalNavBar;

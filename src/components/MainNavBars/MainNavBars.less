@@ -35,6 +35,17 @@
         left: var(--vertical-nav-bar-size);
         z-index: 0;
     }
+
+    // Sections live in the horizontal bar, so the side bar is not needed
+    &.top-nav {
+        .vertical-nav-bar {
+            display: none;
+        }
+
+        .nav-content-container {
+            left: 0;
+        }
+    }
 }
 
 @media only screen and (max-width: @minimum) {
@@ -46,6 +57,13 @@
 
         .vertical-nav-bar {
             top: initial;
+        }
+
+        // Phones keep the bottom tab bar
+        &.top-nav {
+            .vertical-nav-bar {
+                display: flex;
+            }
         }
     }
 }

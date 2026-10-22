@@ -79,7 +79,11 @@ const Routes = () => {
             typeof document.startViewTransition === 'function' &&
             !window.matchMedia('(prefers-reduced-motion: reduce)').matches
         ) {
-            document.startViewTransition(() => flushSync(updateViews));
+            const transition = document.startViewTransition(() => flushSync(updateViews));
+            // A navigation that follows right away (e.g. Library adding its default sort) skips this
+            // transition and rejects its promises with an AbortError; the views still update
+            transition.ready.catch(() => null);
+            transition.finished.catch(() => null);
         } else {
             updateViews();
         }

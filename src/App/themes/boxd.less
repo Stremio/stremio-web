@@ -1,0 +1,519 @@
+// Letterboxd-style layout, shared by every theme whose layout is "boxd" (see common/Theme).
+// It only arranges things; each theme supplies the colors and fonts through these variables:
+//
+//   --boxd-bg               page background
+//   --boxd-header-bg        top bar
+//   --boxd-header-rule      line under the top bar
+//   --boxd-band             lighter band under the top bar that fades into the page
+//   --boxd-surface          search field
+//   --boxd-surface-focus    search field while typing
+//   --boxd-rule             thin rules under headings, filter borders
+//   --boxd-button           flat buttons
+//   --boxd-button-hover
+//   --boxd-chip             cast / genre chips
+//   --boxd-select-hover     filter boxes on hover
+//   --boxd-text             muted text (labels, headings, descriptions)
+//   --boxd-text-strong      emphasized text
+//   --boxd-title            film title
+//   --boxd-title-font, --boxd-title-weight
+//   --boxd-body-font        film description
+//   --boxd-accent           poster hover outline, section labels on film pages
+//   --boxd-poster-frame     hairline inside posters
+//   --boxd-shadow
+//   --boxd-panel, --boxd-panel-border     streams panel on film pages
+//   --boxd-nav-fade         top bar over the film backdrop
+//
+// Component classes are CSS modules ("name-hash"), so they are matched by prefix.
+
+@nav-bar: ~'[class*="horizontal-nav-bar-container-"]';
+@logo-container: ~'[class*="horizontal-nav-bar-container-"] > [class^="logo-container-"]';
+@search-bar: ~'[class*="horizontal-nav-bar-container-"] [class*="search-bar-container-"]';
+@meta-row: ~'[class*="meta-row-container-"]';
+@meta-item: ~'[class*="meta-item-container-"]';
+@poster: ~'[class^="poster-container-"]';
+@section-label: ~'[class^="section-"] > [class^="label-"]';
+
+@boxd-column: 76rem;
+@boxd-gutter: ~'max(1.5rem, calc((100% - @{boxd-column}) / 2))';
+
+@main-nav-bars: ~'[class*="main-nav-bars-container-"]';
+@board-content: ~'[class^="nav-content-container-"] > [class^="board-content-"]';
+@details: ~'[class*="metadetails-container-"]';
+@details-content: ~'[class*="metadetails-container-"] > [class^="metadetails-content-"]';
+@film: ~'[class^="metadetails-content-"] > .film-layout';
+@film-info: ~'[class^="metadetails-content-"] > .film-layout > [class^="meta-info-container-"]';
+@browse-bar: ~'[class*="discover-content-"] [class*="catalog-container-"] [class*="selectable-inputs-container-"]';
+
+html[data-layout="boxd"] {
+    // Header: wordmark on the left, sections as links, compact search pill
+    @{nav-bar} {
+        background-color: var(--boxd-header-bg);
+        box-shadow: 0 1px 0 var(--boxd-header-rule);
+    }
+
+    @{logo-container} {
+        width: auto;
+        padding: 0 0.5rem 0 1.75rem;
+
+        > * {
+            width: auto;
+            height: auto;
+            opacity: 1;
+        }
+    }
+
+    @{search-bar} {
+        --search-bar-size: 2.25rem;
+        width: 17rem;
+        height: var(--search-bar-size);
+        margin-right: 0.5rem;
+        border-radius: 2.25rem;
+        background-color: var(--boxd-surface);
+        box-shadow: inset 0 1px 2px var(--boxd-shadow);
+
+        > [class^="search-input-"] {
+            padding: 0 0.25rem 0 1.1rem;
+            font-size: 0.85rem;
+            color: var(--boxd-text-strong);
+
+            [class^="placeholder-label-"] {
+                color: var(--boxd-text);
+                opacity: 1;
+            }
+        }
+
+        > [class^="submit-button-container-"] {
+            padding: 0 0.9rem;
+
+            svg {
+                width: 1.05rem;
+                height: 1.05rem;
+                color: var(--boxd-text);
+            }
+        }
+
+        &:focus-within {
+            background-color: var(--boxd-surface-focus);
+        }
+    }
+
+    // "POPULAR FILMS THIS WEEK"-style row headings with a rule underneath
+    @{meta-row} > [class^="header-container-"] {
+        margin: 0 1rem 0.75rem;
+        padding: 0 0 0.35rem;
+        border-bottom: 1px solid var(--boxd-rule);
+
+        > [class^="title-container-"] {
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.075em;
+            text-transform: uppercase;
+            color: var(--boxd-text);
+        }
+
+        > [class*="see-all-container-"] {
+            height: auto;
+            padding: 0;
+            border-radius: 0;
+            opacity: 1;
+            font-size: 0.75rem;
+            letter-spacing: 0.075em;
+            text-transform: uppercase;
+            color: var(--boxd-text);
+
+            &:hover, &:focus {
+                background-color: transparent;
+                color: var(--boxd-text-strong);
+            }
+
+            svg {
+                display: none;
+            }
+        }
+    }
+
+    // Posters: square-ish corners, hairline frame, outline on hover, no zoom
+    @{meta-item} {
+        padding: 0.5rem;
+
+        @{poster} {
+            box-shadow: 0 1px 4px var(--boxd-shadow);
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                box-shadow: inset 0 0 0 1px var(--boxd-poster-frame);
+                pointer-events: none;
+            }
+
+            [class^="poster-image-layer-"] {
+                transform: none;
+
+                img {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &.hovered, &:focus-within, &.active, &.selected {
+            @{poster} {
+                box-shadow: 0 0 0 3px var(--boxd-accent), 0 1px 4px var(--boxd-shadow);
+
+                [class^="poster-image-layer-"] {
+                    transform: none;
+                }
+            }
+        }
+
+        [class^="title-bar-container-"] {
+            font-size: 0.85rem;
+            color: var(--boxd-text);
+        }
+    }
+
+    // Settings and other section headings
+    @{section-label} {
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0.075em;
+        text-transform: uppercase;
+        color: var(--boxd-text);
+        padding-bottom: 0.35rem;
+        border-bottom: 1px solid var(--boxd-rule);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--boxd-rule);
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    html[data-layout="boxd"] {
+        @{logo-container} {
+            padding-left: 1rem;
+        }
+
+        @{search-bar} {
+            flex: 1 1 auto;
+            width: auto;
+            min-width: 0;
+            margin: 0 0.25rem 0 0.5rem;
+        }
+    }
+}
+
+// Desktop: a centered column like letterboxd.com, a film page with the backdrop up top and the
+// poster beside a serif title, and a films list with one row of big posters
+@media only screen and (min-width: (@minimum + 1px)) {
+    html[data-layout="boxd"] {
+        @{main-nav-bars} {
+            background: linear-gradient(180deg, var(--boxd-band) var(--horizontal-nav-bar-size), transparent 34rem);
+        }
+
+        // Header content lines up with the page column
+        @{main-nav-bars} > @{nav-bar} {
+            padding-left: @boxd-gutter;
+            padding-right: @boxd-gutter;
+
+            > [class^="logo-container-"] {
+                padding-left: 0;
+            }
+        }
+
+        // ---------- Films list (board) ----------
+        @{board-content} {
+            padding-left: @boxd-gutter;
+            padding-right: @boxd-gutter;
+            padding-top: 1.5rem;
+        }
+
+        // The first row is the big "Popular films this week" strip
+        @{board-content} > :first-child [class^="meta-items-container-"] > :nth-child(n+5) {
+            display: none;
+        }
+
+        // Posters without captions; the name shows on hover
+        @{meta-item} [class^="title-bar-container-"] {
+            display: none;
+        }
+
+        // ---------- "Browse by" filter bar (discover) ----------
+        @{browse-bar} {
+            align-items: center;
+            padding: 1.5rem 1.5rem 1rem;
+
+            &::before {
+                content: 'Browse by';
+                flex: none;
+                margin-right: 1rem;
+                font-size: 0.85rem;
+                letter-spacing: 0.075em;
+                text-transform: uppercase;
+                color: var(--boxd-text);
+            }
+
+            [class*="select-input-"] {
+                flex: none;
+                min-width: 0;
+                margin-left: 0;
+                border: 1px solid var(--boxd-rule);
+                border-radius: 0;
+                background-color: transparent;
+
+                &:not(:first-child) {
+                    margin-left: 0;
+                    border-left: none;
+                }
+
+                &:first-child {
+                    border-radius: 3px 0 0 3px;
+                }
+
+                &:nth-child(3) {
+                    border-radius: 0 3px 3px 0;
+                }
+
+                &:hover {
+                    background-color: var(--boxd-select-hover);
+                }
+
+                > [class^="button-"] {
+                    height: 2.2rem;
+                    padding: 0 0.75rem;
+                    border-radius: 0;
+                    font-size: 0.8rem;
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+
+                    > :first-child {
+                        color: var(--boxd-text);
+                    }
+                }
+            }
+        }
+
+        // ---------- Film page ----------
+        // The page scrolls as a whole, so the backdrop slides away like on the website
+        @{details} {
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            > [class^="nav-bar-"] {
+                position: sticky;
+                top: 0;
+                background: linear-gradient(180deg, var(--boxd-nav-fade) 0%, transparent 100%);
+                box-shadow: none;
+            }
+
+            > [class^="background-image-layer-"] {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: auto;
+                left: 0;
+                height: 34rem;
+                background-color: transparent;
+
+                img {
+                    width: min(100%, 84rem);
+                    height: 100%;
+                    margin: 0 auto;
+                    object-position: center 20%;
+                    opacity: 1;
+                    -webkit-mask-image:
+                        linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%),
+                        linear-gradient(180deg, transparent 0%, #000 18%, #000 45%, transparent 100%);
+                    -webkit-mask-composite: source-in;
+                    mask-image:
+                        linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%),
+                        linear-gradient(180deg, transparent 0%, #000 18%, #000 45%, transparent 100%);
+                    mask-composite: intersect;
+                }
+            }
+        }
+
+        @{details-content} {
+            flex: none;
+            align-items: flex-start;
+            gap: 2.5rem;
+            margin-top: 0;
+            padding: 22rem @boxd-gutter 4rem;
+
+            > [class^="spacing-"] {
+                display: none;
+            }
+
+            > [class*="streams-list-container-"], > [class*="videos-list-container-"] {
+                position: sticky;
+                top: calc(var(--horizontal-nav-bar-size) + 1rem);
+                flex: 0 0 25rem;
+                height: auto;
+                max-height: calc(100vh - var(--horizontal-nav-bar-size) - 2rem);
+                border: 1px solid var(--boxd-panel-border);
+                border-radius: 4px;
+                background-color: var(--boxd-panel);
+                box-shadow: none;
+                backdrop-filter: none;
+            }
+        }
+
+        @{film} {
+            flex: 1 1 auto;
+            height: auto;
+            padding: 0;
+            overflow: visible;
+
+            > [class^="background-image-layer-"] {
+                display: none;
+            }
+
+            > [class^="action-buttons-container-"] {
+                padding-left: 17.5rem;
+                justify-content: flex-start;
+                gap: 0.5rem;
+
+                [class*="action-button-container-"] {
+                    width: auto;
+                    height: 2.5rem;
+                    padding: 0 1rem;
+                    border-radius: 3px;
+                    background-color: var(--boxd-button);
+                    backdrop-filter: none;
+
+                    &:hover, &:focus {
+                        outline: none;
+                        background-color: var(--boxd-button-hover);
+                    }
+
+                    svg {
+                        width: 1.15rem;
+                        height: 1.15rem;
+                    }
+                }
+
+                // Add-to-library / watched pair
+                [class^="group-container-"] {
+                    height: 2.5rem;
+                    border-radius: 3px;
+                    background-color: var(--boxd-button);
+                    backdrop-filter: none;
+
+                    [class*="icon-container-"] {
+                        height: 2.5rem;
+                        border-radius: 0;
+
+                        &:hover {
+                            background-color: var(--boxd-button-hover);
+                        }
+                    }
+
+                    svg {
+                        width: 1.15rem;
+                        height: 1.15rem;
+                    }
+                }
+            }
+        }
+
+        @{film-info} {
+            display: grid;
+            grid-template-columns: 14.5rem minmax(0, 1fr);
+            column-gap: 3rem;
+            align-content: start;
+            overflow: visible;
+
+            > * {
+                grid-column: 2;
+                order: 5;
+            }
+
+            > [class^="poster-"] {
+                grid-column: 1;
+                grid-row: 1 / span 20;
+                order: 0;
+                display: block;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 2 / 3;
+                object-fit: cover;
+                border-radius: 4px;
+                outline: 1px solid var(--boxd-poster-frame);
+                outline-offset: -1px;
+                box-shadow: 0 2px 12px var(--boxd-shadow);
+            }
+
+            > [class^="logo-placeholder-"] {
+                order: 1;
+                margin-bottom: 0.5rem;
+                font-family: var(--boxd-title-font);
+                font-size: 2.6rem;
+                font-weight: var(--boxd-title-weight);
+                line-height: 1.15;
+                color: var(--boxd-title);
+            }
+
+            > [class^="runtime-release-info-container-"] {
+                order: 2;
+                margin-bottom: 1.5rem;
+                font-size: 1.05rem;
+                color: var(--boxd-text);
+
+                [class^="release-info-label-"] {
+                    text-decoration: underline;
+                    text-underline-offset: 0.2em;
+                    color: var(--boxd-text-strong);
+                }
+            }
+
+            > [class^="description-container-"] {
+                order: 3;
+                max-width: 42rem;
+                margin-bottom: 2rem;
+                font-family: var(--boxd-body-font);
+                font-size: 1.15rem;
+                line-height: 1.65;
+                color: var(--boxd-text);
+
+                > [class^="label-container-"] {
+                    display: none;
+                }
+            }
+
+            > [class*="meta-links-container-"] {
+                order: 4;
+                margin-bottom: 1.25rem;
+
+                > [class^="label-container-"] {
+                    margin-bottom: 0.6rem;
+                    padding-bottom: 0.35rem;
+                    border-bottom: 1px solid var(--boxd-rule);
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    letter-spacing: 0.1em;
+                    color: var(--boxd-accent);
+                    opacity: 1;
+                }
+
+                [class*="link-container-"] {
+                    margin: 0 0.3rem 0.3rem 0;
+                    padding: 0.2rem 0.45rem;
+                    border-radius: 3px;
+                    border: none;
+                    font-size: 0.85rem;
+                    font-weight: 400;
+                    color: var(--boxd-text);
+                    background-color: var(--boxd-chip);
+                    backdrop-filter: none;
+
+                    &:hover, &:focus {
+                        color: var(--boxd-text-strong);
+                        background-color: var(--boxd-button);
+                    }
+                }
+            }
+        }
+    }
+}

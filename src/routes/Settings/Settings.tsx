@@ -8,6 +8,7 @@ import { MainNavBars } from 'stremio/components';
 import { SECTIONS } from './constants';
 import Menu from './Menu';
 import General from './General';
+import Themes from './Themes';
 import Interface from './Interface';
 import Player from './Player';
 import Streaming from './Streaming';
@@ -23,6 +24,7 @@ const Settings = () => {
 
     const sectionsContainerRef = useRef<HTMLDivElement>(null);
     const generalSectionRef = useRef<HTMLDivElement>(null);
+    const themesSectionRef = useRef<HTMLDivElement>(null);
     const interfaceSectionRef = useRef<HTMLDivElement>(null);
     const playerSectionRef = useRef<HTMLDivElement>(null);
     const streamingServerSectionRef = useRef<HTMLDivElement>(null);
@@ -30,6 +32,7 @@ const Settings = () => {
 
     const sections = useMemo(() => ([
         { ref: generalSectionRef, id: SECTIONS.GENERAL },
+        { ref: themesSectionRef, id: SECTIONS.THEMES },
         { ref: interfaceSectionRef, id: SECTIONS.INTERFACE },
         { ref: playerSectionRef, id: SECTIONS.PLAYER },
         { ref: streamingServerSectionRef, id: SECTIONS.STREAMING },
@@ -98,6 +101,7 @@ const Settings = () => {
                         ref={generalSectionRef}
                         profile={profile}
                     />
+                    <Themes ref={themesSectionRef} />
                     <Interface
                         ref={interfaceSectionRef}
                         profile={profile}

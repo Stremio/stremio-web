@@ -1,0 +1,257 @@
+// Elenio theme: the Letterboxd layout (boxd.less) dressed as eleinur.neocities.org, a pink
+// page framed by lace, rose vines and polka dots, Glass Antiqua headings, Georgia text and
+// storybook pictures in the top bar.
+// Component classes are CSS modules ("name-hash"), so they are matched by prefix.
+
+@el-cream: #f8f2e5;
+@el-pink: #f6d9e3;
+@el-pink-light: #fbeef3;
+@el-pink-deep: #eec3d6;
+@el-rule: #e2a9c0;
+@el-rose: #c97b9c;
+@el-rose-dark: #a85f80;
+@el-text: #7b5b70;
+@el-text-muted: #9a7489;
+@el-gold: #b8913a;
+@el-sage: #8fa876;
+@el-display: 'GlassAntiqua', Georgia, serif;
+
+// Width of the lace frame on each side of the app
+@el-frame: ~'clamp(0rem, 8vw, 11rem)';
+
+@nav-bar: ~'[class*="horizontal-nav-bar-container-"]';
+@top-tab: ~'[class*="horizontal-nav-bar-container-"] [class^="tabs-container-"] > [class^="tab-"]';
+@nav-tab: ~'[class*="nav-tab-button-container-"]';
+@meta-row: ~'[class*="meta-row-container-"]';
+@section-label: ~'[class^="section-"] > [class^="label-"]';
+
+html[data-theme="elenio"] {
+    --primary-background-color: @el-pink;
+    --secondary-background-color: @el-pink;
+    --primary-foreground-color: @el-text;
+    --secondary-foreground-color: #fffafc;
+    --primary-accent-color: @el-rose;
+    --secondary-accent-color: @el-rose;
+    --tertiary-accent-color: @el-gold;
+    --quaternary-accent-color: @el-sage;
+    --overlay-color: rgba(123, 91, 112, 0.1);
+    --modal-background-color: @el-pink-light;
+    --outer-glow: 0 2px 14px rgba(123, 91, 112, 0.22);
+    --border-radius: 0.75rem;
+    --color-placeholder: rgba(123, 91, 112, 0.25);
+    --color-placeholder-background: rgba(123, 91, 112, 0.08);
+    --color-placeholder-text: rgba(123, 91, 112, 0.55);
+
+    --boxd-bg: @el-pink;
+    --boxd-header-bg: @el-pink-deep;
+    --boxd-header-rule: rgba(201, 154, 170, 0.5);
+    --boxd-band: #f9e3ec;
+    --boxd-surface: @el-pink;
+    --boxd-surface-focus: @el-pink-light;
+    --boxd-rule: @el-rule;
+    --boxd-button: @el-pink-deep;
+    --boxd-button-hover: #e6b3c8;
+    --boxd-chip: @el-pink-light;
+    --boxd-select-hover: rgba(201, 123, 156, 0.12);
+    --boxd-text: @el-text-muted;
+    --boxd-text-strong: @el-text;
+    --boxd-title: @el-rose-dark;
+    --boxd-title-font: @el-display;
+    --boxd-title-weight: 400;
+    --boxd-body-font: Georgia, 'Times New Roman', serif;
+    --boxd-accent: @el-rose;
+    --boxd-poster-frame: rgba(255, 255, 255, 0.45);
+    --boxd-shadow: rgba(123, 91, 112, 0.25);
+    --boxd-panel: rgba(255, 248, 251, 0.7);
+    --boxd-panel-border: @el-pink-deep;
+    --boxd-nav-fade: rgba(246, 217, 227, 0.75);
+
+    font-family: Georgia, 'Times New Roman', 'TwemojiFlags', serif;
+    background-color: @el-cream;
+
+    body {
+        background:
+            url('/assets/images/themes/eleinur/flora1.webp') left top / calc(2.2 * @el-frame) auto repeat-y,
+            url('/assets/images/themes/eleinur/flora2.webp') right top / calc(2.2 * @el-frame) auto repeat-y,
+            @el-cream;
+
+        #app {
+            width: calc(100% - 2 * @el-frame);
+            margin: 0 auto;
+            background-color: @el-pink;
+            box-shadow: 0 0 18px rgba(123, 91, 112, 0.18);
+            // Keeps full-screen backdrops (position: fixed) inside the lace frame
+            contain: layout paint;
+        }
+
+        // The player always gets the whole screen
+        &:has([class*="player-container-"]) #app {
+            width: 100%;
+        }
+    }
+
+    ::selection {
+        background-color: @el-pink-deep;
+        color: @el-text;
+    }
+
+    // Top bar links: a storybook picture over a little lowercase caption, like the site's
+    // "photo · travel · insp · postcards" compartments
+    @{top-tab} {
+        gap: 0.2rem;
+        font-size: 0.8rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+        text-transform: lowercase;
+        color: @el-text;
+        opacity: 1;
+
+        img, svg {
+            width: 2.3rem;
+            height: 2.3rem;
+            transition: transform 0.15s ease-out;
+        }
+
+        svg {
+            padding: 0.25rem;
+            color: @el-text;
+            opacity: 0.7;
+        }
+
+        &:hover {
+            img, svg {
+                transform: translateY(-4px) scale(1.05);
+            }
+        }
+
+        &.selected {
+            color: @el-rose-dark;
+
+            img {
+                filter: drop-shadow(0 2px 3px rgba(168, 95, 128, 0.45));
+            }
+
+            svg {
+                color: @el-rose-dark;
+                opacity: 1;
+            }
+        }
+    }
+
+    // The same pictures in the bottom tab bar on phones
+    @{nav-tab} {
+        background: none;
+
+        img {
+            width: 2.6rem;
+            height: 2.6rem;
+            object-fit: contain;
+            transition: transform 0.15s ease-out;
+        }
+
+        svg {
+            color: @el-text;
+            opacity: 0.6;
+        }
+
+        > div:last-child {
+            opacity: 1;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            color: @el-text;
+        }
+
+        &:hover {
+            background: none;
+
+            img {
+                transform: translateY(-4px) scale(1.05);
+            }
+        }
+
+        &.selected {
+            img {
+                filter: drop-shadow(0 2px 3px rgba(168, 95, 128, 0.45));
+            }
+
+            svg, > div:last-child {
+                color: @el-rose-dark;
+                opacity: 1;
+            }
+        }
+    }
+
+    // Row and section headings in Glass Antiqua rather than small capitals
+    @{meta-row} > [class^="header-container-"] > [class^="title-container-"],
+    @{section-label} {
+        font-family: @el-display;
+        font-size: 1.5rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        text-transform: none;
+        color: @el-rose;
+        text-shadow: 0 1px 2px rgba(201, 154, 170, 0.45);
+    }
+
+    // Discover side panel
+    [class*="meta-preview-container-"] > [class^="background-image-layer-"] {
+        background-color: @el-pink;
+
+        img {
+            opacity: 0.45;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: fade(@el-pink, 70%);
+        }
+    }
+
+    // Title logos are mostly white artwork, so give them an outline to stand out on pink
+    [class*="meta-preview-container-"] [class^="logo-"] {
+        filter: drop-shadow(0 0 1px @el-text) drop-shadow(0 0 1px @el-text) drop-shadow(0 1px 4px rgba(123, 91, 112, 0.5));
+    }
+
+    // Login screen: pink glows instead of the purple ones
+    [class*="intro-container-"] > [class^="background-container-"] {
+        filter: blur(6rem) hue-rotate(70deg) saturate(0.6);
+        opacity: 0.45;
+    }
+
+    [class*="facebook-button-"], [class*="facebook-button-"] * {
+        color: #ffffff;
+    }
+
+    [class*="addon-container-"] [class*="uninstall-button-container-"] {
+        opacity: 0.6;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    // Phones keep Stremio's film page, so veil its full-screen backdrop in pink
+    html[data-theme="elenio"] [class*="metadetails-container-"] > [class^="background-image-layer-"] {
+        background-color: @el-pink;
+
+        img {
+            opacity: 0.6;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, fade(@el-pink, 94%) 0%, fade(@el-pink, 80%) 45%, fade(@el-pink, 35%) 100%);
+        }
+    }
+}
+
+// No room for the lace frame on small screens
+@media only screen and (max-width: @xxsmall) {
+    html[data-theme="elenio"] body #app {
+        width: 100%;
+    }
+}

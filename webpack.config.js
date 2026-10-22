@@ -158,13 +158,13 @@ module.exports = (env, argv) => ({
                 }
             },
             {
-                test: /\.(png|jpe?g|svg)$/,
+                test: /\.(png|jpe?g|svg|webp)$/,
                 exclude: /node_modules/,
                 resourceQuery: /inline/,
                 type: 'asset/inline'
             },
             {
-                test: /\.(png|jpe?g|svg)$/,
+                test: /\.(png|jpe?g|svg|webp)$/,
                 exclude: /node_modules/,
                 resourceQuery: { not: [/inline/] },
                 type: 'asset/resource',

@@ -1,0 +1,178 @@
+// Flannel theme: the app is a plaid shirt, content sits on a dark felt patch sewn on with
+// cream stitching, headings in a sturdy slab serif and a leather label for the logo.
+// Component classes are CSS modules ("name-hash"), so they are matched by prefix.
+
+@fl-felt: #20221b;
+@fl-felt-light: #2b2d23;
+@fl-brown: #4e4334;
+@fl-tan: #c9a27a;
+@fl-cream: #ece0c8;
+@fl-rust: #c8733f;
+@fl-moss: #7d8c55;
+@fl-stitch: rgba(236, 224, 200, 0.28);
+
+@nav-bar: ~'[class*="horizontal-nav-bar-container-"]';
+@search-bar: ~'[class*="horizontal-nav-bar-container-"] [class*="search-bar-container-"]';
+@nav-tab: ~'[class*="nav-tab-button-container-"]';
+@nav-content: ~'[class*="main-nav-bars-container-"] > [class^="nav-content-container-"]';
+@meta-row: ~'[class*="meta-row-container-"]';
+@meta-item: ~'[class*="meta-item-container-"]';
+@poster: ~'[class^="poster-container-"]';
+@section-label: ~'[class^="section-"] > [class^="label-"]';
+
+html[data-theme="flannel"] {
+    --primary-background-color: @fl-felt;
+    --secondary-background-color: @fl-felt-light;
+    --primary-foreground-color: @fl-cream;
+    --secondary-foreground-color: @fl-felt;
+    --primary-accent-color: @fl-rust;
+    --secondary-accent-color: @fl-moss;
+    --tertiary-accent-color: @fl-tan;
+    --quaternary-accent-color: @fl-brown;
+    --overlay-color: rgba(236, 224, 200, 0.09);
+    --modal-background-color: @fl-felt-light;
+    --outer-glow: 0 4px 18px rgba(0, 0, 0, 0.55);
+    --border-radius: 0.6rem;
+    --color-placeholder-background: rgba(236, 224, 200, 0.07);
+    --color-placeholder-text: rgba(236, 224, 200, 0.5);
+
+    background: @fl-felt url('/assets/images/themes/flannel/plaid.webp') repeat;
+    background-size: 26rem;
+
+    body {
+        background: transparent;
+    }
+
+    ::selection {
+        background-color: @fl-rust;
+        color: @fl-cream;
+    }
+
+    // The bars sit directly on the plaid, so give their contents a little shadow to stay legible
+    @{nav-bar} {
+        > [class^="logo-container-"] {
+            width: auto;
+            padding: 0 0.75rem 0 1.25rem;
+
+            > * {
+                width: auto;
+                height: auto;
+                opacity: 1;
+            }
+        }
+
+        [class^="button-container-"], [class*=" button-container-"] {
+            opacity: 0.9;
+
+            svg {
+                color: @fl-cream;
+                opacity: 1;
+                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+            }
+        }
+    }
+
+    @{search-bar} {
+        background-color: fade(@fl-felt, 88%);
+        outline: 1.5px dashed @fl-stitch;
+        outline-offset: -0.35rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+
+    @{nav-tab} {
+        svg {
+            color: @fl-cream;
+            opacity: 0.85;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.85));
+        }
+
+        > div:last-child {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+        }
+
+        &:hover {
+            background-color: fade(@fl-felt, 70%);
+        }
+
+        &.selected {
+            background-color: fade(@fl-felt, 85%);
+
+            svg {
+                color: @fl-rust;
+                opacity: 1;
+            }
+        }
+    }
+
+    // The felt patch the content is sewn onto
+    @{nav-content} {
+        background-color: fade(@fl-felt, 95%);
+        border-top-left-radius: 1.25rem;
+        box-shadow: -2px -2px 10px rgba(0, 0, 0, 0.45);
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0.45rem 0 0 0.45rem;
+            z-index: 2;
+            border-top: 2px dashed @fl-stitch;
+            border-left: 2px dashed @fl-stitch;
+            border-top-left-radius: 0.9rem;
+            pointer-events: none;
+        }
+    }
+
+    @{meta-row} > [class^="header-container-"] > [class^="title-container-"],
+    @{section-label} {
+        font-family: 'ZillaSlab', Georgia, serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        color: @fl-cream;
+    }
+
+    @{meta-row} > [class^="header-container-"] > [class^="title-container-"] {
+        font-size: 1.55rem;
+    }
+
+    @{meta-item} {
+        @{poster} {
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        &.hovered, &:focus-within, &.active, &.selected {
+            @{poster} {
+                box-shadow: 0 0 0 0.2rem @fl-tan, 0 3px 10px rgba(0, 0, 0, 0.6);
+            }
+        }
+    }
+
+    // Login screen: warm amber glows instead of the purple ones
+    [class*="intro-container-"] > [class^="background-container-"] {
+        filter: blur(6rem) hue-rotate(125deg) saturate(0.55);
+        opacity: 0.4;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: fade(@fl-tan, 45%);
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    html[data-theme="flannel"] {
+        @{nav-content} {
+            border-top-right-radius: 1.25rem;
+
+            &::after {
+                inset: 0.45rem 0.45rem 0 0.45rem;
+                border-right: 2px dashed @fl-stitch;
+                border-top-right-radius: 0.9rem;
+            }
+        }
+
+        // The bottom tab bar gets its own strip of felt
+        [class*="main-nav-bars-container-"] > [class^="vertical-nav-bar-"] {
+            background-color: fade(@fl-felt, 96%);
+            border-top: 2px dashed @fl-stitch;
+        }
+    }
+}

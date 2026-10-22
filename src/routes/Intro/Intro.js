@@ -9,7 +9,8 @@ const Modal = require('stremio/router/Modal');
 const { useCore } = require('stremio/core');
 const { useBinaryState } = require('stremio/common');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
-const { Button, Image, Checkbox } = require('stremio/components');
+const { useTheme } = require('stremio/common/Theme');
+const { Button, BrandLogo, Image, Checkbox } = require('stremio/components');
 const CredentialsTextInput = require('./CredentialsTextInput');
 const PasswordResetModal = require('./PasswordResetModal');
 const useFacebookLogin = require('./useFacebookLogin');
@@ -26,6 +27,7 @@ const Intro = () => {
     const core = useCore();
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
+    const theme = useTheme();
     const [startFacebookLogin, stopFacebookLogin] = useFacebookLogin();
     const [startAppleLogin, stopAppleLogin] = useAppleLogin();
     const emailRef = React.useRef(null);
@@ -293,7 +295,12 @@ const Intro = () => {
             <div className={styles['background-container']} />
             <div className={styles['heading-container']}>
                 <div className={styles['logo-container']}>
-                    <Image className={styles['logo']} src={require('/assets/images/logo.png')} alt={' '} />
+                    {
+                        theme === 'default' ?
+                            <Image className={styles['logo']} src={require('/assets/images/logo.png')} alt={' '} />
+                            :
+                            <BrandLogo className={styles['brand-logo']} />
+                    }
                 </div>
                 <div className={styles['title-container']}>
                     {t('WEBSITE_SLOGAN_NEW_NEW')}

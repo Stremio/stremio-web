@@ -3,6 +3,7 @@
 import AddonDetailsModal from './AddonDetailsModal';
 import ActionMenu from './ActionMenu';
 import BottomSheet from './BottomSheet';
+import BrandLogo from './BrandLogo';
 import Button from './Button';
 import Checkbox from './Checkbox';
 import Chips from './Chips';
@@ -42,6 +43,7 @@ export {
     AddonDetailsModal,
     ActionMenu,
     BottomSheet,
+    BrandLogo,
     Button,
     Checkbox,
     Chips,

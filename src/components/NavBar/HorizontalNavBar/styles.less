@@ -36,6 +36,51 @@
         margin-left: max(0rem, calc(1rem - var(--safe-area-inset-left)));
     }
 
+    .tabs-container {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1.75rem;
+        margin-right: auto;
+        padding: 0 1.5rem;
+
+        .tab {
+            flex: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.075em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+            transition: opacity 0.1s ease-out;
+
+            &:hover, &:focus, &:global(.selected) {
+                opacity: 1;
+            }
+
+            .tab-logo, .tab-icon {
+                flex: none;
+                width: 2.3rem;
+                height: 2.3rem;
+                object-fit: contain;
+            }
+
+            .tab-icon {
+                padding: 0.2rem;
+            }
+
+            .tab-label {
+                flex: none;
+            }
+        }
+    }
+
     .title {
         flex: 4 0 0;
         padding: 0 1rem;
@@ -126,6 +171,10 @@
 
         .logo-container {
             width: var(--horizontal-nav-bar-size);
+        }
+
+        .tabs-container {
+            display: none;
         }
 
         .button-container {
