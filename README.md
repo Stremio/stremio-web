@@ -5,36 +5,11 @@
     <img src="/assets/images/elenio_logo_light.png" width="220" alt="Elenio logo">
 </picture>
 
-# Stremio Web
+## Elenio web
+Stremio fork so my girlfriend can have a Streamio with different themes. 
 
-**Freedom to Stream** — the official web UI of [Stremio](https://www.stremio.com), a modern media center that's a one-stop solution for your video entertainment.
-
-[![Build](https://github.com/Stremio/stremio-web/actions/workflows/build.yml/badge.svg)](https://github.com/Stremio/stremio-web/actions/workflows/build.yml)
-[![Github Page](https://img.shields.io/website?label=Page&logo=github&up_message=online&down_message=offline&url=https%3A%2F%2Fstremio.github.io%2Fstremio-web%2F)](https://stremio.github.io/stremio-web/development)
-[![Version](https://img.shields.io/github/package-json/v/Stremio/stremio-web/development?label=version&color=7b5bf5)](https://github.com/Stremio/stremio-web/releases)
-[![License](https://img.shields.io/github/license/Stremio/stremio-web?color=7b5bf5)](/LICENSE.md)
-
-**[🌐 Open the Web App](https://web.stremio.com)** · [Website](https://www.stremio.com) · [Report a bug](https://github.com/Stremio/stremio-web/issues/new/choose)
-
-<img alt="Stremio board" width="100%" src="https://github.com/user-attachments/assets/b3597fcc-ee53-4c4c-82be-457844135230" />
-
-</div>
-
-## ✨ Features
-
-- 🧩 **Addon-powered** — discover movies, series and channels from catalogs provided by [addons](https://web.stremio.com/#/addons)
-- 🔄 **Sync everywhere** — your library and Continue Watching follow your Stremio account across devices
-- 📺 **Casting** — play on the big screen via Chromecast
-- 💬 **Subtitles** — addon-provided or local, with customizable styling
-- ⌨️ **Keyboard-first player** — full playback control without touching the mouse
-- 🌍 **50+ languages** — community-translated via [stremio-translations](https://github.com/Stremio/stremio-translations)
-- 📱 **Installable** — runs as a standalone PWA
-
-## 📸 Screenshots
-
-| Discover | Meta Details |
-|:---:|:---:|
-| ![Discover](https://github.com/user-attachments/assets/e89af0e8-8c53-4dac-a38a-464b5dfcf1a4) | ![Meta Details](https://github.com/user-attachments/assets/858a6946-d34a-4490-90c2-368b8714d501) |
+## Change theme
+Go to settings and just pick a theme (Try Letterboxd Theme)
 
 ## 🛠 How it works
 
@@ -75,9 +50,6 @@ docker build -t stremio-web .
 docker run -p 8080:8080 stremio-web
 ```
 
-## 🤝 Contributing
-
-Bug reports and pull requests are welcome — [`good first issue`](https://github.com/Stremio/stremio-web/labels/good%20first%20issue) is a great place to start. Want Stremio in your language? Contribute to [stremio-translations](https://github.com/Stremio/stremio-translations). Please read the [Code of Conduct](/CODE_OF_CONDUCT.md) first.
 
 ## 🧩 Ecosystem
 
@@ -88,9 +60,6 @@ Bug reports and pull requests are welcome — [`good first issue`](https://githu
 | [stremio-translations](https://github.com/Stremio/stremio-translations) | Community translations |
 | [stremio-addon-sdk](https://github.com/Stremio/stremio-addon-sdk) | Build your own addon in Node.js |
 
-## 💬 Community
-
-[Website](https://www.stremio.com) · [Blog](https://blog.stremio.com) · [Reddit](https://www.reddit.com/r/Stremio) · [X](https://x.com/stremio) · [Help center](https://stremio.zendesk.com/hc/en-us)
 
 ## 📄 License
 
