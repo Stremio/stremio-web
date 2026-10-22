@@ -46,7 +46,7 @@ const ServicesToaster = () => {
             toast.show({
                 type: 'error',
                 title: source.event,
-                message: error.message,
+                message: error.code ? window.i18next.t(`ERROR_${error.code}`, { defaultValue: error.message }) : error.message,
                 timeout: 4000,
                 dataset: {
                     type: 'CoreEvent'
