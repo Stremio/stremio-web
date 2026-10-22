@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="/assets/images/stremio_symbol.png" width="90" alt="Stremio logo">
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="/assets/images/elenio_logo_dark.png">
+    <img src="/assets/images/elenio_logo_light.png" width="220" alt="Elenio logo">
+</picture>
 
 # Stremio Web
 
