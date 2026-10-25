@@ -15,6 +15,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
     const {
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
+        subtitlesOffsetSelect,
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
@@ -46,6 +47,12 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     <MultiselectMenu
                         className={'multiselect'}
                         {...subtitlesSizeSelect}
+                    />
+                </Option>
+                <Option label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}>
+                    <MultiselectMenu
+                        className={'multiselect'}
+                        {...subtitlesOffsetSelect}
                     />
                 </Option>
                 <Option label={'SETTINGS_SUBTITLES_COLOR'}>
