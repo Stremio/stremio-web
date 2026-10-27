@@ -26,7 +26,7 @@ const RateSelect = ({ className, label, value, disabled, onChange }: Props) => {
     return (
         <div className={classNames(styles['rate-select'], className, { 'disabled': isDisabled })}>
             <div className={styles['header']}>
-                { t(label) }
+                { t(label, { defaultValue: 'FPS' }) }
             </div>
             <select
                 className={styles['select']}
