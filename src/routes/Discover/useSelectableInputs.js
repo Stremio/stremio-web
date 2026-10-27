@@ -53,6 +53,9 @@ const mapSelectableInputs = (discover, t, navigate) => {
     };
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => {
         const selectedExtra = options.find(({ selected }) => selected);
+        // extras with optionsLimit > 1 can have several values selected at once;
+        // show all of them instead of only the first
+        const selectedValues = options.filter(({ selected, value }) => selected && typeof value === 'string');
         return {
             id: `extra:${name}`,
             label: t.stringWithPrefix(name.toUpperCase(), '', name.charAt(0).toUpperCase() + name.slice(1)),
@@ -72,7 +75,8 @@ const mapSelectableInputs = (discover, t, navigate) => {
             }) : undefined,
             title: options.some(({ selected, value }) => selected && value === null) ?
                 () => t.string(name.toUpperCase())
-                : selectedExtra ? t.string(selectedExtra.value) : () => t.string(name.toUpperCase()),
+                : selectedValues.length > 1 ? selectedValues.map(({ value }) => t.string(value)).join(', ')
+                    : selectedExtra ? t.string(selectedExtra.value) : () => t.string(name.toUpperCase()),
             onSelect: (value) => {
                 const { href } = JSON.parse(value);
                 navigate(toPath(href));
