@@ -43,7 +43,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                         if (hostname === 'imdb.com') {
                             linksGroups.set(category, {
                                 label: name,
-                                href: `https://www.stremio.com/warning#${encodeURIComponent(url)}`
+                                href: url
                             });
                         }
                     } else if (category === CONSTANTS.SHARE_LINK_CATEGORY) {
