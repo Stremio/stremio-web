@@ -186,7 +186,7 @@ const useSubtitles = ({
     toggleSubtitlesMenu,
 }: UseSubtitlesArgs): UseSubtitlesResult => {
     const { t } = useTranslation();
-    const { setSubtitlesTrack, setExtraSubtitlesTrack, setSubtitlesDelay, setSubtitlesSize, setSubtitlesOffset } = video;
+    const { setSubtitlesTrack, setExtraSubtitlesTrack, setSubtitlesDelay, setSubtitlesRate, setSubtitlesSize, setSubtitlesOffset } = video;
     const toast = useToast();
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
@@ -310,6 +310,10 @@ const useSubtitles = ({
         setSubtitlesDelay(delay);
         streamStateChanged({ subtitleDelay: delay });
     }, [streamStateChanged, setSubtitlesDelay]);
+
+    const changeRate = useCallback((rate: number) => {
+        setSubtitlesRate(rate);
+    }, [setSubtitlesRate]);
 
     const finishSubtitleDelayHold = useCallback((applyStep: boolean) => {
         const hold = subtitleDelayHold.current;
@@ -654,6 +658,7 @@ const useSubtitles = ({
         selectedExtraSubtitlesTrackId: video.state.selectedExtraSubtitlesTrackId,
         extraSubtitlesOffset: video.state.extraSubtitlesOffset,
         extraSubtitlesDelay: video.state.extraSubtitlesDelay,
+        extraSubtitlesRate: video.state.extraSubtitlesRate,
         extraSubtitlesSize: video.state.extraSubtitlesSize,
         assSubtitlesStylingActive: video.state.assSubtitlesStylingActive,
         onSubtitlesTrackSelected: selectEmbeddedTrack,
@@ -662,16 +667,19 @@ const useSubtitles = ({
         onSubtitlesSizeChanged: changeSize,
         onExtraSubtitlesOffsetChanged: changeOffset,
         onExtraSubtitlesDelayChanged: changeDelay,
+        onExtraSubtitlesRateChanged: changeRate,
         onExtraSubtitlesSizeChanged: changeSize,
     }), [
         changeDelay,
         changeOffset,
+        changeRate,
         changeSize,
         selectEmbeddedTrack,
         selectExtraTrack,
         settings.interfaceLanguage,
         settings.subtitlesLanguage,
         video.state.extraSubtitlesDelay,
+        video.state.extraSubtitlesRate,
         video.state.extraSubtitlesOffset,
         video.state.extraSubtitlesSize,
         video.state.extraSubtitlesTracks,

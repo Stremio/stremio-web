@@ -38,6 +38,7 @@ const useVideo = () => {
         selectedExtraSubtitlesTrackId: null,
         extraSubtitlesSize: null,
         extraSubtitlesDelay: null,
+        extraSubtitlesRate: null,
         extraSubtitlesOffset: null,
         extraSubtitlesTextColor: null,
         extraSubtitlesBackgroundColor: null,
@@ -135,6 +136,10 @@ const useVideo = () => {
 
     const setSubtitlesDelay = React.useCallback((delay) => {
         setProp('extraSubtitlesDelay', delay);
+    }, [setProp]);
+
+    const setSubtitlesRate = React.useCallback((rate) => {
+        setProp('extraSubtitlesRate', rate);
     }, [setProp]);
 
     const setSubtitlesSize = React.useCallback((size) => {
@@ -254,6 +259,7 @@ const useVideo = () => {
         setAudioTrack,
         setSubtitlesTrack,
         setSubtitlesDelay,
+        setSubtitlesRate,
         setSubtitlesSize,
         setSubtitlesOffset,
         setSubtitlesOffsetMinimum,

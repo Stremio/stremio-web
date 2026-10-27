@@ -30,6 +30,7 @@ type VideoSubtitleState = {
     selectedExtraSubtitlesTrackId: string | null,
     extraSubtitlesOffset: number | null,
     extraSubtitlesDelay: number | null,
+    extraSubtitlesRate: number | null,
     extraSubtitlesSize: number | null,
     assSubtitlesStylingActive: boolean,
 };
@@ -47,6 +48,7 @@ type VideoController = {
     setSubtitlesTrack: (id: string | null) => void,
     setExtraSubtitlesTrack: (id: string | null) => void,
     setSubtitlesDelay: (delay: number) => void,
+    setSubtitlesRate: (rate: number) => void,
     setSubtitlesSize: (size: number) => void,
     setSubtitlesOffset: (offset: number) => void,
     setSubtitlesTextColor: (color: string) => void,
@@ -77,6 +79,7 @@ type SubtitlesMenuProps = {
     selectedExtraSubtitlesTrackId: string | null,
     extraSubtitlesOffset: number | null,
     extraSubtitlesDelay: number | null,
+    extraSubtitlesRate: number | null,
     extraSubtitlesSize: number | null,
     assSubtitlesStylingActive: boolean,
     onSubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
@@ -85,6 +88,7 @@ type SubtitlesMenuProps = {
     onSubtitlesSizeChanged: (size: number) => void,
     onExtraSubtitlesOffsetChanged: (offset: number) => void,
     onExtraSubtitlesDelayChanged: (delay: number) => void,
+    onExtraSubtitlesRateChanged: (rate: number) => void,
     onExtraSubtitlesSizeChanged: (size: number) => void,
 };
 

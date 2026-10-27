@@ -9,6 +9,7 @@ const { Button } = require('stremio/components');
 const styles = require('./styles');
 const { t } = require('i18next');
 const { default: Stepper } = require('./Stepper');
+const { default: RateSelect } = require('./RateSelect');
 const { default: SubtitleVariant } = require('./SubtitleVariant');
 const { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } = require('../subtitleDelay');
 
@@ -125,6 +126,11 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
             }
         }
     }, [props.selectedExtraSubtitlesTrackId, props.extraSubtitlesDelay, props.onExtraSubtitlesDelayChanged]);
+    const onSubtitlesRateChanged = React.useCallback((value) => {
+        if (typeof props.selectedExtraSubtitlesTrackId === 'string' && typeof props.onExtraSubtitlesRateChanged === 'function') {
+            props.onExtraSubtitlesRateChanged(value);
+        }
+    }, [props.selectedExtraSubtitlesTrackId, props.onExtraSubtitlesRateChanged]);
     const onSubtitlesSizeChanged = React.useCallback((value) => {
         if (typeof props.selectedSubtitlesTrackId === 'string') {
             if (props.subtitlesSize !== null && !isNaN(props.subtitlesSize)) {
@@ -221,6 +227,13 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                         disabled={props.extraSubtitlesDelay === null}
                         onChange={onSubtitlesDelayChanged}
                     />
+                    <RateSelect
+                        className={styles['stepper']}
+                        label={'SUBTITLES_FPS'}
+                        value={props.extraSubtitlesRate}
+                        disabled={props.extraSubtitlesRate === null || typeof props.selectedExtraSubtitlesTrackId !== 'string'}
+                        onChange={onSubtitlesRateChanged}
+                    />
                     <Stepper
                         className={styles['stepper']}
                         label={'SIZE'}
@@ -278,6 +291,7 @@ SubtitlesMenu.propTypes = {
     selectedExtraSubtitlesTrackId: PropTypes.string,
     extraSubtitlesOffset: PropTypes.number,
     extraSubtitlesDelay: PropTypes.number,
+    extraSubtitlesRate: PropTypes.number,
     extraSubtitlesSize: PropTypes.number,
     assSubtitlesStylingActive: PropTypes.bool,
     onSubtitlesTrackSelected: PropTypes.func,
@@ -286,6 +300,7 @@ SubtitlesMenu.propTypes = {
     onSubtitlesSizeChanged: PropTypes.func,
     onExtraSubtitlesOffsetChanged: PropTypes.func,
     onExtraSubtitlesDelayChanged: PropTypes.func,
+    onExtraSubtitlesRateChanged: PropTypes.func,
     onExtraSubtitlesSizeChanged: PropTypes.func
 };
 
