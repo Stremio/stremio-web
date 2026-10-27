@@ -59,7 +59,7 @@ const useMetaLinks = (links: Link[] | null | undefined): MetaLinks => {
 
             if (link.category === CONSTANTS.IMDB_LINK_CATEGORY) {
                 if (url.hostname === 'imdb.com') {
-                    imdb = { label: link.name, href: toWarningHref(link.url) };
+                    imdb = { label: link.name, href: link.url };
                 }
             } else if (link.category === CONSTANTS.SHARE_LINK_CATEGORY) {
                 share = { label: link.name, href: link.url };
