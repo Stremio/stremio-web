@@ -53,6 +53,7 @@ const useShell = (): Shell => {
         initialized: false,
         version: null,
         streamingServerUrl: null,
+        mpvConfig: null,
         windowClosed: false,
         windowHidden: false,
     });
@@ -78,12 +79,23 @@ const useShell = (): Shell => {
             }));
         };
 
+        const onMpvConfigSelected = ({ path }: { path: string | null }) => {
+            if (path) {
+                setState((state) => ({
+                    ...state,
+                    mpvConfig: path,
+                }));
+            }
+        };
+
         on('win-visibility-changed', onWindowVisibilityChanged);
         on('win-state-changed', onWindowStateChanged);
+        on('mpv-config-selected', onMpvConfigSelected);
 
         return () => {
             off('win-visibility-changed', onWindowVisibilityChanged);
             off('win-state-changed', onWindowStateChanged);
+            off('mpv-config-selected', onMpvConfigSelected);
         };
     }, []);
 
@@ -103,6 +115,7 @@ const useShell = (): Shell => {
                         initialized: true,
                         version: shellProperties.shellVersion ?? null,
                         streamingServerUrl: shellProperties.streamingServerUrl || null,
+                        mpvConfig: shellProperties.mpvConfig || null,
                     }));
                     setCapabilities({
                         gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',

@@ -32,6 +32,7 @@ type ShellState = {
     initialized: boolean;
     version: string | null;
     streamingServerUrl: string | null;
+    mpvConfig: string | null;
     windowClosed: boolean;
     windowHidden: boolean;
 };
