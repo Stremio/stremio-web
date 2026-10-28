@@ -53,6 +53,7 @@ const useShell = (): Shell => {
         initialized: false,
         version: null,
         streamingServerUrl: null,
+        mpvConfig: null,
         windowClosed: false,
         windowHidden: false,
     });
@@ -61,6 +62,7 @@ const useShell = (): Shell => {
         nativeAssSubtitles: false,
         cacheDirectoryPicker: false,
         nativeInterfaceScale: false,
+        mpvConfig: false,
     });
 
     useEffect(() => {
@@ -78,12 +80,22 @@ const useShell = (): Shell => {
             }));
         };
 
+        const onMpvConfigSelected = ({ path, error }: { path: string | null, error: string | null }) => {
+            if (error) return;
+            setState((state) => ({
+                ...state,
+                mpvConfig: path || null,
+            }));
+        };
+
         on('win-visibility-changed', onWindowVisibilityChanged);
         on('win-state-changed', onWindowStateChanged);
+        on('mpv-config-selected', onMpvConfigSelected);
 
         return () => {
             off('win-visibility-changed', onWindowVisibilityChanged);
             off('win-state-changed', onWindowStateChanged);
+            off('mpv-config-selected', onMpvConfigSelected);
         };
     }, []);
 
@@ -103,12 +115,14 @@ const useShell = (): Shell => {
                         initialized: true,
                         version: shellProperties.shellVersion ?? null,
                         streamingServerUrl: shellProperties.streamingServerUrl || null,
+                        mpvConfig: shellProperties.mpvConfig || null,
                     }));
                     setCapabilities({
                         gpuVideoProcessing: shellProperties.gpuVideoProcessing === 'true',
                         nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
                         cacheDirectoryPicker: shellProperties.cacheDirectoryPicker === 'true',
                         nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
+                        mpvConfig: shellProperties.mpvConfig !== undefined,
                     });
                 }
 
