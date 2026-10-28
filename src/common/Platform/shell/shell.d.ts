@@ -26,6 +26,7 @@ type ShellCapabilities = {
     nativeAssSubtitles: boolean;
     cacheDirectoryPicker: boolean;
     nativeInterfaceScale: boolean;
+    mpvConfig: boolean;
 };
 
 type ShellState = {

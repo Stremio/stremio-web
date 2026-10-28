@@ -62,6 +62,7 @@ const useShell = (): Shell => {
         nativeAssSubtitles: false,
         cacheDirectoryPicker: false,
         nativeInterfaceScale: false,
+        mpvConfig: false,
     });
 
     useEffect(() => {
@@ -79,13 +80,12 @@ const useShell = (): Shell => {
             }));
         };
 
-        const onMpvConfigSelected = ({ path }: { path: string | null }) => {
-            if (path) {
-                setState((state) => ({
-                    ...state,
-                    mpvConfig: path,
-                }));
-            }
+        const onMpvConfigSelected = ({ path, error }: { path: string | null, error: string | null }) => {
+            if (error) return;
+            setState((state) => ({
+                ...state,
+                mpvConfig: path || null,
+            }));
         };
 
         on('win-visibility-changed', onWindowVisibilityChanged);
@@ -122,6 +122,7 @@ const useShell = (): Shell => {
                         nativeAssSubtitles: shellProperties.nativeAssSubtitles === 'true',
                         cacheDirectoryPicker: shellProperties.cacheDirectoryPicker === 'true',
                         nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
+                        mpvConfig: shellProperties.mpvConfig !== undefined,
                     });
                 }
 

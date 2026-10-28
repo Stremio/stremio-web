@@ -10,7 +10,7 @@ const useMpvConfig = () => {
     const { shell } = usePlatform();
     const { t } = useTranslation();
     const toast = useToast();
-    const request = useRef<{ id: number, path: string } | null>(null);
+    const request = useRef<{ id: number, path: string | null } | null>(null);
     const [choosing, setChoosing] = useState(false);
     const path = shell.state.mpvConfig;
 
@@ -22,7 +22,7 @@ const useMpvConfig = () => {
             setChoosing(false);
             if (error) {
                 toast.show({ type: 'error', title: error, timeout: 5000 });
-            } else if (path && path !== previousPath) {
+            } else if ((path || null) !== previousPath) {
                 toast.show({ type: 'info', title: t('RESTART_REQUIRED_MESSAGE'), timeout: 5000 });
             }
         };
@@ -34,19 +34,19 @@ const useMpvConfig = () => {
     }, [shell.on, shell.off, t, toast]);
 
     const onSelect = (value: string) => {
-        if (!path || choosing) return;
+        if (choosing) return;
         const id = ++nextRequestId;
         request.current = { id, path };
         setChoosing(true);
         shell.send(value === 'default' ? 'reset-mpv-config' : 'pick-mpv-config', { requestId: id });
     };
 
-    return path ? {
+    return shell.capabilities.mpvConfig ? {
         options: [
             { label: `${t('SELECT')}…`, value: 'choose' },
             { label: t('SETTINGS_VIDEO_MODE_DEFAULT'), value: 'default' },
         ],
-        title: path,
+        title: path ?? t('SETTINGS_VIDEO_MODE_DEFAULT'),
         disabled: choosing,
         onSelect,
     } : null;
