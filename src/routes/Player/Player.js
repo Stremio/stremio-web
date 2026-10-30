@@ -67,7 +67,7 @@ const Player = () => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
     const profile = useProfile();
-    const [player, videoParamsChanged, streamStateChanged, audioPreferenceChanged, subtitlePreferenceChanged, videoScaleChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
+    const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
@@ -180,7 +180,6 @@ const Player = () => {
         video,
         settings,
         streamStateChanged,
-        audioPreferenceChanged,
     });
 
     const {
@@ -194,7 +193,6 @@ const Player = () => {
         video,
         settings,
         streamStateChanged,
-        subtitlePreferenceChanged,
         menusOpen,
         closeMenus,
         closeSubtitlesMenu,
@@ -207,8 +205,6 @@ const Player = () => {
         castToDevice(deviceId);
         closeCastDevicesMenu();
     };
-    const requestedVideoScale = React.useRef(null);
-    const persistedVideoScale = React.useRef({ stream: null, scale: null });
     const [error, setError] = React.useState(null);
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
@@ -369,20 +365,18 @@ const Player = () => {
         return () => resizeObserver.disconnect();
     }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetMinimum]);
 
-    const onPlaybackSpeedChanged = video.setPlaybackSpeed;
+    const onPlaybackSpeedChanged = React.useCallback((speed) => {
+        video.setPlaybackSpeed(speed);
+        streamStateChanged({ playbackSpeed: speed });
+    }, [video.setPlaybackSpeed, streamStateChanged]);
 
     const onVideoScaleChanged = React.useCallback(() => {
         const currentScale = video.state.videoScale || 'contain';
         const currentIndex = VIDEO_SCALES.indexOf(currentScale);
         const nextScale = VIDEO_SCALES[(currentIndex + 1) % VIDEO_SCALES.length];
-        requestedVideoScale.current = nextScale;
-        persistedVideoScale.current = { stream: video.state.stream, scale: nextScale };
         video.setVideoScale(nextScale);
-        if (player.videoScale !== undefined) {
-            videoScaleChanged(nextScale);
-        }
         streamStateChanged({ videoScale: nextScale });
-    }, [player.videoScale, video.state.stream, video.state.videoScale, streamStateChanged, videoScaleChanged]);
+    }, [video.state.videoScale, video.setVideoScale, streamStateChanged]);
 
     const onDismissNextVideoPopup = React.useCallback(() => {
         setNextVideoPopupDismissal({ stream: video.state.stream, programId: currentEpgVideo?.id });
@@ -594,34 +588,21 @@ const Player = () => {
     }, [video.state.stream, isCasting]);
 
     React.useEffect(() => {
-        if (requestedVideoScale.current === player.videoScale) {
-            requestedVideoScale.current = null;
-        }
-        if (player.selected === null) {
-            requestedVideoScale.current = null;
-            persistedVideoScale.current = { stream: null, scale: null };
+        if (video.state.stream === null || !video.state.manifest?.props.includes('videoScale')) {
             return;
         }
-        if (!video.state.manifest?.props.includes('videoScale') || video.state.stream === null) {
+
+        video.setVideoScale(player.streamState?.videoScale ?? 'contain');
+    }, [player.streamState?.videoScale, video.state.manifest, video.state.stream, video.setVideoScale]);
+
+    React.useEffect(() => {
+        const speed = player.streamState?.playbackSpeed;
+        if (video.state.stream === null || !video.state.manifest?.props.includes('playbackSpeed') || typeof speed !== 'number') {
             return;
         }
-        if (persistedVideoScale.current.stream !== video.state.stream) {
-            persistedVideoScale.current = { stream: video.state.stream, scale: null };
-        }
 
-        const sessionScale = requestedVideoScale.current ?? player.videoScale;
-        const scale = sessionScale ?? player.streamState?.videoScale ?? 'contain';
-
-        if (video.state.videoScale !== scale) {
-            video.setVideoScale(scale);
-        }
-        if (sessionScale &&
-            player.streamState?.videoScale !== sessionScale &&
-            persistedVideoScale.current.scale !== sessionScale) {
-            persistedVideoScale.current.scale = sessionScale;
-            streamStateChanged({ videoScale: sessionScale });
-        }
-    }, [player.selected, player.streamState?.videoScale, player.videoScale, video.state.manifest, video.state.stream, video.state.videoScale, streamStateChanged]);
+        video.setPlaybackSpeed(speed);
+    }, [player.streamState?.playbackSpeed, video.state.manifest, video.state.stream, video.setPlaybackSpeed]);
 
     React.useEffect(() => {
         if (!Array.isArray(video.state.audioTracks) || video.state.audioTracks.length === 0) {
