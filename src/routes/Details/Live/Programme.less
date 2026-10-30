@@ -1,0 +1,198 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.programme {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    .headline, .details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        max-width: 100%;
+
+        .live, .aired {
+            flex: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .live {
+            color: #ffffff;
+
+            &::before {
+                content: '';
+                width: 0.5rem;
+                height: 0.5rem;
+                border-radius: 50%;
+                background-color: @live-color;
+                animation: live-pulse 1.8s ease-in-out infinite;
+            }
+        }
+
+        .aired {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: @text-secondary;
+        }
+
+        .when {
+            min-width: 0;
+            font-size: 0.875rem;
+            line-height: 1.125rem;
+            font-weight: 500;
+            color: @text-secondary;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .title {
+        margin-top: 0.875rem;
+        font-size: 2.75rem;
+        line-height: 1.25;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--primary-foreground-color);
+        overflow-wrap: anywhere;
+    }
+
+    .facts {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 2.5rem;
+        margin-top: 1.25rem;
+        font-size: 1.125rem;
+        line-height: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .overview {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        max-width: 37.5rem;
+        margin-top: 1rem;
+        font-size: 0.9375rem;
+        line-height: 1.85;
+        font-weight: 400;
+        color: @text-secondary;
+        overflow: hidden;
+    }
+
+    .links {
+        margin-top: 1.5rem;
+    }
+
+}
+
+@media @desktop-short {
+    .programme {
+        .title {
+            margin-top: 0.375rem;
+            font-size: 1.75rem;
+        }
+
+        .facts {
+            margin-top: 0.625rem;
+            font-size: 0.875rem;
+        }
+
+        .overview {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            -webkit-line-clamp: 2;
+        }
+
+        .links {
+            display: none;
+        }
+    }
+}
+
+@media @mobile {
+    .programme {
+        .headline, .details {
+            align-items: center;
+            text-align: center;
+        }
+
+        .status {
+            gap: 0.625rem;
+
+            .when {
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.75);
+            }
+        }
+
+        .title {
+            margin-top: 0.5rem;
+            font-size: 1.875rem;
+            line-height: 1.2;
+            letter-spacing: -0.015em;
+        }
+
+        .details {
+            width: 100%;
+        }
+
+        .facts {
+            justify-content: center;
+            gap: 0.375rem 1.5rem;
+            margin-top: 0;
+            font-size: 1rem;
+        }
+
+        .overview {
+            max-width: none;
+            margin-top: 0.625rem;
+            font-size: 0.875rem;
+            line-height: 1.75;
+        }
+
+        .links {
+            margin-top: 1rem;
+        }
+    }
+}
+
+@keyframes live-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .programme {
+        .status .live::before {
+            animation: none;
+        }
+    }
+}

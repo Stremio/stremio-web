@@ -1,0 +1,73 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.rate-button {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    color: var(--primary-foreground-color);
+    overflow: visible;
+
+    &:focus {
+        outline-offset: -0.25rem;
+    }
+
+    .glyph {
+        position: relative;
+        width: 1.375rem;
+        height: 1.375rem;
+        transition: transform 0.15s @ease;
+    }
+
+    &:active .glyph {
+        transform: scale(0.86);
+    }
+
+    .icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+        transition: opacity 0.15s @ease, clip-path 0.25s @ease;
+    }
+
+    &:hover .icon, &:focus .icon, &.on .icon {
+        opacity: 1;
+    }
+
+    .fill {
+        clip-path: inset(100% 0 0 0);
+    }
+
+    &.on .fill {
+        clip-path: inset(0 0 0 0);
+        transition: opacity 0.15s @ease, clip-path 0.3s @ease 0.1s;
+    }
+
+    &.pending {
+        cursor: default;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rate-button {
+        .glyph, .icon {
+            transition: none;
+        }
+    }
+}
+
+@media @desktop-short, @mobile {
+    .rate-button {
+        width: 3rem;
+        height: 3rem;
+    }
+}

@@ -34,11 +34,28 @@ type ResourceRequest = {
     path: ResourceRequestPath,
 };
 
+type OpenPlayerLinks = {
+    ios: string | null,
+    android: string | null,
+    windows: string | null,
+    macos: string | null,
+    linux: string | null,
+    tizen: string | null,
+    webos: string | null,
+    chromeos: string | null,
+    roku: string | null,
+    visionos?: string | null,
+};
+
 type ExternalPlayerLinks = {
-    androidTv: string | null,
     download: string | null,
+    magnet: string | null,
+    streaming: string | null,
+    playlist: string | null,
     fileName: string | null,
-    href: string | null,
+    openPlayer: OpenPlayerLinks | null,
+    web: string | null,
+    androidTv: string | null,
     tizen: string | null,
     webos: string | null,
 };

@@ -1,0 +1,192 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.stream {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.125rem;
+    padding: 1rem 0.875rem 1rem 1.125rem;
+    border-radius: var(--border-radius);
+    transition: background-color 0.15s @ease;
+
+    &:hover,
+    &:focus-visible {
+        background-color: var(--overlay-color);
+
+        .play {
+            background-color: var(--secondary-accent-color);
+            color: #ffffff;
+        }
+    }
+
+    &.last-used {
+        background-color: var(--overlay-color);
+
+        .play {
+            background-color: var(--secondary-accent-color);
+            color: #ffffff;
+        }
+    }
+
+    &.card {
+        background-color: var(--overlay-color);
+
+        &:hover,
+        &:focus-visible {
+            background-color: @overlay-hover;
+        }
+    }
+
+    .info {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .heading {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        min-width: 0;
+    }
+
+    .name {
+        min-width: 0;
+        font-size: 0.9375rem;
+        line-height: 1.3125rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+        overflow-wrap: anywhere;
+    }
+
+    .flag {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        height: 1.25rem;
+        padding: 0 0.375rem;
+        border-radius: 4px;
+        background-color: var(--tertiary-accent-color);
+        font-size: 0.65625rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        color: var(--secondary-foreground-color);
+    }
+
+    .thumbnail-container {
+        flex: none;
+        width: 8rem;
+        height: 5rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background-color: var(--color-placeholder-background);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-fallback {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: @text-tertiary;
+        }
+    }
+
+    .description {
+        font-size: 0.8125rem;
+        line-height: 1.25rem;
+        color: @text-secondary;
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+    }
+
+    .progress {
+        width: 100%;
+        max-width: 10rem;
+        margin-top: 0.5rem;
+    }
+
+    .play {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 2.625rem;
+        height: 2.625rem;
+        border-radius: 50%;
+        background-color: var(--overlay-color);
+        color: var(--primary-foreground-color);
+        transition: background-color 0.15s @ease;
+
+        .icon {
+            width: 1.125rem;
+            height: 1.125rem;
+        }
+    }
+}
+
+.menu {
+    min-width: 14rem;
+    max-width: 22rem;
+
+    .menu-title {
+        margin-bottom: 0.5rem;
+        padding: 0.875rem 1.5rem 0;
+        font-size: 0.8125rem;
+        line-height: 1.25rem;
+        color: @text-secondary;
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+
+    .menu-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        transition: background-color 0.15s @ease;
+
+        &:hover,
+        &:focus {
+            background-color: var(--overlay-color);
+        }
+
+        .menu-icon {
+            flex: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .menu-label {
+            min-width: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+        }
+    }
+}
+
+@media @mobile {
+    .stream {
+        padding: 0.875rem 0.625rem 0.875rem 0.875rem;
+
+        .play {
+            width: 2.75rem;
+            height: 2.75rem;
+        }
+    }
+}
