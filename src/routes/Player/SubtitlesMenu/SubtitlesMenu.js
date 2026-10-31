@@ -23,9 +23,9 @@ const normalizeTracksLang = (tracks) => tracks.map((track) => ({
     lang: languages.toCode(track.lang),
 }));
 
-const sortByValues = (items, values) => items.sort((a, b) => {
-    const left = values.indexOf(a);
-    const right = values.indexOf(b);
+const sortByValues = (items, values, getValue = (item) => item) => items.sort((a, b) => {
+    const left = values.indexOf(getValue(a));
+    const right = values.indexOf(getValue(b));
     if (left === -1 && right === -1) return 0;
     if (left === -1) return 1;
     if (right === -1) return -1;
@@ -78,14 +78,14 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
     }, [subtitlesTracks, extraSubtitlesTracks, props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId]);
     const subtitlesTracksForLanguage = React.useMemo(() => {
         const tracks = allSubtitles.filter(({ lang }) => lang === selectedSubtitlesLanguage);
-        return sortByValues(tracks, ORIGIN_PRIORITIES);
+        return sortByValues(tracks, ORIGIN_PRIORITIES, ({ origin }) => origin);
     }, [allSubtitles, selectedSubtitlesLanguage]);
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
     const subtitlesLanguageOnClick = React.useCallback((event) => {
         const tracks = allSubtitles.filter(({ lang }) => lang === event.currentTarget.dataset.lang);
-        const track = sortByValues(tracks, ORIGIN_PRIORITIES).shift();
+        const track = sortByValues(tracks, ORIGIN_PRIORITIES, ({ origin }) => origin).shift();
 
         if (!track) {
             if (typeof props.onSubtitlesTrackSelected === 'function') {
