@@ -6,7 +6,7 @@ import { deepEqual } from 'fast-equals';
 import { useCore } from 'stremio/core';
 import useCacheLocation from './useCacheLocation';
 
-const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, null];
+const CACHE_SIZES = [0, 2147483648, 5368709120, 10737418240, 53687091200, 107374182400, 214748364800, null];
 
 const cacheSizeToString = (size: number | null) => {
     return size === null ?
