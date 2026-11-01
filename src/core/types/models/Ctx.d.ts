@@ -13,6 +13,13 @@ type Auth = {
     },
 };
 
+type IgnoredStream = {
+    key: string,
+    label: string,
+    metaId: string,
+    videoId?: string | null,
+};
+
 type Settings = {
     audioLanguage: string,
     audioPassthrough: boolean,
@@ -49,6 +56,9 @@ type Settings = {
     assSubtitlesStyling: boolean,
     surroundSound: boolean,
     pauseOnMinimize: boolean,
+    smartPlay: boolean,
+    smartPlayHdrPreference: 'auto' | 'hdr' | 'sdr',
+    ignoredStreams: IgnoredStream[],
 };
 
 type Profile = {

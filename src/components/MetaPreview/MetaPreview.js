@@ -13,6 +13,8 @@ const ModalDialog = require('stremio/components/ModalDialog');
 const SharePrompt = require('stremio/components/SharePrompt');
 const CONSTANTS = require('stremio/common/CONSTANTS');
 const { default: useMediaQuery } = require('stremio/common/useMediaQuery');
+const useProfile = require('stremio/common/useProfile');
+const { smartPlayDeepLink } = require('stremio/common/smartPlayHref');
 const screenSizes = require('stremio/common/screen-sizes.less');
 const routesRegexp = require('stremio/common/routesRegexp');
 const useBinaryState = require('stremio/common/useBinaryState');
@@ -30,6 +32,7 @@ const ALLOWED_LINK_REDIRECTS = [
 
 const MetaPreview = React.forwardRef(({ className, compact, name, logo, background, runtime, releaseInfo, released, description, deepLinks, links, trailerStreams, inLibrary, toggleInLibrary, watched, toggleWatched, ratingInfo, metadata, children, actions, showIcon = 'play', onShowClick }, ref) => {
     const { t } = useTranslation();
+    const profile = useProfile();
     const [shareModalOpen, openShareModal, closeShareModal] = useBinaryState(false);
     const isMobileLandscape = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: ${screenSizes['phone-landscape-size']}) and (orientation: landscape)`);
     const iconActions = compact && isMobileLandscape;
@@ -79,6 +82,12 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
             new Map();
     }, [links]);
     const showHref = React.useMemo(() => {
+        if (profile?.settings?.smartPlay) {
+            const smartHref = smartPlayDeepLink(deepLinks);
+            if (smartHref) {
+                return smartHref;
+            }
+        }
         return deepLinks ?
             typeof deepLinks.player === 'string' ?
                 deepLinks.player
@@ -92,7 +101,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                         null
             :
             null;
-    }, [deepLinks]);
+    }, [deepLinks, profile?.settings?.smartPlay]);
     const trailerHref = React.useMemo(() => {
         if (!Array.isArray(trailerStreams) || trailerStreams.length === 0) {
             return null;

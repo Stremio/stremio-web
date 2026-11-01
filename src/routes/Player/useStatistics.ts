@@ -59,6 +59,8 @@ const useStatistics = (player: Player, streamingServer: StreamingServer) => {
         speed: statistics ? Number((statistics.downloadSpeed / 1000 / 1000).toFixed(2)) : 0,
         completed: typeof statistics?.streamProgress === 'number' ? Number((statistics.streamProgress * 100).toFixed(2)) : null,
         progress: getLoadingProgress(infoHash, statistics),
+        downloaded: statistics?.downloaded ?? 0,
+        streamLen: statistics?.streamLen ?? 0,
     };
 };
 

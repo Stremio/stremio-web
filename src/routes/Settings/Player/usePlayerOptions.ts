@@ -295,6 +295,69 @@ const usePlayerOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
+    const ignoredStreams = profile.settings.ignoredStreams ?? [];
+    const restoreIgnoredStream = (key: string) => {
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UpdateSettings',
+                args: {
+                    ...profile.settings,
+                    ignoredStreams: ignoredStreams.filter((ignored) => ignored.key !== key)
+                }
+            }
+        });
+    };
+
+    const smartPlayToggle = useMemo(() => ({
+        checked: profile.settings.smartPlay,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        smartPlay: !profile.settings.smartPlay
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
+    const smartPlayHdrSelect = useMemo(() => {
+        const labelFor = (value: 'auto' | 'hdr' | 'sdr') => {
+            switch (value) {
+                case 'hdr':
+                    return t('SETTINGS_SMART_PLAY_HDR_PREFER_HDR', { defaultValue: 'Prefer HDR' });
+                case 'sdr':
+                    return t('SETTINGS_SMART_PLAY_HDR_PREFER_SDR', { defaultValue: 'Prefer SDR' });
+                default:
+                    return t('SETTINGS_SMART_PLAY_HDR_AUTO', { defaultValue: 'Auto' });
+            }
+        };
+        return {
+            options: (['auto', 'hdr', 'sdr'] as const).map((value) => ({
+                value,
+                label: labelFor(value)
+            })),
+            value: profile.settings.smartPlayHdrPreference,
+            title: () => labelFor(profile.settings.smartPlayHdrPreference),
+            onSelect: (value: string) => {
+                core.transport.dispatch({
+                    action: 'Ctx',
+                    args: {
+                        action: 'UpdateSettings',
+                        args: {
+                            ...profile.settings,
+                            smartPlayHdrPreference: value as 'auto' | 'hdr' | 'sdr'
+                        }
+                    }
+                });
+            }
+        };
+    }, [profile.settings, t]);
+
     const playInBackgroundToggle = useMemo(() => ({
         checked: profile.settings.playInBackground,
         onClick: () => {
@@ -406,6 +469,10 @@ const usePlayerOptions = (profile: Profile) => {
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingToggle,
+        smartPlayToggle,
+        smartPlayHdrSelect,
+        ignoredStreams,
+        restoreIgnoredStream,
         playInBackgroundToggle,
         hardwareDecodingToggle,
         gpuVideoProcessingToggle,

@@ -26,6 +26,13 @@ const { default: CastDevicesMenu } = require('./CastDevicesMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const { default: AudioMenu } = require('./AudioMenu');
 const SpeedMenu = require('./SpeedMenu');
+const SmartPlayMenu = require('./SmartPlayMenu/SmartPlayMenu').default;
+const StallDowngradePrompt = require('./StallDowngradePrompt/StallDowngradePrompt').default;
+const useSmartPlayStallGuard = require('./useSmartPlayStallGuard').default;
+const { readCachedCandidates } = require('../MetaDetails/StreamsList/smartPlayCache');
+const { parseQuality, streamFileSizeBytes, streamKey, streamLabel } = require('../MetaDetails/StreamsList/streamQuality');
+const { buildMetaDetailsSmartPlayPath } = require('stremio/common/smartPlayHref');
+const { getBandwidthMbps } = require('../MetaDetails/StreamsList/smartPlayCapabilities');
 const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
@@ -68,7 +75,7 @@ const Player = () => {
     }, [queryParams]);
     const profile = useProfile();
     const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
-    const [settings] = useSettings();
+    const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
@@ -103,6 +110,7 @@ const Player = () => {
     const [subtitlesMenuOpen, , closeSubtitlesMenu, toggleSubtitlesMenu] = useBinaryState(false);
     const [audioMenuOpen, , closeAudioMenu, toggleAudioMenu] = useBinaryState(false);
     const [speedMenuOpen, , closeSpeedMenu, toggleSpeedMenu] = useBinaryState(false);
+    const [smartPlayMenuOpen, , closeSmartPlayMenu, toggleSmartPlayMenu] = useBinaryState(false);
     const [statisticsMenuOpen, openStatisticsMenu, closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [castDevicesMenuOpen, , closeCastDevicesMenu, toggleCastDevicesMenu] = useBinaryState(false);
     const metaItemContent = player.metaItem !== null && player.metaItem.type === 'Ready' ? player.metaItem.content : null;
@@ -129,18 +137,183 @@ const Player = () => {
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
 
     const menusOpen = React.useMemo(() => {
-        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || castDevicesMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
-    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, castDevicesMenuOpen, sideDrawerOpen, nextVideoPopupOpen]);
+        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || smartPlayMenuOpen || statisticsMenuOpen || castDevicesMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
+    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, smartPlayMenuOpen, statisticsMenuOpen, castDevicesMenuOpen, sideDrawerOpen, nextVideoPopupOpen]);
 
     const closeMenus = React.useCallback(() => {
         closeOptionsMenu();
         closeSubtitlesMenu();
         closeAudioMenu();
         closeSpeedMenu();
+        closeSmartPlayMenu();
         closeStatisticsMenu();
         closeCastDevicesMenu();
         closeSideDrawer();
     }, []);
+
+    const currentStream = player.selected?.stream ?? null;
+    const currentQuality = React.useMemo(() => parseQuality(currentStream ?? {}), [currentStream]);
+    const currentStreamKey = React.useMemo(() => {
+        return currentStream ? streamKey(currentStream, streamTransportUrl ?? player.addon?.transportUrl ?? '') : null;
+    }, [currentStream, streamTransportUrl, player.addon?.transportUrl]);
+    const cacheVideoId = type === 'movie' ? null : (videoId ?? null);
+    const [bufferSpeed, setBufferSpeed] = React.useState(0);
+    const bufferSampleRef = React.useRef(null);
+    React.useEffect(() => {
+        bufferSampleRef.current = null;
+        setBufferSpeed(0);
+    }, [currentStreamKey]);
+    React.useEffect(() => {
+        const buffered = video.state.buffered;
+        const duration = video.state.duration;
+        const size = currentStream ? streamFileSizeBytes(currentStream) : 0;
+        if (typeof buffered !== 'number' || buffered <= 0 || typeof duration !== 'number' || duration <= 0 || size <= 0) {
+            bufferSampleRef.current = null;
+            return;
+        }
+        const now = Date.now();
+        const previous = bufferSampleRef.current;
+        bufferSampleRef.current = { at: now, buffered };
+        if (!previous || now - previous.at < 1000 || buffered <= previous.buffered) {
+            return;
+        }
+        const downloadedBytes = ((buffered - previous.buffered) / duration) * size;
+        const speed = downloadedBytes / ((now - previous.at) / 1000) / (1024 * 1024);
+        if (Number.isFinite(speed) && speed > 0 && speed < 1000) {
+            setBufferSpeed(Number(speed.toFixed(2)));
+        }
+    }, [currentStream, video.state.buffered, video.state.duration]);
+    const smartPlayCandidates = React.useMemo(() => readCachedCandidates(type, id, cacheVideoId), [type, id, cacheVideoId]);
+    const currentHeight = React.useMemo(() => {
+        if (currentQuality.height > 0) {
+            return currentQuality.height;
+        }
+        return smartPlayCandidates.find((candidate) => candidate.key === currentStreamKey)?.height ?? 0;
+    }, [currentQuality.height, smartPlayCandidates, currentStreamKey]);
+    const smartPlayQualityOptions = React.useMemo(() => {
+        const heights = new Set();
+        smartPlayCandidates.forEach((candidate) => {
+            if (candidate.height > 0) {
+                heights.add(candidate.height);
+            }
+        });
+        if (currentHeight > 0) {
+            heights.add(currentHeight);
+        }
+        return Array.from(heights)
+            .sort((left, right) => right - left)
+            .map((height) => ({ height, label: `${height}p` }));
+    }, [smartPlayCandidates, currentHeight]);
+    const matchesIgnoredContext = React.useCallback((ignored) => {
+        if (ignored.metaId !== id) {
+            return false;
+        }
+        if (type === 'movie') {
+            return ignored.videoId === null || ignored.videoId === undefined || ignored.videoId === id || ignored.videoId === videoId;
+        }
+        return (ignored.videoId ?? null) === (videoId ?? null);
+    }, [id, type, videoId]);
+    const ignoredStreams = React.useMemo(() => {
+        return (settings.ignoredStreams ?? []).filter(matchesIgnoredContext);
+    }, [settings.ignoredStreams, matchesIgnoredContext]);
+    const currentDetails = React.useMemo(() => ({
+        title: currentStream?.name ?? '',
+        description: currentStream?.description ?? '',
+        addonName: player.addon?.manifest?.name ?? streamTransportUrl ?? '',
+        height: currentHeight,
+        hdr: currentQuality.hdr,
+        sizeBytes: currentStream ? streamFileSizeBytes(currentStream) : 0,
+        downloadedBytes: statistics.downloaded ?? 0,
+        totalBytes: statistics.streamLen ?? 0,
+        speed: statistics.speed > 0 ? statistics.speed : bufferSpeed,
+        speedEstimated: statistics.speed <= 0,
+        peers: statistics.peers ?? 0,
+        bufferedMs: video.state.buffered ?? 0,
+        durationMs: video.state.duration ?? 0,
+        connectionMbps: getBandwidthMbps() ?? 0,
+    }), [
+        currentStream,
+        player.addon?.manifest?.name,
+        streamTransportUrl,
+        currentHeight,
+        currentQuality.hdr,
+        statistics.downloaded,
+        statistics.streamLen,
+        statistics.speed,
+        statistics.peers,
+        bufferSpeed,
+        video.state.buffered,
+        video.state.duration,
+    ]);
+    const navigateToSources = React.useCallback(() => {
+        if (typeof type !== 'string' || typeof id !== 'string') {
+            return;
+        }
+        if (typeof video.state.time === 'number') {
+            timeChanged(video.state.time);
+        }
+        closeMenus();
+        const videoPart = typeof videoId === 'string' && videoId.length > 0
+            ? `/${encodeURIComponent(videoId)}`
+            : '';
+        navigate(toPath(`/detail/${encodeURIComponent(type)}/${encodeURIComponent(id)}${videoPart}?manual=1`), { replace: true });
+    }, [type, id, videoId, video.state.time, timeChanged, closeMenus, navigate]);
+    const navigateToSmartPlay = React.useCallback((targetHeight, skipKey, retryToken) => {
+        const path = buildMetaDetailsSmartPlayPath(type, id, videoId, targetHeight, skipKey, retryToken);
+        if (!path) {
+            return;
+        }
+        if (typeof video.state.time === 'number') {
+            timeChanged(video.state.time);
+        }
+        closeMenus();
+        navigate(toPath(path));
+    }, [type, id, videoId, video.state.time, timeChanged, closeMenus, navigate]);
+    const onSmartPlayQualitySelect = React.useCallback((height) => {
+        navigateToSmartPlay(height);
+    }, [navigateToSmartPlay]);
+    const onSmartPlayHdrChange = React.useCallback((value) => {
+        updateSettings({ smartPlayHdrPreference: value });
+    }, [updateSettings]);
+    const onSmartPlayIgnoreCurrent = React.useCallback(() => {
+        if (!currentStreamKey || typeof id !== 'string') {
+            return;
+        }
+        const addonName = player.addon?.manifest?.name ?? streamTransportUrl ?? player.addon?.transportUrl ?? 'Source';
+        const key = currentStreamKey;
+        const next = (settings.ignoredStreams ?? []).filter((ignored) => {
+            return !(matchesIgnoredContext(ignored) && ignored.key === key);
+        });
+        next.push({
+            key,
+            label: streamLabel(currentStream ?? {}, addonName),
+            metaId: id,
+            videoId: type === 'movie' ? null : (videoId ?? null),
+        });
+        updateSettings({ ignoredStreams: next });
+        navigateToSmartPlay(currentHeight > 0 ? currentHeight : undefined, key, `${Date.now()}`);
+    }, [currentStreamKey, id, videoId, type, matchesIgnoredContext, player.addon, streamTransportUrl, settings.ignoredStreams, currentStream, updateSettings, navigateToSmartPlay, currentHeight]);
+    const onSmartPlayRestore = React.useCallback((key) => {
+        const next = (settings.ignoredStreams ?? []).filter((ignored) => {
+            return !(matchesIgnoredContext(ignored) && ignored.key === key);
+        });
+        updateSettings({ ignoredStreams: next });
+    }, [settings.ignoredStreams, matchesIgnoredContext, updateSettings]);
+    const onSmartPlayOpenAudio = React.useCallback(() => {
+        closeSmartPlayMenu();
+        toggleAudioMenu();
+    }, [closeSmartPlayMenu, toggleAudioMenu]);
+    const lowerSmartPlayHeight = React.useMemo(() => {
+        return smartPlayQualityOptions.map((option) => option.height).find((height) => height < currentHeight) ?? 0;
+    }, [smartPlayQualityOptions, currentHeight]);
+    const { suggestion: stallSuggestion, dismiss: dismissStallSuggestion } = useSmartPlayStallGuard({
+        enabled: Boolean(settings.smartPlay) && !isEpg && !casting,
+        time: video.state.time,
+        buffering: video.state.buffering,
+        paused: video.state.paused,
+        currentHeight,
+        lowerHeight: lowerSmartPlayHeight,
+    });
 
     const castDevices = React.useMemo(() => {
         return playbackDevices
@@ -222,26 +395,32 @@ const Player = () => {
 
     const HOLD_DELAY = 400;
 
-    const handleNextVideoNavigation = React.useCallback((deepLinks, bingeWatching, ended) => {
-        if (ended) {
-            if (bingeWatching) {
-                if (deepLinks.player) {
-                    navigate(toPath(deepLinks.player), { replace: true });
-                } else if (deepLinks.metaDetailsStreams) {
-                    navigate(toPath(deepLinks.metaDetailsStreams), { replace: true });
-                }
-            } else {
-                goBack();
-            }
-
-        } else {
-            if (deepLinks.player) {
-                navigate(toPath(deepLinks.player), { replace: true });
-            } else if (deepLinks.metaDetailsStreams) {
-                navigate(toPath(deepLinks.metaDetailsStreams), { replace: true });
+    const handleNextVideoNavigation = React.useCallback((deepLinks, nextVideo, bingeWatching, ended) => {
+        if (ended && !bingeWatching) {
+            goBack();
+            return;
+        }
+        const nextVideoId = nextVideo?.id;
+        if (typeof nextVideoId === 'string' && nextVideoId === videoId) {
+            goBack();
+            return;
+        }
+        const metaId = metaItemContent?.id;
+        const metaType = metaItemContent?.type ?? type;
+        if (profile.settings.smartPlay && typeof nextVideoId === 'string' && typeof metaId === 'string') {
+            const path = buildMetaDetailsSmartPlayPath(metaType, metaId, nextVideoId);
+            if (path) {
+                navigate(toPath(path), { replace: true });
+                return;
             }
         }
-    }, [navigate, goBack]);
+        const target = deepLinks?.player ?? deepLinks?.metaDetailsStreams;
+        if (typeof target === 'string') {
+            navigate(toPath(target), { replace: true });
+        } else if (ended) {
+            goBack();
+        }
+    }, [navigate, goBack, profile.settings.smartPlay, metaItemContent?.id, metaItemContent?.type, type, videoId]);
 
     const onEnded = React.useCallback(() => {
         ended();
@@ -254,7 +433,7 @@ const Player = () => {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
-            handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, true);
+            handleNextVideoNavigation(deepLinks, player.nextVideo, profile.settings.bingeWatching, true);
         } else {
             goBack();
         }
@@ -392,7 +571,7 @@ const Player = () => {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
-            handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, false);
+            handleNextVideoNavigation(deepLinks, player.nextVideo, profile.settings.bingeWatching, false);
         }
     }, [player.nextVideo, isEpg, handleNextVideoNavigation, profile.settings, cancelKeyboardSeek, nextVideo]);
 
@@ -427,6 +606,9 @@ const Player = () => {
         }
         if (!event.nativeEvent.statisticsMenuClosePrevented) {
             closeStatisticsMenu();
+        }
+        if (!event.nativeEvent.smartPlayMenuClosePrevented) {
+            closeSmartPlayMenu();
         }
         if (!event.nativeEvent.castDevicesMenuClosePrevented) {
             closeCastDevicesMenu();
@@ -1044,6 +1226,10 @@ const Player = () => {
                 nextVideo={isEpg ? null : player.nextVideo}
                 stream={player.selected !== null ? player.selected.stream : null}
                 statisticsAvailable={statisticsMenuAvailable}
+                smartPlayMenuAvailable={currentStream !== null}
+                sourcesAvailable={Boolean(type && id)}
+                onOpenSources={navigateToSources}
+                onToggleSmartPlayMenu={toggleSmartPlayMenu}
                 onPlayRequested={onPlayRequested}
                 onPauseRequested={onPauseRequested}
                 onNextVideoRequested={onNextVideoRequested}
@@ -1070,6 +1256,20 @@ const Player = () => {
                 onMouseOver={onBarMouseMove}
                 onTouchEnd={onContainerMouseLeave}
             />
+            {
+                stallSuggestion !== null ?
+                    <StallDowngradePrompt
+                        height={stallSuggestion}
+                        onSwitch={() => {
+                            const height = stallSuggestion;
+                            dismissStallSuggestion();
+                            navigateToSmartPlay(height);
+                        }}
+                        onDismiss={dismissStallSuggestion}
+                    />
+                    :
+                    null
+            }
             <Indicator
                 className={classnames(styles['layer'], styles['indicator-layer'])}
                 videoState={video.state}
@@ -1131,6 +1331,21 @@ const Player = () => {
                     className={classnames(styles['layer'], styles['menu-layer'])}
                     playbackSpeed={video.state.playbackSpeed}
                     onPlaybackSpeedChanged={onPlaybackSpeedChanged}
+                />
+            </Transition>
+            <Transition when={smartPlayMenuOpen} name={'fade'}>
+                <SmartPlayMenu
+                    className={classnames(styles['layer'], styles['menu-layer'])}
+                    details={currentDetails}
+                    qualityOptions={smartPlayQualityOptions}
+                    selectedHeight={currentHeight}
+                    hdrPreference={settings.smartPlayHdrPreference ?? 'auto'}
+                    ignoredStreams={ignoredStreams}
+                    onQualitySelect={onSmartPlayQualitySelect}
+                    onHdrPreferenceChange={onSmartPlayHdrChange}
+                    onIgnoreCurrent={onSmartPlayIgnoreCurrent}
+                    onRestore={onSmartPlayRestore}
+                    onOpenAudio={onSmartPlayOpenAudio}
                 />
             </Transition>
             <Transition when={optionsMenuOpen} name={'fade'}>

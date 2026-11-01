@@ -33,6 +33,10 @@ const ControlBar = React.forwardRef(({
     nextVideo,
     stream,
     statisticsAvailable,
+    smartPlayMenuAvailable,
+    sourcesAvailable,
+    onOpenSources,
+    onToggleSmartPlayMenu,
     onPlayRequested,
     onPauseRequested,
     onNextVideoRequested,
@@ -79,6 +83,9 @@ const ControlBar = React.forwardRef(({
     }, []);
     const onStatisticsButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.statisticsMenuClosePrevented = true;
+    }, []);
+    const onSmartPlayButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.smartPlayMenuClosePrevented = true;
     }, []);
     const onCastDevicesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.castDevicesMenuClosePrevented = true;
@@ -184,6 +191,12 @@ const ControlBar = React.forwardRef(({
                         : null
                 }
                 <div className={styles['spacing']} />
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': sourcesAvailable === false })} title={t('PLAYER_SOURCES', { defaultValue: 'Sources' })} tabIndex={-1} onClick={onOpenSources}>
+                    <Icon className={styles['icon']} name={'list'} />
+                </Button>
+                <Button className={classnames(styles['control-bar-button'], { 'disabled': smartPlayMenuAvailable === false })} title={t('PLAYER_SMART_PLAY', { defaultValue: 'Playback' })} tabIndex={-1} onMouseDown={onSmartPlayButtonMouseDown} onClick={onToggleSmartPlayMenu}>
+                    <Icon className={styles['icon']} name={'settings'} />
+                </Button>
                 <Button className={styles['control-bar-buttons-menu-button']} onClick={toggleButtonsMenu}>
                     <Icon className={styles['icon']} name={'more-vertical'} />
                 </Button>
@@ -248,6 +261,10 @@ ControlBar.propTypes = {
     nextVideo: PropTypes.object,
     stream: PropTypes.object,
     statisticsAvailable: PropTypes.bool,
+    smartPlayMenuAvailable: PropTypes.bool,
+    sourcesAvailable: PropTypes.bool,
+    onOpenSources: PropTypes.func,
+    onToggleSmartPlayMenu: PropTypes.func,
     onPlayRequested: PropTypes.func,
     onPauseRequested: PropTypes.func,
     onNextVideoRequested: PropTypes.func,

@@ -253,6 +253,8 @@ const MetaDetails = () => {
                             streams={metaDetails.streams}
                             video={video}
                             type={streamPath.type}
+                            metaId={readyMeta?.id ?? urlParams.id}
+                            metaItem={readyMeta}
                             externalPlayerCallbackCanMarkWatched={externalPlayerCallbackCanMarkWatched}
                             onEpisodeSearch={handleEpisodeSearch}
                         />

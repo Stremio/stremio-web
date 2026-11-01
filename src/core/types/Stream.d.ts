@@ -12,6 +12,14 @@ type Stream = {
     fileIdx?: number,
     url?: string,
     externalUrl?: string,
+    behaviorHints?: {
+        notWebReady?: boolean,
+        bingeGroup?: string,
+        countryWhitelist?: string[],
+        filename?: string,
+        videoHash?: string,
+        videoSize?: number,
+    },
     deepLinks?: {
         player: string,
         externalPlayer: ExternalPlayerLinks,

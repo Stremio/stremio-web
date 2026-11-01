@@ -11,6 +11,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, Popup } = require('stremio/components');
 const useBinaryState = require('stremio/common/useBinaryState');
 const useProfile = require('stremio/common/useProfile');
+const { smartPlayDeepLink } = require('stremio/common/smartPlayHref');
 const { usePlatform } = require('stremio/common/Platform');
 const { formatEpgTimeRange } = require('stremio/common/EPG');
 const { getInterfaceRect } = require('stremio/common/interfaceScale');
@@ -104,19 +105,22 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
     }, [onSelect]);
     const videoButtonOnClick = React.useCallback(() => {
         selectVideo();
-
-        if (deepLinks && typeof deepLinks.metaDetailsStreams === 'string') {
-            navigate(toPath(deepLinks.metaDetailsStreams), { replace: !platform.isMobile });
+        const smartHref = profile?.settings?.smartPlay ? smartPlayDeepLink(deepLinks) : null;
+        const target = smartHref ?? (deepLinks && typeof deepLinks.metaDetailsStreams === 'string' ? deepLinks.metaDetailsStreams : null);
+        if (typeof target === 'string') {
+            navigate(toPath(target), { replace: !platform.isMobile });
         }
-    }, [deepLinks, navigate, platform.isMobile, selectVideo]);
+    }, [deepLinks, navigate, platform.isMobile, selectVideo, profile?.settings?.smartPlay]);
     const playButtonOnClick = React.useCallback((event) => {
         event.preventDefault();
         event.stopPropagation();
         selectVideo();
-        if (deepLinks && typeof deepLinks.player === 'string') {
-            navigate(toPath(deepLinks.player));
+        const smartHref = profile?.settings?.smartPlay ? smartPlayDeepLink(deepLinks) : null;
+        const target = smartHref ?? (deepLinks && typeof deepLinks.player === 'string' ? deepLinks.player : null);
+        if (typeof target === 'string') {
+            navigate(toPath(target));
         }
-    }, [deepLinks, navigate, selectVideo]);
+    }, [deepLinks, navigate, selectVideo, profile?.settings?.smartPlay]);
     const playButtonOnKeyDown = React.useCallback((event) => {
         event.stopPropagation();
     }, []);

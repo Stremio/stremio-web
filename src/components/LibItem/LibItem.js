@@ -6,6 +6,8 @@ const { useNavigateWithOrigin } = require('stremio-router');
 const { default: toPath } = require('stremio-router/toPath');
 const PropTypes = require('prop-types');
 const { useCore } = require('stremio/core');
+const useProfile = require('stremio/common/useProfile');
+const { smartPlayDeepLink } = require('stremio/common/smartPlayHref');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const MetaItem = require('stremio/components/MetaItem');
 const { t } = require('i18next');
@@ -14,8 +16,10 @@ const LibItem = ({ _id, removable, notifications, watched, detailsVideosFirst, .
     const navigate = useNavigate();
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const core = useCore();
+    const profile = useProfile();
     const detailsHref = React.useMemo(() => getMetaDetailsHref(props.deepLinks, detailsVideosFirst), [props.deepLinks, detailsVideosFirst]);
-    const playerHref = props.deepLinks && typeof props.deepLinks.player === 'string' ? props.deepLinks.player : null;
+    const smartPlayerHref = profile?.settings?.smartPlay ? smartPlayDeepLink(props.deepLinks) : null;
+    const playerHref = smartPlayerHref ?? (props.deepLinks && typeof props.deepLinks.player === 'string' ? props.deepLinks.player : null);
 
     const newVideos = React.useMemo(() => {
         const count = notifications.items?.[_id]?.length ?? 0;

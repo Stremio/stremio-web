@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
-import { ColorInput, MultiselectMenu, Toggle } from 'stremio/components';
+import { useTranslation } from 'react-i18next';
+import { Button, ColorInput, MultiselectMenu, Toggle } from 'stremio/components';
 import { usePlatform } from 'stremio/common';
 import { Category, Option, Section } from '../components';
 import usePlayerOptions from './usePlayerOptions';
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
+    const { t } = useTranslation();
     const { shell } = usePlatform();
     const platform = usePlatform();
 
@@ -27,6 +29,10 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingToggle,
+        smartPlayToggle,
+        smartPlayHdrSelect,
+        ignoredStreams,
+        restoreIgnoredStream,
         playInBackgroundToggle,
         hardwareDecodingToggle,
         gpuVideoProcessingToggle,
@@ -128,7 +134,35 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         {...nextVideoPopupDurationSelect}
                     />
                 </Option>
+                <Option label={t('SETTINGS_SMART_PLAY', { defaultValue: 'Smart Play' })}>
+                    <Toggle
+                        tabIndex={-1}
+                        {...smartPlayToggle}
+                    />
+                </Option>
+                <Option label={t('SETTINGS_SMART_PLAY_HDR', { defaultValue: 'Smart Play HDR' })}>
+                    <MultiselectMenu
+                        className={'multiselect'}
+                        {...smartPlayHdrSelect}
+                    />
+                </Option>
             </Category>
+            {
+                ignoredStreams.length > 0 ?
+                    <Category icon={'settings'} label={t('PLAYER_IGNORED_SOURCES', { defaultValue: 'Ignored files' })}>
+                        {
+                            ignoredStreams.map((ignored) => (
+                                <Option key={ignored.key} label={ignored.label}>
+                                    <Button onClick={() => restoreIgnoredStream(ignored.key)}>
+                                        {t('PLAYER_RESTORE_SOURCE', { defaultValue: 'Restore' })}
+                                    </Button>
+                                </Option>
+                            ))
+                        }
+                    </Category>
+                    :
+                    null
+            }
             <Category icon={'glasses'} label={'SETTINGS_SECTION_ADVANCED'}>
                 <Option label={'SETTINGS_PLAY_IN_EXTERNAL_PLAYER'}>
                     <MultiselectMenu
