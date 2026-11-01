@@ -45,7 +45,7 @@ export const parseHdr = (text: string): boolean => {
 };
 
 export const parseEpisode = (text: string): ParsedEpisode | null => {
-    const standard = text.match(/\bS(\d{1,2})E(\d{1,3})\b/i);
+    const standard = text.match(/\bS(\d{1,2})[\s._-]*E(\d{1,3})\b/i);
     if (standard) {
         return {
             season: parseInt(standard[1], 10),
@@ -63,12 +63,12 @@ export const parseEpisode = (text: string): ParsedEpisode | null => {
 };
 
 export const parseSeason = (text: string): number | null => {
-    const season = text.match(/\bSeason\s*(\d{1,2})\b/i);
+    const season = text.match(/\b(?:Season|S)\s*(\d{1,2})\b/i);
     return season ? parseInt(season[1], 10) : null;
 };
 
 export const isSeasonPack = (text: string): boolean => {
-    return /\b(complete\s+series|complete\s+season|season\s+\d{1,2}\b(?!\s*episode)|E\d{1,3}\s*[-–]\s*E?\d{1,3})\b/i.test(text);
+    return /\b(complete\s+series|complete\s+season|season\s+\d{1,2}\b(?!\s*episode)|S\d{1,2}\b(?![\s._-]*E\d)|E\d{1,3}\s*[-–]\s*E?\d{1,3})\b/i.test(text);
 };
 
 export const parseRuntimeMinutes = (text: string): number => {
@@ -147,7 +147,16 @@ export const streamKey = (stream: Partial<Stream>, addonTransportUrl: string): s
     if (typeof stream.infoHash === 'string' && stream.infoHash.length > 0) {
         source = `torrent:${stream.infoHash}:${stream.fileIdx ?? ''}`;
     } else if (typeof stream.url === 'string' && stream.url.length > 0) {
-        source = `url:${stripQuery(stream.url)}`;
+        const identity = [
+            stream.name,
+            stream.description,
+            stream.behaviorHints?.filename,
+            stream.behaviorHints?.videoHash,
+            typeof stream.behaviorHints?.videoSize === 'number' ? `${stream.behaviorHints.videoSize}` : null,
+        ]
+            .filter((value): value is string => typeof value === 'string' && value.length > 0)
+            .join('|');
+        source = `url:${stripQuery(stream.url)}:${identity || fnv1a(stream.url)}`;
     } else {
         source = `text:${stream.name ?? ''}:${stream.description ?? ''}`;
     }

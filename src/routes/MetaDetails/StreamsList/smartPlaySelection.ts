@@ -70,6 +70,9 @@ const matchesRequestedContent = (
     const isMovie = options.type === 'movie' || options.metaItem?.type === 'movie';
 
     if (requestedIsEpisode) {
+        if (isSeasonPack(text)) {
+            return false;
+        }
         const parsedEpisode = parseEpisode(text);
         if (parsedEpisode && (parsedEpisode.season !== requestedSeason || parsedEpisode.episode !== requestedEpisode)) {
             return false;
