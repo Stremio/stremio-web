@@ -59,6 +59,13 @@ export const parseEpisode = (text: string): ParsedEpisode | null => {
             episode: parseInt(alternate[2], 10),
         };
     }
+    const separated = text.match(/\bS(\d{1,2})\s*[-–]\s*(\d{1,3})\b/i);
+    if (separated) {
+        return {
+            season: parseInt(separated[1], 10),
+            episode: parseInt(separated[2], 10),
+        };
+    }
     return null;
 };
 
@@ -68,7 +75,7 @@ export const parseSeason = (text: string): number | null => {
 };
 
 export const isSeasonPack = (text: string): boolean => {
-    return /\b(complete\s+series|complete\s+season|season\s+\d{1,2}\b(?!\s*episode)|S\d{1,2}\b(?![\s._-]*E\d)|E\d{1,3}\s*[-–]\s*E?\d{1,3})\b/i.test(text);
+    return /\b(complete\s+series|complete\s+season|season\s+\d{1,2}\b(?!\s*episode)|S\d{1,2}\b(?![\s._-]*(?:E\d|[-–]\s*\d))|E\d{1,3}\s*[-–]\s*E?\d{1,3})\b/i.test(text);
 };
 
 export const parseRuntimeMinutes = (text: string): number => {
@@ -131,8 +138,6 @@ export const parseQuality = (stream: Partial<Stream>): StreamQuality => {
     };
 };
 
-const stripQuery = (url: string): string => url.split('?')[0].split('#')[0];
-
 const fnv1a = (value: string): string => {
     let hash = 0x811c9dc5;
     for (let i = 0; i < value.length; i++) {
@@ -147,16 +152,7 @@ export const streamKey = (stream: Partial<Stream>, addonTransportUrl: string): s
     if (typeof stream.infoHash === 'string' && stream.infoHash.length > 0) {
         source = `torrent:${stream.infoHash}:${stream.fileIdx ?? ''}`;
     } else if (typeof stream.url === 'string' && stream.url.length > 0) {
-        const identity = [
-            stream.name,
-            stream.description,
-            stream.behaviorHints?.filename,
-            stream.behaviorHints?.videoHash,
-            typeof stream.behaviorHints?.videoSize === 'number' ? `${stream.behaviorHints.videoSize}` : null,
-        ]
-            .filter((value): value is string => typeof value === 'string' && value.length > 0)
-            .join('|');
-        source = `url:${stripQuery(stream.url)}:${identity || fnv1a(stream.url)}`;
+        source = `url:${stream.url}`;
     } else {
         source = `text:${stream.name ?? ''}:${stream.description ?? ''}`;
     }

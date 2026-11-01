@@ -159,6 +159,7 @@ const Player = () => {
     const cacheVideoId = type === 'movie' ? null : (videoId ?? null);
     const [bufferSpeed, setBufferSpeed] = React.useState(0);
     const bufferSampleRef = React.useRef(null);
+    const pendingIgnoreRef = React.useRef(null);
     React.useEffect(() => {
         bufferSampleRef.current = null;
         setBufferSpeed(0);
@@ -276,7 +277,7 @@ const Player = () => {
         updateSettings({ smartPlayHdrPreference: value });
     }, [updateSettings]);
     const onSmartPlayIgnoreCurrent = React.useCallback(() => {
-        if (!currentStreamKey || typeof id !== 'string') {
+        if (!currentStreamKey || typeof id !== 'string' || pendingIgnoreRef.current) {
             return;
         }
         const addonName = player.addon?.manifest?.name ?? streamTransportUrl ?? player.addon?.transportUrl ?? 'Source';
@@ -290,9 +291,35 @@ const Player = () => {
             metaId: id,
             videoId: type === 'movie' ? null : (videoId ?? null),
         });
+        pendingIgnoreRef.current = {
+            key,
+            targetHeight: currentHeight > 0 ? currentHeight : undefined,
+        };
         updateSettings({ ignoredStreams: next });
-        navigateToSmartPlay(currentHeight > 0 ? currentHeight : undefined, key, `${Date.now()}`);
-    }, [currentStreamKey, id, videoId, type, matchesIgnoredContext, player.addon, streamTransportUrl, settings.ignoredStreams, currentStream, updateSettings, navigateToSmartPlay, currentHeight]);
+        closeSmartPlayMenu();
+    }, [currentStreamKey, id, videoId, type, matchesIgnoredContext, player.addon, streamTransportUrl, settings.ignoredStreams, currentStream, updateSettings, closeSmartPlayMenu, currentHeight]);
+    React.useEffect(() => {
+        const pending = pendingIgnoreRef.current;
+        if (!pending) {
+            return;
+        }
+        const applied = (settings.ignoredStreams ?? []).some((ignored) => {
+            return ignored.key === pending.key && matchesIgnoredContext(ignored);
+        });
+        if (applied) {
+            pendingIgnoreRef.current = null;
+            navigateToSmartPlay(pending.targetHeight, pending.key, `${Date.now()}`);
+            return;
+        }
+        const timer = window.setTimeout(() => {
+            if (pendingIgnoreRef.current !== pending) {
+                return;
+            }
+            pendingIgnoreRef.current = null;
+            navigateToSmartPlay(pending.targetHeight, pending.key, `${Date.now()}`);
+        }, 1500);
+        return () => window.clearTimeout(timer);
+    }, [settings.ignoredStreams, matchesIgnoredContext, navigateToSmartPlay]);
     const onSmartPlayRestore = React.useCallback((key) => {
         const next = (settings.ignoredStreams ?? []).filter((ignored) => {
             return !(matchesIgnoredContext(ignored) && ignored.key === key);
