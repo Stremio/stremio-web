@@ -44,15 +44,15 @@ const ShellOpenHandler = () => {
         };
         const onOpenMedia = (input: string) => {
             try {
-                const { protocol, hostname, pathname, searchParams } = new URL(input);
+                const { protocol, host, pathname, search, searchParams } = new URL(input);
                 if (protocol === CONSTANTS.PROTOCOL) {
                     setPendingTorrent(null);
-                    if (hostname.length) {
-                        const transportUrl = `https://${hostname}${pathname}`;
+                    if (host.length) {
+                        const transportUrl = `https://${host}${pathname}${search}`;
                         navigate(`/addons?addon=${encodeURIComponent(transportUrl)}`);
                     } else {
-                        const search = searchParams.toString();
-                        const path = search ? `${pathname}?${search}` : pathname;
+                        const query = searchParams.toString();
+                        const path = query ? `${pathname}?${query}` : pathname;
                         navigateToRoute(navigate, locationRef.current, path);
                     }
                 } else if (protocol === 'magnet:') {
