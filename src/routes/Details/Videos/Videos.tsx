@@ -14,7 +14,7 @@ import { formatDate, getMinutesLeft } from '../format';
 import Search from './Search';
 import VideoRow from './Video';
 import useScrollMemory from './useScrollMemory';
-import useSeasons from './useSeasons';
+import useSeasons from 'stremio/common/useSeasons';
 import type { ScrollMemory } from './useScrollMemory';
 import styles from './Videos.less';
 

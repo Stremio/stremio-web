@@ -1,34 +1,28 @@
-// Copyright (C) 2017-2024 Smart code 203358507
+// Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) '~stremio/routes/Details/variables.less';
 
 :import('~stremio/components/MetaPreview/MetaPreview.less') {
     preview-description: description;
 }
 
-:import('~stremio/components/MultiselectMenu/Dropdown/Dropdown.less') {
-    dropdown: dropdown;
-    open: open;
-}
-
 @padding: 1rem;
 
 .side-drawer {
+    z-index: 1;
     display: flex;
     flex-direction: column;
+    width: @panel-width;
+    max-width: 100%;
+    height: var(--dynamic-viewport-height);
     padding: @padding;
     padding-top: calc(@padding + var(--safe-area-inset-top));
-    height: var(--dynamic-viewport-height);
-    max-width: 35rem;
-    overflow-y: auto;
-    position: relative;
-    border-top-left-radius: var(--border-radius);
-    border-bottom-left-radius: var(--border-radius);
-    background-color: var(--modal-background-color);
-    box-shadow: 0 1.35rem 2.7rem var(--color-background-dark5-40), 0 1.1rem 0.85rem var(--color-background-dark5-20);
-    backdrop-filter: blur(15px);
+    border-top-left-radius: @panel-radius;
+    border-bottom-left-radius: @panel-radius;
+    background-color: @panel-background;
+    backdrop-filter: blur(8px) saturate(1.2);
+    color: var(--primary-foreground-color);
     transition: transform 0.3s ease-in-out;
-    z-index: 1;
 
     .close-button {
         display: none;
@@ -61,36 +55,50 @@
     }
 
     .info {
-        padding: @padding;
+        flex: 0 1 auto;
         min-height: 0;
-        overflow-y: auto;
+        padding: @padding;
 
-        .side-drawer-meta-preview {
-            .preview-description {
-                display: -webkit-box;
-                -webkit-line-clamp: 4;
-                -webkit-box-orient: vertical;
-            }
+        .preview-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
         }
     }
 
-    .series-content {
-        flex: 2;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
+    .seasons {
+        margin: 0.5rem @padding @padding;
+    }
 
-        .videos {
-            flex: 1;
-            min-height: 0;
-            overflow-y: auto;
+    .videos {
+        flex: 2;
+        min-height: 0;
+        padding-bottom: 2rem;
+        overflow-y: auto;
+        scrollbar-width: none;
+        mask-image: linear-gradient(180deg, transparent, #000000 0.75rem, #000000 calc(100% - 3rem), transparent);
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+@media @desktop {
+    .side-drawer {
+        height: calc(var(--dynamic-viewport-height) - @panel-gap * 2);
+        margin: @panel-gap @panel-gap @panel-gap 0;
+        border-radius: @panel-radius;
+
+        &:global(.slide-left-enter):not(:global(.slide-left-active)), &:global(.slide-left-exit) {
+            transform: translateX(calc(100% + @panel-gap));
         }
     }
 }
 
 @media @phone-portrait {
     .side-drawer {
-        max-width: var(--dynamic-viewport-width);
+        width: var(--dynamic-viewport-width);
 
         .close-button {
             display: block;
@@ -100,14 +108,13 @@
 
 @media @phone-landscape {
     .side-drawer {
-        max-width: calc(var(--dynamic-viewport-width) / 2);
+        width: calc(var(--dynamic-viewport-width) / 2);
+        height: var(--dynamic-viewport-height);
+        margin: 0;
+        border-radius: @panel-radius 0 0 @panel-radius;
 
         .info {
             max-height: calc(var(--dynamic-viewport-height) * 0.4);
-        }
-
-        .dropdown.open {
-            max-height: calc(3rem * 4);
         }
     }
 }

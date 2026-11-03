@@ -1,13 +1,15 @@
-// Copyright (C) 2017-2024 Smart code 203358507
+// Copyright (C) 2017-2026 Smart code 203358507
 
 import React, { useMemo, useCallback, useState, useRef, forwardRef, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
 import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, getNonEmptyString, useEpgNow } from 'stremio/common/EPG';
+import useSeasons from 'stremio/common/useSeasons';
 import { MetaPreview, Video } from 'stremio/components';
-import SeasonsBar from './SeasonsBar';
+import SegmentedControl from 'stremio/components/SegmentedControl';
 import styles from './SideDrawer.less';
 
 type Props = {
@@ -20,8 +22,9 @@ type Props = {
 };
 
 const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, isEpg, ...props }: Props, ref) => {
+    const { t } = useTranslation();
     const core = useCore();
-    const [season, setSeason] = useState<number>(seriesInfo?.season);
+    const [season, setSeason] = useState<number | null>(seriesInfo?.season ?? null);
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
     const videosRef = useRef<HTMLDivElement>(null);
 
@@ -40,13 +43,11 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     }, [metaItem.videos]);
 
     const now = useEpgNow(isEpg);
+    const { selectedSeason, videos: seasonVideos, options } = useSeasons(allVideos, season, null);
 
     const videos = useMemo(() => {
-        if (isEpg) {
-            return filterVisibleEpgPrograms(allVideos, now);
-        }
-        return allVideos.filter((video) => video.season === season);
-    }, [allVideos, season, isEpg, now]);
+        return isEpg ? filterVisibleEpgPrograms(allVideos, now) : seasonVideos;
+    }, [allVideos, isEpg, now, seasonVideos]);
 
     const previewVideo = useMemo(() => {
         if (!isEpg) {
@@ -64,17 +65,8 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     const isEpgVideo = previewVideo !== null;
     const released = getEpgValue(isEpgVideo, previewVideo, metaItem, 'released');
 
-    const seasons = useMemo(() => {
-        return allVideos
-            .map(({ season }) => season)
-            .filter((season, index, seasons) => {
-                return seasons.indexOf(season) === index;
-            })
-            .sort((a, b) => (a || Number.MAX_SAFE_INTEGER) - (b || Number.MAX_SAFE_INTEGER));
-    }, [allVideos]);
-
-    const seasonOnSelect = useCallback((event: { value: string | number }) => {
-        setSeason(parseInt(String(event.value), 10));
+    const seasonOnSelect = useCallback((value: string) => {
+        setSeason(parseInt(value, 10));
         videosRef.current?.scrollTo({ top: 0, left: 0 });
     }, []);
 
@@ -118,70 +110,67 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
             <div className={styles['close-button']} onClick={closeSideDrawer}>
                 <Icon className={styles['icon']} name={'chevron-forward'} />
             </div>
-            <div className={styles['info']}>
-                <MetaPreview
-                    className={styles['side-drawer-meta-preview']}
-                    name={getNonEmptyString(getEpgTitle(isEpgVideo, previewVideo, metaItem)) ?? metaItem.name}
-                    logo={metaItem.logo}
-                    runtime={getNonEmptyString(getEpgValue(isEpgVideo, previewVideo, metaItem, 'runtime'))}
-                    releaseInfo={getNonEmptyString(getEpgValue(isEpgVideo, previewVideo, metaItem, 'releaseInfo'))}
-                    released={released instanceof Date || typeof released === 'string' ? released : null}
-                    description={getNonEmptyString(getEpgDescription(isEpgVideo, previewVideo, metaItem))}
-                    links={metaItem.links}
-                />
-            </div>
+            <MetaPreview
+                className={styles['info']}
+                name={getNonEmptyString(getEpgTitle(isEpgVideo, previewVideo, metaItem)) ?? metaItem.name}
+                logo={metaItem.logo}
+                runtime={getNonEmptyString(getEpgValue(isEpgVideo, previewVideo, metaItem, 'runtime'))}
+                releaseInfo={getNonEmptyString(getEpgValue(isEpgVideo, previewVideo, metaItem, 'releaseInfo'))}
+                released={released instanceof Date || typeof released === 'string' ? released : null}
+                description={getNonEmptyString(getEpgDescription(isEpgVideo, previewVideo, metaItem))}
+                links={metaItem.links}
+            />
+            {
+                seriesInfo && !isEpg && options.length > 1 ?
+                    <SegmentedControl
+                        className={styles['seasons']}
+                        options={options}
+                        value={selectedSeason !== null ? String(selectedSeason) : null}
+                        ariaLabel={t('SEASON')}
+                        onSelect={seasonOnSelect}
+                    />
+                    :
+                    null
+            }
             {
                 shouldRenderVideos ?
-                    <div className={styles['series-content']}>
-                        {
-                            seriesInfo && !isEpg ?
-                                <SeasonsBar
-                                    season={season}
-                                    seasons={seasons}
-                                    onSelect={seasonOnSelect}
-                                />
+                    <div ref={videosRef} className={styles['videos']}>
+                        {videos.map((video, index) => {
+                            const range = isEpg ? getEpgTimeRange(video) : null;
+                            const progress = isEpg ? getEpgProgress(video, now) : video.progress;
+                            const isNow = isEpg && progress !== null;
+                            const upcoming = isEpg ?
+                                range !== null && range.startTime > now
                                 :
-                                null
-                        }
+                                video.upcoming;
 
-                        <div ref={videosRef} className={styles['videos']}>
-                            {videos.map((video, index) => {
-                                const range = isEpg ? getEpgTimeRange(video) : null;
-                                const progress = isEpg ? getEpgProgress(video, now) : video.progress;
-                                const isNow = isEpg && progress !== null;
-                                const upcoming = isEpg ?
-                                    range !== null && range.startTime > now
-                                    :
-                                    video.upcoming;
-
-                                return (
-                                    <Video
-                                        key={index}
-                                        className={styles['video']}
-                                        id={video.id}
-                                        title={video.title}
-                                        thumbnail={video.thumbnail}
-                                        season={video.season}
-                                        episode={video.episode}
-                                        released={video.released}
-                                        upcoming={upcoming}
-                                        watched={video.watched}
-                                        seasonWatched={seasonWatched}
-                                        progress={progress}
-                                        deepLinks={isEpg ? undefined : video.deepLinks}
-                                        scheduled={video.scheduled}
-                                        selected={video.id === selectedId}
-                                        isEpg={isEpg}
-                                        isNow={isNow}
-                                        startTime={video.startTime}
-                                        endTime={video.endTime}
-                                        onSelect={isEpg ? () => setSelectedVideoId(video.id) : undefined}
-                                        onMarkVideoAsWatched={onMarkVideoAsWatched}
-                                        onMarkSeasonAsWatched={onMarkSeasonAsWatched}
-                                    />
-                                );
-                            })}
-                        </div>
+                            return (
+                                <Video
+                                    key={index}
+                                    className={styles['video']}
+                                    id={video.id}
+                                    title={video.title}
+                                    thumbnail={video.thumbnail}
+                                    season={video.season}
+                                    episode={video.episode}
+                                    released={video.released}
+                                    upcoming={upcoming}
+                                    watched={video.watched}
+                                    seasonWatched={seasonWatched}
+                                    progress={progress}
+                                    deepLinks={isEpg ? undefined : video.deepLinks}
+                                    scheduled={video.scheduled}
+                                    selected={video.id === selectedId}
+                                    isEpg={isEpg}
+                                    isNow={isNow}
+                                    startTime={video.startTime}
+                                    endTime={video.endTime}
+                                    onSelect={isEpg ? () => setSelectedVideoId(video.id) : undefined}
+                                    onMarkVideoAsWatched={onMarkVideoAsWatched}
+                                    onMarkSeasonAsWatched={onMarkSeasonAsWatched}
+                                />
+                            );
+                        })}
                     </div>
                     :
                     null
