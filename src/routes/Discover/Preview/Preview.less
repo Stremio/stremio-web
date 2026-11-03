@@ -1,0 +1,88 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/routes/Details/variables.less';
+
+.preview {
+    position: relative;
+    isolation: isolate;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    width: 29rem;
+    margin: 1rem @panel-gap @panel-gap 0;
+    border-radius: @panel-radius;
+    background-color: @panel-background;
+    backdrop-filter: blur(8px) saturate(1.2);
+    color: var(--primary-foreground-color);
+
+    .art {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+
+        .image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.3;
+            filter: blur(8px);
+            transform: scale(1.05);
+        }
+    }
+
+    .body {
+        flex: 1;
+        min-height: 0;
+        padding: 2rem 2.5rem 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .logo, .name {
+        display: block;
+        width: 100%;
+        height: 6rem;
+        margin-bottom: 2rem;
+    }
+
+    .logo {
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .name {
+        font-size: 1.7rem;
+        line-height: 1.2;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .facts {
+        margin: 1rem 0;
+    }
+
+    .description {
+        margin-top: 1rem;
+        font-size: 1rem;
+        line-height: 2;
+        font-weight: 400;
+    }
+
+    .links {
+        margin-top: 1.5rem;
+    }
+
+    .actions {
+        padding: 3.5rem 2.5rem 2rem;
+    }
+}

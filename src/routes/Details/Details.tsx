@@ -18,7 +18,7 @@ import useExternalPlayerCallback from './useExternalPlayerCallback';
 import useDetailsActions from './useDetailsActions';
 import usePrimaryAction from './usePrimaryAction';
 import useHeroCollapse from './useHeroCollapse';
-import useMetaLinks from './Hero/useMetaLinks';
+import useMetaLinks from 'stremio/common/useMetaLinks';
 import Background from './Background';
 import HeroArt from './HeroArt';
 import Hero from './Hero';

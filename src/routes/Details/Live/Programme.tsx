@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
 import { parseDate } from '../format';
 import Links from '../Hero/Links';
-import useMetaLinks from '../Hero/useMetaLinks';
+import useMetaLinks from 'stremio/common/useMetaLinks';
 import Rating from './Rating';
 import useFormatters from './Guide/useFormatters';
 import getRelativeTime from './getRelativeTime';

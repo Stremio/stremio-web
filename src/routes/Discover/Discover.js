@@ -19,6 +19,7 @@ const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: FiltersSheet } = require('./FiltersSheet');
+const { default: Preview } = require('./Preview');
 const { default: Guide } = require('./Guide');
 const { default: DaySelector } = require('./Guide/DaySelector');
 const { default: useLiveTvGuide } = require('./useLiveTvGuide');
@@ -68,7 +69,6 @@ const Discover = () => {
     }, [discover.catalog, selectedMetaItemIndex]);
 
     const metasContainerRef = React.useRef();
-    const metaPreviewRef = React.useRef();
     const previousCatalogSizeRef = React.useRef(0);
 
     const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
@@ -172,8 +172,7 @@ const Discover = () => {
             return;
         }
 
-        const visible = metaPreviewRef.current && window.getComputedStyle(metaPreviewRef.current).display !== 'none';
-        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString() && visible) {
+        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString()) {
             event.preventDefault();
             event.currentTarget.focus();
         }
@@ -258,6 +257,7 @@ const Discover = () => {
         );
     };
 
+    const toggleInLibrary = selectedMetaItem?.inLibrary ? removeFromLibrary : addToLibrary;
     const metaPreviewProps = selectedMetaItem && {
         compact: true,
         name: selectedMetaItem.name,
@@ -269,7 +269,7 @@ const Discover = () => {
         deepLinks: selectedMetaItem.deepLinks,
         trailerStreams: selectedMetaItem.trailerStreams,
         inLibrary: selectedMetaItem.inLibrary,
-        toggleInLibrary: selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary,
+        toggleInLibrary,
         watched: selectedMetaItem.watched,
         toggleWatched,
         metaId: selectedMetaItem.id,
@@ -277,20 +277,12 @@ const Discover = () => {
     };
 
     const renderMetaPreview = () => {
-        if (isEpgLayout) {
+        if (isEpgLayout || isMobile) {
             return null;
         }
 
-        if (selectedMetaItem !== null) {
-            return <MetaPreview
-                {...metaPreviewProps}
-                className={styles['meta-preview-container']}
-                ref={metaPreviewRef}
-                background={selectedMetaItem.poster}
-                links={selectedMetaItem.links}
-            />;
-        } else if (discover.catalog !== null && discover.catalog.content.type === 'Loading') {
-            return <div className={styles['meta-preview-container']} />;
+        if (selectedMetaItem !== null || discover.catalog?.content.type === 'Loading') {
+            return <Preview metaItem={selectedMetaItem} onToggleLibrary={toggleInLibrary} onToggleWatched={toggleWatched} />;
         }
 
         return null;
