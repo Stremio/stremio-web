@@ -38,6 +38,15 @@ const Settings = () => {
 
     const [selectedSectionId, setSelectedSectionId] = useState(SECTIONS.GENERAL);
 
+    const getSectionTop = useCallback((section: typeof sections[number]) => {
+        const container = sectionsContainerRef.current;
+        if (!container || !section.ref.current) return 0;
+
+        const containerRect = container.getBoundingClientRect();
+        const sectionRect = section.ref.current.getBoundingClientRect();
+        return sectionRect.top - containerRect.top + container.scrollTop;
+    }, []);
+
     const updateSelectedSectionId = useCallback(() => {
         const container = sectionsContainerRef.current;
         if (!container) return;
@@ -45,7 +54,7 @@ const Settings = () => {
         const availableSections = sections.filter((section) => section.ref.current);
         if (!availableSections.length) return;
 
-        const { scrollTop, clientHeight, scrollHeight, offsetTop } = container;
+        const { scrollTop, clientHeight, scrollHeight } = container;
         const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
 
         if (isAtBottom) {
@@ -55,12 +64,12 @@ const Settings = () => {
 
         const marker = scrollTop + 50;
         const activeSection = availableSections.reduce((current, section) => {
-            const sectionTop = section.ref.current!.offsetTop + offsetTop;
+            const sectionTop = getSectionTop(section);
             return sectionTop <= marker ? section : current;
         }, availableSections[0]);
 
         setSelectedSectionId(activeSection.id);
-    }, [sections]);
+    }, [sections, getSectionTop]);
 
     const onMenuSelect = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         const section = sections.find((section) => {
@@ -69,10 +78,10 @@ const Settings = () => {
 
         const container = sectionsContainerRef.current;
         section && container?.scrollTo({
-            top: section.ref.current!.offsetTop - container!.offsetTop,
+            top: getSectionTop(section),
             behavior: 'smooth'
         });
-    }, [sections]);
+    }, [sections, getSectionTop]);
 
     const onContainerScroll = useCallback(throttle(() => {
         updateSelectedSectionId();
@@ -82,7 +91,7 @@ const Settings = () => {
         if (routeFocused) {
             updateSelectedSectionId();
         }
-    }, [routeFocused]);
+    }, [routeFocused, updateSelectedSectionId]);
 
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>

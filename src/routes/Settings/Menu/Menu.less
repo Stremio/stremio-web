@@ -4,21 +4,30 @@
     flex: none;
     align-self: stretch;
     display: flex;
-    flex-direction: column;
-    width: 18rem;
-    padding: 3rem 1.5rem;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 1.5rem 3rem;
+
+    .nav {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
 
     .button {
         flex: none;
-        align-self: stretch;
+        align-self: center;
         display: flex;
         align-items: center;
         height: 4rem;
         border-radius: 4rem;
         padding: 2rem;
-        margin-bottom: 0.5rem;
+        margin-right: 0.5rem;
         font-size: 1.1rem;
         font-weight: 500;
+        white-space: nowrap;
         color: var(--primary-foreground-color);
         opacity: 0.4;
 
@@ -38,9 +47,20 @@
         flex: 1;
     }
 
+    .version-info {
+        position: absolute;
+        right: 3rem;
+        bottom: 1.5rem;
+        z-index: 1;
+        max-width: calc(100% - 6rem);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
     .version-info-label {
         flex: 0 1 auto;
-        margin: 0.5rem 0;
+        margin: 0.15rem 0;
         white-space: nowrap;
         text-overflow: ellipsis;
         opacity: 0.3;
