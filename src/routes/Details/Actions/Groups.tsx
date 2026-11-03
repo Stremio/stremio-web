@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import useRating from 'stremio/components/MetaPreview/Ratings/useRating';
+import useRating from 'stremio/common/useRating';
 import ToggleButton from 'stremio/components/ToggleButton';
 import RateButton from './RateButton';
 

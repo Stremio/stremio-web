@@ -2,9 +2,8 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/MetaPreview/styles.less') {
-    description-container: description-container;
-    action-buttons-container: action-buttons-container;
+:import('~stremio/components/MetaPreview/MetaPreview.less') {
+    preview-description: description;
 }
 
 :import('~stremio/components/MultiselectMenu/Dropdown/Dropdown.less') {
@@ -67,15 +66,10 @@
         overflow-y: auto;
 
         .side-drawer-meta-preview {
-            .description-container {
+            .preview-description {
                 display: -webkit-box;
                 -webkit-line-clamp: 4;
                 -webkit-box-orient: vertical;
-            }
-
-            .action-buttons-container {
-                padding-top: 0;
-                margin-top: 0;
             }
         }
     }

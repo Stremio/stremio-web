@@ -6,17 +6,13 @@
     modal-body: body-container;
 }
 
-:import('~stremio/components/MetaPreview/styles.less') {
-    preview-background: background-image;
+:import('~stremio/components/MetaPreview/MetaPreview.less') {
+    preview-art: image;
 }
 
 .preview {
     .genres {
         margin-top: 1.5rem;
-    }
-
-    .channel-button {
-        height: 4rem;
     }
 }
 
@@ -25,9 +21,8 @@
         padding: 2rem;
         max-height: inherit;
         min-height: 0;
-        color: var(--primary-foreground-color);
 
-        .preview-background {
+        .preview-art {
             filter: blur(1px);
         }
     }

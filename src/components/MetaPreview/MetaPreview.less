@@ -1,18 +1,12 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) '~stremio/routes/Details/variables.less';
+@import (reference) './variables.less';
 
-.preview {
+.meta-preview {
     position: relative;
-    isolation: isolate;
-    flex: none;
+    z-index: 0;
     display: flex;
     flex-direction: column;
-    width: 29rem;
-    margin: 1rem @panel-gap @panel-gap 0;
-    border-radius: @panel-radius;
-    background-color: @panel-background;
-    backdrop-filter: blur(8px) saturate(1.2);
     color: var(--primary-foreground-color);
 
     .art {
@@ -38,7 +32,6 @@
     .body {
         flex: 1;
         min-height: 0;
-        padding: 2rem 2.5rem 0;
         overflow-y: auto;
         overscroll-behavior: contain;
         scrollbar-width: none;
@@ -83,6 +76,38 @@
     }
 
     .actions {
-        padding: 3.5rem 2.5rem 2rem;
+        flex: none;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-top: 3.5rem;
+        overflow: visible;
+    }
+}
+
+@media @phone-landscape {
+    .meta-preview {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 2rem;
+
+        .body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .logo, .name {
+            height: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .actions {
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding-top: 0;
+        }
     }
 }

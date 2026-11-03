@@ -19,7 +19,6 @@ const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: FiltersSheet } = require('./FiltersSheet');
-const { default: Preview } = require('./Preview');
 const { default: Guide } = require('./Guide');
 const { default: DaySelector } = require('./Guide/DaySelector');
 const { default: useLiveTvGuide } = require('./useLiveTvGuide');
@@ -257,23 +256,19 @@ const Discover = () => {
         );
     };
 
-    const toggleInLibrary = selectedMetaItem?.inLibrary ? removeFromLibrary : addToLibrary;
+    const showHref = selectedMetaItem?.deepLinks.player ?? selectedMetaItem?.deepLinks.metaDetailsStreams ?? selectedMetaItem?.deepLinks.metaDetailsVideos ?? null;
     const metaPreviewProps = selectedMetaItem && {
-        compact: true,
         name: selectedMetaItem.name,
         logo: selectedMetaItem.logo,
         runtime: selectedMetaItem.runtime,
         releaseInfo: selectedMetaItem.releaseInfo,
         released: selectedMetaItem.released,
         description: selectedMetaItem.description,
-        deepLinks: selectedMetaItem.deepLinks,
-        trailerStreams: selectedMetaItem.trailerStreams,
+        trailerHref: selectedMetaItem.trailerStreams[0]?.deepLinks.player ?? null,
         inLibrary: selectedMetaItem.inLibrary,
-        toggleInLibrary,
+        onToggleLibrary: selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary,
         watched: selectedMetaItem.watched,
-        toggleWatched,
-        metaId: selectedMetaItem.id,
-        like: selectedMetaItem.like,
+        onToggleWatched: toggleWatched,
     };
 
     const renderMetaPreview = () => {
@@ -281,8 +276,18 @@ const Discover = () => {
             return null;
         }
 
-        if (selectedMetaItem !== null || discover.catalog?.content.type === 'Loading') {
-            return <Preview metaItem={selectedMetaItem} onToggleLibrary={toggleInLibrary} onToggleWatched={toggleWatched} />;
+        if (selectedMetaItem !== null) {
+            return (
+                <MetaPreview
+                    {...metaPreviewProps}
+                    className={styles['preview']}
+                    background={selectedMetaItem.poster}
+                    links={selectedMetaItem.links}
+                    show={showHref !== null ? { href: showHref } : null}
+                />
+            );
+        } else if (discover.catalog?.content.type === 'Loading') {
+            return <div className={styles['preview']} />;
         }
 
         return null;
@@ -414,8 +419,7 @@ const Discover = () => {
                             {...metaPreviewProps}
                             background={selectedMetaItem.background || selectedMetaItem.poster}
                             links={selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
-                            onShowClick={onMobileShowClick}
-                            showIcon={'chevron-forward'}
+                            show={showHref !== null ? { href: showHref, icon: 'chevron-forward', onClick: onMobileShowClick } : null}
                         />
                     </MetaPreviewSheet>
                     :

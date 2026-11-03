@@ -5,21 +5,16 @@
     sheet-content: content;
 }
 
-:import('~stremio/components/MetaPreview/styles.less') {
-    preview: meta-preview-container;
-    preview-compact: compact;
-    preview-info: meta-info-container;
+:import('~stremio/components/MetaPreview/MetaPreview.less') {
+    preview: meta-preview;
+    preview-body: body;
     preview-logo: logo;
-    preview-logo-placeholder: logo-placeholder;
-    preview-runtime: runtime-release-info-container;
-    preview-runtime-label: runtime-label;
-    preview-release-label: release-info-label;
-    preview-description: description-container;
-    preview-links: meta-links;
-    preview-actions: action-buttons-container;
-    preview-action: action-button;
-    preview-group: group-container;
-    preview-background: background-image;
+    preview-name: name;
+    preview-facts: facts;
+    preview-description: description;
+    preview-links: links;
+    preview-actions: actions;
+    preview-art: image;
 }
 
 .sheet .preview {
@@ -30,17 +25,14 @@
 }
 
 .sheet {
-    .preview .preview-background {
+    .preview .preview-art {
         filter: blur(1px);
     }
 
-    .preview .preview-info .preview-runtime {
+    .preview .preview-facts {
         justify-content: flex-start;
-
-        .preview-runtime-label,
-        .preview-release-label {
-            margin: 0;
-        }
+        gap: 0;
+        padding: 0;
 
         > :not(:first-child) {
             position: relative;
@@ -67,53 +59,39 @@
             padding-top: 2.25rem;
             padding-bottom: calc(1rem + var(--safe-area-inset-bottom));
 
-            .preview-info {
+            .preview-body {
                 min-height: 0;
+            }
 
-                .preview-logo {
-                    width: auto;
-                    height: 3.5rem;
-                    max-width: min(18rem, 70vw);
-                    margin: 0 0 1rem;
-                    object-position: left center;
-                }
+            .preview-logo {
+                width: auto;
+                height: 3.5rem;
+                max-width: min(18rem, 70vw);
+                margin: 0 0 1rem;
+                object-position: left center;
+            }
 
-                .preview-logo-placeholder {
-                    height: 3.5rem;
-                    margin: 0 0 1rem;
-                }
+            .preview-name {
+                height: 3.5rem;
+                margin: 0 0 1rem;
+            }
 
-                .preview-runtime {
-                    margin-top: 0;
-                }
+            .preview-facts {
+                margin-top: 0;
+            }
 
-                .preview-description {
-                    margin-top: 1rem;
-                    line-height: 1.6;
-                }
+            .preview-description {
+                margin-top: 1rem;
+                line-height: 1.6;
+            }
 
-                .preview-links {
-                    margin-top: 1.25rem;
-                }
+            .preview-links {
+                margin-top: 1.25rem;
             }
 
             .preview-actions {
-                margin-top: 0;
                 padding-top: 0.5rem;
-
-                .preview-action,
-                .preview-group {
-                    margin-bottom: 0;
-                }
             }
-        }
-
-        .preview.preview-compact .preview-info .preview-logo {
-            width: auto;
-            height: 3.5rem;
-            max-width: min(18rem, 70vw);
-            margin: 0 0 1rem;
-            object-position: left center;
         }
     }
 }
@@ -123,7 +101,7 @@
         height: auto;
         padding: 1.5rem;
 
-        .preview-info .preview-logo {
+        .preview-logo {
             object-position: left center;
         }
     }
