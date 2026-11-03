@@ -15,7 +15,7 @@ const WebUpdateScreen = () => {
     const promptVisible =
         !dismissed &&
         isPlayer === null &&
-        (state.status === 'ready' || state.status === 'reload-ready' || state.status === 'failed');
+        (state.status === 'ready' || state.status === 'reload-ready');
 
     useEffect(() => {
         if (autoApply && isPlayer === null) {
@@ -33,7 +33,7 @@ const WebUpdateScreen = () => {
             >
                 <img
                     className={styles['logo']}
-                    src={require('/assets/images/stremio_symbol.png')}
+                    src={require('/assets/images/stremio_symbol.png?inline')}
                     alt={''}
                 />
                 <div className={styles['title']}>
@@ -51,7 +51,7 @@ const WebUpdateScreen = () => {
             className={styles['web-update-banner']}
             visible={promptVisible}
             label={t('UPDATER_TITLE')}
-            actionLabel={state.status === 'failed' ? t('TRY_AGAIN') : t('RELOAD_UI')}
+            actionLabel={t('RELOAD_UI')}
             closeLabel={t('BUTTON_CLOSE')}
             onAction={applyUpdate}
             onClose={dismissUpdate}

@@ -8,7 +8,7 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { default: Image } = require('stremio/components/Image');
 const styles = require('./styles');
 
-const AddonDetails = ({ className, id, name, version, logo, description, types, transportUrl, official }) => {
+const AddonDetails = ({ className, id, name, version, logo, description, types, transportUrl, official, receivesWatchActivity }) => {
     const { t } = useTranslation();
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} name={'addons'} />
@@ -66,6 +66,15 @@ const AddonDetails = ({ className, id, name, version, logo, description, types, 
                     null
             }
             {
+                receivesWatchActivity ?
+                    <div className={classnames(styles['section-container'], styles['watch-activity-container'])}>
+                        <Icon className={styles['watch-activity-icon']} name={'eye'} />
+                        <div className={styles['section-label']}>{t('ADDON_WATCH_ACTIVITY_WARNING')}</div>
+                    </div>
+                    :
+                    null
+            }
+            {
                 !official ?
                     <div className={styles['section-container']}>
                         <div className={classnames(styles['section-label'], styles['disclaimer-label'])}>{t('ADDON_DISCLAIMER')}</div>
@@ -87,6 +96,7 @@ AddonDetails.propTypes = {
     types: PropTypes.arrayOf(PropTypes.string),
     transportUrl: PropTypes.string,
     official: PropTypes.bool,
+    receivesWatchActivity: PropTypes.bool,
 };
 
 module.exports = AddonDetails;

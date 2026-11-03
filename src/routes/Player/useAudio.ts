@@ -15,7 +15,6 @@ type Args = {
     },
     settings: Settings,
     streamStateChanged: (state: Partial<StreamState>) => void,
-    audioPreferenceChanged: (preference: AudioPreference) => void,
 };
 
 const normalizeLanguage = (language?: string | null) => {
@@ -31,10 +30,9 @@ const findPreferredTrack = (
     tracks: AudioTrack[],
     selectedId: string | null,
     savedTrack: AudioTrackState | undefined,
-    preference: AudioPreference | null,
     globalLanguage: string | null,
 ) => {
-    const preferredLanguage = normalizeLanguage(preference?.language) ?? normalizeLanguage(savedTrack?.language);
+    const preferredLanguage = normalizeLanguage(savedTrack?.language);
     const saved = tracks.find((track) => track.id === savedTrack?.id);
 
     if (saved && (!preferredLanguage || normalizeLanguage(saved.lang) === preferredLanguage)) {
@@ -60,7 +58,7 @@ const findPreferredTrack = (
     return undefined;
 };
 
-const useAudio = ({ player, video, settings, streamStateChanged, audioPreferenceChanged }: Args) => {
+const useAudio = ({ player, video, settings, streamStateChanged }: Args) => {
     const videoRef = useRef(video);
     const trackSelectionLocked = useRef(false);
     const appliedTrack = useRef<string | null>(null);
@@ -79,8 +77,7 @@ const useAudio = ({ player, video, settings, streamStateChanged, audioPreference
         appliedTrack.current = id;
         currentVideo.setAudioTrack(id);
         streamStateChanged({ audioTrack: { id, ...(language ? { language } : {}) } });
-        audioPreferenceChanged(language ? { language } : {});
-    }, [streamStateChanged, audioPreferenceChanged]);
+    }, [streamStateChanged]);
 
     useEffect(() => {
         trackSelectionLocked.current = false;
@@ -96,7 +93,6 @@ const useAudio = ({ player, video, settings, streamStateChanged, audioPreference
             video.state.audioTracks,
             video.state.selectedAudioTrackId,
             player.streamState?.audioTrack,
-            player.audioPreference,
             settings.audioLanguage,
         );
         if (!track) {
@@ -111,7 +107,6 @@ const useAudio = ({ player, video, settings, streamStateChanged, audioPreference
         videoRef.current.setAudioTrack(track.id);
         appliedTrack.current = track.id;
     }, [
-        player.audioPreference,
         player.streamState,
         settings.audioLanguage,
         video.state.audioTracks,

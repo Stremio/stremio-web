@@ -52,14 +52,19 @@ const StatisticsMenu = React.memo(React.forwardRef(({ className, peers, speed, c
                         {`${speed} ${t('MB_S')}`}
                     </div>
                 </div>
-                <div className={styles['stat']}>
-                    <div className={styles['label']}>
-                        {t('PLAYER_COMPLETED')}
-                    </div>
-                    <div className={styles['value']}>
-                        { Math.min(completed, 100) } %
-                    </div>
-                </div>
+                {
+                    completed !== null ?
+                        <div className={styles['stat']}>
+                            <div className={styles['label']}>
+                                {t('PLAYER_COMPLETED')}
+                            </div>
+                            <div className={styles['value']}>
+                                { Math.min(completed, 100) } %
+                            </div>
+                        </div>
+                        :
+                        null
+                }
             </div>
             <div className={styles['detail']}>
                 <div className={styles['label']}>

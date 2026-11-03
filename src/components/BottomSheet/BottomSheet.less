@@ -1,7 +1,5 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
-
 @animation-duration-ms: 250;
 
 :export {
@@ -32,8 +30,6 @@
         right: 0;
         width: 100%;
         height: 100%;
-        padding: 0;
-        border: 0;
         background-color: var(--primary-background-color);
         opacity: 0;
         transition: opacity (@animation-duration-ms * 1ms) ease-out;
@@ -56,7 +52,6 @@
         padding-bottom: 1rem;
         border-radius: 2rem 2rem 0 0;
         background-color: var(--modal-background-color);
-        overflow: hidden;
         pointer-events: auto;
 
         &:not(.flush) {
@@ -113,7 +108,6 @@
                 padding-left: 1.5rem;
                 font-size: 1.25rem;
                 font-weight: 600;
-                color: var(--primary-foreground-color);
             }
         }
 
@@ -126,18 +120,6 @@
             touch-action: pan-y;
             border-radius: 2rem 2rem 0 0;
         }
-    }
-}
-
-@media only screen and (min-width: @small) and (orientation: portrait) {
-    .bottom-sheet {
-        display: none;
-    }
-}
-
-@media only screen and (min-width: @xsmall) and (orientation: landscape) {
-    .bottom-sheet {
-        display: none;
     }
 }
 

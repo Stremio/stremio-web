@@ -46,7 +46,7 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
         if (typeof channelId === 'string') {
             core.transport.dispatch({
                 action: 'Ctx',
-                args: { action: 'RemoveFromLibrary', args: channelId },
+                args: { action: 'RewindLibraryItem', args: channelId },
             });
             core.transport.dispatch({
                 action: 'Ctx',
@@ -78,6 +78,7 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
         <LibItem
             className={classNames(className, styles['live-item'], { [styles['channel-card']]: !hasProgram })}
             _id={channel?.id}
+            removable={true}
             type={channel?.type}
             name={name}
             poster={poster}

@@ -3,14 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-    multiselect-modal-container: modal-container;
-    multiselect-option-container: option-container;
-    multiselect-icon: icon;
-    multiselect-label: label;
-}
-
 :import('~stremio/components/MultiselectMenu/Label/Label.less') {
     multiselect-button: button;
 }
@@ -25,9 +17,6 @@
 }
 
 .discover-container {
-    height: calc(100% - var(--safe-area-inset-bottom));
-    background-color: transparent;
-
     .discover-content {
         width: 100%;
         height: 100%;
@@ -78,10 +67,6 @@
                             }
                         }
                     }
-
-                    .multiselect-menu-container {
-                        overflow: auto;
-                    }
                 }
 
                 .filter-container {
@@ -104,7 +89,6 @@
                             flex: none;
                             width: 1.4rem;
                             height: 1.4rem;
-                            color: var(--primary-foreground-color);
                         }
                     }
                 }
@@ -228,6 +212,7 @@
             width: 29rem;
             padding: 2rem 2.5rem;
             border-radius: var(--border-radius) 0 0 var(--border-radius);
+            clip-path: inset(0 round var(--border-radius) 0 0 var(--border-radius));
             background-color: var(--modal-background-color);
         }
     }
@@ -244,7 +229,6 @@
 .catalog-summary {
     flex: 1;
     min-width: 0;
-    color: var(--primary-foreground-color);
 
     .catalog-type {
         margin-bottom: 0.25rem;
@@ -259,7 +243,6 @@
 
     .catalog-type,
     .catalog-name {
-        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
@@ -275,7 +258,6 @@
     padding: 0.75rem 1rem;
     border-radius: var(--border-radius);
     background-color: var(--overlay-color);
-    color: var(--primary-foreground-color);
 
     > svg {
         flex: none;
@@ -301,7 +283,7 @@
         overflow: visible;
 
         .selectable-inputs-modal-content {
-            overflow: visible !important;
+            overflow: visible;
 
             .select-input {
                 height: 3rem;
@@ -313,11 +295,6 @@
                     &:not(:last-child) {
                         margin-bottom: 1rem;
                     }
-                }
-
-                .multiselect-menu-container {
-                    max-height: calc(3rem * 3);
-                    overflow: auto;
                 }
             }
         }

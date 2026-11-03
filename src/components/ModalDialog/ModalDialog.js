@@ -8,10 +8,11 @@ const { useModalsContainer } = require('stremio/router/ModalsContainerContext');
 const Modal = require('stremio/router/Modal');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const { default: Button } = require('stremio/components/Button');
+const { default: Checkbox } = require('stremio/components/Checkbox');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const styles = require('./styles');
 
-const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequest, background, ...props }) => {
+const ModalDialog = ({ className, title, buttons, checkboxes, children, dataset, onCloseRequest, background, ...props }) => {
     const { t } = useTranslation();
     const routeFocused = useRouteFocused();
     const modalsContainer = useModalsContainer();
@@ -77,6 +78,16 @@ const ModalDialog = ({ className, title, buttons, children, dataset, onCloseRequ
                         {children}
                     </div>
                     {
+                        Array.isArray(checkboxes) && checkboxes.length > 0 ?
+                            <div className={styles['checkboxes-container']}>
+                                {checkboxes.map(({ label, checked, onChange }, i) => (
+                                    <Checkbox key={i} label={label} checked={checked} onChange={onChange} />
+                                ))}
+                            </div>
+                            :
+                            null
+                    }
+                    {
                         Array.isArray(buttons) && buttons.length > 0 ?
                             <div className={styles['buttons-container']}>
                                 {buttons.map(({ className, label, icon, props }, index) => (
@@ -109,6 +120,11 @@ ModalDialog.propTypes = {
     className: PropTypes.string,
     title: PropTypes.string,
     background: PropTypes.string,
+    checkboxes: PropTypes.arrayOf(PropTypes.shape({
+        label: PropTypes.string,
+        checked: PropTypes.bool,
+        onChange: PropTypes.func
+    })),
     buttons: PropTypes.arrayOf(PropTypes.shape({
         className: PropTypes.string,
         label: PropTypes.string,

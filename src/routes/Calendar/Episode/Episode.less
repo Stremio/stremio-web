@@ -1,0 +1,87 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+.episode {
+    flex: none;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.625rem;
+    border-radius: var(--border-radius);
+    background-color: var(--overlay-color);
+    transition: background-color 0.1s ease-out;
+
+    .artwork-container {
+        flex: none;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40%;
+        max-width: 8rem;
+        aspect-ratio: 16 / 9;
+        border-radius: 0.5rem;
+        background-color: var(--overlay-color);
+        overflow: hidden;
+
+        .artwork {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+            &.blurred {
+                filter: blur(0.5rem);
+            }
+        }
+
+        .placeholder {
+            width: 35%;
+            height: 35%;
+            color: var(--primary-foreground-color);
+            opacity: 0.35;
+        }
+    }
+
+    .info {
+        flex: auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+
+        .label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            color: var(--primary-accent-color);
+        }
+
+        .name, .title {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            overflow-wrap: anywhere;
+        }
+
+        .name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+        }
+
+        .title {
+            font-size: 0.875rem;
+            color: var(--primary-foreground-color);
+            opacity: 0.65;
+        }
+    }
+
+    &:hover {
+        background-color: @color-surface-light5-10;
+    }
+}

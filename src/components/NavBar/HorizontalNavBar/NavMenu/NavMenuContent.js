@@ -11,6 +11,7 @@ const { Button } = require('stremio/components');
 const { useFullscreen } = require('stremio/common/Fullscreen');
 const useProfile = require('stremio/common/useProfile');
 const usePWA = require('stremio/common/usePWA');
+const { default: useInstallPrompt } = require('stremio/common/useInstallPrompt');
 const { default: usePlayUrl } = require('stremio/common/usePlayUrl');
 const useToast = require('stremio/common/Toast/useToast');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
@@ -27,6 +28,7 @@ const NavMenuContent = ({ onClick }) => {
     const toast = useToast();
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const [, isAndroidPWA] = usePWA();
+    const install = useInstallPrompt();
     const streamingServerWarningDismissed = React.useMemo(() => {
         return streamingServer.settings !== null && streamingServer.settings.type === 'Ready' || (
             !isNaN(profile.settings.streamingServerWarningDismissed.getTime()) &&
@@ -87,12 +89,26 @@ const NavMenuContent = ({ onClick }) => {
                 </div>
             </div>
             {
-                supported && !isAndroidPWA ?
+                (supported && !isAndroidPWA) || install !== null ?
                     <div className={styles['nav-menu-section']}>
-                        <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
-                            <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
-                            <div className={styles['nav-menu-option-label']}>{fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')}</div>
-                        </Button>
+                        {
+                            supported && !isAndroidPWA ?
+                                <Button className={styles['nav-menu-option-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                                    <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
+                                    <div className={styles['nav-menu-option-label']}>{fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')}</div>
+                                </Button>
+                                :
+                                null
+                        }
+                        {
+                            install !== null ?
+                                <Button className={styles['nav-menu-option-container']} title={t('INSTALL_APP')} onClick={install}>
+                                    <Icon className={styles['icon']} name={'download'} />
+                                    <div className={styles['nav-menu-option-label']}>{t('INSTALL_APP')}</div>
+                                </Button>
+                                :
+                                null
+                        }
                     </div>
                     :
                     null

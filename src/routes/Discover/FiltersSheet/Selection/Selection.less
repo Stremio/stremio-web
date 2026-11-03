@@ -1,17 +1,13 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) '~stremio/common/screen-sizes.less';
-
 .selection {
     display: flex;
     flex: 1;
     flex-direction: column;
     min-height: 0;
     min-width: 0;
-    color: var(--primary-foreground-color);
 
     button {
-        font-family: inherit;
         font-size: inherit;
         color: inherit;
         cursor: pointer;
@@ -42,7 +38,6 @@
     font-size: 1.4rem;
     font-weight: 600;
     outline: none;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -147,7 +142,7 @@
     background: var(--primary-accent-color);
 }
 
-@media @phone-landscape {
+@media (orientation: landscape) {
     .header {
         padding-bottom: 0.5rem;
     }

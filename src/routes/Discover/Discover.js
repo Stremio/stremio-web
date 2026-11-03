@@ -60,7 +60,7 @@ const Discover = () => {
     const [selectedMetaItemIndex, setSelectedMetaItemIndex] = React.useState(0);
     const isMobile = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
 
-    const compactEpgDate = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: 500px) and (orientation: landscape)`);
+    const compactEpgDate = useMediaQuery(`(max-width: ${screenSizes.xsmall}) and (max-height: ${screenSizes['phone-landscape-size']}) and (orientation: landscape)`);
 
     const selectedMetaItem = React.useMemo(() => {
         return discover.catalog?.content.type === 'Ready' &&

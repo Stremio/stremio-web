@@ -12,8 +12,8 @@ const ItemPlaceholder = () => {
             </div>
             <div className={styles['body']}>
                 <div className={styles['video']}>
+                    <div className={styles['artwork']} />
                     <div className={styles['name']} />
-                    <div className={styles['info']} />
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ import { ColorInput, MultiselectMenu, Toggle } from 'stremio/components';
 import { usePlatform } from 'stremio/common';
 import { Category, Option, Section } from '../components';
 import usePlayerOptions from './usePlayerOptions';
+import styles from './Player.less';
 
 type Props = {
     profile: Profile,
@@ -15,6 +16,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
     const {
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
+        subtitlesOffsetSelect,
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
@@ -31,6 +33,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         gpuVideoProcessingToggle,
         videoModeSelect,
         pauseOnMinimizeToggle,
+        mpvConfigSelect,
     } = usePlayerOptions(profile);
 
     return (
@@ -46,6 +49,12 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     <MultiselectMenu
                         className={'multiselect'}
                         {...subtitlesSizeSelect}
+                    />
+                </Option>
+                <Option label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}>
+                    <MultiselectMenu
+                        className={'multiselect'}
+                        {...subtitlesOffsetSelect}
                     />
                 </Option>
                 <Option label={'SETTINGS_SUBTITLES_COLOR'}>
@@ -163,6 +172,17 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                                 tabIndex={-1}
                                 {...pauseOnMinimizeToggle}
                             />
+                        </Option>
+                }
+                {
+                    mpvConfigSelect !== null &&
+                        <Option className={styles['mpv-config-container']} label={'SETTINGS_MPV_CONFIG'}>
+                            <div className={styles['mpv-config-control']} title={mpvConfigSelect.title}>
+                                <MultiselectMenu
+                                    className={'multiselect'}
+                                    {...mpvConfigSelect}
+                                />
+                            </div>
                         </Option>
                 }
             </Category>

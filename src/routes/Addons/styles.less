@@ -3,10 +3,6 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/components/Multiselect/styles.less') {
-    multiselect-menu-container: menu-container;
-}
-
 :import('~stremio/components/ModalDialog/styles.less') {
     share-modal-content: modal-dialog-content;
 }
@@ -22,9 +18,6 @@
 }
 
 .addons-container {
-    height: calc(100% - var(--safe-area-inset-bottom));
-    background-color: transparent;
-
     .addons-content {
         width: 100%;
         height: 100%;
@@ -75,7 +68,6 @@
                     width: 1.2rem;
                     height: 1.2rem;
                     margin-right: 0.5rem;
-                    color: var(--primary-foreground-color);
                 }
 
                 .add-button-label {
@@ -83,9 +75,7 @@
                     flex-shrink: 1;
                     flex-basis: auto;
                     max-height: 2.4em;
-                    font-size: 1rem;
                     font-weight: 700;
-                    color: var(--primary-foreground-color);
                 }
             }
 
@@ -95,10 +85,6 @@
                 flex-shrink: 1;
                 flex-basis: 15rem;
                 margin-right: 1.5rem;
-
-                .multiselect-menu-container {
-                    overflow: auto;
-                }
             }
 
             .spacing {
@@ -125,7 +111,6 @@
                     flex: none;
                     width: 1.4rem;
                     height: 1.4rem;
-                    color: var(--primary-foreground-color);
                 }
             }
         }
@@ -157,14 +142,10 @@
         .filters-modal-content {
             display: flex;
             flex-direction: column;
-            overflow: visible !important;
+            overflow: visible;
 
             .select-input-container {
                 height: 3rem;
-
-                .multiselect-menu-container {
-                    overflow: auto;
-                }
 
                 &:not(:last-child) {
                     margin-bottom: 1rem;

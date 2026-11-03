@@ -23,13 +23,13 @@ const useMediaSession = (
     // Playback state
     useEffect(() => {
         if (navigator.mediaSession) {
-            const playbackState = videoState.paused === null ? 'none' : videoState.paused ? 'paused' : 'playing';
+            const playbackState = !videoState.loaded || typeof videoState.paused !== 'boolean' ? 'none' : videoState.paused ? 'paused' : 'playing';
             navigator.mediaSession.playbackState = playbackState;
         }
 
         if (shell.active) {
             shell.send('media.status', {
-                paused: !!videoState.paused,
+                paused: !videoState.loaded || !!videoState.paused,
             });
         }
 
@@ -38,7 +38,18 @@ const useMediaSession = (
                 navigator.mediaSession.playbackState = 'none';
             }
         };
-    }, [videoState.paused]);
+    }, [videoState.paused, videoState.loaded]);
+
+    const { active: shellActive, send: shellSend } = shell;
+    useEffect(() => {
+        return () => {
+            if (shellActive) {
+                shellSend('media.status', {
+                    paused: true,
+                });
+            }
+        };
+    }, [shellActive, shellSend]);
 
     // Metadata
     useEffect(() => {

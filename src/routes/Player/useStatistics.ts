@@ -13,7 +13,7 @@ const getLoadingProgress = (infoHash: string | null, statistics: Statistics | nu
 
     const MB = 1024 * 1024;
     const peerScore = Math.min(1, statistics.peers / 8) * 20;
-    const minDownload = Math.min(8 * MB, Math.max(2 * MB, statistics.streamLen * 0.008));
+    const minDownload = Math.min(8 * MB, Math.max(2 * MB, (statistics.streamLen ?? 0) * 0.008));
     const downloadedScore = Math.min(1, statistics.downloaded / minDownload) * 70;
     const speedScore = Math.min(1, statistics.downloadSpeed / MB) * 10;
 
@@ -30,7 +30,7 @@ const useStatistics = (player: Player, streamingServer: StreamingServer) => {
     const statistics = infoHash !== null && statisticsValue?.infoHash.toLowerCase() === infoHash.toLowerCase() ? statisticsValue : null;
 
     useEffect(() => {
-        if (infoHash === null || fileIdx === null) {
+        if (infoHash === null) {
             return undefined;
         }
 
@@ -57,7 +57,7 @@ const useStatistics = (player: Player, streamingServer: StreamingServer) => {
         infoHash,
         peers: statistics?.peers ?? 0,
         speed: statistics ? Number((statistics.downloadSpeed / 1000 / 1000).toFixed(2)) : 0,
-        completed: statistics ? Number((statistics.streamProgress * 100).toFixed(2)) : 0,
+        completed: typeof statistics?.streamProgress === 'number' ? Number((statistics.streamProgress * 100).toFixed(2)) : null,
         progress: getLoadingProgress(infoHash, statistics),
     };
 };

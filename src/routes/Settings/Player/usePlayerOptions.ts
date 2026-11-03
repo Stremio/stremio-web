@@ -2,13 +2,16 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
 import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
+import useMpvConfig from './useMpvConfig';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
+const SUBTITLES_OFFSETS = Array.from({ length: 21 }, (_, i) => i * 5);
 
 const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
+    const mpvConfigSelect = useMpvConfig();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
         value: code,
@@ -54,6 +57,29 @@ const usePlayerOptions = (profile: Profile) => {
                     args: {
                         ...profile.settings,
                         subtitlesSize: parseInt(value, 10)
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
+    const subtitlesOffsetSelect = useMemo(() => ({
+        options: SUBTITLES_OFFSETS.map((offset) => ({
+            value: `${offset}`,
+            label: `${offset}%`
+        })),
+        value: `${profile.settings.subtitlesOffset}`,
+        title: () => {
+            return `${profile.settings.subtitlesOffset}%`;
+        },
+        onSelect: (value: string) => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitlesOffset: parseInt(value, 10)
                     }
                 }
             });
@@ -370,6 +396,7 @@ const usePlayerOptions = (profile: Profile) => {
     return {
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
+        subtitlesOffsetSelect,
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
@@ -386,6 +413,7 @@ const usePlayerOptions = (profile: Profile) => {
         gpuVideoProcessingToggle,
         videoModeSelect,
         pauseOnMinimizeToggle,
+        mpvConfigSelect,
     };
 };
 

@@ -12,6 +12,18 @@
     justify-content: space-between;
     position: relative;
 
+    &:hover {
+        border: 2px solid var(--overlay-color);
+
+        .actions {
+            .delete {
+                .icon {
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
+
     .content {
         display: flex;
         gap: 1rem;
@@ -24,9 +36,7 @@
         }
 
         .label {
-            color: var(--primary-foreground-color);
             white-space: nowrap;
-            overflow: hidden;
             text-overflow: ellipsis;
         }
     }
@@ -57,10 +67,8 @@
             }
 
             .label {
-                font-size: 1rem;
                 color: var(--primary-foreground-color);
                 white-space: nowrap;
-                overflow: hidden;
                 text-overflow: ellipsis;
             }
         }
@@ -93,19 +101,7 @@
 
                 .icon {
                     color: var(--danger-accent-color);
-                    opacity: 1 !important;
-                }
-            }
-        }
-    }
-
-    &:hover {
-        border: 2px solid var(--overlay-color);
-    
-        .actions {
-            .delete {
-                .icon {
-                    opacity: 0.6;
+                    opacity: 1;
                 }
             }
         }

@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { Button, Image } from 'stremio/components';
-import styles from './Placeholder.less';
+import styles from 'stremio/routes/Library/Placeholder/Placeholder.less';
 
 const Placeholder = () => {
     const { t } = useTranslation();

@@ -160,6 +160,13 @@ module.exports = (env, argv) => ({
             {
                 test: /\.(png|jpe?g|svg)$/,
                 exclude: /node_modules/,
+                resourceQuery: /inline/,
+                type: 'asset/inline'
+            },
+            {
+                test: /\.(png|jpe?g|svg)$/,
+                exclude: /node_modules/,
+                resourceQuery: { not: [/inline/] },
                 type: 'asset/resource',
                 generator: {
                     filename: 'images/[name][ext][query]'
@@ -224,7 +231,7 @@ module.exports = (env, argv) => ({
             new WorkboxPlugin.GenerateSW({
                 maximumFileSizeToCacheInBytes: 20000000,
                 clientsClaim: true,
-                skipWaiting: true
+                skipWaiting: false
             }),
         new CopyWebpackPlugin({
             patterns: [

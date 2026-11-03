@@ -90,8 +90,12 @@ const SearchParamsHandler = () => {
         }
 
         const normalized = parsed.href;
-        const selected = normalize(profile.settings.streamingServerUrl);
-        if (normalized === selected) {
+        const selected = parse(profile.settings.streamingServerUrl);
+        if (normalized === selected?.href) {
+            return;
+        }
+
+        if (loopback(parsed) && selected !== null && !loopback(selected)) {
             return;
         }
 

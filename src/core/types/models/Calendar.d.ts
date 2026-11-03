@@ -36,6 +36,8 @@ type CalendarContentItem = {
     id: string,
     name: string,
     poster?: string,
+    background?: string,
+    thumbnail?: string,
     title: string,
     season?: number,
     episode?: number,
@@ -51,5 +53,6 @@ type Calendar = {
     selectable: CalendarSelectable,
     selected: CalendarSelected,
     monthInfo: CalendarMonthInfo,
+    metaItems: Loadable<void>[],
     items: CalendarItem[],
 };

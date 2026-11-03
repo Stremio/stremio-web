@@ -43,26 +43,16 @@ type AudioTrackState = {
     language?: string,
 };
 
-type AudioPreference = {
-    language?: string,
-};
-
 type VideoScale = 'contain' | 'cover' | 'fill';
-
-type SubtitleSource = 'embedded' | 'external';
-
-type SubtitlePreference = {
-    enabled: boolean,
-    source?: SubtitleSource,
-    language?: string,
-};
 
 type StreamState = {
     subtitleTrack?: SubtitlesTrackState | null,
+    subtitlesEnabled?: boolean,
     subtitleDelay?: number,
     subtitleSize?: number,
     subtitleOffset?: number,
     audioTrack?: AudioTrackState,
+    playbackSpeed?: number,
     videoScale?: VideoScale,
 };
 
@@ -80,9 +70,6 @@ type Player = {
     stream: Loadable<SelectedStream> | null,
     seriesInfo: SeriesInfo | null,
     streamState: StreamState | null,
-    audioPreference: AudioPreference | null,
-    subtitlePreference: SubtitlePreference | null,
-    videoScale: VideoScale | null,
     subtitles: Subtitle[],
     title: string | null,
 };

@@ -20,7 +20,7 @@
     padding: 1rem;
     overflow: visible;
 
-    &:hover, &:focus-within, &:global(.active), &:global(.selected) {
+    &:global(.hovered), &:focus-within, &:global(.active), &:global(.selected) {
         outline-style: none;
         transition: background-color 100ms ease-out;
 
@@ -29,6 +29,7 @@
 
             .dismiss-icon-layer {
                 opacity: 1;
+                pointer-events: auto;
             }
 
             .poster-image-layer {
@@ -120,6 +121,7 @@
             width: 1.5rem;
             border-radius: 100%;
             opacity: 0;
+            pointer-events: none;
             transition: opacity 0.1s ease-in;
 
             .dismiss-icon {
@@ -190,7 +192,6 @@
                 flex: none;
                 width: 80%;
                 height: 50%;
-                color: var(--primary-foreground-color);
                 opacity: 0.2;
             }
 
@@ -368,11 +369,9 @@
             padding-left: 1.5rem;
             font-weight: 600;
             text-align: center;
-            color: var(--primary-foreground-color);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
 
             &:only-child {
                 padding: 0 0.5rem;
@@ -393,6 +392,10 @@
         opacity: 0;
         transform: translateX(1rem);
         transition: opacity 0.1s ease-out;
+
+        @media (any-pointer: coarse) {
+            opacity: 1;
+        }
 
         .icon {
             display: block;

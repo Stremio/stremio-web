@@ -30,13 +30,12 @@ const useCalendarDate = (profile: Profile) => {
     const toDayMonth = useCallback((calendarDate: CalendarDate | null): string => {
         if (!calendarDate) return '';
 
-        const date = new Date();
-        date.setDate(calendarDate.day);
-        date.setMonth(calendarDate.month - 1);
+        const date = new Date(calendarDate.year, calendarDate.month - 1, calendarDate.day);
 
         return date.toLocaleString(profile.settings.interfaceLanguage, {
+            weekday: 'long',
             day: 'numeric',
-            month: 'short',
+            month: 'long',
         });
     }, [profile.settings]);
 
