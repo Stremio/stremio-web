@@ -1,7 +1,8 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useMemo } from 'react';
-import { CONSTANTS, routesRegexp } from 'stremio/common';
+import CONSTANTS from 'stremio/common/CONSTANTS';
+import routesRegexp from 'stremio/common/routesRegexp';
 
 export type MetaLink = {
     label: string,

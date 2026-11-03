@@ -4,10 +4,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import { EPGProgram } from 'stremio/common/EPG';
-import MetaPreview from 'stremio/components/MetaPreview';
+import MetaPreview, { Links } from 'stremio/components/MetaPreview';
 import MetaPreviewSheet from 'stremio/components/MetaPreviewSheet';
-import ActionButton from 'stremio/components/MetaPreview/ActionButton';
-import MetaLinks from 'stremio/components/MetaPreview/MetaLinks';
 import ModalDialog from 'stremio/components/ModalDialog';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import ProgramInfo from './ProgramInfo';
@@ -31,28 +29,25 @@ const EpgProgramModal = ({ program, now, show, onCloseRequest, channelHref }: Pr
     const preview = (
         <MetaPreview
             className={styles['preview']}
-            compact={true}
             name={program.title}
             background={program.thumbnail}
             description={program.overview}
             metadata={<ProgramInfo program={program} now={now} />}
-            actions={
+            show={
                 channelHref ?
-                    <ActionButton
-                        className={styles['channel-button']}
-                        icon={'chevron-forward'}
-                        label={t('LIVE_TV_VIEW_CHANNEL', { defaultValue: 'View channel' })}
-                        variant={'wide'}
-                        href={channelHref}
-                        onClick={onCloseRequest}
-                    />
+                    {
+                        href: channelHref,
+                        label: t('LIVE_TV_VIEW_CHANNEL', { defaultValue: 'View channel' }),
+                        icon: 'chevron-forward',
+                        onClick: onCloseRequest,
+                    }
                     :
                     null
             }
         >
             {
                 genres.length > 0 ?
-                    <MetaLinks className={styles['genres']} label={'Genres'} links={genres.map((genre) => ({ label: genre }))} />
+                    <Links className={styles['genres']} groups={[{ category: 'Genres', links: genres.map((label) => ({ label })) }]} />
                     :
                     null
             }

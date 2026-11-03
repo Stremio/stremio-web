@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
-import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, useEpgNow } from 'stremio/common/EPG';
+import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, getNonEmptyString, useEpgNow } from 'stremio/common/EPG';
 import { MetaPreview, Video } from 'stremio/components';
 import SeasonsBar from './SeasonsBar';
 import styles from './SideDrawer.less';
@@ -62,6 +62,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
     }, [isEpg, videos, selectedVideoId, selected, now]);
 
     const isEpgVideo = previewVideo !== null;
+    const released = getEpgValue(isEpgVideo, previewVideo, metaItem, 'released');
 
     const seasons = useMemo(() => {
         return allVideos
@@ -120,13 +121,12 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
             <div className={styles['info']}>
                 <MetaPreview
                     className={styles['side-drawer-meta-preview']}
-                    compact={true}
-                    name={getEpgTitle(isEpgVideo, previewVideo, metaItem)}
+                    name={getNonEmptyString(getEpgTitle(isEpgVideo, previewVideo, metaItem)) ?? metaItem.name}
                     logo={metaItem.logo}
-                    runtime={getEpgValue(isEpgVideo, previewVideo, metaItem, 'runtime')}
-                    releaseInfo={getEpgValue(isEpgVideo, previewVideo, metaItem, 'releaseInfo')}
-                    released={getEpgValue(isEpgVideo, previewVideo, metaItem, 'released')}
-                    description={getEpgDescription(isEpgVideo, previewVideo, metaItem)}
+                    runtime={getNonEmptyString(getEpgValue(isEpgVideo, previewVideo, metaItem, 'runtime'))}
+                    releaseInfo={getNonEmptyString(getEpgValue(isEpgVideo, previewVideo, metaItem, 'releaseInfo'))}
+                    released={released instanceof Date || typeof released === 'string' ? released : null}
+                    description={getNonEmptyString(getEpgDescription(isEpgVideo, previewVideo, metaItem))}
                     links={metaItem.links}
                 />
             </div>
