@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Button from 'stremio/components/Button';
 import { useProfile } from 'stremio/common';
 import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from '../format';
-import useMetaLinks from './useMetaLinks';
+import useMetaLinks from 'stremio/common/useMetaLinks';
 import Logo from './Logo';
 import Still from './Still';
 import Facts from './Facts';
