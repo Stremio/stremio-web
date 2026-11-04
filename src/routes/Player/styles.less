@@ -89,6 +89,11 @@ html:not(.active-slider-within) {
             right: -4rem;
             left: initial;
             transform: translateY(-50%);
+
+            &.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
         }
 
         &.control-bar-layer {
