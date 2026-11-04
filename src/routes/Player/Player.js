@@ -1022,7 +1022,7 @@ const Player = () => {
             {
                 player.metaItem?.type === 'Ready' ?
                     <SideDrawerButton
-                        className={classnames(styles['layer'], styles['side-drawer-button-layer'])}
+                        className={classnames(styles['layer'], styles['side-drawer-button-layer'], { [styles['hidden']]: sideDrawerOpen })}
                         onClick={toggleSideDrawer}
                     />
                     :
