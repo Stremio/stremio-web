@@ -15,7 +15,6 @@
 
 :import('~stremio/components/MainNavBars/MainNavBars.less') {
     nav-content-container: nav-content-container;
-    horizontal-nav-bar: horizontal-nav-bar;
 }
 
 .board-container {
@@ -28,15 +27,26 @@
         flex: 1;
         align-self: stretch;
 
-        .horizontal-nav-bar {
-            transition: background-color 0.2s ease-out;
-        }
-
-        &.scrolled .horizontal-nav-bar {
-            background-color: var(--secondary-background-color);
-        }
-
         &.with-spotlight {
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 0;
+                background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
+                clip-path: inset(0 0 calc(100% - var(--horizontal-nav-bar-size) - var(--safe-area-inset-top)) 0);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s ease-out;
+            }
+
+            &.scrolled::after {
+                opacity: 1;
+            }
+
             .nav-content-container {
                 top: 0;
                 left: 0;
