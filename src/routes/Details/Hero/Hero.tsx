@@ -1,8 +1,9 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import Button from 'stremio/components/Button';
 import { useProfile } from 'stremio/common';
 import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from '../format';
 import useMetaLinks from './useMetaLinks';
@@ -28,6 +29,8 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
     const { groups, imdb } = useMetaLinks(metaItem.links);
     const released = parseDate(metaItem.released);
     const minutesLeft = video !== null ? getMinutesLeft(libraryItem, video.id) : null;
+    const [expanded, setExpanded] = useState(false);
+    const collapsible = compact && groups.length > 0;
 
     return (
         <div className={classNames(className, styles['hero'], { [styles['compact']]: compact })}>
@@ -48,8 +51,21 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                             ]}
                             imdb={imdb}
                         />
-                        <Description className={styles['description']} text={metaItem.description} />
-                        <Links className={styles['links']} groups={groups} centered={compact} />
+                        <Description className={classNames(styles['description'], { [styles['expanded']]: collapsible && expanded })} text={metaItem.description} />
+                        {
+                            collapsible ?
+                                <Button className={styles['more']} aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+                                    {t(expanded ? 'SHOW_LESS' : 'SHOW_MORE')}
+                                </Button>
+                                :
+                                null
+                        }
+                        {
+                            !collapsible || expanded ?
+                                <Links className={styles['links']} groups={groups} centered={compact} />
+                                :
+                                null
+                        }
                     </React.Fragment>
                     :
                     <React.Fragment>
