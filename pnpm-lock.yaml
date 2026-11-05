@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: 0.66.0
-        version: 0.66.0
+        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz
+        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz
       '@stremio/stremio-icons':
         specifier: 5.15.0
         version: 5.15.0
@@ -1444,8 +1444,9 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@0.66.0':
-    resolution: {integrity: sha512-KeXTtj4AGeAFDh/VM5/bYGOu+h7MAKxsy0Rcm5KS250kRgFfTN+XrJTuZ7WI5j9VmOsClIZFRk3spwziekTHgg==}
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz':
+    resolution: {integrity: sha512-BjDmkcablhC6V/QZDU0DQfkrQ0GyWNzPZnlpSUjIASY8Ny1ZZnxZ6sYQdT8WuGnXkyL5nsx1aXD6yMKc5hSMpg==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz}
+    version: 0.66.0
 
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
@@ -6579,7 +6580,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@0.66.0':
+  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz':
     dependencies:
       '@babel/runtime': 7.24.1
 
