@@ -9,7 +9,8 @@ const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBar
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
-const { default: Spotlight } = require('./Spotlight');
+const { default: Spotlight, Placeholder: SpotlightPlaceholder } = require('./Spotlight');
+const { default: useScrolledPast } = require('./Spotlight/useScrolledPast');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
@@ -45,21 +46,24 @@ const Board = () => {
         leadingRows: boardCatalogsOffset,
         preloadRows: THRESHOLD,
     });
+    const spotlightSentinelRef = React.useRef(null);
+    const scrolledPastSpotlight = useScrolledPast(spotlightSentinelRef, scrollContainerRef, spotlightItems.length > 0);
     return (
         <div className={styles['board-container']}>
             <EventModal />
-            <MainNavBars className={styles['board-content-container']} route={'board'}>
-                <div ref={scrollContainerRef} className={classnames(styles['board-content'], { [styles['with-spotlight']]: spotlightVisible })} onScroll={onScroll}>
+            <MainNavBars className={classnames(styles['board-content-container'], { [styles['with-spotlight']]: spotlightVisible, [styles['scrolled']]: scrolledPastSpotlight })} route={'board'}>
+                <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
                         spotlightItems.length > 0 ?
                             <Spotlight
                                 key={`${spotlight.addon.manifest.id}/${spotlight.type}/${spotlight.id}`}
                                 className={styles['board-spotlight']}
                                 items={spotlightItems}
+                                sentinelRef={spotlightSentinelRef}
                             />
                             :
                             spotlightVisible ?
-                                <Spotlight.Placeholder className={styles['board-spotlight']} />
+                                <SpotlightPlaceholder className={styles['board-spotlight']} />
                                 :
                                 null
                     }

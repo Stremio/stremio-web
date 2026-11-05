@@ -10,6 +10,16 @@
     height: @hero-height;
     isolation: isolate;
     color: var(--primary-foreground-color);
+    touch-action: pan-y;
+
+    .sentinel {
+        position: absolute;
+        top: calc(100% - var(--horizontal-nav-bar-size) - var(--safe-area-inset-top));
+        left: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
 
     .art {
         position: absolute;
@@ -61,8 +71,14 @@
     .pager {
         position: absolute;
         right: 2rem;
-        bottom: 6.6rem;
+        bottom: @pager-bottom;
         z-index: 4;
+    }
+}
+
+@media (hover: hover) {
+    .spotlight:hover {
+        --spotlight-play-state: paused;
     }
 }
 
@@ -93,19 +109,19 @@
         .pager {
             right: 0;
             left: 0;
-            bottom: 1.25rem;
+            bottom: @pager-bottom-mobile;
             display: flex;
             justify-content: center;
         }
     }
 }
 
-@media @short {
+@media @short-viewport {
     .spotlight {
-        height: ~"max(24rem, calc(var(--dynamic-viewport-height) - 0.5rem))";
+        height: @hero-height-short;
 
         .pager {
-            bottom: 4.4rem;
+            bottom: @pager-bottom-short;
         }
     }
 }
