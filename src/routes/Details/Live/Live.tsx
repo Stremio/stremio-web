@@ -8,7 +8,7 @@ import { EPGProgram, useLiveRefresh } from 'stremio/common/EPG';
 import useHeroCollapse from '../useHeroCollapse';
 import Background from '../Background';
 import HeroArt from '../HeroArt';
-import Logo from '../Hero/Logo';
+import Logo from 'stremio/components/Logo';
 import Panel from '../Panel';
 import Streams from '../Streams';
 import Programme from './Programme';
