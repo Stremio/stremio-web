@@ -3,6 +3,7 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 @import (reference) '~stremio/components/MetaRow/styles.less';
+@import (reference) './Spotlight/variables.less';
 
 :import('~stremio/components/MetaRow/styles.less') {
     meta-item: meta-item;
@@ -14,6 +15,7 @@
 
 :import('~stremio/components/MainNavBars/MainNavBars.less') {
     nav-content-container: nav-content-container;
+    horizontal-nav-bar: horizontal-nav-bar;
 }
 
 .board-container {
@@ -26,35 +28,45 @@
         flex: 1;
         align-self: stretch;
 
-        .nav-content-container {
-            top: 0;
-            left: 0;
+        .horizontal-nav-bar {
+            transition: background-color 0.2s ease-out;
+        }
+
+        &.scrolled .horizontal-nav-bar {
+            background-color: var(--secondary-background-color);
+        }
+
+        &.with-spotlight {
+            .nav-content-container {
+                top: 0;
+                left: 0;
+            }
+
+            .board-content {
+                padding-left: calc(var(--vertical-nav-bar-size) + 1rem);
+
+                .board-spotlight {
+                    margin: 0 -1rem 0 calc(-1 * (var(--vertical-nav-bar-size) + 1rem));
+                    width: auto;
+                }
+
+                .board-spotlight + .board-row {
+                    position: relative;
+                    z-index: 1;
+                    margin-top: -@row-overlap;
+                }
+            }
         }
 
         .board-content {
             height: 100%;
             width: 100%;
-            padding: calc(var(--horizontal-nav-bar-size) + var(--safe-area-inset-top)) 1rem 0 calc(var(--vertical-nav-bar-size) + 1rem);
+            padding: 0 1rem;
             overflow-y: auto;
-
-            &.with-spotlight {
-                padding-top: 0;
-            }
-
-            .board-spotlight {
-                margin: 0 -1rem 0 calc(-1 * (var(--vertical-nav-bar-size) + 1rem));
-                width: auto;
-            }
 
             .board-row {
                 margin-top: 1rem;
                 margin-bottom: 2rem;
-            }
-
-            .board-spotlight + .board-row {
-                position: relative;
-                z-index: 1;
-                margin-top: -3.5rem;
             }
         }
     }
@@ -82,16 +94,6 @@
 
         .board-content-container {
             .board-content {
-                padding-left: 1rem;
-
-                .board-spotlight {
-                    margin-left: -1rem;
-                }
-
-                .board-spotlight + .board-row {
-                    margin-top: -2rem;
-                }
-
                 .board-row {
                     margin-bottom: 1.5rem;
                 }
@@ -125,6 +127,24 @@
         .board-warning-container {
             bottom: calc(var(--vertical-nav-bar-size) + 0.5rem);
             height: 7rem;
+        }
+    }
+}
+
+@media @mobile {
+    .board-container {
+        .board-content-container.with-spotlight {
+            .board-content {
+                padding-left: 1rem;
+
+                .board-spotlight {
+                    margin-left: -1rem;
+                }
+
+                .board-spotlight + .board-row {
+                    margin-top: -@row-overlap-mobile;
+                }
+            }
         }
     }
 }

@@ -1,16 +1,23 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 @import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) '~stremio/routes/Details/variables.less';
 
-@text-secondary: rgba(255, 255, 255, 0.8);
-@overlay: rgba(255, 255, 255, 0.1);
-@overlay-strong: rgba(255, 255, 255, 0.24);
-@scrim-color: rgb(12, 11, 17);
-@ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+@media-ink: #ffffff;
+@media-text-secondary: rgba(255, 255, 255, 0.8);
+@media-surface: rgba(255, 255, 255, 0.1);
+@media-surface-strong: rgba(255, 255, 255, 0.24);
+@media-pill-background: rgba(0, 0, 0, 0.4);
+@row-overlap: 3.5rem;
+@row-overlap-mobile: 2rem;
 @hero-height: ~"clamp(38rem, min(calc(var(--dynamic-viewport-height) * 0.62), calc(var(--dynamic-viewport-width) * 0.56)), 56rem)";
 @hero-height-mobile: ~"min(calc(var(--dynamic-viewport-height) * 0.72), calc(var(--dynamic-viewport-width) * 1.3), 42rem)";
+@hero-height-short: ~"max(24rem, calc(var(--dynamic-viewport-height) - 0.5rem))";
 @content-left: calc(var(--vertical-nav-bar-size) + 2rem);
-@content-bottom: 6rem;
-@mobile: ~"only screen and (max-width: @{xxsmall})";
-@short: ~"only screen and (max-height: @{phone-landscape-size})";
-@mobile-nav: ~"only screen and (max-width: @{minimum})";
+@content-bottom: (@row-overlap + 2.5rem);
+@content-bottom-short: 4rem;
+@pager-bottom: (@content-bottom + 0.6rem);
+@pager-bottom-short: (@content-bottom-short + 0.4rem);
+@pager-bottom-mobile: (@row-overlap-mobile + 0.5rem);
+@content-bottom-mobile: (@pager-bottom-mobile + 3.75rem);
+@short-viewport: ~"only screen and (max-height: @{phone-landscape-size})";
