@@ -1,16 +1,19 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-const useCarousel = (count: number) => {
+const useCarousel = (count: number, initiallyPaused: boolean) => {
     const [index, setIndex] = useState(0);
-    const [paused, setPaused] = useState(false);
-    const [shown, setShown] = useState(() => new Set<number>());
+    const [paused, setPaused] = useState(initiallyPaused);
+    const [shown, setShown] = useState(() => new Set(count > 0 ? [0, 1 % count] : []));
     const current = count > 0 ? index % count : 0;
 
     const go = useCallback((next: number, manual: boolean) => {
         if (count > 0) {
-            setIndex(((next % count) + count) % count);
+            const slide = ((next % count) + count) % count;
+            const preload = (slide + 1) % count;
+            setIndex(slide);
+            setShown((shown) => shown.has(slide) && shown.has(preload) ? shown : new Set([...shown, slide, preload]));
         }
 
         if (manual) {
@@ -18,20 +21,10 @@ const useCarousel = (count: number) => {
         }
     }, [count]);
 
+    const pause = useCallback(() => setPaused(true), []);
     const togglePaused = useCallback(() => setPaused((paused) => !paused), []);
 
-    useEffect(() => {
-        if (count === 0) {
-            return;
-        }
-
-        setShown((shown) => {
-            const next = [current, (current + 1) % count].filter((slide) => !shown.has(slide));
-            return next.length > 0 ? new Set([...shown, ...next]) : shown;
-        });
-    }, [current, count]);
-
-    return { index: current, paused, shown, go, togglePaused };
+    return { index: current, paused, shown, go, pause, togglePaused };
 };
 
 export default useCarousel;

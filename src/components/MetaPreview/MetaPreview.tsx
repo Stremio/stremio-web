@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import Image from 'stremio/components/Image';
 import ContentRating from 'stremio/components/ContentRating';
 import useMetaLinks from 'stremio/common/useMetaLinks';
+import getReleaseYear from 'stremio/common/getReleaseYear';
 import Facts from './Facts';
 import Links from './Links';
 import Actions from './Actions';
@@ -34,11 +35,6 @@ type Props = {
 };
 
 const renderNothing = () => null;
-
-const getYear = (released: Date | string | null): string | null => {
-    const date = typeof released === 'string' ? new Date(released) : released;
-    return date !== null && !Number.isNaN(date.getTime()) ? String(date.getFullYear()) : null;
-};
 
 const MetaPreview = ({
     className,
@@ -89,7 +85,7 @@ const MetaPreview = ({
                         :
                         null
                 }
-                <Facts className={styles['facts']} items={[runtime, releaseInfo || getYear(released)]} imdb={imdb}>
+                <Facts className={styles['facts']} items={[runtime, releaseInfo || getReleaseYear(released)]} imdb={imdb}>
                     {
                         contentRatings.length > 0 ?
                             contentRatings.map((rating, index) => <ContentRating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />)
