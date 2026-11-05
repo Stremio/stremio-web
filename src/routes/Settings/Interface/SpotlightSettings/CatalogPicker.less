@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) './variables.less';
+@import (reference) '~stremio/routes/Board/Spotlight/variables.less';
 
 :import('~stremio/components/ModalDialog/styles.less') {
     modal-dialog-container: modal-dialog-container;
@@ -68,7 +68,7 @@
                 background-color: transparent;
             }
 
-            &.disabled {
+            &:global(.disabled) {
                 opacity: 0.5;
                 pointer-events: none;
             }

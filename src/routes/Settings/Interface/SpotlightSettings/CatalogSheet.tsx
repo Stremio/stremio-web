@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import BottomSheet from 'stremio/components/BottomSheet';
@@ -20,18 +20,12 @@ const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) =
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
 
-    const onQueryChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(event.target.value);
-    }, []);
-    const onUseDefault = useCallback(() => onSelect(null), [onSelect]);
-    const onExited = useCallback(() => setQuery(''), []);
-
     return (
         <BottomSheet
             className={styles['sheet']}
             show={show}
             onCloseRequest={onClose}
-            onExited={onExited}
+            onExited={() => setQuery('')}
             closeOnContentClick={false}
             closeOnOrientationChange={false}
             flush={true}
@@ -41,14 +35,9 @@ const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) =
                 <div className={styles['header']}>
                     <Icon className={styles['heading-icon']} name={'home'} />
                     <div className={styles['heading']}>{t('SETTINGS_SPOTLIGHT_CATALOG')}</div>
-                    {
-                        !isDefault ?
-                            <button type={'button'} className={styles['reset']} onClick={onUseDefault}>
-                                {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}
-                            </button>
-                            :
-                            null
-                    }
+                    <button type={'button'} className={styles['reset']} disabled={isDefault} onClick={() => onSelect(null)}>
+                        {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}
+                    </button>
                 </div>
                 <p className={styles['description']}>{t('SETTINGS_SPOTLIGHT_CATALOG_DESCRIPTION')}</p>
                 <div className={styles['search']}>
@@ -58,7 +47,7 @@ const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) =
                         value={query}
                         placeholder={t('SETTINGS_SPOTLIGHT_SEARCH')}
                         aria-label={t('SETTINGS_SPOTLIGHT_SEARCH')}
-                        onChange={onQueryChange}
+                        onChange={(event) => setQuery(event.target.value)}
                     />
                 </div>
                 <CatalogGroups className={styles['body']} compact={true} catalogs={catalogs} query={query} onSelect={onSelect} />

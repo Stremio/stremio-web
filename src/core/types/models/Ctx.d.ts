@@ -58,15 +58,6 @@ type BoardSpotlight = {
     showCatalogRow: boolean,
 };
 
-type BoardCatalog = {
-    id: string,
-    name: string,
-    type: string,
-    addon: CatalogAddonPreview,
-    request: ResourceRequest,
-    selected: boolean,
-};
-
 type Profile = {
     auth: Auth | null,
     addons: Addon[],
@@ -106,5 +97,4 @@ type Ctx = {
     notifications: Notifications,
     searchHistory: SearchHistory,
     streamingServerUrls: StreamingServerUrls,
-    boardCatalogs: BoardCatalog[],
 };

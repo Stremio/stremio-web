@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) './variables.less';
+@import (reference) '~stremio/routes/Board/Spotlight/variables.less';
 
 .card {
     position: relative;
@@ -41,7 +41,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        background: linear-gradient(90deg, fade(@media-color, 82%) 0%, fade(@media-color, 40%) 45%, fade(@media-color, 0%) 75%), linear-gradient(0deg, fade(@media-color, 70%) 0%, fade(@media-color, 0%) 60%);
+        background: linear-gradient(90deg, fade(@scrim-color, 82%) 0%, fade(@scrim-color, 40%) 45%, fade(@scrim-color, 0%) 75%), linear-gradient(0deg, fade(@scrim-color, 70%) 0%, fade(@scrim-color, 0%) 60%);
     }
 
     .count {
@@ -53,11 +53,11 @@
         height: 1.7rem;
         padding: 0 0.7rem;
         border-radius: 999px;
-        background-color: rgba(0, 0, 0, 0.35);
+        background-color: @media-pill-background;
         backdrop-filter: blur(6px);
         font-size: 0.75rem;
         font-weight: 600;
-        color: #ffffff;
+        color: @media-ink;
     }
 
     .caption {
@@ -106,7 +106,7 @@
                 .addon {
                     margin-left: 0.6rem;
                     font-weight: 500;
-                    color: @text-secondary;
+                    color: @media-text-secondary;
 
                     &::before {
                         content: '';
@@ -125,16 +125,16 @@
                 display: flex;
                 gap: 0.3rem;
 
-                i {
-                    display: block;
+                .dot {
+                    flex: none;
                     width: 1.1rem;
                     height: 0.25rem;
                     border-radius: 0.25rem;
-                    background-color: rgba(255, 255, 255, 0.35);
+                    background-color: fade(@media-ink, 30%);
 
                     &.on {
                         width: 2.2rem;
-                        background-color: #ffffff;
+                        background-color: @media-ink;
                     }
                 }
             }
@@ -159,7 +159,7 @@
             .line .pager {
                 gap: 0.25rem;
 
-                i {
+                .dot {
                     width: 0.75rem;
 
                     &.on {
