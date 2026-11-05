@@ -29,6 +29,13 @@
 @desktop-short: ~"only screen and (min-width: @{desktop-min}) and (max-height: @{phone-landscape-size})";
 @mobile: ~"only screen and (max-width: @{xxsmall})";
 
+.page-background(@position) {
+    background-image: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
+    background-position: @position;
+    background-size: calc(max(var(--small-viewport-width), var(--dynamic-viewport-width))) calc(max(var(--small-viewport-height), var(--dynamic-viewport-height)));
+    background-repeat: no-repeat;
+}
+
 .hero-column() {
     @media @desktop {
         position: absolute;

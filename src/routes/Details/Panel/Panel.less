@@ -121,7 +121,7 @@
                 z-index: -1;
                 opacity: 0;
                 transition: opacity 0.25s @ease;
-                background-color: var(--secondary-background-color);
+                .page-background(left calc(-1 * var(--safe-area-inset-left)) top 0);
             }
 
             &.stuck::before {
