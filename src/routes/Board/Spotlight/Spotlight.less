@@ -1,0 +1,117 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+.spotlight {
+    position: relative;
+    z-index: 0;
+    flex: none;
+    width: 100%;
+    height: @hero-height;
+    isolation: isolate;
+    color: var(--primary-foreground-color);
+
+    .art {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        -webkit-mask-image: linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.45) 4rem, #000 11rem, #000 68%, rgba(0, 0, 0, 0.55) 84%, transparent 100%);
+        mask-image: linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.45) 4rem, #000 11rem, #000 68%, rgba(0, 0, 0, 0.55) 84%, transparent 100%);
+
+        .backdrop {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.9s ease;
+
+            .image {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: 72% 22%;
+            }
+
+            &.on {
+                opacity: 1;
+
+                .image {
+                    animation: settle 14s ease-out both;
+                }
+            }
+        }
+
+        .scrim {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            background: linear-gradient(90deg, fade(@scrim-color, 88%) 0%, fade(@scrim-color, 70%) 22%, fade(@scrim-color, 38%) 42%, fade(@scrim-color, 10%) 60%, fade(@scrim-color, 0%) 74%);
+        }
+    }
+
+    .pager {
+        position: absolute;
+        right: 2rem;
+        bottom: 6.6rem;
+        z-index: 4;
+    }
+}
+
+@keyframes settle {
+    from {
+        transform: scale(1.06);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@media @mobile {
+    .spotlight {
+        height: @hero-height-mobile;
+
+        .art {
+            .backdrop .image {
+                object-position: center 20%;
+            }
+
+            .scrim {
+                background: linear-gradient(180deg, fade(@scrim-color, 0%) 28%, fade(@scrim-color, 55%) 62%, fade(@scrim-color, 86%) 100%);
+            }
+        }
+
+        .pager {
+            right: 0;
+            left: 0;
+            bottom: 1.25rem;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
+@media @short {
+    .spotlight {
+        height: ~"max(24rem, calc(var(--dynamic-viewport-height) - 0.5rem))";
+
+        .pager {
+            bottom: 4.4rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spotlight .art .backdrop.on .image {
+        animation: none;
+    }
+}
