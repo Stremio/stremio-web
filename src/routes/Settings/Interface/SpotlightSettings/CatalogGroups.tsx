@@ -35,11 +35,11 @@ const CatalogGroups = ({ className, compact = false, catalogs, query, onSelect }
                 return groups;
             }
 
-            const group = groups.find(({ id }) => id === catalog.addon.manifest.id);
+            const group = groups.find(({ id }) => id === catalog.request.base);
             if (group) {
                 group.catalogs.push({ catalog, title });
             } else {
-                groups.push({ id: catalog.addon.manifest.id, name: addonName, catalogs: [{ catalog, title }] });
+                groups.push({ id: catalog.request.base, name: addonName, catalogs: [{ catalog, title }] });
             }
 
             return groups;
@@ -60,7 +60,7 @@ const CatalogGroups = ({ className, compact = false, catalogs, query, onSelect }
                             {
                                 group.catalogs.map(({ catalog, title }) => (
                                     <CatalogCard
-                                        key={`${catalog.type}/${catalog.id}`}
+                                        key={`${catalog.request.base}/${catalog.type}/${catalog.id}`}
                                         catalog={catalog}
                                         title={title}
                                         onSelect={onSelect}
