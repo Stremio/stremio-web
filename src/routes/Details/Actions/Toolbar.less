@@ -23,13 +23,9 @@
         height: 3.5rem;
         padding: 0 0.5rem;
         border-radius: 999px;
-        .page-background(left calc(-1 * (1.25rem + var(--safe-area-inset-left))) bottom calc(-1 * (1rem + var(--safe-area-inset-bottom))));
+        background-color: var(--secondary-background-color);
         pointer-events: auto;
         overflow: visible;
-
-        & + .group {
-            .page-background(right calc(-1 * (1.25rem + var(--safe-area-inset-right))) bottom calc(-1 * (1rem + var(--safe-area-inset-bottom))));
-        }
     }
 }
 
