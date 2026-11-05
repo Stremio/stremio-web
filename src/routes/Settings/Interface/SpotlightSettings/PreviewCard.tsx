@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import useTranslate from 'stremio/common/useTranslate';
-import useCatalogPreview from './useCatalogPreview';
 import styles from './PreviewCard.less';
 
 type Props = {
@@ -21,9 +20,10 @@ const renderNothing = () => null;
 const PreviewCard = ({ className, catalog, expanded, onClick }: Props) => {
     const { t } = useTranslation();
     const { catalogTitle } = useTranslate();
-    const preview = useCatalogPreview(catalog?.request ?? null);
     const title = catalog !== null ? catalogTitle(catalog) ?? catalog.name : '';
     const addonName = catalog?.addon.manifest.name ?? '';
+    const loaded = catalog !== null && catalog.content !== null && catalog.content.type !== 'Loading';
+    const preview = catalog?.content?.type === 'Ready' ? catalog.content.content : null;
 
     return (
         <Button
@@ -34,21 +34,21 @@ const PreviewCard = ({ className, catalog, expanded, onClick }: Props) => {
             onClick={onClick}
         >
             {
-                preview ?
+                preview !== null ?
                     <Image className={styles['background']} src={preview.background} alt={''} renderFallback={renderNothing} />
                     :
                     null
             }
             <div className={styles['scrim']} />
             {
-                preview !== undefined ?
+                loaded ?
                     <div className={styles['count']}>{t('SETTINGS_SPOTLIGHT_TITLES', { count: preview?.count ?? 0 })}</div>
                     :
                     null
             }
             <div className={styles['caption']}>
                 {
-                    preview ?
+                    preview !== null ?
                         <Image
                             className={styles['logo']}
                             src={preview.logo ?? undefined}
@@ -66,7 +66,7 @@ const PreviewCard = ({ className, catalog, expanded, onClick }: Props) => {
                     <div className={styles['pager']} aria-hidden={'true'}>
                         {
                             Array.from({ length: preview?.count ?? 0 }, (_, index) => (
-                                <i key={index} className={classNames({ [styles['on']]: index === 0 })} />
+                                <div key={index} className={classNames(styles['dot'], { [styles['on']]: index === 0 })} />
                             ))
                         }
                     </div>

@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-@import (reference) './variables.less';
+@import (reference) '~stremio/routes/Board/Spotlight/variables.less';
 
 .card {
     display: block;
@@ -36,7 +36,7 @@
             right: 0;
             bottom: 0;
             left: 0;
-            background: linear-gradient(0deg, fade(@media-color, 75%) 0%, fade(@media-color, 10%) 55%, fade(@media-color, 0%) 100%);
+            background: linear-gradient(0deg, fade(@scrim-color, 75%) 0%, fade(@scrim-color, 10%) 55%, fade(@scrim-color, 0%) 100%);
         }
 
         .tag {
@@ -48,13 +48,13 @@
             height: 1.5rem;
             padding: 0 0.55rem;
             border-radius: 999px;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: @media-pill-background;
             backdrop-filter: blur(6px);
             font-size: 0.65rem;
             font-weight: 700;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #ffffff;
+            color: @media-ink;
         }
 
         .logo {

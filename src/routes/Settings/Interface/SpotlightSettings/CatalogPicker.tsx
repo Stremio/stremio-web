@@ -1,8 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import ModalDialog from 'stremio/components/ModalDialog';
 import Button from 'stremio/components/Button';
@@ -21,16 +20,11 @@ const CatalogPicker = ({ catalogs, isDefault, onSelect, onClose }: Props) => {
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
 
-    const onQueryChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(event.target.value);
-    }, []);
-    const onUseDefault = useCallback(() => onSelect(null), [onSelect]);
-
     return (
         <ModalDialog className={styles['picker']} onCloseRequest={onClose}>
             <div className={styles['header']}>
                 <div className={styles['title']}>{t('SETTINGS_SPOTLIGHT_CATALOG')}</div>
-                <Button className={classNames(styles['reset'], { [styles['disabled']]: isDefault })} disabled={isDefault} onClick={onUseDefault}>
+                <Button className={styles['reset']} disabled={isDefault} onClick={() => onSelect(null)}>
                     {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}
                 </Button>
             </div>
@@ -43,7 +37,7 @@ const CatalogPicker = ({ catalogs, isDefault, onSelect, onClose }: Props) => {
                         value={query}
                         placeholder={t('SETTINGS_SPOTLIGHT_SEARCH')}
                         aria-label={t('SETTINGS_SPOTLIGHT_SEARCH')}
-                        onChange={onQueryChange}
+                        onChange={(event) => setQuery(event.target.value)}
                     />
                     <Icon className={styles['icon']} name={'search'} />
                 </label>

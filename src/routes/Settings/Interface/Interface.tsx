@@ -3,7 +3,7 @@ import { usePlatform } from 'stremio/common';
 import { Scale, MultiselectMenu, Toggle } from 'stremio/components';
 import { Category, Section, Option } from '../components';
 import useInterfaceOptions from './useInterfaceOptions';
-import SpotlightSettings from './Spotlight';
+import SpotlightSettings from './SpotlightSettings';
 
 type Props = {
     profile: Profile,

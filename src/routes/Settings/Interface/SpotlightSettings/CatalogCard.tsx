@@ -1,28 +1,25 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
-import useCatalogPreview from './useCatalogPreview';
 import styles from './CatalogCard.less';
 
 type Props = {
     catalog: BoardCatalog,
     title: string,
-    isDefault: boolean,
     onSelect: (catalog: BoardCatalog) => void,
 };
 
 const renderNothing = () => null;
 
-const CatalogCard = ({ catalog, title, isDefault, onSelect }: Props) => {
+const CatalogCard = ({ catalog, title, onSelect }: Props) => {
     const { t } = useTranslation();
-    const preview = useCatalogPreview(catalog.request);
-
-    const onClick = useCallback(() => onSelect(catalog), [catalog, onSelect]);
+    const loaded = catalog.content !== null && catalog.content.type !== 'Loading';
+    const preview = catalog.content?.type === 'Ready' ? catalog.content.content : null;
 
     return (
         <Button
@@ -30,24 +27,24 @@ const CatalogCard = ({ catalog, title, isDefault, onSelect }: Props) => {
             role={'option'}
             aria-selected={catalog.selected}
             title={title}
-            onClick={onClick}
+            onClick={() => onSelect(catalog)}
         >
             <div className={styles['art']}>
                 {
-                    preview ?
+                    preview !== null ?
                         <Image className={styles['background']} src={preview.background} alt={''} renderFallback={renderNothing} />
                         :
                         null
                 }
                 <div className={styles['scrim']} />
                 {
-                    isDefault ?
+                    catalog.default ?
                         <div className={styles['tag']}>{t('DEFAULT')}</div>
                         :
                         null
                 }
                 {
-                    preview ?
+                    preview !== null ?
                         <Image
                             className={styles['logo']}
                             src={preview.logo ?? undefined}
@@ -64,7 +61,7 @@ const CatalogCard = ({ catalog, title, isDefault, onSelect }: Props) => {
             <div className={styles['caption']}>
                 <div className={styles['name']}>{title}</div>
                 {
-                    preview !== undefined ?
+                    loaded ?
                         <div className={styles['meta']}>{t('SETTINGS_SPOTLIGHT_TITLES', { count: preview?.count ?? 0 })}</div>
                         :
                         null

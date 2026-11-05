@@ -4,23 +4,18 @@ type MetaItemPreviewCatalogsWithExtra = MetaItemPreview & {
     deepLinks: MetaItemDeepLinks,
 };
 
-type CatalogAddonPreview = {
-    manifest: {
-        id: string,
-        name: string,
-    },
-};
-
-type SpotlightCatalog = Catalog<Loadable<MetaItemPreviewCatalogsWithExtra[]>, DiscoverDeepLinks> & {
+type CatalogWithExtra = {
     id: string,
     name: string,
     type: string,
-    addon: CatalogAddonPreview,
+    addon: AddonPreview,
+    content: Loadable<MetaItemPreviewCatalogsWithExtra[]> | null,
+    deepLinks: DiscoverDeepLinks,
 };
 
 type CatalogsWithExtra = {
-    catalogs: Catalog<Loadable<MetaItemPreviewCatalogsWithExtra[]>, DiscoverDeepLinks>[] | null,
-    spotlight: SpotlightCatalog | null,
+    catalogs: CatalogWithExtra[] | null,
+    spotlight: CatalogWithExtra | null,
     selected: {
         type: string | null,
         extra: [string, string][]

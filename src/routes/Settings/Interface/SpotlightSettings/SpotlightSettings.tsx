@@ -10,6 +10,7 @@ import Button from 'stremio/components/Button';
 import Toggle from 'stremio/components/Toggle';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import { Option } from '../../components';
+import useBoardCatalogs from './useBoardCatalogs';
 import useBoardSpotlight from './useBoardSpotlight';
 import PreviewCard from './PreviewCard';
 import CatalogPicker from './CatalogPicker';
@@ -24,8 +25,9 @@ const SpotlightSettings = ({ profile }: Props) => {
     const { catalogTitle } = useTranslate();
     const routeActive = useRouteActive();
     const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
-    const { enabled, showCatalogRow, catalogs, selected, isDefault, toggleEnabled, toggleCatalogRow, select } = useBoardSpotlight(profile);
     const [pickerOpen, openPicker, closePicker] = useBinaryState(false);
+    const catalogs = useBoardCatalogs(pickerOpen);
+    const { enabled, showCatalogRow, selected, isDefault, toggleEnabled, toggleCatalogRow, select } = useBoardSpotlight(profile, catalogs);
     const off = !enabled;
 
     useEffect(() => {

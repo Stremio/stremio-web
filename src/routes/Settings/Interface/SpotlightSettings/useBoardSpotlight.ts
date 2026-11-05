@@ -1,17 +1,13 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useCore } from 'stremio/core';
-import useModelState from 'stremio/common/useModelState';
 
-const map = (ctx: Ctx) => ({ catalogs: ctx.boardCatalogs });
-
-const useBoardSpotlight = (profile: Profile) => {
+const useBoardSpotlight = (profile: Profile, catalogs: BoardCatalog[]) => {
     const core = useCore();
-    const { catalogs } = useModelState({ model: 'ctx', action: null, map }) as { catalogs: BoardCatalog[] };
     const spotlight = profile.settings.boardSpotlight;
-    const selected = useMemo(() => catalogs.find(({ selected }) => selected) ?? null, [catalogs]);
-    const isDefault = selected === null || selected === catalogs[0];
+    const selected = catalogs.find(({ selected }) => selected) ?? null;
+    const isDefault = selected === null || selected.default;
 
     const update = useCallback((changes: Partial<BoardSpotlight>) => {
         core.transport.dispatch({
@@ -36,7 +32,6 @@ const useBoardSpotlight = (profile: Profile) => {
     return {
         enabled: spotlight.enabled,
         showCatalogRow: spotlight.showCatalogRow,
-        catalogs,
         selected,
         isDefault,
         toggleEnabled,

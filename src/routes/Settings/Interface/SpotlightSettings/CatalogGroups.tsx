@@ -25,7 +25,6 @@ type Group = {
 const CatalogGroups = ({ className, compact = false, catalogs, query, onSelect }: Props) => {
     const { t } = useTranslation();
     const { catalogTitle } = useTranslate();
-    const defaultCatalog = catalogs[0] ?? null;
 
     const groups = useMemo(() => {
         const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -64,7 +63,6 @@ const CatalogGroups = ({ className, compact = false, catalogs, query, onSelect }
                                         key={`${catalog.type}/${catalog.id}`}
                                         catalog={catalog}
                                         title={title}
-                                        isDefault={catalog === defaultCatalog}
                                         onSelect={onSelect}
                                     />
                                 ))
