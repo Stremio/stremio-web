@@ -11,7 +11,7 @@ type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
     onError?: (event: React.SyntheticEvent<HTMLImageElement>) => void,
 };
 
-const ImageContent = ({ className, src, alt, fallbackSrc, renderFallback, ...props }: Props) => {
+const ImageContent = ({ className, src, alt, fallbackSrc, renderFallback, loading, ...props }: Props) => {
     const [broken, setBroken] = useState(false);
     const onError = useCallback((event: React.SyntheticEvent<HTMLImageElement>) => {
         if (typeof props.onError === 'function') {
@@ -25,9 +25,9 @@ const ImageContent = ({ className, src, alt, fallbackSrc, renderFallback, ...pro
         typeof renderFallback === 'function' ?
             renderFallback()
             :
-            <img {...props} className={className} src={fallbackSrc} alt={alt} loading='lazy'/>
+            <img {...props} className={className} src={fallbackSrc} alt={alt} loading={loading ?? 'lazy'}/>
         :
-        <img {...props} className={className} src={src} alt={alt} loading='lazy' onError={onError} />;
+        <img {...props} className={className} src={src} alt={alt} loading={loading ?? 'lazy'} onError={onError} />;
 };
 
 const Image = (props: Props) => <ImageContent key={props.src} {...props} />;

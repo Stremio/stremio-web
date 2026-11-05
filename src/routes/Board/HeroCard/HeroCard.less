@@ -1,0 +1,284 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.hero-card {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    aspect-ratio: 2.35 / 1;
+    min-height: 20rem;
+    max-height: 34rem;
+    margin: 0.5rem 0 1rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: var(--secondary-background-color);
+    user-select: none;
+}
+
+.viewport {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.backdrop {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 800ms ease-in-out;
+
+    &.active {
+        opacity: 1;
+    }
+}
+
+.background-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    user-select: none;
+    -webkit-user-drag: none;
+
+    &.poster-image {
+        filter: blur(1.5rem) brightness(0.55);
+        transform: scale(1.15);
+    }
+}
+
+.gradient-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(8, 10, 16, 0.96) 0%, rgba(8, 10, 16, 0.82) 34%, rgba(8, 10, 16, 0.28) 68%, rgba(8, 10, 16, 0.04) 100%),
+        linear-gradient(0deg, rgba(8, 10, 16, 0.55) 0%, rgba(8, 10, 16, 0) 38%);
+}
+
+.content-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.85rem;
+    width: 58%;
+    max-width: 100%;
+    padding: 2.5rem 3rem;
+    animation: hero-card-fade-in 450ms ease;
+}
+
+.logo {
+    display: block;
+    max-width: 30rem;
+    max-height: 8rem;
+    object-fit: contain;
+    object-position: left center;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.title {
+    max-width: 30rem;
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+.meta-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.8rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.imdb-badge {
+    padding: 0.05rem 0.3rem;
+    border-radius: 0.2rem;
+    background-color: #f5c518;
+    color: #000;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.rating-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+}
+
+.meta-label {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.genres {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.description {
+    display: -webkit-box;
+    max-width: 34rem;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.watch-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 2rem;
+    background-color: var(--primary-accent-color);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    pointer-events: auto;
+    transition: filter 150ms ease;
+
+    &:hover {
+        filter: brightness(1.08);
+    }
+}
+
+.watch-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: currentColor;
+}
+
+.watch-label {
+    line-height: 1;
+}
+
+.dots-container {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.35rem;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    padding: 0;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 0.38);
+    transition: width 250ms ease, background-color 250ms ease;
+
+    &.active {
+        width: 1.5rem;
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+}
+
+@keyframes hero-card-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.4rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .backdrop {
+        transition: none;
+    }
+
+    .content-container {
+        animation: none;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .hero-card {
+        aspect-ratio: 16 / 9;
+        min-height: 17rem;
+        max-height: 24rem;
+        margin-bottom: 0.75rem;
+        border-radius: 0.75rem;
+    }
+
+    .content-container {
+        width: 100%;
+        gap: 0.6rem;
+        padding: 1.5rem;
+    }
+
+    .logo {
+        max-width: 16rem;
+        max-height: 5rem;
+    }
+
+    .title {
+        font-size: clamp(1.5rem, 6vw, 2.4rem);
+    }
+
+    .description {
+        font-size: 0.85rem;
+        -webkit-line-clamp: 2;
+    }
+
+    .dots-container {
+        right: 1rem;
+        bottom: 0.9rem;
+    }
+}
+
+@media @phone-landscape {
+    .hero-card {
+        aspect-ratio: 2.6 / 1;
+        min-height: 15rem;
+        max-height: 20rem;
+    }
+
+    .content-container {
+        width: 62%;
+        padding: 1.25rem 1.75rem;
+    }
+
+    .logo {
+        max-width: 14rem;
+        max-height: 4rem;
+    }
+
+    .description {
+        -webkit-line-clamp: 2;
+    }
+}

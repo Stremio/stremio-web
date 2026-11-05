@@ -18,6 +18,8 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
         escExitFullscreenToggle,
         hideSpoilersToggle,
         gamepadSupportToggle,
+        heroCardToggle,
+        heroCardCatalogSelect,
     } = useInterfaceOptions(profile);
 
     return (
@@ -61,6 +63,21 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
                     {...gamepadSupportToggle}
                 />
             </Option>
+            <Option label={'Enable Spotlight'}>
+                <Toggle
+                    tabIndex={-1}
+                    {...heroCardToggle}
+                />
+            </Option>
+            {
+                heroCardToggle.checked &&
+                    <Option label={'Catalog to show as Spotlight'}>
+                        <MultiselectMenu
+                            className={'multiselect'}
+                            {...heroCardCatalogSelect}
+                        />
+                    </Option>
+            }
         </Section>
     );
 });
