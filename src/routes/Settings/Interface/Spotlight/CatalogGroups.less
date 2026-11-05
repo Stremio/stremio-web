@@ -1,0 +1,68 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+.groups {
+    display: flex;
+    flex-direction: column;
+
+    .group {
+        flex: none;
+        overflow: visible;
+
+        .heading {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 0 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+
+            .icon {
+                flex: none;
+                width: 1.25rem;
+                height: 1.25rem;
+                color: @text-secondary;
+            }
+
+            .addon {
+                flex: none;
+                max-width: 100%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .count {
+                flex: none;
+                font-weight: 500;
+                color: @text-tertiary;
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.25rem;
+            overflow: visible;
+        }
+    }
+
+    .empty {
+        padding: 2rem 1rem;
+        text-align: center;
+        opacity: 0.6;
+    }
+
+    &.compact {
+        .group {
+            .heading {
+                padding: 1rem 0 0.75rem;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem 0.9rem;
+            }
+        }
+    }
+}

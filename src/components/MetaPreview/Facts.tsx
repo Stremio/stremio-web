@@ -11,11 +11,12 @@ type Props = {
     className?: string,
     items: (string | null | undefined)[],
     imdb: MetaLink | null,
+    children?: React.ReactNode,
 };
 
-const Facts = ({ className, items, imdb }: Props) => {
+const Facts = ({ className, items, imdb, children }: Props) => {
     const facts = items.filter((item): item is string => typeof item === 'string' && item.length > 0);
-    if (facts.length === 0 && imdb === null) {
+    if (facts.length === 0 && imdb === null && !children) {
         return null;
     }
 
@@ -35,6 +36,7 @@ const Facts = ({ className, items, imdb }: Props) => {
                     :
                     null
             }
+            {children}
         </div>
     );
 };

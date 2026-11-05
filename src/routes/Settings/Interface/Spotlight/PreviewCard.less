@@ -1,0 +1,172 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+.card {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 6.4;
+    border-radius: 1rem;
+    isolation: isolate;
+    background-color: var(--overlay-color);
+    color: var(--primary-foreground-color);
+    text-align: left;
+    transition: filter 0.15s ease-out;
+
+    &:hover, &:focus {
+        filter: brightness(1.08);
+    }
+
+    &:focus {
+        outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+        outline-offset: -0.25rem;
+    }
+
+    .background {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 25%;
+    }
+
+    .scrim {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(90deg, fade(@media-color, 82%) 0%, fade(@media-color, 40%) 45%, fade(@media-color, 0%) 75%), linear-gradient(0deg, fade(@media-color, 70%) 0%, fade(@media-color, 0%) 60%);
+    }
+
+    .count {
+        position: absolute;
+        top: 1rem;
+        right: 1.25rem;
+        display: flex;
+        align-items: center;
+        height: 1.7rem;
+        padding: 0 0.7rem;
+        border-radius: 999px;
+        background-color: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(6px);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .caption {
+        position: absolute;
+        right: 1.25rem;
+        bottom: 1.1rem;
+        left: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        overflow: visible;
+
+        .logo {
+            display: block;
+            max-width: 11rem;
+            max-height: 3rem;
+            object-fit: contain;
+            object-position: left bottom;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.4));
+        }
+
+        .fallback {
+            max-width: 11rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+
+            .name {
+                min-width: 0;
+                font-size: 0.95rem;
+                font-weight: 600;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+
+                .addon {
+                    margin-left: 0.6rem;
+                    font-weight: 500;
+                    color: @text-secondary;
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        width: 1px;
+                        height: 0.9em;
+                        margin: 0 0.6rem -0.1em 0;
+                        background-color: currentColor;
+                        opacity: 0.4;
+                    }
+                }
+            }
+
+            .pager {
+                flex: none;
+                display: flex;
+                gap: 0.3rem;
+
+                i {
+                    display: block;
+                    width: 1.1rem;
+                    height: 0.25rem;
+                    border-radius: 0.25rem;
+                    background-color: rgba(255, 255, 255, 0.35);
+
+                    &.on {
+                        width: 2.2rem;
+                        background-color: #ffffff;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media @phone {
+    .card {
+        aspect-ratio: 16 / 7.5;
+
+        .caption {
+            right: 1rem;
+            bottom: 1rem;
+            left: 1.25rem;
+
+            .logo {
+                max-width: 9rem;
+                max-height: 2.5rem;
+            }
+
+            .line .pager {
+                gap: 0.25rem;
+
+                i {
+                    width: 0.75rem;
+
+                    &.on {
+                        width: 1.5rem;
+                    }
+                }
+            }
+        }
+    }
+}

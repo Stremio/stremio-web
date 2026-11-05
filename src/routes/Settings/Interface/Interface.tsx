@@ -1,8 +1,9 @@
 import React, { forwardRef } from 'react';
 import { usePlatform } from 'stremio/common';
 import { Scale, MultiselectMenu, Toggle } from 'stremio/components';
-import { Section, Option } from '../components';
+import { Category, Section, Option } from '../components';
 import useInterfaceOptions from './useInterfaceOptions';
+import SpotlightSettings from './Spotlight';
 
 type Props = {
     profile: Profile,
@@ -61,6 +62,9 @@ const Interface = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) =>
                     {...gamepadSupportToggle}
                 />
             </Option>
+            <Category icon={'home'} label={'SETTINGS_SECTION_BOARD'}>
+                <SpotlightSettings profile={profile} />
+            </Category>
         </Section>
     );
 });

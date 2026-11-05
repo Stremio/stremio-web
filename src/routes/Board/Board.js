@@ -9,6 +9,7 @@ const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBar
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
+const { default: Spotlight } = require('./Spotlight');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
@@ -26,7 +27,11 @@ const Board = () => {
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
+    const spotlight = board.spotlight;
+    const spotlightItems = spotlight?.content?.type === 'Ready' ? spotlight.content.content : [];
+    const spotlightVisible = spotlightItems.length > 0 || spotlight?.content?.type === 'Loading';
     const boardCatalogsOffset =
+        (spotlightVisible ? 1 : 0) +
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
     const showStreamingServerWarning = React.useMemo(() => {
@@ -44,7 +49,20 @@ const Board = () => {
         <div className={styles['board-container']}>
             <EventModal />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
-                <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
+                <div ref={scrollContainerRef} className={classnames(styles['board-content'], { [styles['with-spotlight']]: spotlightVisible })} onScroll={onScroll}>
+                    {
+                        spotlightItems.length > 0 ?
+                            <Spotlight
+                                key={`${spotlight.addon.manifest.id}/${spotlight.type}/${spotlight.id}`}
+                                className={styles['board-spotlight']}
+                                items={spotlightItems}
+                            />
+                            :
+                            spotlightVisible ?
+                                <Spotlight.Placeholder className={styles['board-spotlight']} />
+                                :
+                                null
+                    }
                     {
                         continueWatchingPreview.items.length > 0 ?
                             <MetaRow

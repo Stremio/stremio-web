@@ -1,0 +1,140 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+:import('~stremio/components/BottomSheet/BottomSheet.less') {
+    sheet-container: container;
+    sheet-content: content;
+}
+
+.sheet {
+    .sheet-container {
+        width: 100%;
+        max-width: 42rem;
+        height: min(44rem, calc(100% - max(0.75rem, var(--safe-area-inset-top))));
+        max-height: calc(100% - max(0.75rem, var(--safe-area-inset-top)));
+    }
+
+    .sheet-content {
+        display: flex;
+        border-radius: 0;
+    }
+}
+
+.selection {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+
+    button {
+        font-size: inherit;
+        color: inherit;
+        cursor: pointer;
+
+        &:focus-visible {
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            outline-offset: calc(-1 * var(--focus-outline-size));
+        }
+    }
+
+    .header {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.75rem 1rem 0.75rem;
+
+        .heading-icon {
+            flex: none;
+            width: 3.25rem;
+            height: 3.25rem;
+            padding: 0.85rem;
+            color: var(--primary-accent-color);
+        }
+
+        .heading {
+            flex: 1;
+            min-width: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .reset {
+            flex: none;
+            height: 2.25rem;
+            padding: 0 0.75rem;
+            border-radius: 2.25rem;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-accent-color);
+
+            &:active {
+                background: var(--overlay-color);
+            }
+        }
+    }
+
+    .description {
+        flex: none;
+        margin: 0;
+        padding: 0 1.25rem 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: @text-secondary;
+    }
+
+    .search {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: 3.25rem;
+        margin: 0.25rem 1.25rem 0.5rem;
+        padding: 0 1rem;
+        border-radius: var(--border-radius);
+        background: var(--overlay-color);
+
+        svg {
+            flex: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            opacity: 0.5;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            height: 3.25rem;
+            color: inherit;
+            background: transparent;
+        }
+    }
+
+    .body {
+        flex: 1;
+        min-height: 0;
+        padding: 0.15rem 1.25rem 1rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .footer {
+        flex: none;
+        padding: 1rem 1.25rem calc(1rem + var(--safe-area-inset-bottom));
+        border-top: 1px solid var(--overlay-color);
+
+        .done {
+            width: 100%;
+            min-height: 3.25rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            background: var(--primary-accent-color);
+            font-weight: 600;
+        }
+    }
+}

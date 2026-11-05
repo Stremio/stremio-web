@@ -49,6 +49,22 @@ type Settings = {
     assSubtitlesStyling: boolean,
     surroundSound: boolean,
     pauseOnMinimize: boolean,
+    boardSpotlight: BoardSpotlight,
+};
+
+type BoardSpotlight = {
+    enabled: boolean,
+    catalog: ResourceRequest | null,
+    showCatalogRow: boolean,
+};
+
+type BoardCatalog = {
+    id: string,
+    name: string,
+    type: string,
+    addon: CatalogAddonPreview,
+    request: ResourceRequest,
+    selected: boolean,
 };
 
 type Profile = {
@@ -90,4 +106,5 @@ type Ctx = {
     notifications: Notifications,
     searchHistory: SearchHistory,
     streamingServerUrls: StreamingServerUrls,
+    boardCatalogs: BoardCatalog[],
 };
