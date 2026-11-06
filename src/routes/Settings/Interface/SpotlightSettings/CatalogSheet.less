@@ -28,17 +28,6 @@
     min-height: 0;
     min-width: 0;
 
-    button {
-        font-size: inherit;
-        color: inherit;
-        cursor: pointer;
-
-        &:focus-visible {
-            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-            outline-offset: calc(-1 * var(--focus-outline-size));
-        }
-    }
-
     .header {
         display: flex;
         flex: none;
@@ -65,6 +54,8 @@
 
         .reset {
             flex: none;
+            display: flex;
+            align-items: center;
             height: 2.25rem;
             padding: 0 0.75rem;
             border-radius: 2.25rem;
@@ -75,11 +66,6 @@
 
             &:active {
                 background: var(--overlay-color);
-            }
-
-            &:disabled {
-                opacity: 0.5;
-                pointer-events: none;
             }
         }
     }
@@ -134,6 +120,9 @@
         border-top: 1px solid var(--overlay-color);
 
         .done {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             min-height: 3.25rem;
             padding: 0.75rem 1rem;

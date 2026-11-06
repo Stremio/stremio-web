@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import BottomSheet from 'stremio/components/BottomSheet';
+import Button from 'stremio/components/Button';
 import TextInput from 'stremio/components/TextInput';
 import CatalogGroups from './CatalogGroups';
 import styles from './CatalogSheet.less';
@@ -35,9 +36,9 @@ const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) =
                 <div className={styles['header']}>
                     <Icon className={styles['heading-icon']} name={'home'} />
                     <div className={styles['heading']}>{t('SETTINGS_SPOTLIGHT_CATALOG')}</div>
-                    <button type={'button'} className={styles['reset']} disabled={isDefault} onClick={() => onSelect(null)}>
+                    <Button className={styles['reset']} disabled={isDefault} onClick={() => onSelect(null)}>
                         {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}
-                    </button>
+                    </Button>
                 </div>
                 <p className={styles['description']}>{t('SETTINGS_SPOTLIGHT_CATALOG_DESCRIPTION')}</p>
                 <div className={styles['search']}>
@@ -52,9 +53,9 @@ const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) =
                 </div>
                 <CatalogGroups className={styles['body']} compact={true} catalogs={catalogs} query={query} onSelect={onSelect} />
                 <div className={styles['footer']}>
-                    <button type={'button'} className={styles['done']} onClick={onClose}>
+                    <Button className={styles['done']} onClick={onClose}>
                         {t('DONE')}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </BottomSheet>
