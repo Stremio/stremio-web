@@ -11,6 +11,7 @@ const { t } = require('i18next');
 const { default: Stepper } = require('./Stepper');
 const { default: SubtitleVariant } = require('./SubtitleVariant');
 const { snapSubtitleDelay, SUBTITLES_DELAY_STEP_MS } = require('../subtitleDelay');
+const { normalizeSubtitleLanguage, filterSubtitleTracks } = require('stremio/common/subtitleLanguageFilter');
 
 const ORIGIN_PRIORITIES = [
     'LOCAL',
@@ -18,9 +19,9 @@ const ORIGIN_PRIORITIES = [
     'EXCLUSIVE',
 ];
 
-const normalizeTracksLang = (tracks) => tracks.map((track) => ({
+const normalizeTracksLang = (tracks, filterEnabled) => tracks.map((track) => ({
     ...track,
-    lang: languages.toCode(track.lang),
+    lang: filterEnabled ? normalizeSubtitleLanguage(track.lang) ?? languages.toCode(track.lang) : languages.toCode(track.lang),
 }));
 
 const sortByValues = (items, values, getValue = (item) => item) => items.sort((a, b) => {
@@ -34,16 +35,19 @@ const sortByValues = (items, values, getValue = (item) => item) => items.sort((a
 
 const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
     const subtitlesTracks = React.useMemo(() => {
-        return normalizeTracksLang(Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : []);
-    }, [props.subtitlesTracks]);
+        return normalizeTracksLang(Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : [], props.subtitlesLanguageFilterEnabled);
+    }, [props.subtitlesTracks, props.subtitlesLanguageFilterEnabled]);
 
     const extraSubtitlesTracks = React.useMemo(() => {
-        return normalizeTracksLang(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : []);
-    }, [props.extraSubtitlesTracks]);
+        return normalizeTracksLang(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [], props.subtitlesLanguageFilterEnabled);
+    }, [props.extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled]);
 
     const allSubtitles = React.useMemo(() => {
-        return subtitlesTracks.concat(extraSubtitlesTracks);
-    }, [subtitlesTracks, extraSubtitlesTracks]);
+        return filterSubtitleTracks(subtitlesTracks.concat(extraSubtitlesTracks), props.subtitlesLanguageFilterEnabled, [
+            props.preferredSubtitleLanguage1,
+            props.preferredSubtitleLanguage2,
+        ]);
+    }, [subtitlesTracks, extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled, props.preferredSubtitleLanguage1, props.preferredSubtitleLanguage2]);
 
     const subtitlesLanguages = React.useMemo(() => {
         const userLanguage = languages.toCode(props.subtitlesLanguage) ?? DEFAULT_SUBTITLES_LANGUAGE;
@@ -252,6 +256,9 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
 SubtitlesMenu.displayName = 'MainNavBars';
 
 SubtitlesMenu.propTypes = {
+    subtitlesLanguageFilterEnabled: PropTypes.bool,
+    preferredSubtitleLanguage1: PropTypes.string,
+    preferredSubtitleLanguage2: PropTypes.string,
     className: PropTypes.string,
     subtitlesLanguage: PropTypes.string,
     interfaceLanguage: PropTypes.string,

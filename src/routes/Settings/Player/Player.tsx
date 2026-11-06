@@ -14,6 +14,9 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
     const platform = usePlatform();
 
     const {
+        subtitlesLanguageFilterToggle,
+        preferredSubtitleLanguage1Select,
+        preferredSubtitleLanguage2Select,
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
@@ -44,6 +47,15 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         className={'multiselect'}
                         {...subtitlesLanguageSelect}
                     />
+                </Option>
+                <Option label={'SETTINGS_SUBTITLES_SHOW_ONLY_PREFERRED_LANGS'}>
+                    <Toggle tabIndex={-1} {...subtitlesLanguageFilterToggle} />
+                </Option>
+                <Option label={'STREMIO_TV_SETTINGS_PREFERRED_LANGUAGE'}>
+                    <MultiselectMenu className={'multiselect'} {...preferredSubtitleLanguage1Select} />
+                </Option>
+                <Option label={'STREMIO_TV_SETTINGS_SECONDARY_PREFERRED_LANGUAGE'}>
+                    <MultiselectMenu className={'multiselect'} {...preferredSubtitleLanguage2Select} />
                 </Option>
                 <Option label={'SETTINGS_SUBTITLES_SIZE'}>
                     <MultiselectMenu

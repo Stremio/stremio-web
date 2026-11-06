@@ -62,6 +62,9 @@ type UseSubtitlesArgs = {
 };
 
 type SubtitlesMenuProps = {
+    subtitlesLanguageFilterEnabled: boolean,
+    preferredSubtitleLanguage1: string,
+    preferredSubtitleLanguage2: string | null,
     subtitlesLanguage: string | null,
     interfaceLanguage: string,
     subtitlesTracks: SubtitleTrack[],
