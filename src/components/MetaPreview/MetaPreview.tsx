@@ -73,7 +73,7 @@ const MetaPreview = ({
                     title={name}
                     renderFallback={() => <div className={styles['name']}>{name}</div>}
                 />
-                {metadata ?? <Facts className={styles['facts']} items={[runtime, releaseInfo || getReleaseYear(released)]} imdb={imdb} />}
+                {metadata ?? <Facts className={styles['facts']} items={[releaseInfo || getReleaseYear(released), runtime]} imdb={imdb} />}
                 {
                     typeof description === 'string' && description.length > 0 ?
                         <p className={styles['description']}>{description}</p>
