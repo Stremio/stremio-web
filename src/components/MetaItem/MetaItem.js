@@ -17,9 +17,22 @@ const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHr
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
 const styles = require('./styles');
 
-const MetaItem = React.memo(({ className, type, name, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
-    const { t } = useTranslation();
+const MetaItem = React.memo(({ className, type, name, nextEpisode, poster, posterShape, posterChangeCursor, progress, newVideos, options, actionMenu, deepLinks, href: customHref, dataset, optionOnSelect, onDismissClick, onPlayClick, watched, live, ...props }) => {
+    const { t, i18n } = useTranslation();
     const artwork = poster && typeof poster === 'object' ? poster : { src: poster, shape: posterShape, changeCursor: posterChangeCursor };
+    // "S13E1423 · in 2 days", or "S13E1423 · Out now" while the +N tag has not caught up with an aired episode
+    const nextEpisodeLabel = React.useMemo(() => {
+        if (nextEpisode === null || typeof nextEpisode !== 'object') {
+            return null;
+        }
+        const { season, episode, days, aired } = nextEpisode;
+        const code = typeof season === 'number' && typeof episode === 'number' ? `S${season}E${episode}` : null;
+        const when = aired ?
+            t('EPISODE_OUT_NOW', { defaultValue: 'Out now' })
+            :
+            new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }).format(days, 'day');
+        return code ? `${code} · ${when}` : when;
+    }, [nextEpisode, t, i18n.language]);
     const { navigateWithOrigin } = useNavigateWithOrigin();
     const [menuOpen, onMenuOpen, onMenuClose] = useBinaryState(false);
     const { hoverProps, isHovered } = useHover({});
@@ -82,7 +95,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                 <div className={classnames(styles['poster-container'], { 'poster-change-cursor': artwork.changeCursor })}>
                     {
                         onDismissClick ?
-                            <div title={t('LIBRARY_RESUME_DISMISS')} className={styles['dismiss-icon-layer']} onClick={dismissOnClick}>
+                            <div title={t('LIBRARY_RESUME_DISMISS')} className={classnames(styles['dismiss-icon-layer'], { [styles['below-banner']]: nextEpisodeLabel !== null })} onClick={dismissOnClick}>
                                 <Icon className={styles['dismiss-icon']} name={'close'} />
                                 <div className={styles['dismiss-icon-backdrop']} />
                             </div>
@@ -91,7 +104,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                     }
                     {
                         watched ?
-                            <div className={styles['watched-icon-layer']}>
+                            <div className={classnames(styles['watched-icon-layer'], { [styles['below-banner']]: nextEpisodeLabel !== null })}>
                                 <Icon className={styles['watched-icon']} name={'checkmark'} />
                             </div>
                             :
@@ -148,6 +161,15 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                             :
                             null
                     }
+                    {
+                        nextEpisodeLabel !== null ?
+                            <div className={classnames(styles['next-episode-banner'], { [styles['aired']]: nextEpisode.aired })} title={nextEpisodeLabel}>
+                                <Icon className={styles['icon']} name={'clock'} />
+                                <div className={styles['label']}>{nextEpisodeLabel}</div>
+                            </div>
+                            :
+                            null
+                    }
                 </div>
                 {
                     (typeof name === 'string' && name.length > 0) || hasOptions ?
@@ -197,6 +219,12 @@ MetaItem.propTypes = {
     className: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
+    nextEpisode: PropTypes.shape({
+        season: PropTypes.number,
+        episode: PropTypes.number,
+        days: PropTypes.number,
+        aired: PropTypes.bool,
+    }),
     poster: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.shape({

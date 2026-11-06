@@ -9,6 +9,7 @@ const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBar
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
+const { default: useNextEpisodes } = require('./useNextEpisodes');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
@@ -18,9 +19,10 @@ const Board = () => {
     const t = useTranslate();
     const streamingServer = useStreamingServer();
     const continueWatchingPreview = useContinueWatchingPreview();
+    const notifications = useNotifications();
+    const continueWatchingCatalog = useNextEpisodes(continueWatchingPreview, notifications);
     const liveTvContinueWatching = useLiveTvContinueWatching();
     const [board, loadBoardRows] = useBoard();
-    const notifications = useNotifications();
     const profile = useProfile();
     const liveTvCatalog = React.useMemo(() => ({
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
@@ -50,7 +52,7 @@ const Board = () => {
                             <MetaRow
                                 className={classnames(styles['board-row'], styles['continue-watching-row'], 'animation-fade-in')}
                                 title={t.string('BOARD_CONTINUE_WATCHING')}
-                                catalog={continueWatchingPreview}
+                                catalog={continueWatchingCatalog}
                                 itemComponent={ContinueWatchingItem}
                                 notifications={notifications}
                             />

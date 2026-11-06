@@ -59,6 +59,7 @@ type Profile = {
 type Notifications = {
     uid: string,
     created: string,
+    lastUpdated: string | null,
     items: Record<string, NotificationItem[]>,
 };
 

@@ -14,6 +14,7 @@
 }
 
 @play-icon-size: 4rem;
+@next-episode-banner-height: 1.6rem;
 
 .meta-item-container {
     position: relative;
@@ -143,6 +144,10 @@
                 background-color: var(--primary-background-color);
                 opacity: 0.6;
             }
+
+            &.below-banner {
+                top: @next-episode-banner-height + 0.5rem;
+            }
         }
 
         .watched-icon-layer {
@@ -162,6 +167,10 @@
                 width: 0.75rem;
                 height: 0.75rem;
                 color: var(--primary-foreground-color);
+            }
+
+            &.below-banner {
+                top: @next-episode-banner-height;
             }
         }
 
@@ -269,6 +278,46 @@
 
             &:hover {
                 transform: scale(1.1);
+            }
+        }
+
+        // Next-episode strip across the top of the poster: accent while the episode is still
+        // to come, light once it aired and the +N tag has not caught up with it yet.
+        .next-episode-banner {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: @next-episode-banner-height;
+            padding: 0 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            background-color: var(--primary-accent-color);
+            color: var(--primary-foreground-color);
+
+            &.aired {
+                background-color: var(--primary-foreground-color);
+                color: var(--primary-background-color);
+            }
+
+            .icon {
+                flex: none;
+                width: 0.8rem;
+                height: 0.8rem;
+                color: currentColor;
+            }
+
+            .label {
+                flex: 0 1 auto;
+                min-width: 0;
+                font-size: 0.8rem;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
 
