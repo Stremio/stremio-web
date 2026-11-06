@@ -4,7 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
-import type { MetaLink } from './useMetaLinks';
+import type { MetaLink } from 'stremio/common/useMetaLinks';
 import styles from './Facts.less';
 
 type Props = {
