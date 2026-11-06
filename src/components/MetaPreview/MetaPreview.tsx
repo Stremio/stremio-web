@@ -4,6 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Image from 'stremio/components/Image';
 import useMetaLinks from 'stremio/common/useMetaLinks';
+import getReleaseYear from 'stremio/common/getReleaseYear';
 import Facts from './Facts';
 import Links from './Links';
 import Actions from './Actions';
@@ -31,11 +32,6 @@ type Props = {
 };
 
 const renderNothing = () => null;
-
-const getYear = (released: Date | string | null): string | null => {
-    const date = typeof released === 'string' ? new Date(released) : released;
-    return date !== null && !Number.isNaN(date.getTime()) ? String(date.getFullYear()) : null;
-};
 
 const MetaPreview = ({
     className,
@@ -77,7 +73,7 @@ const MetaPreview = ({
                     title={name}
                     renderFallback={() => <div className={styles['name']}>{name}</div>}
                 />
-                {metadata ?? <Facts className={styles['facts']} items={[runtime, releaseInfo || getYear(released)]} imdb={imdb} />}
+                {metadata ?? <Facts className={styles['facts']} items={[releaseInfo || getReleaseYear(released), runtime]} imdb={imdb} />}
                 {
                     typeof description === 'string' && description.length > 0 ?
                         <p className={styles['description']}>{description}</p>

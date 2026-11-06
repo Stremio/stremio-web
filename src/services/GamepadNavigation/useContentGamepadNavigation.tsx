@@ -5,6 +5,8 @@ import { useGamepad } from '../GamepadContext';
 
 const FOCUSABLE = '[tabindex]:not([data-focus-guard])';
 
+const isVisible = (element: HTMLElement) => element.checkVisibility?.({ visibilityProperty: true }) ?? true;
+
 const getActiveScope = (fallback: HTMLDivElement | null): HTMLElement | null => {
     if (document.querySelector('[data-gamepad-modal]')) return null;
 
@@ -42,7 +44,7 @@ const useContentGamepadNavigation = (
 
             const elements = Array.from(
                 scope?.querySelectorAll<HTMLDivElement>(FOCUSABLE) || []
-            );
+            ).filter(isVisible);
             if (elements.length === 0) return;
 
             const activeElement = (scope ?? document)?.querySelector<HTMLDivElement>(':focus');
@@ -102,7 +104,7 @@ const useContentGamepadNavigation = (
 
             const elements = Array.from(
                 scope?.querySelectorAll<HTMLDivElement>(FOCUSABLE) || []
-            );
+            ).filter(isVisible);
             if (elements.length === 0) {
                 if (lastFocused.current) {
                     lastFocused.current.focus();
