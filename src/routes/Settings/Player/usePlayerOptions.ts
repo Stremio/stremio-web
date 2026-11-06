@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
-import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
+import { CONSTANTS, languageNames, useLanguageSorting, usePlatform, useSettings } from 'stremio/common';
 import useMpvConfig from './useMpvConfig';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
@@ -11,6 +11,7 @@ const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
+    const [, updateSettings] = useSettings();
     const mpvConfigSelect = useMpvConfig();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
@@ -394,6 +395,14 @@ const usePlayerOptions = (profile: Profile) => {
     }), [profile.settings]);
 
     return {
+        showClockToggle: {
+            checked: profile.settings.showClockInPlayer,
+            onClick: () => updateSettings({ showClockInPlayer: !profile.settings.showClockInPlayer }),
+        },
+        clockAlwaysVisibleToggle: {
+            checked: profile.settings.playerClockAlwaysVisible,
+            onClick: () => updateSettings({ playerClockAlwaysVisible: !profile.settings.playerClockAlwaysVisible }),
+        },
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
