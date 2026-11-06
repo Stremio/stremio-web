@@ -85,7 +85,7 @@ const MetaPreview = ({
                         :
                         null
                 }
-                <Facts className={styles['facts']} items={[runtime, releaseInfo || getReleaseYear(released)]} imdb={imdb}>
+                <Facts className={styles['facts']} items={[releaseInfo || getReleaseYear(released), runtime]} imdb={imdb}>
                     {
                         contentRatings.length > 0 ?
                             contentRatings.map((rating, index) => <ContentRating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />)
