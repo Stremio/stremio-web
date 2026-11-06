@@ -577,6 +577,9 @@ const useSubtitles = ({
     }, [closeMenus, hasTracks, toggleSubtitlesMenu]));
 
     const menuProps = useMemo(() => ({
+        subtitlesLanguageFilterEnabled: settings.subtitlesLanguageFilterEnabled,
+        preferredSubtitleLanguage1: settings.preferredSubtitleLanguage1,
+        preferredSubtitleLanguage2: settings.preferredSubtitleLanguage2,
         subtitlesLanguage: settings.subtitlesLanguage,
         interfaceLanguage: settings.interfaceLanguage,
         subtitlesTracks: video.state.subtitlesTracks,
@@ -602,6 +605,9 @@ const useSubtitles = ({
         changeSize,
         selectEmbeddedTrack,
         selectExtraTrack,
+        settings.subtitlesLanguageFilterEnabled,
+        settings.preferredSubtitleLanguage1,
+        settings.preferredSubtitleLanguage2,
         settings.interfaceLanguage,
         settings.subtitlesLanguage,
         video.state.extraSubtitlesDelay,

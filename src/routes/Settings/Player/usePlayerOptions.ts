@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
-import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
+import { CONSTANTS, languages, languageNames, useLanguageSorting, usePlatform, useSettings } from 'stremio/common';
 import useMpvConfig from './useMpvConfig';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
@@ -11,6 +11,9 @@ const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
+    const [, updateSettings] = useSettings();
+    const preferredLanguageOptions = useMemo(() => languages.all.map(({ code, label }) => ({ value: code, label })), []);
+    const { sortedOptions: sortedPreferredLanguageOptions } = useLanguageSorting(preferredLanguageOptions);
     const mpvConfigSelect = useMpvConfig();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
@@ -394,6 +397,20 @@ const usePlayerOptions = (profile: Profile) => {
     }), [profile.settings]);
 
     return {
+        subtitlesLanguageFilterToggle: {
+            checked: profile.settings.subtitlesLanguageFilterEnabled,
+            onClick: () => updateSettings({ subtitlesLanguageFilterEnabled: !profile.settings.subtitlesLanguageFilterEnabled }),
+        },
+        preferredSubtitleLanguage1Select: {
+            options: sortedPreferredLanguageOptions,
+            value: profile.settings.preferredSubtitleLanguage1,
+            onSelect: (value: string) => updateSettings({ preferredSubtitleLanguage1: value }),
+        },
+        preferredSubtitleLanguage2Select: {
+            options: [{ value: null, label: t('NONE') }, ...sortedPreferredLanguageOptions],
+            value: profile.settings.preferredSubtitleLanguage2,
+            onSelect: (value: string | null) => updateSettings({ preferredSubtitleLanguage2: value }),
+        },
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
