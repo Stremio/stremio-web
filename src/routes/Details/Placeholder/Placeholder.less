@@ -154,18 +154,6 @@
         max-width: 100%;
     }
 
-    .channel {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-
-        .addon {
-            width: 5rem;
-            height: 0.8125rem;
-            margin-top: 0.75rem;
-        }
-    }
-
     .status {
         width: 14rem;
         height: 0.875rem;
@@ -354,12 +342,8 @@
 
 @media @desktop {
     .placeholder {
-        .art, .channel {
+        .art {
             margin-bottom: auto;
-        }
-
-        &.live .art {
-            margin-bottom: 0;
         }
     }
 }
@@ -402,10 +386,6 @@
             min-height: 0.75rem;
         }
 
-        .channel .addon {
-            margin-top: 0.5rem;
-        }
-
         .status ~ .title {
             height: 1.75rem;
             margin-top: 0.5rem;
@@ -446,7 +426,7 @@
             height: 4rem;
         }
 
-        .still, .links, .channel, .spacer, &.hero .title, &.episode .title {
+        .still, .links, .spacer, &.hero .title, &.episode .title {
             display: none;
         }
 
