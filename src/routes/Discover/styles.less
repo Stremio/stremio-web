@@ -2,6 +2,7 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) '~stremio/routes/Details/variables.less';
 
 :import('~stremio/components/MultiselectMenu/Label/Label.less') {
     multiselect-button: button;
@@ -204,6 +205,16 @@
                     }
                 }
             }
+        }
+
+        .preview {
+            flex: none;
+            width: @panel-width;
+            margin: 1rem @panel-gap @panel-gap 0;
+            padding: 2rem;
+            border-radius: @panel-radius;
+            background-color: @panel-background;
+            backdrop-filter: blur(8px) saturate(1.2);
         }
     }
 }

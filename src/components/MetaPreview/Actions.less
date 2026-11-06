@@ -1,0 +1,83 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+.button, .group {
+    flex: none;
+    display: flex;
+    align-items: center;
+    height: 4rem;
+    border-radius: 999px;
+    background-color: var(--overlay-color);
+    backdrop-filter: blur(5px);
+    overflow: visible;
+}
+
+.button {
+    position: relative;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0 1.75rem;
+    color: var(--primary-foreground-color);
+    transition: background-color 0.15s @ease;
+
+    &:hover, &:focus {
+        background-color: @overlay-hover;
+    }
+
+    &.round {
+        width: 4rem;
+        padding: 0;
+    }
+
+    &.show {
+        &:hover, &:focus {
+            background-color: var(--secondary-accent-color);
+        }
+    }
+
+    .icon {
+        flex: none;
+        width: 1.75rem;
+        height: 1.75rem;
+        opacity: 0.9;
+    }
+
+    .label {
+        flex: none;
+        font-size: 1rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+}
+
+.group .toggle {
+    --glyph: 1.75rem;
+    width: 4rem;
+    height: 4rem;
+}
+
+@media @phone-landscape {
+    .group {
+        flex-direction: column;
+        gap: 0.75rem;
+        height: auto;
+        border-radius: 0;
+        background-color: transparent;
+        backdrop-filter: none;
+
+        .toggle {
+            background-color: var(--overlay-color);
+            backdrop-filter: blur(5px);
+        }
+    }
+
+    .button.show {
+        width: 4rem;
+        padding: 0;
+
+        .label {
+            display: none;
+        }
+    }
+}
