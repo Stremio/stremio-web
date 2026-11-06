@@ -44,6 +44,7 @@ const SpotlightSettings = ({ profile }: Props) => {
             <Option className={classNames({ [styles['off']]: off })} label={'SETTINGS_SPOTLIGHT_CATALOG'}>
                 <Button
                     className={styles['value']}
+                    tabIndex={off ? undefined : 0}
                     aria-haspopup={'dialog'}
                     aria-expanded={pickerOpen}
                     onClick={openPicker}
@@ -56,10 +57,11 @@ const SpotlightSettings = ({ profile }: Props) => {
                 className={classNames(styles['preview'], { [styles['off']]: off })}
                 catalog={selected}
                 expanded={pickerOpen}
+                tabIndex={off ? undefined : 0}
                 onClick={openPicker}
             />
             <Option className={classNames({ [styles['off']]: off })} label={'SETTINGS_SPOTLIGHT_SHOW_ROW'}>
-                <Toggle tabIndex={-1} checked={showCatalogRow} onClick={toggleCatalogRow} />
+                <Toggle tabIndex={off ? undefined : -1} checked={showCatalogRow} onClick={toggleCatalogRow} />
             </Option>
             {
                 isMobile ?
