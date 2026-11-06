@@ -7,7 +7,7 @@ import { useModelState } from 'stremio/common';
 // What the strip on a Continue Watching card says about a series, if anything:
 //
 //   episodes aired since the last watch (the +N tag)   → nothing, the tag has the floor
-//   the latest aired episode, no pull run since         → "S13E1423 · Out now"
+//   the latest aired episode, no pull run since         → "S13E1423 · yesterday"
 //   the first episode dated today or later              → "S13E1423 · in 2 days"
 //   otherwise                                           → nothing
 //
