@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useBinaryState, useMediaQuery } from 'stremio/common';
@@ -22,13 +23,19 @@ type Props = {
 };
 
 const SpotlightSettings = ({ profile }: Props) => {
+    const { t } = useTranslation();
     const { catalogTitle } = useTranslate();
     const routeActive = useRouteActive();
     const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
     const [pickerOpen, openPicker, closePicker] = useBinaryState(false);
-    const catalogs = useBoardCatalogs(pickerOpen);
-    const { enabled, showCatalogRow, selected, isDefault, toggleEnabled, toggleCatalogRow, select } = useBoardSpotlight(profile, catalogs);
+    const { selected, catalogs, spotlight } = useBoardCatalogs(pickerOpen);
+    const { enabled, showCatalogRows, picks, isDefault, nudge, toggleEnabled, toggleCatalogRows, toggle, remove, reset } = useBoardSpotlight(profile, catalogs);
     const off = !enabled;
+    const empty = selected !== null && catalogs.length === 0;
+    const value = picks.length === 1 ?
+        catalogTitle(picks[0]) ?? picks[0].name
+        :
+        picks.length > 1 || empty ? t('SETTINGS_SPOTLIGHT_CATALOGS', { count: picks.length }) : '';
 
     useEffect(() => {
         if (!routeActive) {
@@ -41,7 +48,7 @@ const SpotlightSettings = ({ profile }: Props) => {
             <Option label={'SETTINGS_SHOW_SPOTLIGHT'}>
                 <Toggle tabIndex={-1} checked={enabled} onClick={toggleEnabled} />
             </Option>
-            <Option className={classNames({ [styles['off']]: off })} label={'SETTINGS_SPOTLIGHT_CATALOG'}>
+            <Option className={classNames({ [styles['off']]: off })} label={'SETTINGS_SPOTLIGHT_CATALOGS_TITLE'}>
                 <Button
                     className={styles['value']}
                     tabIndex={off ? undefined : 0}
@@ -49,35 +56,47 @@ const SpotlightSettings = ({ profile }: Props) => {
                     aria-expanded={pickerOpen}
                     onClick={openPicker}
                 >
-                    <div className={styles['label']}>{selected !== null ? catalogTitle(selected) ?? selected.name : ''}</div>
+                    <div className={styles['label']}>{value}</div>
                     <Icon className={styles['icon']} name={'chevron-forward'} />
                 </Button>
             </Option>
             <PreviewCard
                 className={classNames(styles['preview'], { [styles['off']]: off })}
-                catalog={selected}
+                empty={empty}
+                picks={picks}
+                preview={spotlight}
                 expanded={pickerOpen}
                 tabIndex={off ? undefined : 0}
                 onClick={openPicker}
             />
-            <Option className={classNames({ [styles['off']]: off })} label={'SETTINGS_SPOTLIGHT_SHOW_ROW'}>
-                <Toggle tabIndex={off ? undefined : -1} checked={showCatalogRow} onClick={toggleCatalogRow} />
+            <Option className={classNames({ [styles['off']]: off })} label={picks.length > 1 ? 'SETTINGS_SPOTLIGHT_SHOW_ROWS' : 'SETTINGS_SPOTLIGHT_SHOW_ROW'}>
+                <Toggle tabIndex={off ? undefined : -1} checked={showCatalogRows} onClick={toggleCatalogRows} />
             </Option>
             {
                 isMobile ?
                     <CatalogSheet
                         show={pickerOpen}
                         catalogs={catalogs}
+                        empty={empty}
+                        picks={picks}
                         isDefault={isDefault}
-                        onSelect={select}
+                        nudge={nudge}
+                        onToggle={toggle}
+                        onRemove={remove}
+                        onReset={reset}
                         onClose={closePicker}
                     />
                     :
                     pickerOpen ?
                         <CatalogPicker
                             catalogs={catalogs}
+                            empty={empty}
+                            picks={picks}
                             isDefault={isDefault}
-                            onSelect={select}
+                            nudge={nudge}
+                            onToggle={toggle}
+                            onRemove={remove}
+                            onReset={reset}
                             onClose={closePicker}
                         />
                         :

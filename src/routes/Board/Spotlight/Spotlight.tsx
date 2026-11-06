@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useId, useRef, useState } from 'react';
+import React, { useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { useCore } from 'stremio/core';
@@ -32,7 +32,8 @@ const Spotlight = ({ className, items, sentinelRef }: Props) => {
     const routeActive = useRouteActive();
     const isMobile = useMediaQuery(MOBILE_QUERY);
     const [reducedMotion] = useState(() => window.matchMedia(REDUCED_MOTION_QUERY).matches);
-    const { index, paused, shown, go, pause, togglePaused } = useCarousel(items.length, reducedMotion);
+    const ids = useMemo(() => items.map((item) => item.id), [items]);
+    const { index, paused, shown, go, pause, togglePaused } = useCarousel(ids, reducedMotion);
     const swipeStart = useRef<number | null>(null);
     const stopped = paused || isMobile || !routeActive;
 
@@ -79,7 +80,7 @@ const Spotlight = ({ className, items, sentinelRef }: Props) => {
             <div className={styles['art']} aria-hidden={'true'}>
                 {
                     items.map((item, slide) => (
-                        shown.has(slide) ?
+                        shown.has(item.id) ?
                             <div key={item.id} className={classNames(styles['backdrop'], { [styles['on']]: slide === index })}>
                                 <Image className={styles['image']} src={item.background ?? undefined} alt={''} renderFallback={renderNothing} />
                             </div>

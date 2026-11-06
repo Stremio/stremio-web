@@ -23,6 +23,24 @@
         outline-offset: -0.25rem;
     }
 
+    .nothing {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        height: 100%;
+        padding: 0 1.5rem;
+        font-size: 0.95rem;
+        text-align: center;
+        color: @text-secondary;
+
+        .title {
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+        }
+    }
+
     .background {
         position: absolute;
         top: 0;

@@ -28,9 +28,8 @@ const Board = () => {
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
-    const spotlight = board.spotlight;
-    const spotlightItems = spotlight?.content?.type === 'Ready' ? spotlight.content.content : [];
-    const spotlightVisible = spotlightItems.length > 0 || spotlight?.content?.type === 'Loading';
+    const spotlightItems = board.spotlight?.type === 'Ready' ? board.spotlight.content : [];
+    const spotlightVisible = spotlightItems.length > 0 || board.spotlight?.type === 'Loading';
     const boardCatalogsOffset =
         (spotlightVisible ? 1 : 0) +
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
@@ -56,7 +55,7 @@ const Board = () => {
                     {
                         spotlightItems.length > 0 ?
                             <Spotlight
-                                key={`${spotlight.addon.manifest.id}/${spotlight.type}/${spotlight.id}`}
+                                key={spotlightItems[0].id}
                                 className={styles['board-spotlight']}
                                 items={spotlightItems}
                                 sentinelRef={spotlightSentinelRef}

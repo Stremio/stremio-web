@@ -13,7 +13,7 @@ type BoardCatalog = {
     type: string,
     addon: AddonPreview,
     request: ResourceRequest,
-    selected: boolean,
+    selected: number | null,
     default: boolean,
     content: Loadable<BoardCatalogPreview | null> | null,
 };
@@ -23,4 +23,5 @@ type BoardCatalogs = {
         all: boolean,
     } | null,
     catalogs: BoardCatalog[],
+    spotlight: BoardCatalogPreview | null,
 };

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import useModelState from 'stremio/common/useModelState';
 
-const useBoardCatalogs = (all: boolean): BoardCatalog[] => {
+const useBoardCatalogs = (all: boolean): BoardCatalogs => {
     const action = useMemo(() => ({
         action: 'Load',
         args: {
@@ -11,8 +11,7 @@ const useBoardCatalogs = (all: boolean): BoardCatalog[] => {
             args: { all },
         },
     }), [all]);
-    const { catalogs } = useModelState({ model: 'board_catalogs', action, deps: ['ctx'] }) as BoardCatalogs;
-    return catalogs;
+    return useModelState({ model: 'board_catalogs', action, deps: ['ctx'] }) as BoardCatalogs;
 };
 
 export default useBoardCatalogs;

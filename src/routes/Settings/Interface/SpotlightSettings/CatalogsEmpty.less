@@ -1,0 +1,48 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/routes/Board/Spotlight/variables.less';
+
+.empty {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 3.5rem 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: center;
+    color: @text-secondary;
+
+    .icon {
+        flex: none;
+        width: 3rem;
+        height: 3rem;
+        opacity: 0.4;
+        color: var(--primary-foreground-color);
+    }
+
+    .title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+    }
+
+    .link {
+        flex: none;
+        display: flex;
+        align-items: center;
+        height: 3rem;
+        margin-top: 0.5rem;
+        padding: 0 1.75rem;
+        border-radius: 3rem;
+        background-color: var(--primary-accent-color);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--primary-foreground-color);
+
+        &:hover, &:focus {
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+        }
+    }
+}

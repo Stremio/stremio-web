@@ -15,7 +15,7 @@ type CatalogWithExtra = {
 
 type CatalogsWithExtra = {
     catalogs: CatalogWithExtra[] | null,
-    spotlight: CatalogWithExtra | null,
+    spotlight: Loadable<MetaItemPreviewCatalogsWithExtra[]> | null,
     selected: {
         type: string | null,
         extra: [string, string][]
