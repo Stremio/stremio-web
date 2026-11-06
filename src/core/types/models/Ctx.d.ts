@@ -54,8 +54,8 @@ type Settings = {
 
 type BoardSpotlight = {
     enabled: boolean,
-    catalog: ResourceRequest | null,
-    showCatalogRow: boolean,
+    catalogs: ResourceRequest[],
+    showCatalogRows: boolean,
 };
 
 type Profile = {

@@ -7,17 +7,25 @@ import BottomSheet from 'stremio/components/BottomSheet';
 import Button from 'stremio/components/Button';
 import TextInput from 'stremio/components/TextInput';
 import CatalogGroups from './CatalogGroups';
+import CatalogTray from './CatalogTray';
+import CatalogsEmpty from './CatalogsEmpty';
+import { MAX_CATALOGS, type Nudge } from './useBoardSpotlight';
 import styles from './CatalogSheet.less';
 
 type Props = {
     show: boolean,
     catalogs: BoardCatalog[],
+    empty: boolean,
+    picks: BoardCatalog[],
     isDefault: boolean,
-    onSelect: (catalog: BoardCatalog | null) => void,
+    nudge: Nudge | null,
+    onToggle: (catalog: BoardCatalog) => void,
+    onRemove: (catalog: BoardCatalog) => void,
+    onReset: () => void,
     onClose: () => void,
 };
 
-const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) => {
+const CatalogSheet = ({ show, catalogs, empty, picks, isDefault, nudge, onToggle, onRemove, onReset, onClose }: Props) => {
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
 
@@ -30,28 +38,48 @@ const CatalogSheet = ({ show, catalogs, isDefault, onSelect, onClose }: Props) =
             closeOnContentClick={false}
             closeOnOrientationChange={false}
             flush={true}
-            ariaLabel={t('SETTINGS_SPOTLIGHT_CATALOG')}
+            ariaLabel={t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')}
         >
             <div className={styles['selection']}>
                 <div className={styles['header']}>
                     <Icon className={styles['heading-icon']} name={'home'} />
-                    <div className={styles['heading']}>{t('SETTINGS_SPOTLIGHT_CATALOG')}</div>
-                    <Button className={styles['reset']} disabled={isDefault} onClick={() => onSelect(null)}>
-                        {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}
-                    </Button>
+                    <div className={styles['heading']}>{t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')}</div>
+                    {
+                        !isDefault ?
+                            <Button className={styles['reset']} onClick={onReset}>
+                                {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}
+                            </Button>
+                            :
+                            null
+                    }
                 </div>
-                <p className={styles['description']}>{t('SETTINGS_SPOTLIGHT_CATALOG_DESCRIPTION')}</p>
-                <div className={styles['search']}>
-                    <Icon name={'search'} />
-                    <TextInput
-                        type={'search'}
-                        value={query}
-                        placeholder={t('SETTINGS_SPOTLIGHT_SEARCH')}
-                        aria-label={t('SETTINGS_SPOTLIGHT_SEARCH')}
-                        onChange={(event) => setQuery(event.target.value)}
-                    />
-                </div>
-                <CatalogGroups className={styles['body']} compact={true} catalogs={catalogs} query={query} onSelect={onSelect} />
+                {
+                    empty ?
+                        <CatalogsEmpty />
+                        :
+                        <React.Fragment>
+                            <p className={styles['description']}>{t('SETTINGS_SPOTLIGHT_CATALOGS_DESCRIPTION')}</p>
+                            <div className={styles['search']}>
+                                <Icon name={'search'} />
+                                <TextInput
+                                    type={'search'}
+                                    value={query}
+                                    placeholder={t('SETTINGS_SPOTLIGHT_SEARCH')}
+                                    aria-label={t('SETTINGS_SPOTLIGHT_SEARCH')}
+                                    onChange={(event) => setQuery(event.target.value)}
+                                />
+                            </div>
+                            <CatalogTray compact={true} picks={picks} nudge={nudge} onRemove={onRemove} />
+                            <CatalogGroups
+                                className={styles['body']}
+                                compact={true}
+                                catalogs={catalogs}
+                                query={query}
+                                full={picks.length >= MAX_CATALOGS}
+                                onToggle={onToggle}
+                            />
+                        </React.Fragment>
+                }
                 <div className={styles['footer']}>
                     <Button className={styles['done']} onClick={onClose}>
                         {t('DONE')}

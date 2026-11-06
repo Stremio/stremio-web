@@ -102,14 +102,12 @@
             border-radius: 50%;
             background-color: var(--primary-accent-color);
             color: var(--primary-foreground-color);
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
             transform: scale(0);
             transition: transform 0.25s @ease-pop;
-
-            .icon {
-                flex: none;
-                width: 0.9rem;
-                height: 0.9rem;
-            }
         }
     }
 
@@ -143,6 +141,28 @@
     @media (hover: hover) {
         &:hover .art::after {
             box-shadow: inset 0 0 0 0.15rem var(--primary-foreground-color);
+        }
+    }
+
+    &.dimmed {
+        cursor: not-allowed;
+
+        .art {
+            opacity: 0.35;
+        }
+
+        .caption {
+            opacity: 0.55;
+        }
+
+        &:focus .art::after {
+            box-shadow: none;
+        }
+
+        @media (hover: hover) {
+            &:hover .art::after {
+                box-shadow: none;
+            }
         }
     }
 

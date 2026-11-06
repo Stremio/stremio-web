@@ -13,7 +13,8 @@ type Props = {
     compact?: boolean,
     catalogs: BoardCatalog[],
     query: string,
-    onSelect: (catalog: BoardCatalog) => void,
+    full: boolean,
+    onToggle: (catalog: BoardCatalog) => void,
 };
 
 type Group = {
@@ -22,7 +23,7 @@ type Group = {
     catalogs: { catalog: BoardCatalog, title: string }[],
 };
 
-const CatalogGroups = ({ className, compact = false, catalogs, query, onSelect }: Props) => {
+const CatalogGroups = ({ className, compact = false, catalogs, query, full, onToggle }: Props) => {
     const { t } = useTranslation();
     const { catalogTitle } = useTranslate();
 
@@ -56,14 +57,15 @@ const CatalogGroups = ({ className, compact = false, catalogs, query, onSelect }
                             <div className={styles['addon']}>{group.name}</div>
                             <div className={styles['count']}>{t('SETTINGS_SPOTLIGHT_CATALOGS', { count: group.catalogs.length })}</div>
                         </div>
-                        <div className={styles['grid']} role={'listbox'} aria-label={group.name}>
+                        <div className={styles['grid']} role={'listbox'} aria-multiselectable={'true'} aria-label={group.name}>
                             {
                                 group.catalogs.map(({ catalog, title }) => (
                                     <CatalogCard
                                         key={`${catalog.request.base}/${catalog.type}/${catalog.id}`}
                                         catalog={catalog}
                                         title={title}
-                                        onSelect={onSelect}
+                                        full={full}
+                                        onToggle={onToggle}
                                     />
                                 ))
                             }

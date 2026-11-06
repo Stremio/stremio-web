@@ -3,7 +3,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import styles from './CatalogCard.less';
@@ -11,23 +10,26 @@ import styles from './CatalogCard.less';
 type Props = {
     catalog: BoardCatalog,
     title: string,
-    onSelect: (catalog: BoardCatalog) => void,
+    full: boolean,
+    onToggle: (catalog: BoardCatalog) => void,
 };
 
 const renderNothing = () => null;
 
-const CatalogCard = ({ catalog, title, onSelect }: Props) => {
+const CatalogCard = ({ catalog, title, full, onToggle }: Props) => {
     const { t } = useTranslation();
-    const loaded = catalog.content !== null && catalog.content.type !== 'Loading';
+    const selected = catalog.selected !== null;
+    const dimmed = full && !selected;
     const preview = catalog.content?.type === 'Ready' ? catalog.content.content : null;
 
     return (
         <Button
-            className={classNames(styles['card'], { [styles['selected']]: catalog.selected })}
+            className={classNames(styles['card'], { [styles['selected']]: selected, [styles['dimmed']]: dimmed })}
             role={'option'}
-            aria-selected={catalog.selected}
+            aria-selected={selected}
+            aria-disabled={dimmed}
             title={title}
-            onClick={() => onSelect(catalog)}
+            onClick={() => onToggle(catalog)}
         >
             <div className={styles['art']}>
                 {
@@ -55,14 +57,16 @@ const CatalogCard = ({ catalog, title, onSelect }: Props) => {
                         null
                 }
                 <div className={styles['check']} aria-hidden={'true'}>
-                    <Icon className={styles['icon']} name={'checkmark'} />
+                    {catalog.selected !== null ? catalog.selected + 1 : null}
                 </div>
             </div>
             <div className={styles['caption']}>
                 <div className={styles['name']}>{title}</div>
                 {
-                    loaded ?
-                        <div className={styles['meta']}>{t('SETTINGS_SPOTLIGHT_TITLES', { count: preview?.count ?? 0 })}</div>
+                    catalog.content?.type === 'Ready' ?
+                        <div className={styles['meta']}>
+                            {preview !== null ? t('SETTINGS_SPOTLIGHT_TITLES', { count: preview.count }) : t('SETTINGS_SPOTLIGHT_NO_ARTWORK')}
+                        </div>
                         :
                         null
                 }
