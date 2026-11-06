@@ -1445,7 +1445,7 @@ packages:
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
   '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz':
-    resolution: {integrity: sha512-5NcU9N4jZqd1QQdnbQ04LelHbUl9geZLlitOFzselPbT7KKAKuFCQC3TT1DaTHCoiYvqv57V8GT7/v9uuxFiyA==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz}
+    resolution: {integrity: sha512-5lSQf4AMc03PBu7i6I1qZRiMt3nH7fTj37jKnhrtbWusrxXxkXkuOHR9X2v8o5RD/lmEf8LoXnPgR8tINZXJoA==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/board-spotlight/stremio-stremio-core-web-0.66.0.tgz}
     version: 0.66.0
 
   '@stremio/stremio-icons@5.15.0':
