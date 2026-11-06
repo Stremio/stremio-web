@@ -13,8 +13,8 @@ const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 const { t } = require('i18next');
 
-const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, ...props }) => {
-    const backButtonOnClick = useGoBack(originPath);
+const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, onBackButtonClick, hdrInfo, ...props }) => {
+    const goBack = useGoBack(originPath);
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
         <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
@@ -22,12 +22,12 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             {children}
         </Button>
     ), []);
-    useHorizontalNavGamepadNavigation(route || className, backButton ? backButtonOnClick : undefined);
+    useHorizontalNavGamepadNavigation(route || className, backButton ? goBack : undefined);
     return (
         <nav {...props} className={classnames(className, styles['horizontal-nav-bar-container'])}>
             {
                 backButton ?
-                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={backButtonOnClick}>
+                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={onBackButtonClick || goBack}>
                         <Icon className={styles['icon']} name={'chevron-back'} />
                     </Button>
                     :
@@ -91,6 +91,7 @@ HorizontalNavBar.propTypes = {
     fullscreenButton: PropTypes.bool,
     navMenu: PropTypes.bool,
     originPath: PropTypes.string,
+    onBackButtonClick: PropTypes.func,
     hdrInfo: PropTypes.shape({
         gamma: PropTypes.string,
     }),

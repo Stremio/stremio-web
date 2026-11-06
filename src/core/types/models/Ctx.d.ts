@@ -53,6 +53,7 @@ type Settings = {
 
 type Profile = {
     auth: Auth | null,
+    addons: Addon[],
     settings: Settings,
 };
 
