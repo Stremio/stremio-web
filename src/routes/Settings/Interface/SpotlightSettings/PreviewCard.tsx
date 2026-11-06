@@ -12,12 +12,13 @@ type Props = {
     className?: string,
     catalog: BoardCatalog | null,
     expanded: boolean,
+    tabIndex?: number,
     onClick: () => void,
 };
 
 const renderNothing = () => null;
 
-const PreviewCard = ({ className, catalog, expanded, onClick }: Props) => {
+const PreviewCard = ({ className, catalog, expanded, tabIndex, onClick }: Props) => {
     const { t } = useTranslation();
     const { catalogTitle } = useTranslate();
     const title = catalog !== null ? catalogTitle(catalog) ?? catalog.name : '';
@@ -28,6 +29,7 @@ const PreviewCard = ({ className, catalog, expanded, onClick }: Props) => {
     return (
         <Button
             className={classNames(className, styles['card'])}
+            tabIndex={tabIndex}
             aria-label={`${t('SETTINGS_SPOTLIGHT_CATALOG')}: ${title}, ${addonName}`}
             aria-haspopup={'dialog'}
             aria-expanded={expanded}
