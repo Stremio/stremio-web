@@ -12,23 +12,23 @@ const usePlayerOptions = (profile: Profile) => {
     const core = useCore();
     const platform = usePlatform();
     const [, updateSettings] = useSettings();
-    const preferredLanguageOptions = useMemo(() => languages.all.map(({ code, label }) => ({ value: code, label })), []);
-    const { sortedOptions: sortedPreferredLanguageOptions } = useLanguageSorting(preferredLanguageOptions);
     const mpvConfigSelect = useMpvConfig();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
         value: code,
         label: LANGUAGES_NAMES[code]
     })), []);
+    const subtitleLanguageOptions = useMemo(() => languages.all.map(({ code, label }) => ({ value: code, label })), []);
+    const { sortedOptions: sortedSubtitleLanguageOptions } = useLanguageSorting(subtitleLanguageOptions);
 
     const { sortedOptions: sortedLanguageOptions } = useLanguageSorting(languageOptions);
 
     const subtitlesLanguageSelect = useMemo(() => ({
         options: [
             { value: null, label: t('NONE') },
-            ...sortedLanguageOptions
+            ...sortedSubtitleLanguageOptions
         ],
-        value: profile.settings.subtitlesLanguage,
+        value: languages.find(profile.settings.subtitlesLanguage ?? '')?.code ?? profile.settings.subtitlesLanguage,
         onSelect: (value: string) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -41,7 +41,7 @@ const usePlayerOptions = (profile: Profile) => {
                 }
             });
         }
-    }), [profile.settings, sortedLanguageOptions]);
+    }), [profile.settings, sortedSubtitleLanguageOptions]);
 
     const subtitlesSizeSelect = useMemo(() => ({
         options: CONSTANTS.SUBTITLES_SIZES.map((size) => ({
@@ -401,15 +401,10 @@ const usePlayerOptions = (profile: Profile) => {
             checked: profile.settings.subtitlesLanguageFilterEnabled,
             onClick: () => updateSettings({ subtitlesLanguageFilterEnabled: !profile.settings.subtitlesLanguageFilterEnabled }),
         },
-        preferredSubtitleLanguage1Select: {
-            options: sortedPreferredLanguageOptions,
-            value: profile.settings.preferredSubtitleLanguage1,
-            onSelect: (value: string) => updateSettings({ preferredSubtitleLanguage1: value }),
-        },
-        preferredSubtitleLanguage2Select: {
-            options: [{ value: null, label: t('NONE') }, ...sortedPreferredLanguageOptions],
-            value: profile.settings.preferredSubtitleLanguage2,
-            onSelect: (value: string | null) => updateSettings({ preferredSubtitleLanguage2: value }),
+        secondarySubtitlesLanguageSelect: {
+            options: [{ value: null, label: t('NONE') }, ...sortedSubtitleLanguageOptions],
+            value: languages.find(profile.settings.secondarySubtitlesLanguage ?? '')?.code ?? profile.settings.secondarySubtitlesLanguage,
+            onSelect: (value: string | null) => updateSettings({ secondarySubtitlesLanguage: value }),
         },
         subtitlesLanguageSelect,
         subtitlesSizeSelect,

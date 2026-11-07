@@ -44,10 +44,10 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
 
     const allSubtitles = React.useMemo(() => {
         return filterSubtitleTracks(subtitlesTracks.concat(extraSubtitlesTracks), props.subtitlesLanguageFilterEnabled, [
-            props.preferredSubtitleLanguage1,
-            props.preferredSubtitleLanguage2,
+            props.subtitlesLanguage,
+            props.secondarySubtitlesLanguage,
         ]);
-    }, [subtitlesTracks, extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled, props.preferredSubtitleLanguage1, props.preferredSubtitleLanguage2]);
+    }, [subtitlesTracks, extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled, props.subtitlesLanguage, props.secondarySubtitlesLanguage]);
 
     const subtitlesLanguages = React.useMemo(() => {
         const userLanguage = languages.toCode(props.subtitlesLanguage) ?? DEFAULT_SUBTITLES_LANGUAGE;
@@ -257,8 +257,7 @@ SubtitlesMenu.displayName = 'MainNavBars';
 
 SubtitlesMenu.propTypes = {
     subtitlesLanguageFilterEnabled: PropTypes.bool,
-    preferredSubtitleLanguage1: PropTypes.string,
-    preferredSubtitleLanguage2: PropTypes.string,
+    secondarySubtitlesLanguage: PropTypes.string,
     className: PropTypes.string,
     subtitlesLanguage: PropTypes.string,
     interfaceLanguage: PropTypes.string,

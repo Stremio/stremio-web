@@ -43,8 +43,6 @@ type Settings = {
     subtitlesFont: string,
     subtitlesLanguage: string | null,
     subtitlesLanguageFilterEnabled: boolean,
-    preferredSubtitleLanguage1: string,
-    preferredSubtitleLanguage2: string | null,
     subtitlesOffset: number,
     subtitlesOutlineColor: string,
     subtitlesSize: number,
