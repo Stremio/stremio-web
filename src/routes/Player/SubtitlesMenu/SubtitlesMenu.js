@@ -42,21 +42,6 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
         return normalizeTracksLang(Array.isArray(props.extraSubtitlesTracks) ? props.extraSubtitlesTracks : [], props.subtitlesLanguageFilterEnabled);
     }, [props.extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled]);
 
-    const allSubtitles = React.useMemo(() => {
-        return filterSubtitleTracks(subtitlesTracks.concat(extraSubtitlesTracks), props.subtitlesLanguageFilterEnabled, [
-            props.subtitlesLanguage,
-            props.secondarySubtitlesLanguage,
-        ]);
-    }, [subtitlesTracks, extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled, props.subtitlesLanguage, props.secondarySubtitlesLanguage]);
-
-    const subtitlesLanguages = React.useMemo(() => {
-        const userLanguage = languages.toCode(props.subtitlesLanguage) ?? DEFAULT_SUBTITLES_LANGUAGE;
-        const interfaceLanguage = languages.toCode(props.interfaceLanguage) ?? DEFAULT_SUBTITLES_LANGUAGE;
-        const priorities = [LOCAL_SUBTITLES_LANGUAGE, userLanguage, interfaceLanguage];
-        const langs = [...new Set(allSubtitles.map(({ lang }) => lang))].sort((a, b) => a.localeCompare(b));
-        return sortByValues(langs, priorities);
-    }, [allSubtitles, props.subtitlesLanguage, props.interfaceLanguage]);
-
     const selectedSubtitlesLanguage = React.useMemo(() => {
         return typeof props.selectedSubtitlesTrackId === 'string' ?
             subtitlesTracks
@@ -80,6 +65,22 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                 :
                 null;
     }, [subtitlesTracks, extraSubtitlesTracks, props.selectedSubtitlesTrackId, props.selectedExtraSubtitlesTrackId]);
+
+    const allSubtitles = React.useMemo(() => {
+        return filterSubtitleTracks(subtitlesTracks.concat(extraSubtitlesTracks), props.subtitlesLanguageFilterEnabled, [
+            props.subtitlesLanguage,
+            props.secondarySubtitlesLanguage,
+        ], selectedSubtitlesLanguage);
+    }, [subtitlesTracks, extraSubtitlesTracks, props.subtitlesLanguageFilterEnabled, props.subtitlesLanguage, props.secondarySubtitlesLanguage, selectedSubtitlesLanguage]);
+
+    const subtitlesLanguages = React.useMemo(() => {
+        const userLanguage = languages.toCode(props.subtitlesLanguage) ?? DEFAULT_SUBTITLES_LANGUAGE;
+        const interfaceLanguage = languages.toCode(props.interfaceLanguage) ?? DEFAULT_SUBTITLES_LANGUAGE;
+        const priorities = [LOCAL_SUBTITLES_LANGUAGE, userLanguage, interfaceLanguage];
+        const langs = [...new Set(allSubtitles.map(({ lang }) => lang))].sort((a, b) => a.localeCompare(b));
+        return sortByValues(langs, priorities);
+    }, [allSubtitles, props.subtitlesLanguage, props.interfaceLanguage]);
+
     const subtitlesTracksForLanguage = React.useMemo(() => {
         const tracks = allSubtitles.filter(({ lang }) => lang === selectedSubtitlesLanguage);
         return sortByValues(tracks, ORIGIN_PRIORITIES, ({ origin }) => origin);

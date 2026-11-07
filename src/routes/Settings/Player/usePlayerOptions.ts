@@ -7,6 +7,11 @@ import useMpvConfig from './useMpvConfig';
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
 const SUBTITLES_OFFSETS = Array.from({ length: 21 }, (_, i) => i * 5);
 
+const getLanguageOptionValue = (language: string | null) => {
+    const code = languages.toCode(language ?? '');
+    return Object.keys(LANGUAGES_NAMES).find((value) => languages.toCode(value) === code) ?? language;
+};
+
 const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
@@ -18,17 +23,15 @@ const usePlayerOptions = (profile: Profile) => {
         value: code,
         label: LANGUAGES_NAMES[code]
     })), []);
-    const subtitleLanguageOptions = useMemo(() => languages.all.map(({ code, label }) => ({ value: code, label })), []);
-    const { sortedOptions: sortedSubtitleLanguageOptions } = useLanguageSorting(subtitleLanguageOptions);
 
     const { sortedOptions: sortedLanguageOptions } = useLanguageSorting(languageOptions);
 
     const subtitlesLanguageSelect = useMemo(() => ({
         options: [
             { value: null, label: t('NONE') },
-            ...sortedSubtitleLanguageOptions
+            ...sortedLanguageOptions
         ],
-        value: languages.find(profile.settings.subtitlesLanguage ?? '')?.code ?? profile.settings.subtitlesLanguage,
+        value: getLanguageOptionValue(profile.settings.subtitlesLanguage),
         onSelect: (value: string) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -41,7 +44,7 @@ const usePlayerOptions = (profile: Profile) => {
                 }
             });
         }
-    }), [profile.settings, sortedSubtitleLanguageOptions]);
+    }), [profile.settings, sortedLanguageOptions]);
 
     const subtitlesSizeSelect = useMemo(() => ({
         options: CONSTANTS.SUBTITLES_SIZES.map((size) => ({
@@ -402,8 +405,8 @@ const usePlayerOptions = (profile: Profile) => {
             onClick: () => updateSettings({ subtitlesLanguageFilterEnabled: !profile.settings.subtitlesLanguageFilterEnabled }),
         },
         secondarySubtitlesLanguageSelect: {
-            options: [{ value: null, label: t('NONE') }, ...sortedSubtitleLanguageOptions],
-            value: languages.find(profile.settings.secondarySubtitlesLanguage ?? '')?.code ?? profile.settings.secondarySubtitlesLanguage,
+            options: [{ value: null, label: t('NONE') }, ...sortedLanguageOptions],
+            value: getLanguageOptionValue(profile.settings.secondarySubtitlesLanguage),
             onSelect: (value: string | null) => updateSettings({ secondarySubtitlesLanguage: value }),
         },
         subtitlesLanguageSelect,
@@ -414,6 +417,11 @@ const usePlayerOptions = (profile: Profile) => {
         subtitlesOutlineColorInput,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
+        secondaryAudioLanguageSelect: {
+            options: [{ value: null, label: t('NONE') }, ...sortedLanguageOptions],
+            value: getLanguageOptionValue(profile.settings.secondaryAudioLanguage),
+            onSelect: (value: string | null) => updateSettings({ secondaryAudioLanguage: value }),
+        },
         surroundSoundToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,

@@ -24,6 +24,7 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         subtitlesOutlineColorInput,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
+        secondaryAudioLanguageSelect,
         surroundSoundToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
@@ -96,6 +97,9 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                         className={'multiselect'}
                         {...audioLanguageSelect}
                     />
+                </Option>
+                <Option label={'SETTINGS_SECONDARY_AUDIO_TRACK'}>
+                    <MultiselectMenu className={'multiselect'} {...secondaryAudioLanguageSelect} />
                 </Option>
                 <Option label={'SETTINGS_SURROUND_SOUND'}>
                     <Toggle

@@ -17,7 +17,7 @@ const normalizeSubtitleLanguage = (language: unknown): string | null => {
     if (typeof language !== 'string') return null;
     let code = language.trim().toLowerCase().replace(/_/g, '-');
     while (code) {
-        if (aliases.has(code)) return aliases.get(code);
+        if (aliases.has(code)) return aliases.get(code) ?? null;
         const separator = code.lastIndexOf('-');
         if (separator === -1) break;
         code = code.slice(0, separator);
@@ -25,12 +25,15 @@ const normalizeSubtitleLanguage = (language: unknown): string | null => {
     return null;
 };
 
-const filterSubtitleTracks = <T extends { lang?: string }>(tracks: T[], enabled: boolean, preferredLanguages: unknown[]): T[] => {
+const filterSubtitleTracks = <T extends { lang?: string }>(tracks: T[], enabled: boolean, preferredLanguages: unknown[], activeLanguage?: string | null): T[] => {
     if (!enabled) return tracks;
     const preferred = new Set(preferredLanguages.map(normalizeSubtitleLanguage).filter(Boolean));
     // Older or malformed settings should not leave the user with an empty menu.
     if (preferred.size === 0) return tracks;
-    return tracks.filter((track) => preferred.has(normalizeSubtitleLanguage(track.lang)));
+    const active = normalizeSubtitleLanguage(activeLanguage);
+    if (active) preferred.add(active);
+    return tracks.filter((track) => track.lang === 'local' ||
+        (activeLanguage && track.lang === activeLanguage) || preferred.has(normalizeSubtitleLanguage(track.lang)));
 };
 
 export { normalizeSubtitleLanguage, filterSubtitleTracks };

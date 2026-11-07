@@ -373,7 +373,7 @@ const useSubtitles = ({
 
         const subtitlesEnabled = player.streamState?.subtitlesEnabled;
 
-        if (subtitlesEnabled === false || (!subtitlesEnabled && settings.subtitlesLanguage === null)) {
+        if (subtitlesEnabled === false || (!subtitlesEnabled && settings.subtitlesLanguage === null && settings.secondarySubtitlesLanguage === null)) {
             if (video.state.selectedSubtitlesTrackId !== null ||
                 video.state.selectedExtraSubtitlesTrackId !== null) {
                 setSubtitlesTrack(null);
