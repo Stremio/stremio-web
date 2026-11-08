@@ -21,8 +21,8 @@ importers:
         specifier: 0.67.0
         version: 0.67.0
       '@stremio/stremio-icons':
-        specifier: 5.15.0
-        version: 5.15.0
+        specifier: 5.18.0
+        version: 5.18.0
       '@stremio/stremio-video':
         specifier: 0.0.103
         version: 0.0.103
@@ -1447,8 +1447,8 @@ packages:
   '@stremio/stremio-core-web@0.67.0':
     resolution: {integrity: sha512-6u2pUxmUjxIuRPo0gAzkck2sN3vt8NnL3Zb9ZDcB/zhZgmseDTrZrqez/qZGuTMBpt8gDJS+FO+b6EP+pUWWTg==}
 
-  '@stremio/stremio-icons@5.15.0':
-    resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
+  '@stremio/stremio-icons@5.18.0':
+    resolution: {integrity: sha512-Hll2y0Yb/3dkBdW8DE36QBy2jo65+OcklJ8mrBCSMjpyNOiN4GeAvnHoAazRZZc9nLssChGZdExtYHCUQCZp1g==}
 
   '@stremio/stremio-video@0.0.103':
     resolution: {integrity: sha512-6Y/IfP8UgiPINTdJae8MaNiqCrE/oC1vtPbDr4cwBbLp32Oi6ud/+GrWstuEc4NezhWQ/0YspouzvMRCk3R5Vg==}
@@ -6583,7 +6583,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.1
 
-  '@stremio/stremio-icons@5.15.0': {}
+  '@stremio/stremio-icons@5.18.0': {}
 
   '@stremio/stremio-video@0.0.103':
     dependencies:

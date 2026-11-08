@@ -23,7 +23,7 @@
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
         "@stremio/stremio-core-web": "0.67.0",
-        "@stremio/stremio-icons": "5.15.0",
+        "@stremio/stremio-icons": "5.18.0",
         "@stremio/stremio-video": "0.0.103",
         "bowser": "2.14.1",
         "buffer": "6.0.3",
