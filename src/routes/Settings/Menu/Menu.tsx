@@ -3,8 +3,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
+import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
-import { PageIcon, SearchField } from '../components';
+import { SearchField } from '../components';
 import type { SettingsGroup } from '../useSettingsPages';
 import styles from './Menu.less';
 
@@ -36,7 +37,7 @@ const Menu = ({ groups, selected, query, onQueryChange, onNavigate }: Props) => 
                                     aria-current={page.id === selected ? 'page' : undefined}
                                     onClick={onNavigate}
                                 >
-                                    <PageIcon className={styles['icon']} name={page.icon} />
+                                    <Icon className={styles['icon']} name={page.icon} />
                                     <div className={styles['item-label']}>{page.label}</div>
                                 </Button>
                             ))

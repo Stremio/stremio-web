@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { interfaceLanguages, languageNames, usePlatform } from 'stremio/common';
 import { Button } from 'stremio/components';
-import { PageIcon, SearchField } from '../components';
+import { SearchField } from '../components';
 import { PAGES } from '../constants';
 import getAvatar from '../getAvatar';
 import isTraktAuthenticated from '../isTraktAuthenticated';
@@ -103,7 +103,7 @@ const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, 
                                         data-page={page.id}
                                         onClick={onOpenPage}
                                     >
-                                        <PageIcon className={styles['icon']} name={page.icon} />
+                                        <Icon className={styles['icon']} name={page.icon} />
                                         <div className={styles['text']}>
                                             <div className={styles['title']}>{page.label}</div>
                                             {
