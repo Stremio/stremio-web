@@ -6,6 +6,7 @@ import Icon from '@stremio/stremio-icons/react';
 import styles from './Row.less';
 
 type Props = {
+    className?: string,
     label: string,
     description?: string,
     icon?: string,
@@ -14,9 +15,9 @@ type Props = {
     children?: React.ReactNode,
 };
 
-const Row = ({ label, description, icon, control, stackOnPhone, children }: Props) => {
+const Row = ({ className, label, description, icon, control, stackOnPhone, children }: Props) => {
     return (
-        <div className={classNames(styles['row'], { [styles['stack']]: stackOnPhone })}>
+        <div className={classNames(className, styles['row'], { [styles['stack']]: stackOnPhone })}>
             <div className={styles['heading']}>
                 {
                     icon &&

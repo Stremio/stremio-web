@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import Button from 'stremio/components/Button';
 import styles from './Scale.less';
 
 type Props = {
@@ -18,15 +19,42 @@ const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key.startsWith('Arrow')) event.stopPropagation();
 };
 
+const getTickIndex = (key: string, index: number, count: number) => {
+    switch (key) {
+        case 'ArrowRight':
+        case 'ArrowUp':
+            return Math.min(count - 1, index + 1);
+        case 'ArrowLeft':
+        case 'ArrowDown':
+            return Math.max(0, index - 1);
+        case 'Home':
+            return 0;
+        case 'End':
+            return count - 1;
+        default:
+            return null;
+    }
+};
+
 const Scale = ({ min, max, step, options, value, tabIndex, onChange }: Props) => {
     const { t } = useTranslation();
     const [preview, setPreview] = useState(value);
     const inputRef = useRef<HTMLInputElement>(null);
+    const ticksRef = useRef<HTMLDivElement>(null);
     const dragging = useRef<number | null>(null);
 
-    const onTickClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-        onChange(Number(event.currentTarget.value));
+    const onTickClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+        onChange(Number(event.currentTarget.dataset.value));
     }, [onChange]);
+
+    const onTicksKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+        const next = getTickIndex(event.key, options.indexOf(preview), options.length);
+        if (next === null) return;
+        event.preventDefault();
+        event.stopPropagation();
+        onChange(options[next]);
+        (ticksRef.current?.children[next] as HTMLElement | undefined)?.focus();
+    }, [options, preview, onChange]);
 
     const onPointerDown = useCallback((event: React.PointerEvent<HTMLInputElement>) => {
         if (event.isPrimary && event.button === 0) dragging.current = event.pointerId;
@@ -68,19 +96,27 @@ const Scale = ({ min, max, step, options, value, tabIndex, onChange }: Props) =>
 
     return (
         <div className={styles['scale']}>
-            <div className={styles['ticks']} style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}>
+            <div
+                ref={ticksRef}
+                className={styles['ticks']}
+                style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
+                role={'radiogroup'}
+                aria-label={t('SETTINGS_UI_ZOOM')}
+                onKeyDown={onTicksKeyDown}
+            >
                 {
                     options.map((tick) => (
-                        <button
-                            type={'button'}
-                            value={tick}
-                            className={classNames(styles['label'], { [styles['active']]: preview === tick })}
+                        <Button
                             key={tick}
-                            aria-pressed={preview === tick}
+                            className={classNames(styles['label'], { [styles['active']]: preview === tick })}
+                            data-value={tick}
+                            role={'radio'}
+                            aria-checked={preview === tick}
+                            tabIndex={preview === tick ? 0 : -1}
                             onClick={onTickClick}
                         >
                             {tick}%
-                        </button>
+                        </Button>
                     ))
                 }
             </div>

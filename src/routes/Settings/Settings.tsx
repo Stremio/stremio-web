@@ -1,19 +1,23 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import classnames from 'classnames';
-import { useMediaQuery, useProfile, useStreamingServer, withCoreSuspender } from 'stremio/common';
+import { useBinaryState, useMediaQuery, useProfile, useStreamingServer, withCoreSuspender } from 'stremio/common';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import { MainNavBars } from 'stremio/components';
 import { Page } from './components';
 import { PAGES } from './constants';
 import useSettingsPages from './useSettingsPages';
+import useTraktAuth from './useTraktAuth';
+import useBoardCatalogs from './Interface/SpotlightSettings/useBoardCatalogs';
 import Menu from './Menu';
 import Hub from './Hub';
 import General from './General';
 import Interface from './Interface';
 import Player from './Player';
+import Integrations from './Integrations';
+import Device from './Device';
 import Streaming from './Streaming';
 import Shortcuts from './Shortcuts';
 import Info from './Info';
@@ -27,6 +31,15 @@ const Settings = () => {
     const streamingServer = useStreamingServer();
     const hubLayout = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
     const { groups, pages } = useSettingsPages();
+    const trakt = useTraktAuth(profile);
+    const [spotlightPickerOpen, openSpotlightPicker, closeSpotlightPicker] = useBinaryState(false);
+    const boardCatalogs = useBoardCatalogs(spotlightPickerOpen);
+    const spotlight = useMemo(() => ({
+        catalogs: boardCatalogs,
+        pickerOpen: spotlightPickerOpen,
+        openPicker: openSpotlightPicker,
+        closePicker: closeSpotlightPicker,
+    }), [boardCatalogs, spotlightPickerOpen, openSpotlightPicker, closeSpotlightPicker]);
 
     const paneRef = useRef<HTMLDivElement>(null);
     const pendingFocusRef = useRef<string | null>(null);
@@ -70,6 +83,10 @@ const Settings = () => {
         }
     }, [page?.id]);
 
+    useEffect(() => {
+        closeSpotlightPicker();
+    }, [page?.id, closeSpotlightPicker]);
+
     return (
         <MainNavBars className={styles['settings-container']} route={'settings'}>
             <div className={classnames(styles['settings-content'], 'animation-fade-in')}>
@@ -87,8 +104,10 @@ const Settings = () => {
                         {
                             page ?
                                 <Page title={page.label} scope={page.scope} onBack={hubLayout ? onBack : undefined}>
-                                    {page.id === PAGES.INTERFACE && <Interface profile={profile} />}
+                                    {page.id === PAGES.INTERFACE && <Interface profile={profile} spotlight={spotlight} />}
                                     {page.id === PAGES.PLAYER && <Player profile={profile} />}
+                                    {page.id === PAGES.INTEGRATIONS && <Integrations profile={profile} trakt={trakt} />}
+                                    {page.id === PAGES.DEVICE && <Device profile={profile} />}
                                     {page.id === PAGES.STREAMING && <Streaming profile={profile} streamingServer={streamingServer} />}
                                     {page.id === PAGES.ACCOUNT && <General profile={profile} />}
                                     {page.id === PAGES.SHORTCUTS && <Shortcuts />}

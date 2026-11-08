@@ -71,6 +71,23 @@
         &.scale {
             width: 19rem;
         }
+
+        :global(.multiselect) {
+            width: 100%;
+            background-color: var(--overlay-color);
+        }
+
+        :global(.color-input) {
+            width: 100%;
+            padding: 1.3rem 1rem;
+            border-radius: 3rem;
+            border: 2px solid transparent;
+            transition: 0.3s all ease-in-out;
+
+            &:hover {
+                border-color: var(--overlay-color);
+            }
+        }
     }
 }
 

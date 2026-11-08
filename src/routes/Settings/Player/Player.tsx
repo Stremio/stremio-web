@@ -1,17 +1,16 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ColorInput, MultiselectMenu, Toggle } from 'stremio/components';
-import { usePlatform } from 'stremio/common';
-import { Category, Option, Section } from '../components';
+import { Group, Row } from '../components';
+import SubtitlesPreview from './SubtitlesPreview';
 import usePlayerOptions from './usePlayerOptions';
-import styles from './Player.less';
 
 type Props = {
     profile: Profile,
 };
 
-const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
-    const { shell } = usePlatform();
-    const platform = usePlatform();
+const Player = ({ profile }: Props) => {
+    const { t } = useTranslation();
 
     const {
         subtitlesLanguageSelect,
@@ -22,172 +21,67 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
         subtitlesOutlineColorInput,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
-        surroundSoundToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingToggle,
-        playInBackgroundToggle,
-        hardwareDecodingToggle,
-        gpuVideoProcessingToggle,
-        videoModeSelect,
-        pauseOnMinimizeToggle,
-        mpvConfigSelect,
     } = usePlayerOptions(profile);
 
     return (
-        <Section ref={ref} label={'SETTINGS_NAV_PLAYER'}>
-            <Category icon={'subtitles'} label={'SETTINGS_SECTION_SUBTITLES'}>
-                <Option label={'SETTINGS_SUBTITLES_LANGUAGE'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...subtitlesLanguageSelect}
-                    />
-                </Option>
-                <Option label={'SETTINGS_SUBTITLES_SIZE'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...subtitlesSizeSelect}
-                    />
-                </Option>
-                <Option label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...subtitlesOffsetSelect}
-                    />
-                </Option>
-                <Option label={'SETTINGS_SUBTITLES_COLOR'}>
-                    <ColorInput
-                        className={'color-input'}
-                        {...subtitlesTextColorInput}
-                    />
-                </Option>
-                <Option label={'SETTINGS_SUBTITLES_COLOR_BACKGROUND'}>
-                    <ColorInput
-                        className={'color-input'}
-                        {...subtitlesBackgroundColorInput}
-                    />
-                </Option>
-                <Option label={'SETTINGS_SUBTITLES_COLOR_OUTLINE'}>
-                    <ColorInput
-                        className={'color-input'}
-                        {...subtitlesOutlineColorInput}
-                    />
-                </Option>
-                <Option label={'SETTINGS_ASS_SUBTITLES_STYLING'}>
-                    <Toggle
-                        tabIndex={-1}
-                        {...assSubtitlesStylingToggle}
-                    />
-                </Option>
-            </Category>
-            <Category icon={'volume-medium'} label={'SETTINGS_SECTION_AUDIO'}>
-                <Option label={'SETTINGS_DEFAULT_AUDIO_TRACK'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...audioLanguageSelect}
-                    />
-                </Option>
-                <Option label={'SETTINGS_SURROUND_SOUND'}>
-                    <Toggle
-                        tabIndex={-1}
-                        {...surroundSoundToggle}
-                    />
-                </Option>
-            </Category>
-            <Category icon={'remote'} label={'SETTINGS_SECTION_CONTROLS'}>
-                <Option label={'SETTINGS_SEEK_KEY'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...seekTimeDurationSelect}
-                    />
-                </Option>
-                <Option label={'SETTINGS_SEEK_KEY_SHIFT'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...seekShortTimeDurationSelect}
-                    />
-                </Option>
-                <Option label={'SETTINGS_PLAY_IN_BACKGROUND'}>
-                    <Toggle
-                        disabled={true}
-                        tabIndex={-1}
-                        {...playInBackgroundToggle}
-                    />
-                </Option>
-            </Category>
-            <Category icon={'play'} label={'SETTINGS_SECTION_AUTO_PLAY'}>
-                <Option label={'AUTO_PLAY'}>
-                    <Toggle
-                        tabIndex={-1}
-                        {...bingeWatchingToggle}
-                    />
-                </Option>
-                <Option label={'SETTINGS_NEXT_VIDEO_POPUP_DURATION'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...nextVideoPopupDurationSelect}
-                    />
-                </Option>
-            </Category>
-            <Category icon={'glasses'} label={'SETTINGS_SECTION_ADVANCED'}>
-                <Option label={'SETTINGS_PLAY_IN_EXTERNAL_PLAYER'}>
-                    <MultiselectMenu
-                        className={'multiselect'}
-                        {...playInExternalPlayerSelect}
-                    />
-                </Option>
-                {
-                    shell.active &&
-                        <Option label={'SETTINGS_HWDEC'}>
-                            <Toggle
-                                tabIndex={-1}
-                                {...hardwareDecodingToggle}
-                            />
-                        </Option>
-                }
-                {
-                    shell.active && shell.capabilities.gpuVideoProcessing &&
-                        <Option label={'SETTINGS_GPU_VIDEO_PROCESSING'}>
-                            <Toggle
-                                tabIndex={-1}
-                                {...gpuVideoProcessingToggle}
-                            />
-                        </Option>
-                }
-                {
-                    shell.active && platform.name === 'windows' &&
-                        <Option label={'SETTINGS_VIDEO_MODE'}>
-                            <MultiselectMenu
-                                className={'multiselect'}
-                                {...videoModeSelect}
-                            />
-                        </Option>
-                }
-                {
-                    shell.active &&
-                        <Option label={'SETTINGS_PAUSE_MINIMIZED'}>
-                            <Toggle
-                                tabIndex={-1}
-                                {...pauseOnMinimizeToggle}
-                            />
-                        </Option>
-                }
-                {
-                    mpvConfigSelect !== null &&
-                        <Option className={styles['mpv-config-container']} label={'SETTINGS_MPV_CONFIG'}>
-                            <div className={styles['mpv-config-control']} title={mpvConfigSelect.title}>
-                                <MultiselectMenu
-                                    className={'multiselect'}
-                                    {...mpvConfigSelect}
-                                />
-                            </div>
-                        </Option>
-                }
-            </Category>
-        </Section>
+        <React.Fragment>
+            <Group title={t('SETTINGS_SECTION_SUBTITLES')} icon={'subtitles'}>
+                <SubtitlesPreview settings={profile.settings} />
+                <Row label={t('SETTINGS_SUBTITLES_LANGUAGE')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesLanguageSelect} />
+                </Row>
+                <Row label={t('SETTINGS_SUBTITLES_SIZE')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesSizeSelect} />
+                </Row>
+                <Row label={t('PLAYER_SUBTITLES_VERTICAL_POSITION')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesOffsetSelect} />
+                </Row>
+                <Row label={t('SETTINGS_SUBTITLES_COLOR')} control={'wide'}>
+                    <ColorInput className={'color-input'} {...subtitlesTextColorInput} />
+                </Row>
+                <Row label={t('SETTINGS_SUBTITLES_COLOR_BACKGROUND')} control={'wide'}>
+                    <ColorInput className={'color-input'} {...subtitlesBackgroundColorInput} />
+                </Row>
+                <Row label={t('SETTINGS_SUBTITLES_COLOR_OUTLINE')} control={'wide'}>
+                    <ColorInput className={'color-input'} {...subtitlesOutlineColorInput} />
+                </Row>
+                <Row label={t('SETTINGS_ASS_SUBTITLES_STYLING')}>
+                    <Toggle {...assSubtitlesStylingToggle} />
+                </Row>
+            </Group>
+            <Group title={t('SETTINGS_SECTION_AUDIO')} icon={'volume-medium'}>
+                <Row label={t('SETTINGS_DEFAULT_AUDIO_TRACK')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...audioLanguageSelect} />
+                </Row>
+            </Group>
+            <Group title={t('SETTINGS_SECTION_CONTROLS')} icon={'remote'}>
+                <Row label={t('SETTINGS_SEEK_KEY')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...seekTimeDurationSelect} />
+                </Row>
+                <Row label={t('SETTINGS_SEEK_KEY_SHIFT')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...seekShortTimeDurationSelect} />
+                </Row>
+            </Group>
+            <Group title={t('SETTINGS_SECTION_AUTO_PLAY')} icon={'play'}>
+                <Row label={t('AUTO_PLAY')}>
+                    <Toggle {...bingeWatchingToggle} />
+                </Row>
+                <Row label={t('SETTINGS_NEXT_VIDEO_POPUP_DURATION')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...nextVideoPopupDurationSelect} />
+                </Row>
+            </Group>
+            <Group title={t('SETTINGS_SECTION_ADVANCED')} icon={'glasses'}>
+                <Row label={t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...playInExternalPlayerSelect} />
+                </Row>
+            </Group>
+        </React.Fragment>
     );
-});
+};
 
 export default Player;

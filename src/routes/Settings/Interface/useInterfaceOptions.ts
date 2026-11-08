@@ -55,38 +55,6 @@ const useInterfaceOptions = (profile: Profile) => {
         }
     }), [profile.settings, core.transport]);
 
-    const escExitFullscreenToggle = useMemo(() => ({
-        checked: profile.settings.escExitFullscreen,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        escExitFullscreen: !profile.settings.escExitFullscreen
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
-    const quitOnCloseToggle = useMemo(() => ({
-        checked: profile.settings.quitOnClose,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        quitOnClose: !profile.settings.quitOnClose
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
     const hideSpoilersToggle = useMemo(() => ({
         checked: profile.settings.hideSpoilers,
         onClick: () => {
@@ -122,8 +90,6 @@ const useInterfaceOptions = (profile: Profile) => {
     return {
         interfaceLanguageSelect,
         interfaceSize,
-        escExitFullscreenToggle,
-        quitOnCloseToggle,
         hideSpoilersToggle,
         gamepadSupportToggle,
     };
