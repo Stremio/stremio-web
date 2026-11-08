@@ -9,7 +9,8 @@ const map = (dataExport) => ({
     exportUrl: dataExport !== null && dataExport.exportUrl !== null && dataExport.exportUrl.type === 'Ready' ?
         dataExport.exportUrl.content
         :
-        null
+        null,
+    exportLoading: dataExport !== null && dataExport.exportUrl !== null && dataExport.exportUrl.type === 'Loading'
 });
 
 const useDataExport = () => {

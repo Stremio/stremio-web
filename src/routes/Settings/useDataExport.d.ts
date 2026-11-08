@@ -1,5 +1,5 @@
 declare const useDataExport: () => [
-    DataExport,
+    DataExport & { exportLoading: boolean },
     () => void,
 ];
 

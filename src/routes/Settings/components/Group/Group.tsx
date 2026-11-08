@@ -10,10 +10,11 @@ type Props = {
     title?: string,
     icon?: string,
     description?: string,
+    padded?: boolean,
     children: React.ReactNode,
 };
 
-const Group = ({ className, title, icon, description, children }: Props) => {
+const Group = ({ className, title, icon, description, padded, children }: Props) => {
     return (
         <section className={classNames(className, styles['group'])} aria-label={title}>
             {
@@ -30,7 +31,7 @@ const Group = ({ className, title, icon, description, children }: Props) => {
                 description &&
                     <p className={styles['description']}>{description}</p>
             }
-            <div className={styles['card']}>
+            <div className={classNames(styles['card'], { [styles['padded']]: padded })}>
                 {children}
             </div>
         </section>

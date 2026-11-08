@@ -12,6 +12,33 @@
     padding: 0.75rem 1.25rem;
     overflow: visible;
 
+    &.thin {
+        min-height: 3.25rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+
+    &.end {
+        min-height: 3.75rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    &.keys {
+        min-height: 3.75rem;
+        padding-top: 0.6rem;
+        padding-bottom: 0.9rem;
+
+        .heading {
+            min-width: 8rem;
+        }
+
+        .control {
+            flex: 0 1 auto;
+        }
+    }
+
     & + .row::before {
         content: '';
         position: absolute;

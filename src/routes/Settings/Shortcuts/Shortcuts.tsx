@@ -1,26 +1,30 @@
-import React, { forwardRef } from 'react';
-import { Section } from '../components';
-import { ShortcutsGroup } from 'stremio/components';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useShortcuts } from 'stremio/common';
-import styles from './Shortcuts.less';
+import Combos from 'stremio/components/ShortcutsGroup/Combos';
+import { Group, Row } from '../components';
 
-const Shortcuts = forwardRef<HTMLDivElement>((_, ref) => {
+const Shortcuts = () => {
+    const { t } = useTranslation();
     const { grouped } = useShortcuts();
 
     return (
-        <Section ref={ref} label={'SETTINGS_NAV_SHORTCUTS'}>
+        <React.Fragment>
             {
                 grouped.map(({ name, label, shortcuts }) => (
-                    <ShortcutsGroup
-                        key={name}
-                        className={styles['shortcuts-group']}
-                        label={label}
-                        shortcuts={shortcuts}
-                    />
+                    <Group key={name} title={t(label)}>
+                        {
+                            shortcuts.map((shortcut) => (
+                                <Row key={shortcut.name} label={t(shortcut.label)} variant={'keys'}>
+                                    <Combos combos={shortcut.combos} />
+                                </Row>
+                            ))
+                        }
+                    </Group>
                 ))
             }
-        </Section>
+        </React.Fragment>
     );
-});
+};
 
 export default Shortcuts;

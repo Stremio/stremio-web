@@ -11,16 +11,17 @@ import { PAGES } from './constants';
 import useSettingsPages from './useSettingsPages';
 import useTraktAuth from './useTraktAuth';
 import useBoardCatalogs from './Interface/SpotlightSettings/useBoardCatalogs';
+import useAccountExport from './useAccountExport';
 import Menu from './Menu';
 import Hub from './Hub';
-import General from './General';
 import Interface from './Interface';
 import Player from './Player';
 import Integrations from './Integrations';
 import Device from './Device';
 import Streaming from './Streaming';
+import Account from './Account';
 import Shortcuts from './Shortcuts';
-import Info from './Info';
+import Help from './Help';
 import styles from './Settings.less';
 
 const Settings = () => {
@@ -32,6 +33,7 @@ const Settings = () => {
     const hubLayout = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
     const { groups, pages } = useSettingsPages();
     const trakt = useTraktAuth(profile);
+    const dataExport = useAccountExport();
     const [spotlightPickerOpen, openSpotlightPicker, closeSpotlightPicker] = useBinaryState(false);
     const boardCatalogs = useBoardCatalogs(spotlightPickerOpen);
     const spotlight = useMemo(() => ({
@@ -109,9 +111,9 @@ const Settings = () => {
                                     {page.id === PAGES.INTEGRATIONS && <Integrations profile={profile} trakt={trakt} />}
                                     {page.id === PAGES.DEVICE && <Device profile={profile} />}
                                     {page.id === PAGES.STREAMING && <Streaming profile={profile} streamingServer={streamingServer} />}
-                                    {page.id === PAGES.ACCOUNT && <General profile={profile} />}
+                                    {page.id === PAGES.ACCOUNT && <Account profile={profile} dataExport={dataExport} />}
                                     {page.id === PAGES.SHORTCUTS && <Shortcuts />}
-                                    {page.id === PAGES.HELP && <Info streamingServer={streamingServer} />}
+                                    {page.id === PAGES.HELP && <Help streamingServer={streamingServer} />}
                                 </Page>
                                 :
                                 <Hub

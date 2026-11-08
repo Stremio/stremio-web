@@ -7,6 +7,7 @@ import { interfaceLanguages, languageNames, usePlatform } from 'stremio/common';
 import { Button } from 'stremio/components';
 import { PageIcon, SearchField } from '../components';
 import { PAGES } from '../constants';
+import getAvatar from '../getAvatar';
 import isTraktAuthenticated from '../isTraktAuthenticated';
 import type { SettingsGroup } from '../useSettingsPages';
 import styles from './Hub.less';
@@ -26,17 +27,7 @@ const Hub = ({ groups, profile, streamingServer, query, onQueryChange, onOpenPag
     const { t } = useTranslation();
     const platform = usePlatform();
 
-    const avatar = useMemo(() => {
-        if (!profile.auth) {
-            return `url('${require('/assets/images/anonymous.png')}')`;
-        }
-
-        if (profile.auth.user.avatar) {
-            return `url('${profile.auth.user.avatar}')`;
-        }
-
-        return `url('${require('/assets/images/default_avatar.png')}')`;
-    }, [profile.auth]);
+    const avatar = useMemo(() => getAvatar(profile.auth), [profile.auth]);
 
     const summaries = useMemo<Record<string, string | null>>(() => {
         const { settings } = profile;

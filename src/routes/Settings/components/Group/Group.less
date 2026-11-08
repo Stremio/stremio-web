@@ -41,11 +41,19 @@
         border-radius: 1.25rem;
         background-color: var(--overlay-color);
         overflow: visible;
+
+        &.padded {
+            padding: 1.25rem;
+        }
     }
 }
 
 @media only screen and (max-width: @minimum) {
     .group {
         margin-top: 1.5rem;
+
+        .card.padded {
+            padding: 1rem;
+        }
     }
 }
