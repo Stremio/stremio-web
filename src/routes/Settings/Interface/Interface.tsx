@@ -35,10 +35,10 @@ const Interface = ({ profile, spotlight }: Props) => {
             </Group>
             <Group title={t('SETTINGS_GROUP_BEHAVIOR')}>
                 <Row rowId={'blur'} label={t('SETTINGS_BLUR_UNWATCHED_IMAGE')}>
-                    <Toggle {...hideSpoilersToggle} />
+                    <Toggle aria-label={t('SETTINGS_BLUR_UNWATCHED_IMAGE')} {...hideSpoilersToggle} />
                 </Row>
                 <Row rowId={'gamepad'} label={t('SETTINGS_GAMEPAD')}>
-                    <Toggle {...gamepadSupportToggle} />
+                    <Toggle aria-label={t('SETTINGS_GAMEPAD')} {...gamepadSupportToggle} />
                 </Row>
             </Group>
         </React.Fragment>

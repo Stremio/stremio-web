@@ -39,6 +39,7 @@ const SpotlightSettings = ({ profile, spotlight: { catalogs: boardCatalogs, pick
     const { selected, catalogs, spotlight } = boardCatalogs;
     const { enabled, showCatalogRows, picks, isDefault, nudge, toggleEnabled, toggleCatalogRows, toggle, remove, reset } = useBoardSpotlight(profile, catalogs);
     const off = !enabled;
+    const rowsLabel = picks.length > 1 ? t('SETTINGS_SPOTLIGHT_SHOW_ROWS') : t('SETTINGS_SPOTLIGHT_SHOW_ROW');
     const empty = selected !== null && catalogs.length === 0;
     const value = picks.length === 1 ?
         catalogTitle(picks[0]) ?? picks[0].name
@@ -82,7 +83,7 @@ const SpotlightSettings = ({ profile, spotlight: { catalogs: boardCatalogs, pick
     return (
         <React.Fragment>
             <Row rowId={'spotlight'} label={t('SETTINGS_SHOW_SPOTLIGHT')}>
-                <Toggle checked={enabled} onClick={toggleEnabled} />
+                <Toggle aria-label={t('SETTINGS_SHOW_SPOTLIGHT')} checked={enabled} onClick={toggleEnabled} />
             </Row>
             <Row className={classNames({ [styles['off']]: off })} rowId={'spotlightCatalogs'} label={t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')} control={'wide'}>
                 <Button
@@ -105,8 +106,8 @@ const SpotlightSettings = ({ profile, spotlight: { catalogs: boardCatalogs, pick
                 tabIndex={off ? undefined : 0}
                 onClick={onOpenPicker}
             />
-            <Row className={classNames({ [styles['off']]: off })} rowId={'spotlightRows'} label={picks.length > 1 ? t('SETTINGS_SPOTLIGHT_SHOW_ROWS') : t('SETTINGS_SPOTLIGHT_SHOW_ROW')}>
-                <Toggle tabIndex={off ? undefined : 0} checked={showCatalogRows} onClick={toggleCatalogRows} />
+            <Row className={classNames({ [styles['off']]: off })} rowId={'spotlightRows'} label={rowsLabel}>
+                <Toggle aria-label={rowsLabel} tabIndex={off ? undefined : 0} checked={showCatalogRows} onClick={toggleCatalogRows} />
             </Row>
             {
                 isMobile ?

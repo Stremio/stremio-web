@@ -34,18 +34,18 @@ const Device = ({ profile }: Props) => {
         <React.Fragment>
             <Group title={t('PLAYBACK')}>
                 <Row rowId={'surround'} label={t('SETTINGS_SURROUND_SOUND')}>
-                    <Toggle {...surroundSoundToggle} />
+                    <Toggle aria-label={t('SETTINGS_SURROUND_SOUND')} {...surroundSoundToggle} />
                 </Row>
                 {
                     shell.active &&
                         <Row rowId={'hwdec'} label={t('SETTINGS_HWDEC')}>
-                            <Toggle {...hardwareDecodingToggle} />
+                            <Toggle aria-label={t('SETTINGS_HWDEC')} {...hardwareDecodingToggle} />
                         </Row>
                 }
                 {
                     shell.active && shell.capabilities.gpuVideoProcessing &&
                         <Row rowId={'gpu'} label={t('SETTINGS_GPU_VIDEO_PROCESSING')}>
-                            <Toggle {...gpuVideoProcessingToggle} />
+                            <Toggle aria-label={t('SETTINGS_GPU_VIDEO_PROCESSING')} {...gpuVideoProcessingToggle} />
                         </Row>
                 }
                 {
@@ -57,7 +57,7 @@ const Device = ({ profile }: Props) => {
                 {
                     shell.active &&
                         <Row rowId={'pause'} label={t('SETTINGS_PAUSE_MINIMIZED')}>
-                            <Toggle {...pauseOnMinimizeToggle} />
+                            <Toggle aria-label={t('SETTINGS_PAUSE_MINIMIZED')} {...pauseOnMinimizeToggle} />
                         </Row>
                 }
                 {
@@ -73,15 +73,15 @@ const Device = ({ profile }: Props) => {
                 shell.active &&
                     <Group title={t('SETTINGS_GROUP_DESKTOP_APP')}>
                         <Row rowId={'quit'} label={t('SETTINGS_QUIT_ON_CLOSE')}>
-                            <Toggle {...quitOnCloseToggle} />
+                            <Toggle aria-label={t('SETTINGS_QUIT_ON_CLOSE')} {...quitOnCloseToggle} />
                         </Row>
                         <Row rowId={'esc'} label={t('SETTINGS_FULLSCREEN_EXIT')}>
-                            <Toggle {...escExitFullscreenToggle} />
+                            <Toggle aria-label={t('SETTINGS_FULLSCREEN_EXIT')} {...escExitFullscreenToggle} />
                         </Row>
                         {
                             discord.available &&
                                 <Row rowId={'discord'} label={t('SETTINGS_DISCORD')}>
-                                    <Toggle {...discordRpcToggle} />
+                                    <Toggle aria-label={t('SETTINGS_DISCORD')} {...discordRpcToggle} />
                                 </Row>
                         }
                     </Group>

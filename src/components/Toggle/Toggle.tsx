@@ -16,7 +16,7 @@ type Props = {
 
 const Toggle = forwardRef(({ className, checked, children, ...props }: Props, ref) => {
     return (
-        <Button {...props} ref={ref} className={classnames(className, styles['toggle-container'], { 'checked': checked })}>
+        <Button role={'switch'} aria-checked={checked} {...props} ref={ref} className={classnames(className, styles['toggle-container'], { 'checked': checked })}>
             <div className={styles['toggle']} />
             {children}
         </Button>

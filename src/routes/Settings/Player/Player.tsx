@@ -51,7 +51,7 @@ const Player = ({ profile }: Props) => {
                     <ColorInput className={'color-input'} {...subtitlesOutlineColorInput} />
                 </Row>
                 <Row rowId={'ass'} label={t('SETTINGS_ASS_SUBTITLES_STYLING')}>
-                    <Toggle {...assSubtitlesStylingToggle} />
+                    <Toggle aria-label={t('SETTINGS_ASS_SUBTITLES_STYLING')} {...assSubtitlesStylingToggle} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_AUDIO')} icon={'volume-medium'}>
@@ -69,7 +69,7 @@ const Player = ({ profile }: Props) => {
             </Group>
             <Group title={t('SETTINGS_SECTION_AUTO_PLAY')} icon={'play'}>
                 <Row rowId={'auto'} label={t('AUTO_PLAY')}>
-                    <Toggle {...bingeWatchingToggle} />
+                    <Toggle aria-label={t('AUTO_PLAY')} {...bingeWatchingToggle} />
                 </Row>
                 <Row rowId={'popup'} label={t('SETTINGS_NEXT_VIDEO_POPUP_DURATION')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...nextVideoPopupDurationSelect} />
