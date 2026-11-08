@@ -1011,12 +1011,7 @@ const Player = () => {
                     selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
                 />
             </ContextMenu>
-            <PlayerClock
-                enabled={settings.showClockInPlayer} controlsVisible={!overlayHidden}
-                alwaysVisible={settings.playerClockAlwaysVisible}
-                time={keyboardSeekTime ?? video.state.time} duration={video.state.duration}
-                playbackSpeed={video.state.playbackSpeed} live={livePlayback}
-            />
+            <PlayerClock visible={settings.showClockInPlayer && fullscreen && !overlayHidden} />
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
                 title={player.title !== null ? player.title : ''}

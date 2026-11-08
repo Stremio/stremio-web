@@ -399,10 +399,6 @@ const usePlayerOptions = (profile: Profile) => {
             checked: profile.settings.showClockInPlayer,
             onClick: () => updateSettings({ showClockInPlayer: !profile.settings.showClockInPlayer }),
         },
-        clockAlwaysVisibleToggle: {
-            checked: profile.settings.playerClockAlwaysVisible,
-            onClick: () => updateSettings({ playerClockAlwaysVisible: !profile.settings.playerClockAlwaysVisible }),
-        },
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,

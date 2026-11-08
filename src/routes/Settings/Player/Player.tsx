@@ -15,7 +15,6 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
 
     const {
         showClockToggle,
-        clockAlwaysVisibleToggle,
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
@@ -101,9 +100,6 @@ const Player = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
             <Category icon={'remote'} label={'SETTINGS_SECTION_CONTROLS'}>
                 <Option label={'SETTINGS_PLAYER_SHOW_CLOCK'}>
                     <Toggle tabIndex={-1} {...showClockToggle} />
-                </Option>
-                <Option label={'SETTINGS_PLAYER_CLOCK_ALWAYS_VISIBLE'}>
-                    <Toggle tabIndex={-1} disabled={!profile.settings.showClockInPlayer} {...clockAlwaysVisibleToggle} />
                 </Option>
                 <Option label={'SETTINGS_SEEK_KEY'}>
                     <MultiselectMenu
