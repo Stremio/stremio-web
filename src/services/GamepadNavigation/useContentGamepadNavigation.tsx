@@ -3,10 +3,16 @@
 import { useEffect, useRef } from 'react';
 import { useGamepad } from '../GamepadContext';
 
-const FOCUSABLE = '[tabindex]:not([data-focus-guard])';
+const FOCUSABLE = '[tabindex]:not([data-focus-guard]):not(input[type="range"][tabindex="-1"])';
 const OPEN_DROPDOWN = '[class*="dropdown"][class*="open"]';
 
 const isVisible = (element: HTMLElement) => element.checkVisibility?.({ visibilityProperty: true }) ?? true;
+
+const toRovingStop = (element: HTMLElement, activeElement: HTMLElement) => {
+    const group = element.closest<HTMLElement>('[role="radiogroup"]');
+    if (!group || group.contains(activeElement) || element.getAttribute('tabindex') !== '-1') return element;
+    return group.querySelector<HTMLElement>('[role="radio"][tabindex="0"]') ?? element;
+};
 
 const getActiveScope = (fallback: HTMLDivElement | null): HTMLElement | null => {
     if (document.querySelector('[data-gamepad-modal]')) return null;
@@ -91,8 +97,9 @@ const useContentGamepadNavigation = (
                 }
             });
 
-            if (closestElement) {
-                closestElement.focus();
+            const target = closestElement as HTMLDivElement | null;
+            if (target) {
+                toRovingStop(target, activeElement).focus();
             }
         };
 
