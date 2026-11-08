@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useGamepad } from '../GamepadContext';
 
 const FOCUSABLE = '[tabindex]:not([data-focus-guard])';
+const OPEN_DROPDOWN = '[class*="dropdown"][class*="open"]';
 
 const isVisible = (element: HTMLElement) => element.checkVisibility?.({ visibilityProperty: true }) ?? true;
 
@@ -15,7 +16,10 @@ const getActiveScope = (fallback: HTMLDivElement | null): HTMLElement | null => 
         if (modal.children.length > 0) return modal;
     }
 
-    const dropdown = fallback?.querySelector<HTMLElement>('[class*="dropdown"][class*="open"]');
+    const portalDropdown = fallback?.closest('.route-container')?.querySelector<HTMLElement>(`[class*="portal-layer"] ${OPEN_DROPDOWN}`);
+    if (portalDropdown) return portalDropdown;
+
+    const dropdown = fallback?.querySelector<HTMLElement>(OPEN_DROPDOWN);
     if (dropdown) return dropdown;
 
     return fallback;
