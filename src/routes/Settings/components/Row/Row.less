@@ -1,0 +1,109 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 4.25rem;
+    padding: 0.75rem 1.25rem;
+    overflow: visible;
+
+    & + .row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 1.25rem;
+        left: 1.25rem;
+        height: 1px;
+        background-color: var(--overlay-color);
+    }
+
+    .heading {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+
+        .icon {
+            flex: none;
+            width: 1.75rem;
+            height: 1.75rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .text {
+            flex: 1;
+            min-width: 0;
+
+            .label {
+                line-height: 1.4;
+                color: var(--primary-foreground-color);
+            }
+
+            .description {
+                margin-top: 0.15rem;
+                font-size: 0.875rem;
+                line-height: 1.45;
+                color: var(--primary-foreground-color);
+                opacity: 0.6;
+            }
+        }
+    }
+
+    .control {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        min-width: 0;
+        overflow: visible;
+
+        &.wide {
+            width: 15rem;
+        }
+
+        &.scale {
+            width: 19rem;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .row {
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+
+        & + .row::before {
+            right: 1rem;
+            left: 1rem;
+        }
+
+        .control {
+            &.wide {
+                width: 11.5rem;
+                max-width: 55%;
+            }
+
+            &.scale {
+                width: 100%;
+            }
+        }
+
+        &.stack {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+
+            .control {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    }
+}

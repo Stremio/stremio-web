@@ -1,65 +1,48 @@
-import React, { useMemo } from 'react';
+// Copyright (C) 2017-2026 Smart code 203358507
+
+import React from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { usePlatform } from 'stremio/common';
 import { Button } from 'stremio/components';
-import { SECTIONS } from '../constants';
+import { PageIcon, SearchField } from '../components';
+import type { SettingsGroup } from '../useSettingsPages';
 import styles from './Menu.less';
 
 type Props = {
+    groups: SettingsGroup[],
     selected: string,
-    streamingServer: StreamingServer,
-    onSelect: (event: React.MouseEvent<HTMLDivElement>) => void,
+    query: string,
+    onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 };
 
-const Menu = ({ selected, streamingServer, onSelect }: Props) => {
+const Menu = ({ groups, selected, query, onQueryChange }: Props) => {
     const { t } = useTranslation();
-    const { shell } = usePlatform();
-    const platform = usePlatform();
-
-    const settings = useMemo(() => (
-        streamingServer?.settings?.type === 'Ready' ?
-            streamingServer.settings.content as StreamingServerSettings : null
-    ), [streamingServer?.settings]);
 
     return (
-        <div className={styles['menu']}>
-            <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.GENERAL })} title={t('SETTINGS_NAV_GENERAL')} data-section={SECTIONS.GENERAL} onClick={onSelect}>
-                { t('SETTINGS_NAV_GENERAL') }
-            </Button>
-            <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.INTERFACE })} title={t('INTERFACE')} data-section={SECTIONS.INTERFACE} onClick={onSelect}>
-                { t('INTERFACE') }
-            </Button>
-            <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.PLAYER })} title={t('SETTINGS_NAV_PLAYER')} data-section={SECTIONS.PLAYER} onClick={onSelect}>
-                { t('SETTINGS_NAV_PLAYER') }
-            </Button>
-            <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.STREAMING })} title={t('SETTINGS_NAV_STREAMING')} data-section={SECTIONS.STREAMING} onClick={onSelect}>
-                { t('SETTINGS_NAV_STREAMING') }
-            </Button>
-            { !platform.isMobile && <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.SHORTCUTS })} title={t('SETTINGS_NAV_SHORTCUTS')} data-section={SECTIONS.SHORTCUTS} onClick={onSelect}>
-                { t('SETTINGS_NAV_SHORTCUTS') }
-            </Button> }
-
-            <div className={styles['spacing']} />
-            <div className={styles['version-info-label']} title={process.env.VERSION}>
-                {t('SETTINGS_APP_VERSION')}: {process.env.VERSION}
-            </div>
-            <div className={styles['version-info-label']} title={process.env.COMMIT_HASH}>
-                {t('SETTINGS_BUILD_VERSION')}: {process.env.COMMIT_HASH}
-            </div>
+        <nav className={styles['menu']} aria-label={t('SETTINGS')}>
+            <SearchField value={query} onChange={onQueryChange} />
             {
-                settings?.serverVersion &&
-                    <div className={styles['version-info-label']} title={settings.serverVersion}>
-                        {t('SETTINGS_SERVER_VERSION')}: {settings.serverVersion}
+                groups.map((group) => (
+                    <div key={group.id} className={styles['group']}>
+                        <div className={styles['label']}>{group.label}</div>
+                        {
+                            group.pages.map((page) => (
+                                <Button
+                                    key={page.id}
+                                    className={classNames(styles['item'], { [styles['selected']]: page.id === selected })}
+                                    href={`#/settings/${page.id}`}
+                                    title={page.label}
+                                    aria-current={page.id === selected ? 'page' : undefined}
+                                >
+                                    <PageIcon className={styles['icon']} name={page.icon} />
+                                    <div className={styles['item-label']}>{page.label}</div>
+                                </Button>
+                            ))
+                        }
                     </div>
+                ))
             }
-            {
-                typeof shell.state.version === 'string' &&
-                    <div className={styles['version-info-label']} title={shell.state.version}>
-                        {t('SETTINGS_SHELL_VERSION')}: {shell.state.version}
-                    </div>
-            }
-        </div>
+        </nav>
     );
 };
 
