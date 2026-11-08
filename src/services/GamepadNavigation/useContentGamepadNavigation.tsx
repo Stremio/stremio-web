@@ -137,12 +137,13 @@ const useContentGamepadNavigation = (
             }
         };
 
-        gamepad?.on('analog', gamepadHandlerId, handleGamepadNavigation);
+        const onAnalog = handleGamepadNavigation as (data?: string) => void;
+        gamepad?.on('analog', gamepadHandlerId, onAnalog);
         gamepad?.on('buttonA', gamepadHandlerId, onSelect);
 
         return () => {
-            gamepad?.off('analog', gamepadHandlerId);
-            gamepad?.off('buttonA', gamepadHandlerId);
+            gamepad?.off('analog', gamepadHandlerId, onAnalog);
+            gamepad?.off('buttonA', gamepadHandlerId, onSelect);
         };
     }, [gamepad, gamepadHandlerId, sectionRef]);
 };
