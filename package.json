@@ -49,7 +49,7 @@
         "react-router": "6.30.0",
         "react-router-dom": "6.30.0",
         "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "github:Stremio/stremio-translations#7e9b54c59dd60e00711c166e279430dff4f0e657",
+        "stremio-translations": "github:Stremio/stremio-translations#13a78f0ff5f280de8d52bd5f7e7f59904b33ed08",
         "url": "0.11.4",
         "use-long-press": "^3.3.0",
         "workbox-window": "7.4.1"
