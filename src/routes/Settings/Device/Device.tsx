@@ -33,36 +33,36 @@ const Device = ({ profile }: Props) => {
     return (
         <React.Fragment>
             <Group title={t('PLAYBACK')}>
-                <Row label={t('SETTINGS_SURROUND_SOUND')}>
+                <Row rowId={'surround'} label={t('SETTINGS_SURROUND_SOUND')}>
                     <Toggle {...surroundSoundToggle} />
                 </Row>
                 {
                     shell.active &&
-                        <Row label={t('SETTINGS_HWDEC')}>
+                        <Row rowId={'hwdec'} label={t('SETTINGS_HWDEC')}>
                             <Toggle {...hardwareDecodingToggle} />
                         </Row>
                 }
                 {
                     shell.active && shell.capabilities.gpuVideoProcessing &&
-                        <Row label={t('SETTINGS_GPU_VIDEO_PROCESSING')}>
+                        <Row rowId={'gpu'} label={t('SETTINGS_GPU_VIDEO_PROCESSING')}>
                             <Toggle {...gpuVideoProcessingToggle} />
                         </Row>
                 }
                 {
                     shell.active && platform.name === 'windows' &&
-                        <Row label={t('SETTINGS_VIDEO_MODE')} control={'wide'}>
+                        <Row rowId={'videoMode'} label={t('SETTINGS_VIDEO_MODE')} control={'wide'}>
                             <MultiselectMenu className={'multiselect'} portal={true} {...videoModeSelect} />
                         </Row>
                 }
                 {
                     shell.active &&
-                        <Row label={t('SETTINGS_PAUSE_MINIMIZED')}>
+                        <Row rowId={'pause'} label={t('SETTINGS_PAUSE_MINIMIZED')}>
                             <Toggle {...pauseOnMinimizeToggle} />
                         </Row>
                 }
                 {
                     mpvConfigSelect !== null &&
-                        <Row label={t('SETTINGS_MPV_CONFIG')} control={'wide'}>
+                        <Row rowId={'mpvConfig'} label={t('SETTINGS_MPV_CONFIG')} control={'wide'}>
                             <div className={styles['mpv-config-control']} title={mpvConfigSelect.title}>
                                 <MultiselectMenu className={'multiselect'} portal={true} {...mpvConfigSelect} />
                             </div>
@@ -72,15 +72,15 @@ const Device = ({ profile }: Props) => {
             {
                 shell.active &&
                     <Group title={t('SETTINGS_GROUP_DESKTOP_APP')}>
-                        <Row label={t('SETTINGS_QUIT_ON_CLOSE')}>
+                        <Row rowId={'quit'} label={t('SETTINGS_QUIT_ON_CLOSE')}>
                             <Toggle {...quitOnCloseToggle} />
                         </Row>
-                        <Row label={t('SETTINGS_FULLSCREEN_EXIT')}>
+                        <Row rowId={'esc'} label={t('SETTINGS_FULLSCREEN_EXIT')}>
                             <Toggle {...escExitFullscreenToggle} />
                         </Row>
                         {
                             discord.available &&
-                                <Row label={t('SETTINGS_DISCORD')}>
+                                <Row rowId={'discord'} label={t('SETTINGS_DISCORD')}>
                                     <Toggle {...discordRpcToggle} />
                                 </Row>
                         }

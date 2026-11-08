@@ -44,7 +44,7 @@ const Integrations = ({ profile, trakt }: Props) => {
 
     return (
         <Group>
-            <Row label={t('SETTINGS_TRAKT')} description={traktDescription} icon={'trakt'} stackOnPhone={true}>
+            <Row rowId={'trakt'} label={t('SETTINGS_TRAKT')} description={traktDescription} icon={'trakt'} stackOnPhone={true}>
                 <RowButton
                     label={trakt.authenticated ? t('SETTINGS_TRAKT_DISCONNECT') : t('SETTINGS_TRAKT_AUTHENTICATE')}
                     external={!trakt.authenticated}
@@ -53,6 +53,7 @@ const Integrations = ({ profile, trakt }: Props) => {
                 />
             </Row>
             <Row
+                rowId={'calendar'}
                 label={t('SETTINGS_SUBSCRIBE_CALENDAR')}
                 description={profile.auth === null ? t('SETTINGS_CALENDAR_GUEST_DESC') : t('SETTINGS_CALENDAR_DESC')}
                 icon={'calendar'}

@@ -19,11 +19,12 @@ type Props = {
     profile: Profile,
     streamingServer: StreamingServer,
     query: string,
+    results: React.ReactNode,
     onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
     onOpenPage: (event: React.MouseEvent<HTMLDivElement>) => void,
 };
 
-const Hub = ({ groups, profile, streamingServer, query, onQueryChange, onOpenPage }: Props) => {
+const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, onOpenPage }: Props) => {
     const { t } = useTranslation();
     const platform = usePlatform();
 
@@ -86,8 +87,9 @@ const Hub = ({ groups, profile, streamingServer, query, onQueryChange, onOpenPag
                 <Icon className={styles['chevron']} name={'chevron-forward'} />
             </Button>
             <SearchField className={styles['search']} value={query} onChange={onQueryChange} />
+            {results}
             {
-                groups.map((group) => (
+                !results && groups.map((group) => (
                     <React.Fragment key={group.id}>
                         <div className={styles['label']}>{group.label}</div>
                         <div className={styles['card']}>

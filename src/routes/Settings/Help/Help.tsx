@@ -20,10 +20,10 @@ const Help = ({ streamingServer }: Props) => {
             streamingServer.settings.content as StreamingServerSettings : null;
 
         return [
-            { label: t('SETTINGS_APP_VERSION'), value: process.env.VERSION, display: process.env.VERSION },
-            { label: t('SETTINGS_BUILD_VERSION'), value: process.env.COMMIT_HASH, display: process.env.COMMIT_HASH?.slice(0, 13) },
-            ...(settings?.serverVersion ? [{ label: t('SETTINGS_SERVER_VERSION'), value: settings.serverVersion, display: settings.serverVersion }] : []),
-            ...(typeof shell.state.version === 'string' ? [{ label: t('SETTINGS_SHELL_VERSION'), value: shell.state.version, display: shell.state.version }] : []),
+            { id: 'vApp', label: t('SETTINGS_APP_VERSION'), value: process.env.VERSION, display: process.env.VERSION },
+            { id: 'vBuild', label: t('SETTINGS_BUILD_VERSION'), value: process.env.COMMIT_HASH, display: process.env.COMMIT_HASH?.slice(0, 13) },
+            ...(settings?.serverVersion ? [{ id: 'vServer', label: t('SETTINGS_SERVER_VERSION'), value: settings.serverVersion, display: settings.serverVersion }] : []),
+            ...(typeof shell.state.version === 'string' ? [{ id: 'vShell', label: t('SETTINGS_SHELL_VERSION'), value: shell.state.version, display: shell.state.version }] : []),
         ];
     }, [t, streamingServer?.settings, shell.state.version]);
 
@@ -44,13 +44,13 @@ const Help = ({ streamingServer }: Props) => {
             </Group>
             <Group title={t('ABOUT_STREMIO')}>
                 {
-                    versions.map(({ label, value, display }) => (
-                        <Row key={label} label={label} variant={'thin'}>
+                    versions.map(({ id, label, value, display }) => (
+                        <Row key={id} rowId={id} label={label} variant={'thin'}>
                             <div className={styles['value']} title={value}>{display}</div>
                         </Row>
                     ))
                 }
-                <Row variant={'end'}>
+                <Row rowId={'copyDetails'} variant={'end'}>
                     <RowButton label={t('SETTINGS_COPY_DETAILS')} onClick={onCopyDetails} />
                 </Row>
             </Group>

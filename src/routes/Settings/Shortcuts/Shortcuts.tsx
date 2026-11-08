@@ -15,7 +15,7 @@ const Shortcuts = () => {
                     <Group key={name} title={t(label)}>
                         {
                             shortcuts.map((shortcut) => (
-                                <Row key={shortcut.name} label={t(shortcut.label)} variant={'keys'}>
+                                <Row key={shortcut.name} rowId={shortcut.name} label={t(shortcut.label)} variant={'keys'}>
                                     <Combos combos={shortcut.combos} />
                                 </Row>
                             ))

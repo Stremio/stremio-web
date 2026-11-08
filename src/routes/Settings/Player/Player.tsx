@@ -32,51 +32,51 @@ const Player = ({ profile }: Props) => {
         <React.Fragment>
             <Group title={t('SETTINGS_SECTION_SUBTITLES')} icon={'subtitles'}>
                 <SubtitlesPreview settings={profile.settings} />
-                <Row label={t('SETTINGS_SUBTITLES_LANGUAGE')} control={'wide'}>
+                <Row rowId={'subLang'} label={t('SETTINGS_SUBTITLES_LANGUAGE')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesLanguageSelect} />
                 </Row>
-                <Row label={t('SETTINGS_SUBTITLES_SIZE')} control={'wide'}>
+                <Row rowId={'subSize'} label={t('SETTINGS_SUBTITLES_SIZE')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesSizeSelect} />
                 </Row>
-                <Row label={t('PLAYER_SUBTITLES_VERTICAL_POSITION')} control={'wide'}>
+                <Row rowId={'subPos'} label={t('PLAYER_SUBTITLES_VERTICAL_POSITION')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesOffsetSelect} />
                 </Row>
-                <Row label={t('SETTINGS_SUBTITLES_COLOR')} control={'wide'}>
+                <Row rowId={'subColor'} label={t('SETTINGS_SUBTITLES_COLOR')} control={'wide'}>
                     <ColorInput className={'color-input'} {...subtitlesTextColorInput} />
                 </Row>
-                <Row label={t('SETTINGS_SUBTITLES_COLOR_BACKGROUND')} control={'wide'}>
+                <Row rowId={'subBg'} label={t('SETTINGS_SUBTITLES_COLOR_BACKGROUND')} control={'wide'}>
                     <ColorInput className={'color-input'} {...subtitlesBackgroundColorInput} />
                 </Row>
-                <Row label={t('SETTINGS_SUBTITLES_COLOR_OUTLINE')} control={'wide'}>
+                <Row rowId={'subOutline'} label={t('SETTINGS_SUBTITLES_COLOR_OUTLINE')} control={'wide'}>
                     <ColorInput className={'color-input'} {...subtitlesOutlineColorInput} />
                 </Row>
-                <Row label={t('SETTINGS_ASS_SUBTITLES_STYLING')}>
+                <Row rowId={'ass'} label={t('SETTINGS_ASS_SUBTITLES_STYLING')}>
                     <Toggle {...assSubtitlesStylingToggle} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_AUDIO')} icon={'volume-medium'}>
-                <Row label={t('SETTINGS_DEFAULT_AUDIO_TRACK')} control={'wide'}>
+                <Row rowId={'audio'} label={t('SETTINGS_DEFAULT_AUDIO_TRACK')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...audioLanguageSelect} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_CONTROLS')} icon={'remote'}>
-                <Row label={t('SETTINGS_SEEK_KEY')} control={'wide'}>
+                <Row rowId={'seek'} label={t('SETTINGS_SEEK_KEY')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...seekTimeDurationSelect} />
                 </Row>
-                <Row label={t('SETTINGS_SEEK_KEY_SHIFT')} control={'wide'}>
+                <Row rowId={'seekShift'} label={t('SETTINGS_SEEK_KEY_SHIFT')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...seekShortTimeDurationSelect} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_AUTO_PLAY')} icon={'play'}>
-                <Row label={t('AUTO_PLAY')}>
+                <Row rowId={'auto'} label={t('AUTO_PLAY')}>
                     <Toggle {...bingeWatchingToggle} />
                 </Row>
-                <Row label={t('SETTINGS_NEXT_VIDEO_POPUP_DURATION')} control={'wide'}>
+                <Row rowId={'popup'} label={t('SETTINGS_NEXT_VIDEO_POPUP_DURATION')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...nextVideoPopupDurationSelect} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_ADVANCED')} icon={'glasses'}>
-                <Row label={t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER')} control={'wide'}>
+                <Row rowId={'external'} label={t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...playInExternalPlayerSelect} />
                 </Row>
             </Group>

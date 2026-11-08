@@ -23,10 +23,10 @@ const Interface = ({ profile, spotlight }: Props) => {
     return (
         <React.Fragment>
             <Group title={t('SETTINGS_GROUP_LANGUAGE_DISPLAY')}>
-                <Row label={t('SETTINGS_UI_LANGUAGE')} control={'wide'}>
+                <Row rowId={'lang'} label={t('SETTINGS_UI_LANGUAGE')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...interfaceLanguageSelect} />
                 </Row>
-                <Row label={t('SETTINGS_UI_ZOOM')} control={'scale'} stackOnPhone={true}>
+                <Row rowId={'zoom'} label={t('SETTINGS_UI_ZOOM')} control={'scale'} stackOnPhone={true}>
                     <Scale {...interfaceSize} tabIndex={-1} />
                 </Row>
             </Group>
@@ -34,10 +34,10 @@ const Interface = ({ profile, spotlight }: Props) => {
                 <SpotlightSettings profile={profile} spotlight={spotlight} />
             </Group>
             <Group title={t('SETTINGS_GROUP_BEHAVIOR')}>
-                <Row label={t('SETTINGS_BLUR_UNWATCHED_IMAGE')}>
+                <Row rowId={'blur'} label={t('SETTINGS_BLUR_UNWATCHED_IMAGE')}>
                     <Toggle {...hideSpoilersToggle} />
                 </Row>
-                <Row label={t('SETTINGS_GAMEPAD')}>
+                <Row rowId={'gamepad'} label={t('SETTINGS_GAMEPAD')}>
                     <Toggle {...gamepadSupportToggle} />
                 </Row>
             </Group>

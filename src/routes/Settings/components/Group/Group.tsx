@@ -7,6 +7,7 @@ import styles from './Group.less';
 
 type Props = {
     className?: string,
+    rowId?: string,
     title?: string,
     icon?: string,
     description?: string,
@@ -14,9 +15,9 @@ type Props = {
     children: React.ReactNode,
 };
 
-const Group = ({ className, title, icon, description, padded, children }: Props) => {
+const Group = ({ className, rowId, title, icon, description, padded, children }: Props) => {
     return (
-        <section className={classNames(className, styles['group'])} aria-label={title}>
+        <section className={classNames(className, styles['group'])} aria-label={title} data-row={rowId}>
             {
                 title &&
                     <div className={styles['heading']}>

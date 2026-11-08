@@ -55,7 +55,7 @@ const Account = ({ profile, dataExport }: Props) => {
             {
                 profile?.auth?.user?.email &&
                     <Group title={t('SETTINGS_GROUP_SECURITY')}>
-                        <Row label={t('PASSWORD')} description={t('SETTINGS_PASSWORD_DESC')} stackOnPhone={true}>
+                        <Row rowId={'password'} label={t('PASSWORD')} description={t('SETTINGS_PASSWORD_DESC')} stackOnPhone={true}>
                             <RowButton
                                 label={t('SETTINGS_CHANGE_PASSWORD')}
                                 href={`https://www.strem.io/reset-password/${profile.auth.user.email}`}
@@ -67,7 +67,7 @@ const Account = ({ profile, dataExport }: Props) => {
             {
                 profile?.auth?.user &&
                     <Group title={t('SETTINGS_GROUP_YOUR_DATA')}>
-                        <Row label={t('SETTINGS_DATA_EXPORT')} description={t('WEBSITE_DATA_EXPORT_DESCRIPTION')} stackOnPhone={true}>
+                        <Row rowId={'export'} label={t('SETTINGS_DATA_EXPORT')} description={t('WEBSITE_DATA_EXPORT_DESCRIPTION')} stackOnPhone={true}>
                             <RowButton label={t('SETTINGS_DATA_EXPORT_BUTTON')} disabled={dataExport.loading} onClick={dataExport.start} />
                         </Row>
                     </Group>
@@ -75,7 +75,7 @@ const Account = ({ profile, dataExport }: Props) => {
             {
                 profile?.auth?.user &&
                     <Group className={styles['danger']}>
-                        <Row label={t('SETTINGS_ACCOUNT_DELETION')} description={t('SETTINGS_ACCOUNT_DELETION_DESC')} stackOnPhone={true}>
+                        <Row rowId={'deletion'} label={t('SETTINGS_ACCOUNT_DELETION')} description={t('SETTINGS_ACCOUNT_DELETION_DESC')} stackOnPhone={true}>
                             <RowButton
                                 variant={'danger'}
                                 label={t('SETTINGS_DELETE_ACCOUNT')}

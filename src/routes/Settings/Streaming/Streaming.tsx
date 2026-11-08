@@ -42,13 +42,13 @@ const Streaming = ({ profile, streamingServer }: Props) => {
 
     return (
         <React.Fragment>
-            <Group title={t('SETTINGS_GROUP_STREAMING_SERVER')} padded={true}>
+            <Group rowId={'urls'} title={t('SETTINGS_GROUP_STREAMING_SERVER')} padded={true}>
                 <URLsManager selectedUrl={profile.settings.streamingServerUrl} settings={streamingServer.settings} />
             </Group>
             {
                 streamingServerRemoteUrlInput.value !== null &&
                     <Group>
-                        <Row label={t('SETTINGS_REMOTE_URL')} description={streamingServerRemoteUrlInput.value} stackOnPhone={true}>
+                        <Row rowId={'remoteUrl'} label={t('SETTINGS_REMOTE_URL')} description={streamingServerRemoteUrlInput.value} stackOnPhone={true}>
                             <RowButton label={t('COPY')} onClick={onCopyRemoteUrl} />
                         </Row>
                     </Group>
@@ -61,19 +61,19 @@ const Streaming = ({ profile, streamingServer }: Props) => {
                     >
                         {
                             profile.auth !== null && profile.auth.user !== null && remoteEndpointSelect !== null &&
-                                <Row label={t('SETTINGS_STREAMING_HTTPS_ENDPOINT')} control={'wide'}>
+                                <Row rowId={'https'} label={t('SETTINGS_STREAMING_HTTPS_ENDPOINT')} control={'wide'}>
                                     <MultiselectMenu className={'multiselect'} portal={true} {...remoteEndpointSelect} disabled={settingsDisabled} />
                                 </Row>
                         }
                         {
                             cacheSizeSelect !== null &&
-                                <Row label={t('SETTINGS_SERVER_CACHE_SIZE')} control={'wide'}>
+                                <Row rowId={'cache'} label={t('SETTINGS_SERVER_CACHE_SIZE')} control={'wide'}>
                                     <MultiselectMenu className={'multiselect'} portal={true} {...cacheSizeSelect} disabled={settingsDisabled} />
                                 </Row>
                         }
                         {
                             cacheLocationSelect !== null &&
-                                <Row label={t('SETTINGS_CACHING_DRIVE')} control={'wide'}>
+                                <Row rowId={'drive'} label={t('SETTINGS_CACHING_DRIVE')} control={'wide'}>
                                     <div className={styles['cache-location-control']} title={cacheLocationSelect.title}>
                                         <MultiselectMenu className={'multiselect'} portal={true} {...cacheLocationSelect} />
                                         {cacheLocationError && <div className={styles['cache-location-error']} role={'alert'}>{cacheLocationError}</div>}
@@ -82,13 +82,13 @@ const Streaming = ({ profile, streamingServer }: Props) => {
                         }
                         {
                             torrentProfileSelect !== null &&
-                                <Row label={t('SETTINGS_SERVER_TORRENT_PROFILE')} control={'wide'}>
+                                <Row rowId={'torrent'} label={t('SETTINGS_SERVER_TORRENT_PROFILE')} control={'wide'}>
                                     <MultiselectMenu className={'multiselect'} portal={true} {...torrentProfileSelect} disabled={settingsDisabled} />
                                 </Row>
                         }
                         {
                             transcodingProfileSelect !== null &&
-                                <Row label={t('SETTINGS_TRANSCODE_PROFILE')} control={'wide'}>
+                                <Row rowId={'transcode'} label={t('SETTINGS_TRANSCODE_PROFILE')} control={'wide'}>
                                     <MultiselectMenu className={'multiselect'} portal={true} {...transcodingProfileSelect} disabled={settingsDisabled} />
                                 </Row>
                         }

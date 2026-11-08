@@ -81,10 +81,10 @@ const SpotlightSettings = ({ profile, spotlight: { catalogs: boardCatalogs, pick
 
     return (
         <React.Fragment>
-            <Row label={t('SETTINGS_SHOW_SPOTLIGHT')}>
+            <Row rowId={'spotlight'} label={t('SETTINGS_SHOW_SPOTLIGHT')}>
                 <Toggle checked={enabled} onClick={toggleEnabled} />
             </Row>
-            <Row className={classNames({ [styles['off']]: off })} label={t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')} control={'wide'}>
+            <Row className={classNames({ [styles['off']]: off })} rowId={'spotlightCatalogs'} label={t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')} control={'wide'}>
                 <Button
                     className={styles['value']}
                     tabIndex={off ? undefined : 0}
@@ -105,7 +105,7 @@ const SpotlightSettings = ({ profile, spotlight: { catalogs: boardCatalogs, pick
                 tabIndex={off ? undefined : 0}
                 onClick={onOpenPicker}
             />
-            <Row className={classNames({ [styles['off']]: off })} label={picks.length > 1 ? t('SETTINGS_SPOTLIGHT_SHOW_ROWS') : t('SETTINGS_SPOTLIGHT_SHOW_ROW')}>
+            <Row className={classNames({ [styles['off']]: off })} rowId={'spotlightRows'} label={picks.length > 1 ? t('SETTINGS_SPOTLIGHT_SHOW_ROWS') : t('SETTINGS_SPOTLIGHT_SHOW_ROW')}>
                 <Toggle tabIndex={off ? undefined : 0} checked={showCatalogRows} onClick={toggleCatalogRows} />
             </Row>
             {
