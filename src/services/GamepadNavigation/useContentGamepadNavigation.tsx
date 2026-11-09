@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useGamepad } from '../GamepadContext';
 
-const FOCUSABLE = '[tabindex]:not([data-focus-guard]):not(input[type="range"][tabindex="-1"])';
+const FOCUSABLE = '[tabindex]:not([data-focus-guard])';
 const OPEN_DROPDOWN = '[class*="dropdown"][class*="open"]';
 
 const isVisible = (element: HTMLElement) => element.checkVisibility?.({ visibilityProperty: true }) ?? true;

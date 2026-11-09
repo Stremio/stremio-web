@@ -27,7 +27,7 @@ const Interface = ({ profile, spotlight }: Props) => {
                     <MultiselectMenu className={'multiselect'} portal={true} {...interfaceLanguageSelect} />
                 </Row>
                 <Row rowId={'zoom'} label={t('SETTINGS_UI_ZOOM')} control={'scale'} stackOnPhone={true}>
-                    <Scale {...interfaceSize} tabIndex={-1} />
+                    <Scale {...interfaceSize} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_BOARD')}>
