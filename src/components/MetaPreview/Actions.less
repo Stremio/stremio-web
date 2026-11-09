@@ -31,8 +31,19 @@
     }
 
     &.show {
+        flex: 0 1 auto;
+        min-width: 0;
+        padding: 0 1.25rem;
+
         &:hover, &:focus {
             background-color: var(--secondary-accent-color);
+        }
+
+        .label {
+            flex: 0 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
