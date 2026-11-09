@@ -30,7 +30,7 @@ const Player = ({ profile }: Props) => {
 
     return (
         <React.Fragment>
-            <Group title={t('SETTINGS_SECTION_SUBTITLES')} icon={'subtitles'}>
+            <Group title={t('SETTINGS_SECTION_SUBTITLES')}>
                 <SubtitlesPreview settings={profile.settings} />
                 <Row rowId={'subLang'} label={t('SETTINGS_SUBTITLES_LANGUAGE')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesLanguageSelect} />
@@ -54,12 +54,12 @@ const Player = ({ profile }: Props) => {
                     <Toggle aria-label={t('SETTINGS_ASS_SUBTITLES_STYLING')} {...assSubtitlesStylingToggle} />
                 </Row>
             </Group>
-            <Group title={t('SETTINGS_SECTION_AUDIO')} icon={'volume-medium'}>
+            <Group title={t('SETTINGS_SECTION_AUDIO')}>
                 <Row rowId={'audio'} label={t('SETTINGS_DEFAULT_AUDIO_TRACK')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...audioLanguageSelect} />
                 </Row>
             </Group>
-            <Group title={t('SETTINGS_SECTION_CONTROLS')} icon={'remote'}>
+            <Group title={t('SETTINGS_SECTION_CONTROLS')}>
                 <Row rowId={'seek'} label={t('SETTINGS_SEEK_KEY')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...seekTimeDurationSelect} />
                 </Row>
@@ -67,7 +67,7 @@ const Player = ({ profile }: Props) => {
                     <MultiselectMenu className={'multiselect'} portal={true} {...seekShortTimeDurationSelect} />
                 </Row>
             </Group>
-            <Group title={t('SETTINGS_SECTION_AUTO_PLAY')} icon={'play'}>
+            <Group title={t('SETTINGS_SECTION_AUTO_PLAY')}>
                 <Row rowId={'auto'} label={t('AUTO_PLAY')}>
                     <Toggle aria-label={t('AUTO_PLAY')} {...bingeWatchingToggle} />
                 </Row>
@@ -75,7 +75,7 @@ const Player = ({ profile }: Props) => {
                     <MultiselectMenu className={'multiselect'} portal={true} {...nextVideoPopupDurationSelect} />
                 </Row>
             </Group>
-            <Group title={t('SETTINGS_SECTION_ADVANCED')} icon={'glasses'}>
+            <Group title={t('SETTINGS_SECTION_ADVANCED')}>
                 <Row rowId={'external'} label={t('SETTINGS_PLAY_IN_EXTERNAL_PLAYER')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...playInExternalPlayerSelect} />
                 </Row>

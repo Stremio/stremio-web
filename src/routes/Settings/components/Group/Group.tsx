@@ -2,29 +2,23 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import Icon from '@stremio/stremio-icons/react';
 import styles from './Group.less';
 
 type Props = {
     className?: string,
     rowId?: string,
     title?: string,
-    icon?: string,
     description?: string,
     padded?: boolean,
     children: React.ReactNode,
 };
 
-const Group = ({ className, rowId, title, icon, description, padded, children }: Props) => {
+const Group = ({ className, rowId, title, description, padded, children }: Props) => {
     return (
         <section className={classNames(className, styles['group'])} aria-label={title} data-row={rowId}>
             {
                 title &&
                     <div className={styles['heading']}>
-                        {
-                            icon &&
-                                <Icon className={styles['icon']} name={icon} />
-                        }
                         <h2 className={styles['title']}>{title}</h2>
                     </div>
             }

@@ -30,7 +30,7 @@ const Interface = ({ profile, spotlight }: Props) => {
                     <Scale {...interfaceSize} tabIndex={-1} />
                 </Row>
             </Group>
-            <Group title={t('SETTINGS_SECTION_BOARD')} icon={'home'}>
+            <Group title={t('SETTINGS_SECTION_BOARD')}>
                 <SpotlightSettings profile={profile} spotlight={spotlight} />
             </Group>
             <Group title={t('SETTINGS_GROUP_BEHAVIOR')}>
