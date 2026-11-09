@@ -7,7 +7,7 @@ import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/E
 import { parseDate } from '../format';
 import Links from '../Hero/Links';
 import useMetaLinks from 'stremio/common/useMetaLinks';
-import Rating from './Rating';
+import ContentRating from 'stremio/components/ContentRating';
 import useFormatters from './Guide/useFormatters';
 import getRelativeTime from './getRelativeTime';
 import styles from './Programme.less';
@@ -83,7 +83,7 @@ const Programme = ({ className, programme, now, centered = false }: Props) => {
                             }
                             {
                                 ratings.map((rating, index) => (
-                                    <Rating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />
+                                    <ContentRating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />
                                 ))
                             }
                         </div>

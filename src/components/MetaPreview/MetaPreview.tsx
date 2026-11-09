@@ -3,6 +3,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Image from 'stremio/components/Image';
+import ContentRating from 'stremio/components/ContentRating';
 import useMetaLinks from 'stremio/common/useMetaLinks';
 import Facts from './Facts';
 import Links from './Links';
@@ -13,6 +14,7 @@ import styles from './MetaPreview.less';
 type Props = {
     className?: string,
     name: string,
+    title?: string | null,
     logo?: string | null,
     background?: string | null,
     runtime?: string | null,
@@ -20,6 +22,7 @@ type Props = {
     released?: Date | string | null,
     description?: string | null,
     links?: Link[] | null,
+    ratings?: ContentRating[] | null,
     trailerHref?: string | null,
     show?: ShowAction | null,
     inLibrary?: boolean,
@@ -40,6 +43,7 @@ const getYear = (released: Date | string | null): string | null => {
 const MetaPreview = ({
     className,
     name,
+    title = null,
     logo = null,
     background = null,
     runtime = null,
@@ -47,6 +51,7 @@ const MetaPreview = ({
     released = null,
     description = null,
     links = null,
+    ratings = null,
     trailerHref = null,
     show = null,
     inLibrary = false,
@@ -57,6 +62,7 @@ const MetaPreview = ({
     children,
 }: Props) => {
     const { groups, imdb } = useMetaLinks(links);
+    const contentRatings = ratings?.filter((rating) => rating.value.trim().length > 0) ?? [];
     const toggles = typeof onToggleLibrary === 'function' && typeof onToggleWatched === 'function';
 
     return (
@@ -77,7 +83,21 @@ const MetaPreview = ({
                     title={name}
                     renderFallback={() => <div className={styles['name']}>{name}</div>}
                 />
-                {metadata ?? <Facts className={styles['facts']} items={[runtime, releaseInfo || getYear(released)]} imdb={imdb} />}
+                {
+                    typeof title === 'string' && title.length > 0 ?
+                        <h1 className={styles['title']}>{title}</h1>
+                        :
+                        null
+                }
+                <Facts className={styles['facts']} items={[runtime, releaseInfo || getYear(released)]} imdb={imdb}>
+                    {
+                        contentRatings.length > 0 ?
+                            contentRatings.map((rating, index) => <ContentRating key={`${rating.system}:${rating.value}:${index}`} rating={rating} />)
+                            :
+                            null
+                    }
+                </Facts>
+                {metadata}
                 {
                     typeof description === 'string' && description.length > 0 ?
                         <p className={styles['description']}>{description}</p>

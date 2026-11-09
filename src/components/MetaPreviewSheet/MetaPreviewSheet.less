@@ -10,6 +10,7 @@
     preview-body: body;
     preview-logo: logo;
     preview-name: name;
+    preview-title: title;
     preview-facts: facts;
     preview-description: description;
     preview-links: links;
@@ -78,6 +79,10 @@
 
             .preview-facts {
                 margin-top: 0;
+            }
+
+            .preview-title ~ .preview-facts {
+                margin-top: 1rem;
             }
 
             .preview-description {
