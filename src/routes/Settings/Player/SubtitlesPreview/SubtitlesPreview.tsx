@@ -2,11 +2,15 @@
 
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import Button from 'stremio/components/Button';
 import styles from './SubtitlesPreview.less';
 
-const isTransparent = (color: string) => {
-    const hex = color.replace('#', '');
-    return hex.length === 8 && hex.endsWith('00');
+const CREDIT = {
+    title: 'Big Buck Bunny',
+    titleHref: 'https://peach.blender.org/',
+    copyright: '© 2008 Blender Foundation',
+    license: 'CC BY 3.0',
+    licenseHref: 'https://creativecommons.org/licenses/by/3.0/',
 };
 
 type Props = {
@@ -16,21 +20,33 @@ type Props = {
 const SubtitlesPreview = ({ settings }: Props) => {
     const { t } = useTranslation();
 
-    const style = useMemo(() => {
-        const outline = settings.subtitlesOutlineColor;
-        return {
-            color: settings.subtitlesTextColor,
-            backgroundColor: settings.subtitlesBackgroundColor,
-            fontSize: `${Math.round(1.25 * settings.subtitlesSize) / 100}rem`,
-            marginBottom: `${0.75 + settings.subtitlesOffset * 0.06}rem`,
-            textShadow: isTransparent(outline) ? 'none' : `0 0 2px ${outline}, 0 0 2px ${outline}, 0 1px 3px ${outline}`,
-        };
-    }, [settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor, settings.subtitlesSize, settings.subtitlesOffset]);
+    const lineStyle = useMemo(() => ({
+        '--size': Math.floor(settings.subtitlesSize / 25),
+        '--outline': settings.subtitlesOutlineColor,
+        color: settings.subtitlesTextColor,
+        backgroundColor: settings.subtitlesBackgroundColor,
+    } as React.CSSProperties), [settings.subtitlesSize, settings.subtitlesOutlineColor, settings.subtitlesTextColor, settings.subtitlesBackgroundColor]);
 
     return (
-        <div className={styles['subtitles-preview']} role={'img'} aria-label={t('SETTINGS_SUBTITLES_PREVIEW')}>
-            <div className={styles['line']} style={style}>
-                {t('SETTINGS_SUBTITLES_PREVIEW_TEXT')}
+        <div className={styles['subtitles-preview']}>
+            <div className={styles['frame']} role={'img'} aria-label={t('SETTINGS_SUBTITLES_PREVIEW')}>
+                <img
+                    className={styles['image']}
+                    src={require('/assets/images/subtitles_preview.jpg')}
+                    alt={''}
+                    width={1280}
+                    height={720}
+                    decoding={'async'}
+                    loading={'lazy'}
+                />
+                <div className={styles['layer']} style={{ bottom: `${settings.subtitlesOffset}%` }}>
+                    <span className={styles['line']} style={lineStyle}>{t('SETTINGS_SUBTITLES_PREVIEW_TEXT')}</span>
+                </div>
+            </div>
+            <div className={styles['credit']}>
+                <Button className={styles['link']} href={CREDIT.titleHref} target={'_blank'}>{CREDIT.title}</Button>
+                <span>{CREDIT.copyright}</span>
+                <Button className={styles['link']} href={CREDIT.licenseHref} target={'_blank'}>{CREDIT.license}</Button>
             </div>
         </div>
     );
