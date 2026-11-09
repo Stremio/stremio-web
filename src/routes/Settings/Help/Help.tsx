@@ -58,6 +58,7 @@ const Help = ({ streamingServer }: Props) => {
                 <LinkRow label={t('TERMS_OF_SERVICE')} href={'https://www.stremio.com/tos'} />
                 <LinkRow label={t('PRIVACY_POLICY')} href={'https://www.stremio.com/privacy'} />
                 <LinkRow label={t('SETTINGS_SOURCE_CODE')} href={`https://github.com/stremio/stremio-web/tree/${process.env.COMMIT_HASH}`} />
+                <LinkRow label={'Big Buck Bunny © 2008 Blender Foundation · CC BY 3.0'} href={'https://peach.blender.org/about/'} />
             </Group>
         </React.Fragment>
     );

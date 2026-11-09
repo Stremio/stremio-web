@@ -6,71 +6,43 @@
 
 .subtitles-preview {
     position: relative;
+    aspect-ratio: 16 / 9;
+    container-type: size;
+    overflow: hidden;
+    border-radius: 1.25rem 1.25rem 0 0;
+    background-color: @color-background-dark5;
 
-    .frame {
-        position: relative;
-        aspect-ratio: 16 / 9;
-        container-type: size;
-        overflow: hidden;
-        border-radius: 1.25rem 1.25rem 0 0;
-        background-color: @color-background-dark5;
-
-        .image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .layer {
-            position: absolute;
-            right: 0;
-            left: 0;
-            z-index: 1;
-            text-align: center;
-        }
-
-        .line {
-            display: inline-block;
-            padding: 0.2em;
-            font-size: max(0.7rem, calc(var(--size) * 1cqh));
-            font-weight: normal;
-            line-height: normal;
-            white-space: pre-wrap;
-            text-shadow:
-                -@outline -@outline @outline var(--outline),
-                0 -@outline @outline var(--outline),
-                @outline -@outline @outline var(--outline),
-                -@outline 0 @outline var(--outline),
-                @outline 0 @outline var(--outline),
-                -@outline @outline @outline var(--outline),
-                0 @outline @outline var(--outline),
-                @outline @outline @outline var(--outline);
-        }
+    .image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
-    .credit {
+    .layer {
         position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
+        right: 0;
+        left: 0;
         z-index: 1;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.2rem 0.6rem;
-        border-radius: 1rem;
-        white-space: nowrap;
-        color: var(--primary-foreground-color);
-        background-color: @color-background-dark5-60;
-        backdrop-filter: blur(8px);
+        text-align: center;
+    }
 
-        > * {
-            font-size: 0.7rem;
-        }
-
-        .link {
-            text-decoration: underline;
-        }
+    .line {
+        display: inline-block;
+        padding: 0.2em;
+        font-size: max(0.7rem, calc(var(--size) * 1cqh));
+        font-weight: normal;
+        line-height: normal;
+        white-space: pre-wrap;
+        text-shadow:
+            -@outline -@outline @outline var(--outline),
+            0 -@outline @outline var(--outline),
+            @outline -@outline @outline var(--outline),
+            -@outline 0 @outline var(--outline),
+            @outline 0 @outline var(--outline),
+            -@outline @outline @outline var(--outline),
+            0 @outline @outline var(--outline),
+            @outline @outline @outline var(--outline);
     }
 }
