@@ -28,7 +28,6 @@ const useSettingsPages = () => {
 
     const groups = useMemo<SettingsGroup[]>(() => {
         const savedScope = installed ? t('SETTINGS_SCOPE_SAVED_ON_DEVICE') : t('SETTINGS_SCOPE_SAVED_IN_BROWSER');
-        const serverScope = installed ? t('SETTINGS_SCOPE_SERVER_ON_DEVICE') : t('SETTINGS_SCOPE_SERVER_IN_BROWSER');
 
         return [
             {
@@ -44,8 +43,8 @@ const useSettingsPages = () => {
                 id: 'device',
                 label: installed ? t('SETTINGS_GROUP_THIS_DEVICE') : t('SETTINGS_GROUP_THIS_BROWSER'),
                 pages: [
-                    { id: PAGES.DEVICE, icon: 'channels-outline', label: platform.shell.active ? t('SETTINGS_NAV_PLAYBACK_AND_APP') : t('PLAYBACK'), scope: savedScope },
-                    { id: PAGES.STREAMING, icon: 'network', label: t('SETTINGS_NAV_STREAMING'), scope: serverScope },
+                    { id: PAGES.DEVICE, icon: 'channels-outline', label: platform.shell.active ? t('SETTINGS_NAV_PLAYBACK_AND_APP') : t('PLAYBACK'), scope: null },
+                    { id: PAGES.STREAMING, icon: 'network', label: t('SETTINGS_NAV_STREAMING'), scope: null },
                 ],
             },
             {
