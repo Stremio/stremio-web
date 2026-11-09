@@ -18,7 +18,7 @@ const useInitialFocus = (active: boolean, ready: boolean) => {
         const target = dialog?.querySelector<HTMLElement>('[aria-selected="true"]') ?? dialog?.querySelector<HTMLElement>('input');
         if (target) {
             focusedRef.current = true;
-            target.focus({ preventScroll: true });
+            target.focus({ preventScroll: true, focusVisible: false });
             target.scrollIntoView({ block: 'nearest' });
         }
     }, [active, ready, root]);
