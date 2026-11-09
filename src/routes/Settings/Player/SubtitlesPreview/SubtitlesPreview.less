@@ -2,12 +2,11 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
-@outline: 0.208cqh;
+@outline: 0.15rem;
 
 .subtitles-preview {
     position: relative;
     aspect-ratio: 16 / 9;
-    container-type: size;
     overflow: hidden;
     border-radius: 1.25rem 1.25rem 0 0;
     background-color: @color-background-dark5;
@@ -31,7 +30,7 @@
     .line {
         display: inline-block;
         padding: 0.2em;
-        font-size: max(0.7rem, calc(var(--size) * 1cqh));
+        font-size: calc(var(--size) * 1vmin);
         font-weight: normal;
         line-height: normal;
         white-space: pre-wrap;
