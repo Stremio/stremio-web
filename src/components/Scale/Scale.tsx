@@ -13,10 +13,8 @@ type Props = {
 const getTickIndex = (key: string, index: number, count: number) => {
     switch (key) {
         case 'ArrowRight':
-        case 'ArrowDown':
             return Math.min(count - 1, index + 1);
         case 'ArrowLeft':
-        case 'ArrowUp':
             return Math.max(0, index - 1);
         case 'Home':
             return 0;
