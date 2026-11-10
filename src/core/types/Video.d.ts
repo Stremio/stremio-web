@@ -19,6 +19,7 @@ type Video = {
     overview: string | null,
     released: string | null,
     thumbnail: string | null,
+    background?: string | null,
     season?: number,
     episode?: number,
     streams: Stream[],

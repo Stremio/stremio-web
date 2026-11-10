@@ -49,7 +49,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     }, [programmes, selectedKey, now]);
     const selectedProgrammeKey = selected !== null ? getProgrammeKey(selected) : null;
     const live = selected !== null && selected === current;
-    const artwork = selected?.thumbnail ?? meta.background;
+    const artwork = selected?.background ?? selected?.thumbnail ?? meta.background;
 
     useHeroCollapse(rootRef, contentRef, isMobile);
 
