@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useEffect, useRef, useState } from 'react';
+import styles from './CatalogGroups.less';
 
 const useInitialFocus = (active: boolean, ready: boolean) => {
     const [root, setRoot] = useState<HTMLDivElement | null>(null);
@@ -19,7 +20,11 @@ const useInitialFocus = (active: boolean, ready: boolean) => {
         if (target) {
             focusedRef.current = true;
             target.focus({ preventScroll: true, focusVisible: false });
-            target.scrollIntoView({ block: 'nearest' });
+            const list = target.closest<HTMLElement>(`.${styles['groups']}`);
+            if (list) {
+                const overflow = target.getBoundingClientRect().bottom - list.getBoundingClientRect().bottom;
+                if (overflow > 0) list.scrollTop += overflow;
+            }
         }
     }, [active, ready, root]);
 
