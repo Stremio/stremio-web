@@ -106,43 +106,41 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
     }, [place, updateFade]);
 
     return (
-        <div
-            ref={containerRef}
-            className={classNames(className, styles['segmented-control'], styles[size], { [styles['stretch']]: stretch, [styles['fade-start']]: fade.start, [styles['fade-end']]: fade.end })}
-            role={'tablist'}
-            aria-label={ariaLabel}
-            onScroll={updateFade}
-        >
-            <div ref={trackRef} className={styles['track']}>
-                <div ref={indicatorRef} className={styles['indicator']} aria-hidden={'true'} />
-                {
-                    options.map((option) => (
-                        <Button
-                            key={option.value}
-                            className={classNames(styles['option'], { [styles['selected']]: option.value === value })}
-                            role={'tab'}
-                            aria-selected={option.value === value}
-                            data-value={option.value}
-                            title={option.label}
-                            onClick={onClick}
-                        >
-                            {
-                                typeof option.icon === 'string' ?
-                                    <Icon className={styles['icon']} name={option.icon} />
-                                    :
-                                    null
-                            }
-                            <div className={styles['label']}>{option.label}</div>
-                            {
-                                typeof option.count === 'number' ?
-                                    <div className={styles['count']}>{option.count}</div>
-                                    :
-                                    null
-                            }
-                        </Button>
-                    ))
-                }
+        <div className={classNames(className, styles['segmented-control'], styles[size], { [styles['stretch']]: stretch, [styles['fade-start']]: fade.start, [styles['fade-end']]: fade.end })}>
+            <div ref={containerRef} className={styles['scroller']} role={'tablist'} aria-label={ariaLabel} onScroll={updateFade}>
+                <div ref={trackRef} className={styles['track']}>
+                    <div ref={indicatorRef} className={styles['indicator']} aria-hidden={'true'} />
+                    {
+                        options.map((option) => (
+                            <Button
+                                key={option.value}
+                                className={classNames(styles['option'], { [styles['selected']]: option.value === value })}
+                                role={'tab'}
+                                aria-selected={option.value === value}
+                                data-value={option.value}
+                                title={option.label}
+                                onClick={onClick}
+                            >
+                                {
+                                    typeof option.icon === 'string' ?
+                                        <Icon className={styles['icon']} name={option.icon} />
+                                        :
+                                        null
+                                }
+                                <div className={styles['label']}>{option.label}</div>
+                                {
+                                    typeof option.count === 'number' ?
+                                        <div className={styles['count']}>{option.count}</div>
+                                        :
+                                        null
+                                }
+                            </Button>
+                        ))
+                    }
+                </div>
             </div>
+            <Icon className={classNames(styles['arrow'], styles['start'])} name={'chevron-back'} />
+            <Icon className={classNames(styles['arrow'], styles['end'])} name={'chevron-forward'} />
         </div>
     );
 };
