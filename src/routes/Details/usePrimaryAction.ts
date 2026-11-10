@@ -2,13 +2,26 @@
 
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useModelState, useProfile } from 'stremio/common';
 import type { PrimaryAction } from './Actions';
 import useStreamPlay from './Streams/useStreamPlay';
 import useEpisodeNavigation from './useEpisodeNavigation';
 import { getEpisodeLabel, getMinutesLeft } from './format';
 
+type ContinueWatchingPreview = {
+    items: { _id: string, state: { videoId: string | null }, deepLinks: LibraryItemDeepLinks }[],
+};
+
 const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | null, libraryItem: LibraryItem | null, streams: MetaDetails['streams'], canMarkWatched: boolean): PrimaryAction | null => {
     const { t } = useTranslation();
+    const profile = useProfile();
+    const continueWatching = useModelState({ model: 'continue_watching_preview', action: null }) as ContinueWatchingPreview;
+    const resumeHref = useMemo(() => {
+        return profile.settings.playerType === null ?
+            continueWatching.items.find((item) => item._id === metaItem?.id && item.state.videoId === libraryItem?.state.video_id)?.deepLinks.player ?? null
+            :
+            null;
+    }, [profile.settings.playerType, continueWatching.items, metaItem?.id, libraryItem?.state.video_id]);
     const lastUsed = useMemo(() => {
         return video !== null ?
             streams
@@ -51,9 +64,10 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
         return {
             label: episode !== null ? `${t('LIBRARY_RESUME')} ${episode}` : t('LIBRARY_RESUME'),
             sublabel: t('CONTINUE_WATCHING_TIME_LEFT', { minutes }),
-            onClick: () => openEpisode(current.deepLinks.metaDetailsStreams),
+            href: resumeHref,
+            onClick: resumeHref === null ? () => openEpisode(current.deepLinks.metaDetailsStreams) : undefined,
         };
-    }, [metaItem, video, libraryItem, href, target, download, play, openEpisode, t]);
+    }, [metaItem, video, libraryItem, href, target, download, play, resumeHref, openEpisode, t]);
 };
 
 export default usePrimaryAction;
