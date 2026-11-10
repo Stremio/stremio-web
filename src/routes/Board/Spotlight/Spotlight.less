@@ -46,13 +46,16 @@
                 height: 100%;
                 object-fit: cover;
                 object-position: 72% 22%;
+                transform: scale(1.06);
+                transition: transform 0s linear 0.9s;
             }
 
             &.on {
                 opacity: 1;
 
                 .image {
-                    animation: settle 14s ease-out both;
+                    transform: scale(1);
+                    transition: transform 14s ease-out;
                 }
             }
         }
@@ -82,13 +85,9 @@
     }
 }
 
-@keyframes settle {
-    from {
+@starting-style {
+    .spotlight .art .backdrop.on .image {
         transform: scale(1.06);
-    }
-
-    to {
-        transform: scale(1);
     }
 }
 
@@ -127,7 +126,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .spotlight .art .backdrop.on .image {
-        animation: none;
+    .spotlight .art .backdrop .image, .spotlight .art .backdrop.on .image {
+        transform: none;
+        transition: none;
     }
 }
