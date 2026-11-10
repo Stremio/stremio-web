@@ -29,6 +29,11 @@ const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, 
     const platform = usePlatform();
 
     const avatar = useMemo(() => getAvatar(profile.auth), [profile.auth]);
+    const hubGroups = useMemo(() => {
+        return groups
+            .map((group) => ({ ...group, pages: group.pages.filter(({ id }) => id !== PAGES.ACCOUNT) }))
+            .filter((group) => group.pages.length > 0);
+    }, [groups]);
 
     const summaries = useMemo<Record<string, string | null>>(() => {
         const { settings } = profile;
@@ -60,7 +65,6 @@ const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, 
             [PAGES.INTEGRATIONS]: isTraktAuthenticated(profile) ? t('SETTINGS_SUMMARY_TRAKT_CONNECTED') : t('SETTINGS_SUMMARY_INTEGRATIONS'),
             [PAGES.DEVICE]: deviceSummary(),
             [PAGES.STREAMING]: streamingSummary(),
-            [PAGES.ACCOUNT]: profile.auth === null ? `${t('LOG_IN')} / ${t('SIGN_UP')}` : null,
             [PAGES.HELP]: t('SETTINGS_SUMMARY_HELP'),
         };
     }, [t, profile, platform.shell.active, streamingServer.settings]);
@@ -79,17 +83,14 @@ const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, 
                     <div className={styles['title']}>
                         {profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}
                     </div>
-                    {
-                        profile.auth === null &&
-                            <div className={styles['summary']}>{t('SETTINGS_GUEST_HINT')}</div>
-                    }
+                    <div className={styles['summary']}>{profile.auth === null ? t('SETTINGS_GUEST_HINT') : t('ACCOUNT')}</div>
                 </div>
                 <Icon className={styles['chevron']} name={'chevron-forward'} />
             </Button>
             <SearchField className={styles['search']} value={query} onChange={onQueryChange} />
             {results}
             {
-                !results && groups.map((group) => (
+                !results && hubGroups.map((group) => (
                     <React.Fragment key={group.id}>
                         <div className={styles['label']}>{group.label}</div>
                         <div className={styles['card']}>
