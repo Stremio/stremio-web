@@ -126,7 +126,7 @@ const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkW
                 }
             </div>
             <div className={styles['play']} aria-hidden={'true'}>
-                <Icon className={styles['icon']} name={external ? 'external-player' : 'play'} />
+                <Icon className={styles['icon']} name={external ? 'open-in-browser' : 'play'} />
             </div>
             {children}
         </Button>
