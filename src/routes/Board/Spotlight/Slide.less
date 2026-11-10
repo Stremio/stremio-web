@@ -111,9 +111,7 @@
             transition: background-color 0.15s @ease;
 
             &:hover, &:focus {
-                background-color: transparent;
-                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                outline-offset: 0;
+                background-color: @media-surface-strong;
             }
         }
 
@@ -121,8 +119,8 @@
             --glyph: 1.75rem;
             --icon-opacity: 1;
 
-            &[aria-pressed="true"] {
-                background-color: @media-surface-strong;
+            &:focus {
+                outline-offset: calc(-1 * var(--focus-outline-size));
             }
         }
 

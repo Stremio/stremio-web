@@ -53,7 +53,7 @@ const Slide = ({ id, item, active, onToggleLibrary }: Props) => {
             <div className={styles['actions']}>
                 {
                     watchHref !== null ?
-                        <Button className={styles['watch']} href={watchHref} title={t('BOARD_SPOTLIGHT_WATCH')}>
+                        <Button className={styles['watch']} href={watchHref}>
                             <Icon className={styles['icon']} name={'play'} />
                             <div className={styles['label']}>{t('BOARD_SPOTLIGHT_WATCH')}</div>
                         </Button>
