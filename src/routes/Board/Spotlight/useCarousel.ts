@@ -11,7 +11,7 @@ const useCarousel = (ids: string[], initiallyPaused: boolean) => {
     const nextId = ids[(index + 1) % ids.length];
 
     useEffect(() => {
-        setShown((shown) => shown.has(currentId) && shown.has(nextId) ? shown : new Set([...shown, currentId, nextId]));
+        setShown((shown) => shown.has(currentId) && shown.has(nextId) ? shown : new Set(shown).add(currentId).add(nextId));
     }, [currentId, nextId]);
 
     const go = useCallback((next: number, manual: boolean) => {
