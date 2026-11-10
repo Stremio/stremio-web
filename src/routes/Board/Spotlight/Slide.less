@@ -138,6 +138,25 @@
                 height: 1.75rem;
             }
         }
+
+        .watch .icon, .round .icon {
+            transition: transform 0.25s @ease-spring;
+        }
+
+        @media (hover: hover) {
+            .watch:hover .icon {
+                transform: translateX(0.1875rem) scale(1.08);
+            }
+
+            .round:hover .icon {
+                transform: scale(1.14);
+            }
+        }
+
+        .watch:active .icon, .round:active .icon {
+            transform: scale(0.86);
+            transition: transform 0.15s @ease;
+        }
     }
 }
 
@@ -231,6 +250,10 @@
 
         &.on {
             transition-delay: 0.18s, 0s;
+        }
+
+        .actions .watch .icon, .actions .round .icon, .actions .watch:active .icon, .actions .round:active .icon {
+            transition: none;
         }
     }
 }
