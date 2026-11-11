@@ -66,7 +66,7 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
         }
     }, []);
 
-    const armTransition = useBoardTransition(shown?.notification.template === SPOTLIGHT_TEMPLATE, onTransitionEnd);
+    const [armTransition, primeTransition] = useBoardTransition(shown?.notification.template === SPOTLIGHT_TEMPLATE, onTransitionEnd);
 
     useEffect(() => {
         if (routeActive) {
@@ -111,7 +111,11 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
         if (shown === null || phase !== 'open') {
             return;
         }
-        if (button.style === 'primary' && armTransition(shown.notification.id, event.currentTarget, event.detail === 0)) {
+
+        const { id } = shown.notification;
+        const report = () => notificationAction(id, button.id);
+        const armed = button.style === 'primary' && armTransition(id, event.currentTarget, event.detail === 0, report);
+        if (armed) {
             setPhase('held');
         }
         if (button.openUrl !== null) {
@@ -120,8 +124,9 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
         if (button.navigate !== null && button.navigate.startsWith(DEEP_LINK_PREFIX)) {
             navigate(`/${button.navigate.slice(DEEP_LINK_PREFIX.length)}`);
         }
-
-        notificationAction(shown.notification.id, button.id);
+        if (!armed) {
+            report();
+        }
     }, [shown, phase, platform, navigate, notificationAction, armTransition]);
 
     const onExited = useCallback(() => {
@@ -140,6 +145,7 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
             closing={phase === 'closing'}
             held={phase === 'held'}
             onAction={onAction}
+            primaryRef={primeTransition}
             onCloseRequest={onCloseRequest}
             onExited={onExited}
         />

@@ -1,6 +1,9 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
+import { CLEAR } from './paint';
+
 type Stage = {
+    images: Map<Element, HTMLImageElement>,
     route: HTMLElement,
     live: HTMLElement,
     modal: HTMLElement,
@@ -16,7 +19,6 @@ type Stage = {
     origin: { x: number, y: number },
 };
 
-const CLEAR = ['rgba(0, 0, 0, 0)', 'transparent'];
 const COVER = 'position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden';
 const FREEZE = '[data-board-transition] *,[data-board-transition] *::before,[data-board-transition] *::after{animation:none!important;transition:none!important}';
 
@@ -31,7 +33,7 @@ const ground = (element: Element) => {
     return null;
 };
 
-const clone = (source: HTMLElement, scrolled: Element[]) => {
+const clone = (source: HTMLElement, images: Map<Element, HTMLImageElement>, scrolled: Element[]) => {
     const sources = source.querySelectorAll('*');
     const offsets: [number, number, number][] = [];
     sources.forEach((element, index) => {
@@ -50,6 +52,7 @@ const clone = (source: HTMLElement, scrolled: Element[]) => {
         if (element instanceof HTMLImageElement && target instanceof HTMLImageElement) {
             target.loading = 'eager';
             target.decoding = 'sync';
+            images.set(target, element);
         } else if (element instanceof HTMLInputElement && target instanceof HTMLInputElement) {
             target.value = element.value;
         }
@@ -82,8 +85,9 @@ const freeze = (button: HTMLElement, dispose: (disposer: () => void) => void): S
         return null;
     }
 
+    const images = new Map<Element, HTMLImageElement>();
     const scrolled: Element[] = [];
-    const board = clone(live, scrolled);
+    const board = clone(live, images, scrolled);
     const playing = card.getAnimations({ subtree: true }).filter(({ playState }) => playState === 'running');
     const under = layer(0);
     const over = layer(100);
@@ -119,6 +123,7 @@ const freeze = (button: HTMLElement, dispose: (disposer: () => void) => void): S
     }
 
     return {
+        images,
         route,
         live,
         modal,

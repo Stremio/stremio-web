@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useModelState from 'stremio/common/useModelState';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { useGamepad } from 'stremio/services/GamepadContext';
@@ -16,7 +16,15 @@ type Arm = (button: HTMLElement, options: {
     keyboard: boolean,
     gamepad: ReturnType<typeof useGamepad>,
     onEnd: (outcome: Outcome) => void,
+    proceed: () => void,
 }) => Session | null;
+
+type Prime = (button: HTMLElement | null) => void;
+
+type Transition = {
+    arm: Arm,
+    prime: Prime,
+};
 
 type Look = {
     spotlight: boolean | null,
@@ -39,20 +47,30 @@ const useBoardTransition = (offered: boolean, onEnd: (outcome: Outcome) => void)
     const routeActive = useRouteActive();
     const gamepad = useGamepad();
     const { spotlight, notifications } = useModelState({ model: 'ctx', action: null, map }) as Look;
-    const arm = useRef<Arm | null>(null);
+    const [transition, setTransition] = useState<Transition | null>(null);
+    const [target, setTarget] = useState<HTMLElement | null>(null);
     const pending = useRef<{ id: string, session: Session } | null>(null);
     const available = offered && spotlight === false;
 
     useEffect(() => {
-        if (available && arm.current === null) {
+        if (available && transition === null) {
             // @ts-expect-error: nodenext rejects the extensionless path that webpack resolves.
             import('./Transition')
-                .then((transition: { default: Arm }) => {
-                    arm.current = transition.default;
-                })
+                .then(({ arm, prime }: Transition) => setTransition({ arm, prime }))
                 .catch(() => null);
         }
-    }, [available]);
+    }, [available, transition]);
+
+    useEffect(() => {
+        if (!available || transition === null || target === null) {
+            return;
+        }
+
+        transition.prime(target);
+        return () => {
+            transition.prime(null);
+        };
+    }, [available, transition, target]);
 
     useEffect(() => {
         if (pending.current === null) {
@@ -75,27 +93,32 @@ const useBoardTransition = (offered: boolean, onEnd: (outcome: Outcome) => void)
         };
     }, []);
 
-    return useCallback((id: string, button: HTMLElement, keyboard: boolean) => {
+    const arm = useCallback((id: string, button: HTMLElement, keyboard: boolean, proceed: () => void) => {
         pending.current?.session.cancel();
-        const session = available && arm.current !== null ?
-            arm.current(button, {
-                keyboard,
-                gamepad,
-                onEnd: (outcome) => {
-                    if (pending.current?.session === session) {
-                        pending.current = null;
-                    }
+        pending.current = null;
+        if (!available || transition === null) {
+            return false;
+        }
 
-                    onEnd(outcome);
-                },
-            })
-            :
-            null;
+        const session = transition.arm(button, {
+            keyboard,
+            gamepad,
+            proceed,
+            onEnd: (outcome) => {
+                if (pending.current?.session === session) {
+                    pending.current = null;
+                }
+
+                onEnd(outcome);
+            },
+        });
         pending.current = session !== null ? { id, session } : null;
         return session !== null;
-    }, [available, gamepad, onEnd]);
+    }, [available, transition, gamepad, onEnd]);
+
+    return [arm, setTarget] as const;
 };
 
-export type { Outcome, Arm, Session };
+export type { Outcome, Arm, Prime, Session };
 
 export default useBoardTransition;

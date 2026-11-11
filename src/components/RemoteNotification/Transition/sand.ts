@@ -1,23 +1,16 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import type { Box, Mark } from './paint';
+import type { Box } from './paint';
 
 type Point = { x: number, y: number };
 
 type Noise = (x: number, y: number, z: number) => number;
 
-type Material = {
-    canvas: HTMLCanvasElement,
-    region: Box,
-    marks: Mark[],
-    keep: Box[],
-    inked: ((x: number, y: number) => boolean) | null,
-};
-
 type Options = {
-    materials: Material[],
+    region: Box,
+    filled: (x: number, y: number) => boolean,
     origin: Point,
-    span: number,
+    unit: number,
     grain: number,
     budget: number,
     reach: (x: number, y: number) => number,
@@ -27,13 +20,41 @@ const GRID = 8;
 const TURN = Math.PI * 2;
 const FLYING = 1;
 const DEAD = 2;
-const IMAGE = 1;
-const TEXT = 2;
-const SPARSE = 0.4;
-const DIM = 0.55;
-const BRIEF = 0.6;
-const SHADE = 0.6;
-const RISE = 45;
+const BURST = 420;
+const SPRAY = 1.1;
+const SWIRL = 0.4;
+const SINK = 40;
+const RISE = 30;
+const HOLD = 0.3;
+const EDGE = 28;
+const VERTEX = `
+attribute vec2 cell;
+attribute vec4 grain;
+uniform vec2 frame;
+uniform vec2 sheet;
+uniform float size;
+varying vec2 corner;
+varying float alpha;
+void main() {
+    corner = cell / sheet;
+    alpha = grain.z;
+    gl_Position = grain.z > 0.0 ? vec4(grain.x / frame.x * 2.0 - 1.0, 1.0 - grain.y / frame.y * 2.0, 0.0, 1.0) : vec4(2.0, 2.0, 2.0, 1.0);
+    gl_PointSize = size * grain.w;
+}`;
+const FRAGMENT = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform sampler2D surface;
+uniform vec2 patch;
+varying vec2 corner;
+varying float alpha;
+void main() {
+    float disc = 1.0 - smoothstep(0.36, 0.5, distance(gl_PointCoord, vec2(0.5)));
+    gl_FragColor = texture2D(surface, corner + gl_PointCoord * patch) * (alpha * disc);
+}`;
 
 const createNoise = (): Noise => {
     const table = new Uint8Array(512);
@@ -127,96 +148,85 @@ const createField = (width: number, height: number, span: number, noise: Noise) 
 
 type Field = ReturnType<typeof createField>;
 
-const createCover = (region: Box, boxes: Box[], kinds: number[]) => {
+const createCover = (region: Box, boxes: Box[]) => {
     const columns = Math.ceil(region.width / GRID);
     const rows = Math.ceil(region.height / GRID);
     const grid = new Uint8Array(columns * rows);
-    boxes.forEach((box, index) => {
+    boxes.forEach((box) => {
         const left = Math.max(0, Math.floor(box.x / GRID));
         const top = Math.max(0, Math.floor(box.y / GRID));
         const right = Math.min(columns - 1, Math.floor((box.x + box.width) / GRID));
         const bottom = Math.min(rows - 1, Math.floor((box.y + box.height) / GRID));
         for (let row = top; row <= bottom; row++) {
-            grid.fill(kinds[index], row * columns + left, row * columns + right + 1);
+            grid.fill(1, row * columns + left, row * columns + right + 1);
         }
     });
 
-    return (x: number, y: number) => grid[Math.min(rows - 1, Math.floor(y / GRID)) * columns + Math.min(columns - 1, Math.floor(x / GRID))];
+    return (x: number, y: number) => grid[Math.min(rows - 1, Math.floor(y / GRID)) * columns + Math.min(columns - 1, Math.floor(x / GRID))] === 1;
 };
 
-const createSand = ({ materials, origin, span, grain, budget, reach }: Options) => {
-    const cells: number[][] = [];
-    materials.forEach(({ region, marks, keep, inked }, material) => {
-        const marked = createCover(region, marks, marks.map(({ text }) => text ? TEXT : IMAGE));
-        const kept = createCover(region, keep, keep.map(() => IMAGE));
-        for (let top = 0; top < region.height; top += grain) {
-            for (let left = 0; left < region.width; left += grain) {
-                const centerX = left + grain / 2;
-                const centerY = top + grain / 2;
-                const ink = marked(centerX, centerY);
-                if (ink !== 0 && kept(centerX, centerY) === 0 && (inked === null || inked(centerX, centerY))) {
-                    cells.push([material, left, top, ink]);
-                }
+const createSand = ({ region, filled, origin, unit, grain, budget, reach }: Options) => {
+    const spots: number[] = [];
+    for (let top = 0; top < region.height; top += grain) {
+        for (let left = 0; left < region.width; left += grain) {
+            if (filled(left + grain / 2, top + grain / 2)) {
+                spots.push(left, top);
             }
         }
-    });
+    }
 
-    const weight = cells.reduce((sum, cell) => sum + (cell[3] === TEXT ? SPARSE : 1), 0);
-    const share = Math.min(1, budget / Math.max(1, weight));
+    const share = Math.min(1, budget / Math.max(1, spots.length / 2));
     const items: number[][] = [];
-    cells.forEach(([material, left, top, ink]) => {
-        if (Math.random() > share * (ink === TEXT ? SPARSE : 1)) {
-            return;
+    for (let spot = 0; spot < spots.length; spot += 2) {
+        if (Math.random() > share) {
+            continue;
         }
 
-        const { region } = materials[material];
-        const homeX = region.x + left;
-        const homeY = region.y + top;
-        const offsetX = homeX + grain / 2 - origin.x;
-        const offsetY = homeY + grain / 2 - origin.y;
-        const away = Math.hypot(offsetX, offsetY) || 1;
-        const heading = Math.random() * TURN;
-        const speed = span * 0.05 * Math.random();
-        const push = span * 0.26 * Math.random();
+        const centerX = region.x + spots[spot] + grain * (0.1 + 0.8 * Math.random());
+        const centerY = region.y + spots[spot + 1] + grain * (0.1 + 0.8 * Math.random());
+        const offsetX = centerX - origin.x;
+        const offsetY = centerY - origin.y;
+        const aimed = Math.hypot(offsetX, offsetY) > grain;
+        const heading = aimed ? Math.atan2(offsetY, offsetX) + (Math.random() - 0.5) * SPRAY : Math.random() * TURN;
+        const speed = BURST * (0.3 + 0.7 * Math.random()) * unit;
         items.push([
-            reach(homeX + grain / 2, homeY + grain / 2) + grain * (Math.random() - 0.5),
-            material,
-            left,
-            top,
-            homeX,
-            homeY,
-            Math.cos(heading) * speed + offsetX / away * push,
-            Math.sin(heading) * speed + offsetY / away * push,
-            (180 + 220 * Math.random()) * (ink === TEXT ? BRIEF : 1),
-            0.08 + 0.26 * Math.random() * Math.random(),
-            0.45 + 0.75 * Math.random(),
-            ink === TEXT ? DIM : SHADE,
+            reach(centerX, centerY) + grain * (Math.random() - 0.5),
+            spots[spot],
+            spots[spot + 1],
+            centerX,
+            centerY,
+            Math.cos(heading) * speed,
+            Math.sin(heading) * speed,
+            420 + 300 * Math.random(),
+            0.22 + 0.25 * Math.random(),
+            0.85 + 0.5 * Math.random(),
         ]);
-    });
+    }
 
     items.sort((a, b) => a[0] - b[0]);
     const count = items.length;
     const column = (index: number) => Float32Array.from(items, (item) => item[index]);
     const release = column(0);
-    const material = Uint8Array.from(items, (item) => item[1]);
-    const sourceX = column(2);
-    const sourceY = column(3);
-    const x = column(4);
-    const y = column(5);
-    const velocityX = column(6);
-    const velocityY = column(7);
-    const life = column(8);
-    const tau = column(9);
-    const reply = column(10);
-    const shade = column(11);
+    const cells = new Float32Array(count * 2);
+    const data = new Float32Array(count * 4);
+    const velocityX = column(5);
+    const velocityY = column(6);
+    const life = column(7);
+    const tau = column(8);
+    const girth = column(9);
     const age = new Float32Array(count);
     const state = new Uint8Array(count);
-    const canvases = materials.map(({ canvas }) => canvas);
+    items.forEach((item, index) => {
+        cells[index * 2] = item[1];
+        cells[index * 2 + 1] = item[2];
+        data[index * 4] = item[3];
+        data[index * 4 + 1] = item[4];
+    });
     let head = 0;
     let tail = 0;
     let rate = 1;
 
-    const advance = (context: CanvasRenderingContext2D, field: Field, radius: number, delta: number) => {
+    const advance = (field: Field, radius: number, delta: number, hole: Box | null) => {
         const { cell, columns, rows, u, v } = field;
         while (tail < count && release[tail] <= radius) {
             state[tail] = rate < 1 && (tail * 0.618) % 1 > rate ? DEAD : FLYING;
@@ -226,23 +236,23 @@ const createSand = ({ materials, origin, span, grain, budget, reach }: Options) 
             head++;
         }
 
-        const gust = span * 0.42;
+        const sink = SINK * unit;
         const step = delta * 1000;
         for (let index = head; index < tail; index++) {
+            const slot = index * 4;
             if (state[index] === DEAD) {
                 continue;
             }
 
             age[index] += step;
-            if (age[index] >= life[index]) {
+            const progress = age[index] / life[index];
+            if (progress >= 1) {
                 state[index] = DEAD;
+                data[slot + 2] = 0;
                 continue;
             }
-
-            const centerX = x[index] + grain / 2;
-            const centerY = y[index] + grain / 2;
-            const gridX = Math.min(columns - 2.001, Math.max(1, centerX / cell + 1));
-            const gridY = Math.min(rows - 2.001, Math.max(1, centerY / cell + 1));
+            const gridX = Math.min(columns - 2.001, Math.max(1, data[slot] / cell + 1));
+            const gridY = Math.min(rows - 2.001, Math.max(1, data[slot + 1] / cell + 1));
             const cornerX = gridX | 0;
             const cornerY = gridY | 0;
             const blendX = gridX - cornerX;
@@ -250,22 +260,23 @@ const createSand = ({ materials, origin, span, grain, budget, reach }: Options) 
             const node = cornerY * columns + cornerX;
             const flowX = (u[node] * (1 - blendX) + u[node + 1] * blendX) * (1 - blendY) + (u[node + columns] * (1 - blendX) + u[node + columns + 1] * blendX) * blendY;
             const flowY = (v[node] * (1 - blendX) + v[node + 1] * blendX) * (1 - blendY) + (v[node + columns] * (1 - blendX) + v[node + columns + 1] * blendX) * blendY;
-            const offsetX = centerX - origin.x;
-            const offsetY = centerY - origin.y;
-            const away = Math.hypot(offsetX, offsetY) || 1;
-            const wind = gust * reply[index] * Math.exp(-age[index] / 210);
             const drag = 1 - Math.exp(-delta / tau[index]);
-            velocityX[index] += (flowX + offsetX / away * wind - velocityX[index]) * drag;
-            velocityY[index] += (flowY + offsetY / away * wind - velocityY[index]) * drag;
-            x[index] += velocityX[index] * delta;
-            y[index] += velocityY[index] * delta;
+            velocityX[index] += (flowX * SWIRL - velocityX[index]) * drag;
+            velocityY[index] += (flowY * SWIRL + sink - velocityY[index]) * drag;
+            data[slot] += velocityX[index] * delta;
+            data[slot + 1] += velocityY[index] * delta;
+            const ebb = Math.max(0, (progress - HOLD) / (1 - HOLD));
+            let alpha = Math.min(1, age[index] / RISE) * (1 - ebb * ebb * (3 - 2 * ebb));
+            if (hole !== null) {
+                const outsideX = Math.max(hole.x - data[slot], 0, data[slot] - hole.x - hole.width);
+                const outsideY = Math.max(hole.y - data[slot + 1], 0, data[slot + 1] - hole.y - hole.height);
+                alpha *= Math.min(1, Math.hypot(outsideX, outsideY) / EDGE);
+            }
 
-            const ebb = Math.max(0, (age[index] / life[index] - 0.3) / 0.7);
-            context.globalAlpha = shade[index] * Math.min(1, age[index] / RISE) * (1 - ebb * ebb * (3 - 2 * ebb));
-            context.drawImage(canvases[material[index]], sourceX[index], sourceY[index], grain, grain, x[index], y[index], grain, grain);
+            data[slot + 2] = alpha;
+            data[slot + 3] = girth[index] * (1 - 0.4 * progress * progress);
         }
 
-        context.globalAlpha = 1;
         return head < count;
     };
 
@@ -273,9 +284,130 @@ const createSand = ({ materials, origin, span, grain, budget, reach }: Options) 
         rate = Math.min(rate, keep);
     };
 
-    return { count, advance, thin };
+    const range = () => [head, tail];
+
+    return { count, cells, data, advance, thin, range };
 };
 
-export type { Point, Noise, Field, Material };
+type Sand = ReturnType<typeof createSand>;
 
-export { createNoise, createField, createSand };
+const createGlass = (canvas: HTMLCanvasElement) => {
+    const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false });
+    if (gl === null) {
+        return null;
+    }
+
+    const program = gl.createProgram();
+    [[gl.VERTEX_SHADER, VERTEX], [gl.FRAGMENT_SHADER, FRAGMENT]].forEach(([type, source]) => {
+        const shader = gl.createShader(type as number);
+        if (shader !== null && program !== null) {
+            gl.shaderSource(shader, source as string);
+            gl.compileShader(shader);
+            gl.attachShader(program, shader);
+        }
+    });
+    if (program === null) {
+        return null;
+    }
+
+    gl.bindAttribLocation(program, 0, 'cell');
+    gl.bindAttribLocation(program, 1, 'grain');
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        return null;
+    }
+
+    gl.useProgram(program);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enableVertexAttribArray(0);
+    gl.enableVertexAttribArray(1);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
+    gl.uniform2f(gl.getUniformLocation(program, 'frame'), canvas.width, canvas.height);
+    const sheet = gl.getUniformLocation(program, 'sheet');
+    const patch = gl.getUniformLocation(program, 'patch');
+    const size = gl.getUniformLocation(program, 'size');
+    const blank = gl.createBuffer();
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.bindBuffer(gl.ARRAY_BUFFER, blank);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 0, 1]), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
+    gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(sheet, 1, 1);
+    gl.uniform2f(patch, 1, 1);
+    gl.uniform1f(size, 1);
+    gl.drawArrays(gl.POINTS, 0, 1);
+    gl.flush();
+
+    const add = (surface: HTMLCanvasElement, sand: Sand, grain: number) => {
+        const { width, height } = surface;
+        const texture = gl.createTexture();
+        const fixed = gl.createBuffer();
+        const moving = gl.createBuffer();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.bindBuffer(gl.ARRAY_BUFFER, fixed);
+        gl.bufferData(gl.ARRAY_BUFFER, sand.cells, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, moving);
+        gl.bufferData(gl.ARRAY_BUFFER, sand.data, gl.DYNAMIC_DRAW);
+        return () => {
+            const [head, tail] = sand.range();
+            if (tail <= head) {
+                return;
+            }
+
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.uniform2f(sheet, width, height);
+            gl.uniform2f(patch, grain / width, grain / height);
+            gl.uniform1f(size, grain);
+            gl.bindBuffer(gl.ARRAY_BUFFER, fixed);
+            gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ARRAY_BUFFER, moving);
+            gl.bufferSubData(gl.ARRAY_BUFFER, head * 16, sand.data.subarray(head * 4, tail * 4));
+            gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.POINTS, head, tail - head);
+        };
+    };
+
+    return {
+        add,
+        clear: () => gl.clear(gl.COLOR_BUFFER_BIT),
+        drop: () => gl.getExtension('WEBGL_lose_context')?.loseContext(),
+    };
+};
+
+const createPlate = (canvas: HTMLCanvasElement) => {
+    const context = canvas.getContext('2d')!;
+    const add = (surface: HTMLCanvasElement, sand: Sand, grain: number) => () => {
+        const [head, tail] = sand.range();
+        const { cells, data } = sand;
+        for (let index = head; index < tail; index++) {
+            const slot = index * 4;
+            if (data[slot + 2] > 0.01) {
+                const side = grain * data[slot + 3];
+                context.globalAlpha = data[slot + 2];
+                context.drawImage(surface, cells[index * 2], cells[index * 2 + 1], grain, grain, data[slot] - side / 2, data[slot + 1] - side / 2, side, side);
+            }
+        }
+
+        context.globalAlpha = 1;
+    };
+
+    return {
+        add,
+        clear: () => context.clearRect(0, 0, canvas.width, canvas.height),
+        drop: () => null,
+    };
+};
+
+export type { Point, Noise, Field, Sand };
+
+export { createNoise, createField, createCover, createSand, createGlass, createPlate };

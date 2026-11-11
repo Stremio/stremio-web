@@ -2,19 +2,28 @@
 
 type Box = { x: number, y: number, width: number, height: number };
 
-type Mark = Box & { text: boolean };
-
 type Painter = {
-    text: CanvasRenderingContext2D,
-    image: CanvasRenderingContext2D,
+    ink: CanvasRenderingContext2D,
+    shots: CanvasRenderingContext2D,
     view: DOMRect,
     scale: number,
     unit: number,
     range: Range,
-    marks: Mark[],
+    marks: Box[],
+    shot: Box[],
+    images: Map<Element, HTMLImageElement>,
+    skip: Element | null,
 };
 
+const CLEAR = ['rgba(0, 0, 0, 0)', 'transparent'];
 const CORNERS = ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomRightRadius', 'borderBottomLeftRadius'] as const;
+const CHROMA = 64;
+const BRIGHT = 128;
+
+const vivid = (color: string) => {
+    const [red, green, blue, alpha = 1] = (color.match(/[\d.]+/g) ?? []).map(Number);
+    return alpha > 0.5 && (Math.max(red, green, blue) - Math.min(red, green, blue) > CHROMA || (red + green + blue) / 3 > BRIGHT);
+};
 
 const trace = (context: CanvasRenderingContext2D, { x, y, width, height }: Box, radii: number[]) => {
     const limit = Math.min(width, height) / 2;
@@ -35,6 +44,15 @@ const corners = (style: CSSStyleDeclaration, box: Box, unit: number) => (
     })
 );
 
+const fill = ({ ink, marks }: Painter, style: CSSStyleDeclaration, box: Box, radii: number[]) => {
+    if (vivid(style.backgroundColor)) {
+        trace(ink, box, radii);
+        ink.fillStyle = style.backgroundColor;
+        ink.fill();
+        marks.push(box);
+    }
+};
+
 const fit = (ratio: number, box: Box, mode: string, left: number, top: number): Box => {
     let { width, height } = box;
     if (mode === 'cover' || mode === 'contain') {
@@ -51,14 +69,13 @@ const place = (ratio: number, style: CSSStyleDeclaration, box: Box) => {
     return fit(ratio, box, style.objectFit, Number.isFinite(left) ? left : 0.5, Number.isFinite(top) ? top : 0.5);
 };
 
-const usable = (source: HTMLImageElement) => source.complete && source.naturalWidth > 0 && source.naturalHeight > 0;
-
-const picture = ({ image: context, marks }: Painter, element: HTMLImageElement, style: CSSStyleDeclaration, box: Box, radii: number[]) => {
-    if (!usable(element)) {
+const picture = ({ shots: context, images, shot }: Painter, element: HTMLImageElement, style: CSSStyleDeclaration, box: Box, radii: number[]) => {
+    const source = element.complete && element.naturalWidth > 0 ? element : images.get(element) ?? element;
+    if (!source.complete || !(source.naturalWidth > 0) || !(source.naturalHeight > 0)) {
         return;
     }
 
-    const target = place(element.naturalWidth / element.naturalHeight, style, box);
+    const target = place(source.naturalWidth / source.naturalHeight, style, box);
     context.save();
     trace(context, box, radii);
     context.clip();
@@ -66,12 +83,12 @@ const picture = ({ image: context, marks }: Painter, element: HTMLImageElement, 
         context.filter = style.filter;
     }
 
-    context.drawImage(element, target.x, target.y, target.width, target.height);
+    context.drawImage(source, target.x, target.y, target.width, target.height);
     context.restore();
-    marks.push({ ...box, text: false });
+    shot.push(box);
 };
 
-const vector = ({ text: context, marks }: Painter, element: SVGSVGElement, box: Box) => {
+const vector = ({ ink: context, marks }: Painter, element: SVGSVGElement, box: Box) => {
     const { x, y, width, height } = element.viewBox.baseVal;
     if (!(width > 0) || !(height > 0)) {
         return;
@@ -90,7 +107,7 @@ const vector = ({ text: context, marks }: Painter, element: SVGSVGElement, box: 
         }
     });
     context.restore();
-    marks.push({ ...box, text: true });
+    marks.push(box);
 };
 
 const cased = (value: string, transform: string) => {
@@ -104,7 +121,7 @@ const cased = (value: string, transform: string) => {
     return value;
 };
 
-const write = ({ text: context, view, scale, unit, range, marks }: Painter, node: Text, style: CSSStyleDeclaration) => {
+const write = ({ ink: context, view, scale, unit, range, marks }: Painter, node: Text, style: CSSStyleDeclaration) => {
     const size = parseFloat(style.fontSize) * unit;
     if (!(size > 1) || !/\S/.test(node.data)) {
         return;
@@ -142,12 +159,13 @@ const write = ({ text: context, view, scale, unit, range, marks }: Painter, node
         const x = (rect.left - view.left) * scale;
         const y = (rect.top - view.top) * scale;
         context.fillText(cased(value, style.textTransform), x, y + (rect.height * scale + ascent - descent) / 2);
-        marks.push({ x, y, width: (end - rect.left) * scale, height: rect.height * scale, text: true });
+        marks.push({ x, y, width: (end - rect.left) * scale, height: rect.height * scale });
     });
 };
 
-const draw = (painter: Painter, element: Element, alpha: number, skip: Element | null) => {
-    const { text, image, view, scale, unit } = painter;
+const draw = (painter: Painter, element: Element, alpha: number) => {
+    const { view, scale, unit, skip } = painter;
+    const layers = [painter.ink, painter.shots];
     const style = getComputedStyle(element);
     const opacity = alpha * Number(style.opacity);
     const rect = element.getBoundingClientRect();
@@ -166,8 +184,13 @@ const draw = (painter: Painter, element: Element, alpha: number, skip: Element |
         height: rect.height * scale,
     };
     const radii = corners(style, box, unit);
-    text.globalAlpha = opacity;
-    image.globalAlpha = opacity;
+    const fade = () => layers.forEach((context) => {
+        context.globalAlpha = opacity;
+    });
+    fade();
+    if (sized) {
+        fill(painter, style, box, radii);
+    }
     if (element instanceof HTMLImageElement) {
         picture(painter, element, style, box, radii);
         return;
@@ -179,7 +202,7 @@ const draw = (painter: Painter, element: Element, alpha: number, skip: Element |
 
     const clipped = sized && style.overflowX !== 'visible';
     if (clipped) {
-        [text, image].forEach((context) => {
+        layers.forEach((context) => {
             context.save();
             trace(context, box, radii);
             context.clip();
@@ -188,42 +211,49 @@ const draw = (painter: Painter, element: Element, alpha: number, skip: Element |
 
     for (let child = element.firstChild; child !== null; child = child.nextSibling) {
         if (child instanceof Element) {
-            draw(painter, child, opacity, skip);
+            draw(painter, child, opacity);
         } else if (child instanceof Text) {
-            text.globalAlpha = opacity;
+            fade();
             write(painter, child, style);
         }
     }
 
     if (clipped) {
-        text.restore();
-        image.restore();
+        layers.forEach((context) => context.restore());
     }
 };
 
-const paint = (root: Element, skip: Element | null, view: DOMRect, scale: number, zoom: number) => {
-    const [text, image] = [0, 1].map(() => {
+const paint = (roots: Element[], skip: Element | null, view: DOMRect, scale: number, zoom: number, images: Map<Element, HTMLImageElement>) => {
+    const sheet = (options?: CanvasRenderingContext2DSettings) => {
         const canvas = document.createElement('canvas');
         canvas.width = Math.max(1, Math.round(view.width * scale));
         canvas.height = Math.max(1, Math.round(view.height * scale));
-        return canvas;
-    });
+        return canvas.getContext('2d', options)!;
+    };
     const painter: Painter = {
-        text: text.getContext('2d', { willReadFrequently: true })!,
-        image: image.getContext('2d')!,
+        ink: sheet({ willReadFrequently: true }),
+        shots: sheet(),
         view,
         scale,
         unit: zoom * scale,
         range: document.createRange(),
         marks: [],
+        shot: [],
+        images,
+        skip,
     };
 
-    draw(painter, root, 1, skip);
-    return { text, image, marks: painter.marks };
+    roots.forEach((root) => draw(painter, root, 1));
+    return {
+        ink: painter.ink,
+        shots: painter.shots.canvas,
+        marks: painter.marks,
+        shot: painter.shot,
+    };
 };
 
-export type { Box, Mark };
+export type { Box };
 
-export { fit, place };
+export { CLEAR, place };
 
 export default paint;

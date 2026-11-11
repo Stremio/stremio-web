@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
+import Bowser from 'bowser';
+
 type Tier = 'sand' | 'wipe' | 'fade';
 
 type Battery = { charging: boolean, level: number };
@@ -12,6 +14,9 @@ type Device = Navigator & {
 const SOFTWARE = /swiftshader|llvmpipe|softpipe|software|basic render/i;
 const IDLE = 2000;
 const device: Device = navigator;
+
+// WebKit presents WebGL with a blocking call to its GPU process, which stalls frames during the reveal.
+const glassy = Bowser.getParser(navigator.userAgent).getEngineName() !== 'WebKit';
 
 const accelerated = () => {
     const gl = document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true });
@@ -52,5 +57,7 @@ const quality = (): Tier => {
 };
 
 export type { Tier };
+
+export { glassy };
 
 export default quality;
