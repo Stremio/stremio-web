@@ -57,7 +57,13 @@ const GamepadProvider = ({ enabled, onGuide, children }: GamepadProviderProps) =
     }, []);
 
     const lock = useCallback((prefix: string) => {
+        const previous = lockPrefix.current;
         lockPrefix.current = prefix;
+        return () => {
+            if (lockPrefix.current === prefix) {
+                lockPrefix.current = previous;
+            }
+        };
     }, []);
 
     const unlock = useCallback(() => {
