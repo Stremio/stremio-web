@@ -65,7 +65,7 @@ const RemoteNotification = ({ catalogs }: Props) => {
         }
     }, []);
 
-    const armTransition = useBoardTransition(shown !== null, onTransitionEnd);
+    const armTransition = useBoardTransition(shown?.notification.template === SPOTLIGHT_TEMPLATE, onTransitionEnd);
 
     useEffect(() => {
         if (routeActive) {
@@ -110,7 +110,7 @@ const RemoteNotification = ({ catalogs }: Props) => {
         if (shown === null || phase !== 'open') {
             return;
         }
-        if (armTransition(shown.notification.id, event.currentTarget, event.detail === 0)) {
+        if (button.style === 'primary' && armTransition(shown.notification.id, event.currentTarget, event.detail === 0)) {
             setPhase('held');
         }
         if (button.openUrl !== null) {

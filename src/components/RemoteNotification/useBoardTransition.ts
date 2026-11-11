@@ -19,26 +19,29 @@ type Arm = (button: HTMLElement, options: {
 }) => Session | null;
 
 type Look = {
-    spotlight: boolean,
+    spotlight: boolean | null,
     notifications: string[],
 };
 
 type SpotlightSettings = {
-    boardSpotlight?: { enabled: boolean },
+    boardSpotlight?: { enabled?: unknown },
 };
 
-const map = (ctx: Ctx): Look => ({
-    spotlight: (ctx.profile.settings as Settings & SpotlightSettings).boardSpotlight?.enabled === true,
-    notifications: ctx.remoteConfig.notifications.map(({ id }) => id),
-});
+const map = (ctx: Ctx): Look => {
+    const enabled = (ctx.profile.settings as Settings & SpotlightSettings).boardSpotlight?.enabled;
+    return {
+        spotlight: typeof enabled === 'boolean' ? enabled : null,
+        notifications: ctx.remoteConfig.notifications.map(({ id }) => id),
+    };
+};
 
-const useBoardTransition = (prompted: boolean, onEnd: (outcome: Outcome) => void) => {
+const useBoardTransition = (offered: boolean, onEnd: (outcome: Outcome) => void) => {
     const routeActive = useRouteActive();
     const gamepad = useGamepad();
     const { spotlight, notifications } = useModelState({ model: 'ctx', action: null, map }) as Look;
     const arm = useRef<Arm | null>(null);
     const pending = useRef<{ id: string, session: Session } | null>(null);
-    const available = prompted && !spotlight;
+    const available = offered && spotlight === false;
 
     useEffect(() => {
         if (available && arm.current === null) {
@@ -59,7 +62,7 @@ const useBoardTransition = (prompted: boolean, onEnd: (outcome: Outcome) => void
         const { id, session } = pending.current;
         if (!routeActive) {
             session.cancel();
-        } else if (spotlight) {
+        } else if (spotlight === true) {
             session.commit();
         } else if (!notifications.includes(id)) {
             session.cancel();
