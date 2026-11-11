@@ -1,0 +1,40 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+:import('~stremio/components/ModalDialog/styles.less') {
+    modal-dialog-content: modal-dialog-content;
+}
+
+.remote-notification {
+    .modal-dialog-content {
+        width: 30rem;
+        max-width: 100%;
+
+        .image {
+            display: block;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-radius: var(--border-radius);
+            object-fit: cover;
+        }
+
+        .body {
+            font-size: 1rem;
+            line-height: 1.5rem;
+            color: var(--primary-foreground-color);
+            white-space: pre-line;
+        }
+
+        .secondary-button {
+            background-color: var(--overlay-color);
+
+            &:hover {
+                outline: var(--focus-outline-size) solid var(--overlay-color);
+                background-color: transparent;
+            }
+
+            &:focus {
+                outline-color: var(--primary-foreground-color);
+            }
+        }
+    }
+}

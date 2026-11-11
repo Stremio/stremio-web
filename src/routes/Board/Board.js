@@ -11,6 +11,7 @@ const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
+const { default: RemoteNotification } = require('stremio/components/RemoteNotification');
 
 const THRESHOLD = 5;
 
@@ -43,6 +44,7 @@ const Board = () => {
     return (
         <div className={styles['board-container']}>
             <EventModal />
+            <RemoteNotification />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {

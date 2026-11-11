@@ -145,6 +145,15 @@ const App = () => {
                     action: 'PullNotifications'
                 }
             });
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'RemoteConfig',
+                    args: {
+                        action: 'Pull'
+                    }
+                }
+            });
         };
 
         onWindowFocus();
