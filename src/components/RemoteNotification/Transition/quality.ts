@@ -24,12 +24,12 @@ const renderer = (attributes?: WebGLContextAttributes) => {
     return name;
 };
 
-const software = () => {
+const accelerated = () => {
     const name = renderer();
-    return name !== null && (SOFTWARE.test(name) || renderer({ failIfMajorPerformanceCaveat: true }) === null);
+    return name !== null && !SOFTWARE.test(name) && renderer({ failIfMajorPerformanceCaveat: true }) !== null;
 };
 
-let weak = device.hardwareConcurrency <= 2 || (device.deviceMemory ?? 8) <= 2 || software();
+let weak = device.hardwareConcurrency <= 2 || (device.deviceMemory ?? 8) <= 2 || !accelerated();
 
 device.getBattery?.().then((battery) => {
     weak = weak || (!battery.charging && battery.level <= 0.2);

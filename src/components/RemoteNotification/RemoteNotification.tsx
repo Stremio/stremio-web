@@ -1,25 +1,43 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import ModalDialog from 'stremio/components/ModalDialog';
 import useEvents from 'stremio/components/EventModal/useEvents';
 import useRemoteConfig from 'stremio/common/RemoteConfig/useRemoteConfig';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { usePlatform } from 'stremio/common/Platform';
 import useBoardTransition from './useBoardTransition';
-import styles from './styles.less';
+import type { Outcome } from './useBoardTransition';
+import useMedia from './useMedia';
+import type { Catalogs, Media } from './useMedia';
+import Prompt from './Prompt';
 
-const TEMPLATE = 'prompt';
+type Props = {
+    catalogs: Catalogs,
+};
+
+type Shown = {
+    key: string,
+    notification: RemoteNotification,
+    media: Media,
+};
+
+type Phase = 'open' | 'held' | 'closing';
+
+const PROMPT_TEMPLATE = 'prompt';
+const SPOTLIGHT_TEMPLATE = 'spotlight-intro';
 const DEEP_LINK_PREFIX = 'stremio:///';
+const SETTLE = 600;
 
-const RemoteNotification = () => {
+const RemoteNotification = ({ catalogs }: Props) => {
     const platform = usePlatform();
     const navigate = useNavigate();
     const routeActive = useRouteActive();
     const { events } = useEvents();
     const { remoteConfig, pull, notificationShown, notificationAction, dismissNotification } = useRemoteConfig();
-    const shownRef = useRef<string | null>(null);
+    const [shown, setShown] = useState<Shown | null>(null);
+    const [phase, setPhase] = useState<Phase>('open');
+    const reportedRef = useRef<string | null>(null);
 
     const legacyModalPending = events.modal.type === 'Loading' || (events.modal.type === 'Ready' && events.modal.content !== null);
 
@@ -28,10 +46,26 @@ const RemoteNotification = () => {
             return null;
         }
 
-        return remoteConfig.notifications.find(({ template }) => template === TEMPLATE) ?? null;
+        return remoteConfig.notifications.find(({ template }) => template === PROMPT_TEMPLATE || template === SPOTLIGHT_TEMPLATE) ?? null;
     }, [routeActive, legacyModalPending, remoteConfig.notifications]);
 
-    const armTransition = useBoardTransition(notification !== null);
+    const key = notification !== null ? `${notification.id}:${notification.rev}` : null;
+    const media = useMedia(notification, catalogs, notification?.template === SPOTLIGHT_TEMPLATE);
+    const next = useRef<Shown | null>(null);
+    next.current = key !== null && notification !== null && media !== null ? { key, notification, media } : null;
+    const ready = next.current !== null;
+    const shownKey = shown?.key ?? null;
+
+    const onTransitionEnd = useCallback((outcome: Outcome) => {
+        if (outcome === 'revealed') {
+            setShown(null);
+            setPhase('open');
+        } else {
+            setPhase((phase) => phase === 'held' ? 'open' : phase);
+        }
+    }, []);
+
+    const armTransition = useBoardTransition(shown !== null, onTransitionEnd);
 
     useEffect(() => {
         if (routeActive) {
@@ -40,65 +74,74 @@ const RemoteNotification = () => {
     }, [routeActive, pull]);
 
     useEffect(() => {
-        if (notification === null) {
+        if (!ready || shownKey !== null) {
             return;
         }
 
-        const key = `${notification.id}:${notification.rev}`;
-        if (shownRef.current !== key) {
-            shownRef.current = key;
-            notificationShown(notification.id);
+        const timeout = window.setTimeout(() => {
+            setShown(next.current);
+            setPhase('open');
+        }, SETTLE);
+        return () => {
+            window.clearTimeout(timeout);
+        };
+    }, [ready, shownKey]);
+
+    useEffect(() => {
+        if (shown !== null && reportedRef.current !== shown.key) {
+            reportedRef.current = shown.key;
+            notificationShown(shown.notification.id);
         }
-    }, [notification, notificationShown]);
+    }, [shown, notificationShown]);
+
+    useEffect(() => {
+        if (shownKey !== null && shownKey !== key && phase === 'open') {
+            setPhase('closing');
+        }
+    }, [shownKey, key, phase]);
 
     const onCloseRequest = useCallback(() => {
-        if (notification !== null) {
-            dismissNotification(notification.id);
+        if (shown !== null && phase === 'open') {
+            dismissNotification(shown.notification.id);
         }
-    }, [notification, dismissNotification]);
+    }, [shown, phase, dismissNotification]);
 
-    const buttons = useMemo(() => {
-        if (notification === null) {
-            return [];
+    const onAction = useCallback((button: RemoteNotificationButton, event: React.MouseEvent<HTMLElement>) => {
+        if (shown === null || phase !== 'open') {
+            return;
+        }
+        if (armTransition(shown.notification.id, event.currentTarget, event.detail === 0)) {
+            setPhase('held');
+        }
+        if (button.openUrl !== null) {
+            platform.openExternal(button.openUrl);
+        }
+        if (button.navigate !== null && button.navigate.startsWith(DEEP_LINK_PREFIX)) {
+            navigate(`/${button.navigate.slice(DEEP_LINK_PREFIX.length)}`);
         }
 
-        return notification.buttons.map((button) => ({
-            className: button.style === 'primary' ? undefined : styles['secondary-button'],
-            label: button.label,
-            props: {
-                onClick: (event: React.MouseEvent<HTMLElement>) => {
-                    armTransition(notification.id, event.currentTarget, event.detail === 0);
-                    if (button.openUrl !== null) {
-                        platform.openExternal(button.openUrl);
-                    }
-                    if (button.navigate !== null && button.navigate.startsWith(DEEP_LINK_PREFIX)) {
-                        navigate(`/${button.navigate.slice(DEEP_LINK_PREFIX.length)}`);
-                    }
-                    notificationAction(notification.id, button.id);
-                },
-            },
-        }));
-    }, [notification, platform, navigate, notificationAction, armTransition]);
+        notificationAction(shown.notification.id, button.id);
+    }, [shown, phase, platform, navigate, notificationAction, armTransition]);
 
-    if (notification === null) {
+    const onExited = useCallback(() => {
+        setShown(null);
+        setPhase('open');
+    }, []);
+
+    if (shown === null) {
         return null;
     }
 
     return (
-        <ModalDialog className={styles['remote-notification']} title={notification.title} buttons={buttons} onCloseRequest={onCloseRequest}>
-            {
-                notification.image !== null ?
-                    <img className={styles['image']} src={notification.image} />
-                    :
-                    null
-            }
-            {
-                notification.body !== null ?
-                    <div className={styles['body']}>{notification.body}</div>
-                    :
-                    null
-            }
-        </ModalDialog>
+        <Prompt
+            notification={shown.notification}
+            media={shown.media}
+            closing={phase === 'closing'}
+            held={phase === 'held'}
+            onAction={onAction}
+            onCloseRequest={onCloseRequest}
+            onExited={onExited}
+        />
     );
 };
 

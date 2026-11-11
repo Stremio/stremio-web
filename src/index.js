@@ -43,7 +43,7 @@ const appInfo = {
     shellVersion: null,
     platform: globalThis.chrome?.webview ? 'desktop' : 'web',
     os,
-    notificationTemplates: ['prompt']
+    notificationTemplates: ['prompt', 'spotlight-intro']
 };
 
 const root = ReactDOM.createRoot(document.getElementById('app'));

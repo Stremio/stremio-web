@@ -3,13 +3,20 @@
 import { useCallback, useEffect, useRef } from 'react';
 import useModelState from 'stremio/common/useModelState';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
+import { useGamepad } from 'stremio/services/GamepadContext';
 
-type Arm = (button: HTMLElement, keyboard: boolean) => Session | null;
+type Outcome = 'revealed' | 'dropped';
 
 type Session = {
     commit: () => void,
     cancel: () => void,
 };
+
+type Arm = (button: HTMLElement, options: {
+    keyboard: boolean,
+    gamepad: ReturnType<typeof useGamepad>,
+    onEnd: (outcome: Outcome) => void,
+}) => Session | null;
 
 type Look = {
     spotlight: boolean,
@@ -25,8 +32,9 @@ const map = (ctx: Ctx): Look => ({
     notifications: ctx.remoteConfig.notifications.map(({ id }) => id),
 });
 
-const useBoardTransition = (prompted: boolean) => {
+const useBoardTransition = (prompted: boolean, onEnd: (outcome: Outcome) => void) => {
     const routeActive = useRouteActive();
+    const gamepad = useGamepad();
     const { spotlight, notifications } = useModelState({ model: 'ctx', action: null, map }) as Look;
     const arm = useRef<Arm | null>(null);
     const pending = useRef<{ id: string, session: Session } | null>(null);
@@ -50,12 +58,10 @@ const useBoardTransition = (prompted: boolean) => {
 
         const { id, session } = pending.current;
         if (!routeActive) {
-            pending.current = null;
             session.cancel();
         } else if (spotlight) {
             session.commit();
         } else if (!notifications.includes(id)) {
-            pending.current = null;
             session.cancel();
         }
     }, [routeActive, spotlight, notifications]);
@@ -68,9 +74,25 @@ const useBoardTransition = (prompted: boolean) => {
 
     return useCallback((id: string, button: HTMLElement, keyboard: boolean) => {
         pending.current?.session.cancel();
-        const session = available && arm.current !== null ? arm.current(button, keyboard) : null;
+        const session = available && arm.current !== null ?
+            arm.current(button, {
+                keyboard,
+                gamepad,
+                onEnd: (outcome) => {
+                    if (pending.current?.session === session) {
+                        pending.current = null;
+                    }
+
+                    onEnd(outcome);
+                },
+            })
+            :
+            null;
         pending.current = session !== null ? { id, session } : null;
-    }, [available]);
+        return session !== null;
+    }, [available, gamepad, onEnd]);
 };
+
+export type { Outcome, Arm, Session };
 
 export default useBoardTransition;

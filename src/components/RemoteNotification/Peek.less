@@ -1,0 +1,305 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+@ease: cubic-bezier(0.22, 1, 0.36, 1);
+@ink: @color-surface-light5;
+@scrim-color: rgb(12, 11, 17);
+@beat: 1s;
+@morph: 0.95s;
+@art-height: 70%;
+@travel: 61%;
+@edge: 6%;
+
+.peek {
+    position: relative;
+    padding-top: 56.25%;
+    background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        height: 24%;
+        background: linear-gradient(180deg, transparent 0%, var(--modal-background-color) 100%);
+    }
+
+    .art {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: @art-height;
+        -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 62%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
+        mask-image: linear-gradient(180deg, #000 0%, #000 62%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
+        animation: open @morph @ease @beat backwards;
+
+        .backdrop {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 72% 22%;
+            animation: settle 7s ease-out @beat backwards;
+        }
+
+        .scrim {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, fade(@scrim-color, 84%) 0%, fade(@scrim-color, 62%) 22%, fade(@scrim-color, 30%) 42%, fade(@scrim-color, 8%) 60%, fade(@scrim-color, 0%) 74%);
+        }
+    }
+
+    .hero {
+        position: absolute;
+        top: 0;
+        left: @edge;
+        width: 40%;
+        height: @art-height;
+        overflow: visible;
+
+        > * {
+            animation: arrive 0.55s @ease backwards;
+        }
+
+        .logo, .wordmark {
+            position: absolute;
+            bottom: 46%;
+            left: 0;
+            animation-delay: (@beat + 0.4s);
+        }
+
+        .logo {
+            display: block;
+            width: 68%;
+            height: 34%;
+            object-fit: contain;
+            object-position: left bottom;
+            filter: brightness(0) invert(1);
+        }
+
+        .wordmark {
+            width: 52%;
+            padding-top: 9%;
+            border-radius: 0.4rem;
+            background-color: fade(@ink, 90%);
+        }
+
+        .facts {
+            position: absolute;
+            top: 60%;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 5%;
+            width: 100%;
+            animation-delay: (@beat + 0.46s);
+
+            .fact {
+                flex: none;
+                width: 12%;
+                padding-top: 2.4%;
+                border-radius: 1rem;
+                background-color: fade(@ink, 62%);
+
+                &:nth-child(2) {
+                    width: 17%;
+                }
+
+                &:nth-child(3) {
+                    width: 30%;
+                    background-color: fade(@ink, 34%);
+                }
+            }
+        }
+
+        .controls {
+            position: absolute;
+            top: 71%;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 4%;
+            width: 100%;
+            overflow: visible;
+            animation-delay: (@beat + 0.52s);
+
+            .watch {
+                position: relative;
+                flex: none;
+                width: 36%;
+                padding-top: 14.5%;
+                border-radius: 4rem;
+                background-color: var(--primary-accent-color);
+
+                .icon {
+                    position: absolute;
+                    top: 50%;
+                    left: 21%;
+                    width: 20%;
+                    height: 50%;
+                    color: @ink;
+                    transform: translateY(-50%);
+                }
+
+                .caption {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 29%;
+                    padding-top: 6%;
+                    border-radius: 1rem;
+                    background-color: fade(@ink, 92%);
+                    transform: translateY(-50%);
+                }
+            }
+
+            .round {
+                position: relative;
+                flex: none;
+                width: 14.5%;
+                padding-top: 14.5%;
+                border-radius: 50%;
+                background-color: fade(@ink, 18%);
+
+                .glyph {
+                    position: absolute;
+                    top: 27%;
+                    left: 27%;
+                    width: 46%;
+                    height: 46%;
+                    color: @ink;
+                }
+            }
+        }
+    }
+
+    .pager {
+        position: absolute;
+        top: 50.5%;
+        right: 5%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 2.4%;
+        width: 22%;
+        animation: arrive 0.55s @ease (@beat + 0.6s) backwards;
+
+        .tick {
+            flex: none;
+            width: 10%;
+            padding-top: 2%;
+            border-radius: 1rem;
+            background-color: fade(@ink, 42%);
+
+            &:first-child {
+                width: 22%;
+                background-color: @ink;
+            }
+        }
+    }
+
+    .shelf {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateY(@travel);
+        animation: descend @morph @ease @beat backwards;
+
+        &.leaving {
+            opacity: 0;
+            animation-name: leave;
+        }
+
+        .row {
+            position: absolute;
+            top: 9%;
+            left: @edge;
+            width: (100% - @edge);
+            overflow: visible;
+
+            .label {
+                width: 19%;
+                padding-top: 1.7%;
+                margin-bottom: 2.2%;
+                border-radius: 1rem;
+                background-color: fade(@ink, 78%);
+            }
+
+            .posters {
+                display: flex;
+                align-items: flex-start;
+                gap: 1.7%;
+                overflow: visible;
+
+                .poster {
+                    flex: none;
+                    display: block;
+                    width: 12.4%;
+                    aspect-ratio: 2 / 3;
+                    border-radius: 0.35rem;
+                    background-color: var(--overlay-color);
+                    object-fit: cover;
+                }
+            }
+        }
+
+        &.leaving .row {
+            top: 56%;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .peek {
+        .art, .art .backdrop, .hero > *, .pager, .shelf {
+            animation: none;
+        }
+    }
+}
+
+@keyframes open {
+    from {
+        -webkit-clip-path: inset(22% 81.6% 33% 6% round 0.35rem);
+        clip-path: inset(22% 81.6% 33% 6% round 0.35rem);
+    }
+
+    to {
+        -webkit-clip-path: inset(0 0 0 0 round 0);
+        clip-path: inset(0 0 0 0 round 0);
+    }
+}
+
+@keyframes settle {
+    from {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes arrive {
+    from {
+        opacity: 0;
+        transform: translateY(0.4rem);
+    }
+}
+
+@keyframes descend {
+    from {
+        transform: none;
+    }
+}
+
+@keyframes leave {
+    from {
+        opacity: 1;
+        transform: none;
+    }
+}
