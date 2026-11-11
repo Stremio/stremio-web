@@ -166,6 +166,7 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
             <button
                 className={styles['backdrop']}
                 aria-label={t('BUTTON_CLOSE')}
+                tabIndex={-1}
                 onClick={requestClose}
             />
             <div
@@ -178,6 +179,8 @@ const BottomSheet = ({ children, className, title, ariaLabel, show, onCloseReque
                 role={'dialog'}
                 aria-modal={'true'}
                 aria-label={labelledBy}
+                tabIndex={-1}
+                data-autofocus
             >
                 <div className={styles['handle']} />
                 {
