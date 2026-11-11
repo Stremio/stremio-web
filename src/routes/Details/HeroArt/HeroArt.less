@@ -43,6 +43,12 @@
             object-position: 50% 25%;
             animation: hero-art-fade-in 0.6s ease-out;
 
+            &.still {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
             &.blurred {
                 filter: blur(1.25rem);
                 transform: scale(1.1);
@@ -135,6 +141,10 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
+}
+
+.hidden {
+    display: none;
 }
 
 @keyframes hero-art-fade-in {

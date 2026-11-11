@@ -164,7 +164,8 @@ const Details = () => {
                 {
                     isMobile && metaItem !== null ?
                         <HeroArt
-                            art={video?.thumbnail || metaItem.background}
+                            art={metaItem.background}
+                            still={video?.thumbnail}
                             logo={metaItem.logo}
                             name={metaItem.name}
                             label={

@@ -107,6 +107,7 @@ const Video = ({ video, selected, seasonWatched, minutesLeft, onSelect, onMarkVi
                     className={classNames(styles['image'], { [styles['blurred']]: blurThumbnail })}
                     src={thumbnail ?? undefined}
                     alt={''}
+                    decoding={'sync'}
                     renderFallback={renderThumbnailFallback}
                 />
                 {

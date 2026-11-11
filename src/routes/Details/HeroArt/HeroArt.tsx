@@ -9,6 +9,7 @@ import styles from './HeroArt.less';
 type Props = {
     className?: string,
     art: string | null,
+    still?: string | null,
     logo: string | null,
     name: string,
     label?: string | null,
@@ -18,7 +19,7 @@ type Props = {
 
 const renderFallback = () => null;
 
-const HeroArt = ({ className, art, logo, name, label = null, title = null, blurred = false }: Props) => (
+const HeroArt = ({ className, art, still = null, logo, name, label = null, title = null, blurred = false }: Props) => (
     <React.Fragment>
         <div className={styles['bar']} aria-hidden={'true'}>
             <div className={styles['bar-content']}>
@@ -27,8 +28,9 @@ const HeroArt = ({ className, art, logo, name, label = null, title = null, blurr
                         typeof title === 'string' ?
                             <div className={styles['bar-text']}>{title}</div>
                             :
-                            <Logo logo={logo} name={name} small={true} />
+                            null
                     }
+                    <Logo className={classNames({ [styles['hidden']]: typeof title === 'string' })} logo={logo} name={name} small={true} />
                 </div>
             </div>
         </div>
@@ -37,7 +39,13 @@ const HeroArt = ({ className, art, logo, name, label = null, title = null, blurr
                 <div className={styles['art']}>
                     {
                         typeof art === 'string' && art.length > 0 ?
-                            <Image key={art} className={classNames(styles['image'], { [styles['blurred']]: blurred })} src={art} alt={''} renderFallback={renderFallback} />
+                            <Image className={styles['image']} src={art} alt={''} renderFallback={renderFallback} />
+                            :
+                            null
+                    }
+                    {
+                        typeof still === 'string' && still.length > 0 ?
+                            <Image className={classNames(styles['image'], styles['still'], { [styles['blurred']]: blurred })} src={still} alt={''} renderFallback={renderFallback} />
                             :
                             null
                     }
@@ -58,8 +66,9 @@ const HeroArt = ({ className, art, logo, name, label = null, title = null, blurr
                         <h1 className={styles['title']}>{title}</h1>
                     </React.Fragment>
                     :
-                    <Logo logo={logo} name={name} />
+                    null
             }
+            <Logo className={classNames({ [styles['hidden']]: typeof title === 'string' })} logo={logo} name={name} />
         </div>
     </React.Fragment>
 );
