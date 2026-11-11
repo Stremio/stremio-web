@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useGoBack, useNavigateWithOrigin } from 'stremio-router';
@@ -87,6 +87,11 @@ const Details = () => {
     const originPath = useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     const leave = useGoBack(originPath);
     const { fromVideos, insertVideos } = useEpisodeNavigation();
+    const directVideo = video !== null && video.id === videoId && !fromVideos && !metaItem?.behaviorHints.defaultVideoId ? video : null;
+    const [streams, setStreams] = useState(details.streams);
+    if (directVideo === null && streams !== details.streams) {
+        setStreams(details.streams);
+    }
 
     useExternalPlayerCallback({ type, id, videoId }, details);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
@@ -94,11 +99,11 @@ const Details = () => {
 
     const insertedVideosKeyRef = useRef<string | null>(null);
     useEffect(() => {
-        if (video !== null && video.id === videoId && !fromVideos && !metaItem?.behaviorHints.defaultVideoId && insertedVideosKeyRef.current !== location.key) {
+        if (directVideo !== null && insertedVideosKeyRef.current !== location.key) {
             insertedVideosKeyRef.current = location.key;
-            insertVideos(video);
+            insertVideos(directVideo);
         }
-    }, [video, videoId, fromVideos, metaItem, location.key, insertVideos]);
+    }, [directVideo, location.key, insertVideos]);
 
     const onEpisodeSearch = useCallback((season: number, episode: number) => {
         const nextVideoId = encodeURIComponent(`${id}:${season}:${episode}`);
@@ -208,7 +213,7 @@ const Details = () => {
                 {
                     streamPath !== null ?
                         <Streams
-                            streams={details.streams}
+                            streams={streams}
                             video={video}
                             type={streamPath.type}
                             canMarkWatched={canMarkWatched}
