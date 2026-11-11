@@ -20,7 +20,13 @@ const createSpring = (response: number, damping: number) => {
     }
 
     left.push(0);
-    return { duration: (left.length - 1) * STEP, left };
+    const sample = (time: number) => {
+        const position = Math.max(0, time) / STEP;
+        const index = Math.min(left.length - 1, Math.floor(position));
+        return left[index] + (left[Math.min(left.length - 1, index + 1)] - left[index]) * (position - index);
+    };
+    const until = (rest: number) => left.findIndex((value) => value <= rest) * STEP;
+    return { duration: (left.length - 1) * STEP, left, at: sample, until };
 };
 
 type Spring = ReturnType<typeof createSpring>;

@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import type { Box } from './paint';
+import type { Box, Mark } from './paint';
 
 type Point = { x: number, y: number };
 
@@ -9,8 +9,9 @@ type Noise = (x: number, y: number, z: number) => number;
 type Material = {
     canvas: HTMLCanvasElement,
     region: Box,
-    marks: Box[],
+    marks: Mark[],
     keep: Box[],
+    inked: ((x: number, y: number) => boolean) | null,
 };
 
 type Options = {
@@ -23,10 +24,16 @@ type Options = {
 };
 
 const GRID = 8;
-const PLAIN = 0.34;
 const TURN = Math.PI * 2;
 const FLYING = 1;
 const DEAD = 2;
+const IMAGE = 1;
+const TEXT = 2;
+const SPARSE = 0.4;
+const DIM = 0.55;
+const BRIEF = 0.6;
+const SHADE = 0.6;
+const RISE = 45;
 
 const createNoise = (): Noise => {
     const table = new Uint8Array(512);
@@ -120,62 +127,71 @@ const createField = (width: number, height: number, span: number, noise: Noise) 
 
 type Field = ReturnType<typeof createField>;
 
-const createCover = (region: Box, boxes: Box[]) => {
+const createCover = (region: Box, boxes: Box[], kinds: number[]) => {
     const columns = Math.ceil(region.width / GRID);
     const rows = Math.ceil(region.height / GRID);
     const grid = new Uint8Array(columns * rows);
-    boxes.forEach((box) => {
+    boxes.forEach((box, index) => {
         const left = Math.max(0, Math.floor(box.x / GRID));
         const top = Math.max(0, Math.floor(box.y / GRID));
         const right = Math.min(columns - 1, Math.floor((box.x + box.width) / GRID));
         const bottom = Math.min(rows - 1, Math.floor((box.y + box.height) / GRID));
         for (let row = top; row <= bottom; row++) {
-            grid.fill(1, row * columns + left, row * columns + right + 1);
+            grid.fill(kinds[index], row * columns + left, row * columns + right + 1);
         }
     });
 
-    return (x: number, y: number) => grid[Math.min(rows - 1, Math.floor(y / GRID)) * columns + Math.min(columns - 1, Math.floor(x / GRID))] === 1;
+    return (x: number, y: number) => grid[Math.min(rows - 1, Math.floor(y / GRID)) * columns + Math.min(columns - 1, Math.floor(x / GRID))];
 };
 
 const createSand = ({ materials, origin, span, grain, budget, reach }: Options) => {
-    const items: number[][] = [];
-    const cells = materials.reduce((sum, { region }) => sum + region.width * region.height / (grain * grain), 0);
-    const share = Math.min(1, budget / Math.max(1, cells * 0.6));
-    materials.forEach(({ region, marks, keep }, material) => {
-        const inked = createCover(region, marks);
-        const kept = createCover(region, keep);
+    const cells: number[][] = [];
+    materials.forEach(({ region, marks, keep, inked }, material) => {
+        const marked = createCover(region, marks, marks.map(({ text }) => text ? TEXT : IMAGE));
+        const kept = createCover(region, keep, keep.map(() => IMAGE));
         for (let top = 0; top < region.height; top += grain) {
             for (let left = 0; left < region.width; left += grain) {
                 const centerX = left + grain / 2;
                 const centerY = top + grain / 2;
-                const ink = inked(centerX, centerY);
-                if ((!ink && kept(centerX, centerY)) || Math.random() > share * (ink ? 1 : PLAIN)) {
-                    continue;
+                const ink = marked(centerX, centerY);
+                if (ink !== 0 && kept(centerX, centerY) === 0 && (inked === null || inked(centerX, centerY))) {
+                    cells.push([material, left, top, ink]);
                 }
-
-                const homeX = region.x + left;
-                const homeY = region.y + top;
-                const offsetX = homeX + grain / 2 - origin.x;
-                const offsetY = homeY + grain / 2 - origin.y;
-                const away = Math.hypot(offsetX, offsetY) || 1;
-                const heading = Math.random() * TURN;
-                const speed = span * 0.09 * Math.random();
-                const push = span * 0.55 * Math.random();
-                items.push([
-                    reach(homeX + grain / 2, homeY + grain / 2) + grain * (Math.random() - 0.5),
-                    material,
-                    left,
-                    top,
-                    homeX,
-                    homeY,
-                    Math.cos(heading) * speed + offsetX / away * push,
-                    Math.sin(heading) * speed + offsetY / away * push,
-                    340 + 420 * Math.random(),
-                    0.08 + 0.26 * Math.random() * Math.random(),
-                    0.45 + 0.75 * Math.random(),
-                ]);
             }
         }
+    });
+
+    const weight = cells.reduce((sum, cell) => sum + (cell[3] === TEXT ? SPARSE : 1), 0);
+    const share = Math.min(1, budget / Math.max(1, weight));
+    const items: number[][] = [];
+    cells.forEach(([material, left, top, ink]) => {
+        if (Math.random() > share * (ink === TEXT ? SPARSE : 1)) {
+            return;
+        }
+
+        const { region } = materials[material];
+        const homeX = region.x + left;
+        const homeY = region.y + top;
+        const offsetX = homeX + grain / 2 - origin.x;
+        const offsetY = homeY + grain / 2 - origin.y;
+        const away = Math.hypot(offsetX, offsetY) || 1;
+        const heading = Math.random() * TURN;
+        const speed = span * 0.05 * Math.random();
+        const push = span * 0.26 * Math.random();
+        items.push([
+            reach(homeX + grain / 2, homeY + grain / 2) + grain * (Math.random() - 0.5),
+            material,
+            left,
+            top,
+            homeX,
+            homeY,
+            Math.cos(heading) * speed + offsetX / away * push,
+            Math.sin(heading) * speed + offsetY / away * push,
+            (180 + 220 * Math.random()) * (ink === TEXT ? BRIEF : 1),
+            0.08 + 0.26 * Math.random() * Math.random(),
+            0.45 + 0.75 * Math.random(),
+            ink === TEXT ? DIM : SHADE,
+        ]);
     });
 
     items.sort((a, b) => a[0] - b[0]);
@@ -192,6 +208,7 @@ const createSand = ({ materials, origin, span, grain, budget, reach }: Options) 
     const life = column(8);
     const tau = column(9);
     const reply = column(10);
+    const shade = column(11);
     const age = new Float32Array(count);
     const state = new Uint8Array(count);
     const canvases = materials.map(({ canvas }) => canvas);
@@ -209,8 +226,7 @@ const createSand = ({ materials, origin, span, grain, budget, reach }: Options) 
             head++;
         }
 
-        const lift = span * 0.05;
-        const gust = span * 0.95;
+        const gust = span * 0.42;
         const step = delta * 1000;
         for (let index = head; index < tail; index++) {
             if (state[index] === DEAD) {
@@ -240,15 +256,13 @@ const createSand = ({ materials, origin, span, grain, budget, reach }: Options) 
             const wind = gust * reply[index] * Math.exp(-age[index] / 210);
             const drag = 1 - Math.exp(-delta / tau[index]);
             velocityX[index] += (flowX + offsetX / away * wind - velocityX[index]) * drag;
-            velocityY[index] += (flowY - lift + offsetY / away * wind - velocityY[index]) * drag;
+            velocityY[index] += (flowY + offsetY / away * wind - velocityY[index]) * drag;
             x[index] += velocityX[index] * delta;
             y[index] += velocityY[index] * delta;
 
-            const progress = age[index] / life[index];
-            const ebb = Math.max(0, (progress - 0.35) / 0.65);
-            const shrunk = Math.max(1, Math.round(grain * (1 - 0.6 * progress)));
-            context.globalAlpha = 1 - ebb * ebb * (3 - 2 * ebb);
-            context.drawImage(canvases[material[index]], sourceX[index], sourceY[index], grain, grain, Math.round(x[index] + (grain - shrunk) / 2), Math.round(y[index] + (grain - shrunk) / 2), shrunk, shrunk);
+            const ebb = Math.max(0, (age[index] / life[index] - 0.3) / 0.7);
+            context.globalAlpha = shade[index] * Math.min(1, age[index] / RISE) * (1 - ebb * ebb * (3 - 2 * ebb));
+            context.drawImage(canvases[material[index]], sourceX[index], sourceY[index], grain, grain, x[index], y[index], grain, grain);
         }
 
         context.globalAlpha = 1;

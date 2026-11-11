@@ -27,45 +27,57 @@ type Plan = {
     poster: Unit | null,
 };
 
-const ROWS = '[class*="board-row-"]';
-const HERO = 'section[aria-roledescription="carousel"]';
-const SLIDE = '[role="tabpanel"]:not([aria-hidden="true"])';
-const WATCH = '[class*="watch"]';
+const ROW = '[data-board-row]';
+const ROW_FALLBACK = '[class*="board-row-"]';
+const TILE = 'data-board-tile';
+const HERO = '[data-spotlight-hero]';
+const HERO_FALLBACK = 'section[aria-roledescription="carousel"]';
+const ART = '[data-spotlight-art]';
+const CONTENT = '[data-spotlight-content]';
+const WATCH = '[data-spotlight-watch]';
+const WATCH_FALLBACK = '[class*="watch"]';
+const PANEL = '[role="tabpanel"]';
+const SLIDE = `${PANEL}:not([aria-hidden="true"])`;
+const HIDDEN = '[aria-hidden="true"]';
 const FOCUSABLE = '[tabindex]:not([tabindex="-1"])';
 const DETAILS = 'a[href*="/detail/"]';
-const TILES = 3;
 
-const metaId = (root: Element | null) => root?.querySelector(DETAILS)?.getAttribute('href')?.split('/')[3] ?? null;
+const findRows = (root: HTMLElement) => {
+    const hooked = root.querySelectorAll<HTMLElement>(ROW);
+    return Array.from(hooked.length > 0 ? hooked : root.querySelectorAll<HTMLElement>(ROW_FALLBACK));
+};
 
 const units = (root: HTMLElement) => {
     const found = new Map<string, HTMLElement>();
     const seen = new Map<string, number>();
-    const unique = (key: string) => {
-        const count = seen.get(key) ?? 0;
-        seen.set(key, count + 1);
-        return count === 0 ? key : `${key}#${count}`;
-    };
-
-    root.querySelectorAll<HTMLElement>(ROWS).forEach((row) => {
-        const name = unique(row.firstElementChild?.textContent ?? '');
-        Array.from(row.children).forEach((part, index) => {
-            if (!(part instanceof HTMLElement)) {
-                return;
-            }
-            if (part.children.length < TILES || part.querySelector('img') === null || getComputedStyle(part).overflowX !== 'visible') {
-                found.set(`${name}/${index}`, part);
-                return;
-            }
-
-            Array.from(part.children).forEach((tile, position) => {
-                if (tile instanceof HTMLElement) {
-                    found.set(unique(`${name}/${tile.querySelector('img')?.getAttribute('src') ?? position}`), tile);
-                }
-            });
-        });
+    findRows(root).forEach((row) => {
+        const name = row.dataset.boardRow || (row.firstElementChild?.textContent ?? '');
+        const count = seen.get(name) ?? 0;
+        seen.set(name, count + 1);
+        found.set(count === 0 ? name : `${name}#${count}`, row);
     });
 
     return found;
+};
+
+const findPoster = (row: HTMLElement, id: string) => {
+    const hooked = row.querySelector(`[${TILE}="${CSS.escape(id)}"]`);
+    const tile = hooked ?? Array.from(row.querySelectorAll(DETAILS)).find((link) => link.getAttribute('href')?.split('/')[3] === id) ?? null;
+    return tile?.querySelector('img') ?? null;
+};
+
+const findChrome = (live: HTMLElement, content: HTMLElement | null) => {
+    const chrome: DOMRect[] = [];
+    for (let node = content; node !== null && node !== live; node = node.parentElement) {
+        Array.from(node.parentElement?.children ?? []).forEach((sibling) => {
+            const rect = sibling.getBoundingClientRect();
+            if (sibling !== node && rect.width > 0 && rect.height > 0) {
+                chrome.push(rect);
+            }
+        });
+    }
+
+    return chrome;
 };
 
 const createPlan = (old: HTMLElement, live: HTMLElement, view: DOMRect, id: string | null): Plan => {
@@ -77,9 +89,9 @@ const createPlan = (old: HTMLElement, live: HTMLElement, view: DOMRect, id: stri
         const from = element.getBoundingClientRect();
         const target = after.get(key);
         const shown = inside(from);
-        if (shown && plan.poster === null && id !== null && metaId(element) === id) {
-            const image = element.querySelector('img');
-            if (image !== null) {
+        if (shown && plan.poster === null && id !== null) {
+            const image = findPoster(element, id);
+            if (image !== null && inside(image.getBoundingClientRect())) {
                 plan.poster = { element: image, rect: image.getBoundingClientRect() };
             }
         }
@@ -106,27 +118,32 @@ const createPlan = (old: HTMLElement, live: HTMLElement, view: DOMRect, id: stri
     return plan;
 };
 
+const shown = (element: Element) => element.closest(HIDDEN) === null && getComputedStyle(element).visibility !== 'hidden';
+
 const findHero = (live: HTMLElement): Hero | null => {
-    const section = live.querySelector<HTMLElement>(HERO);
+    const section = live.querySelector<HTMLElement>(HERO) ?? live.querySelector<HTMLElement>(HERO_FALLBACK);
     if (section === null) {
         return null;
     }
 
-    const image = section.querySelector('img');
-    const art = image?.closest<HTMLElement>(`${HERO} > *`) ?? null;
-    const slide = section.querySelector<HTMLElement>(SLIDE);
-    const parts = slide !== null ? Array.from(slide.children) : [];
-    const rest = Array.from(section.children).filter((child) => child !== art && !child.matches('[role="tabpanel"]'));
+    const hooked = section.querySelector<HTMLElement>(ART);
+    const image = (hooked ?? section).querySelector('img');
+    const art = hooked ?? Array.from(section.children).find((child): child is HTMLElement => child instanceof HTMLElement && child.contains(image)) ?? null;
+    const block = Array.from(section.querySelectorAll<HTMLElement>(CONTENT)).find(shown) ?? section.querySelector<HTMLElement>(SLIDE);
+    const rest = Array.from(section.children).filter((child) => !child.contains(art) && !child.matches(`${PANEL}, ${CONTENT}`) && child.querySelector(CONTENT) === null);
     return {
         section,
-        art,
+        art: image !== null ? art : null,
         image,
-        content: [...parts, ...rest].filter((child): child is HTMLElement => child instanceof HTMLElement && child.offsetWidth > 1),
-        watch: slide?.querySelector<HTMLElement>(`${WATCH}${FOCUSABLE}`) ?? slide?.lastElementChild?.querySelector<HTMLElement>(FOCUSABLE) ?? null,
-        id: metaId(slide),
+        content: [...Array.from(block?.children ?? []), ...rest].filter((part): part is HTMLElement => part instanceof HTMLElement && part.offsetWidth > 1),
+        watch:
+            Array.from(section.querySelectorAll<HTMLElement>(WATCH)).find(shown) ??
+            block?.querySelector<HTMLElement>(`${WATCH_FALLBACK}${FOCUSABLE}`) ??
+            (block ?? section).querySelector<HTMLElement>(FOCUSABLE),
+        id: section.dataset.spotlightHero || (block?.querySelector(DETAILS)?.getAttribute('href')?.split('/')[3] ?? null),
     };
 };
 
 export type { Unit, Move, Hero, Plan };
 
-export { createPlan, findHero };
+export { createPlan, findHero, findRows, findChrome };

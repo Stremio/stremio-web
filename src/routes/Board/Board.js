@@ -44,7 +44,7 @@ const Board = () => {
     return (
         <div className={styles['board-container']}>
             <EventModal />
-            <RemoteNotification catalogs={board.catalogs} />
+            <RemoteNotification catalogs={board.catalogs} watching={continueWatchingPreview.items} />
             <MainNavBars className={styles['board-content-container']} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {

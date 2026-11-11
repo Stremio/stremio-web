@@ -10,29 +10,37 @@ type Device = Navigator & {
 };
 
 const SOFTWARE = /swiftshader|llvmpipe|softpipe|software|basic render/i;
+const IDLE = 2000;
 const device: Device = navigator;
 
-const renderer = (attributes?: WebGLContextAttributes) => {
-    const gl = document.createElement('canvas').getContext('webgl', attributes);
+const accelerated = () => {
+    const gl = document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true });
     if (gl === null) {
-        return null;
+        return false;
     }
 
     const info = gl.getExtension('WEBGL_debug_renderer_info');
     const name = info !== null ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
     gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return name;
+    return !SOFTWARE.test(name);
 };
 
-const accelerated = () => {
-    const name = renderer();
-    return name !== null && !SOFTWARE.test(name) && renderer({ failIfMajorPerformanceCaveat: true }) !== null;
+let weak: boolean | null = null;
+let drained = false;
+
+const probe = () => {
+    weak = weak ?? (device.hardwareConcurrency <= 2 || (device.deviceMemory ?? 8) <= 2 || !accelerated());
+    return weak;
 };
 
-let weak = device.hardwareConcurrency <= 2 || (device.deviceMemory ?? 8) <= 2 || !accelerated();
+if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(probe, { timeout: IDLE });
+} else {
+    window.setTimeout(probe, IDLE);
+}
 
 device.getBattery?.().then((battery) => {
-    weak = weak || (!battery.charging && battery.level <= 0.2);
+    drained = !battery.charging && battery.level <= 0.2;
 }).catch(() => null);
 
 const quality = (): Tier => {
@@ -40,7 +48,7 @@ const quality = (): Tier => {
         return 'fade';
     }
 
-    return weak ? 'wipe' : 'sand';
+    return probe() || drained ? 'wipe' : 'sand';
 };
 
 export type { Tier };

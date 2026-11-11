@@ -6,9 +6,11 @@ import Icon from '@stremio/stremio-icons/react';
 import type { PeekContent } from './useMedia';
 import styles from './Peek.less';
 
-const TICKS = 6;
+const TABS = 5;
+const TICKS = 5;
+const CONTROLS = ['play', 'add-to-library', 'trailer'];
 
-const Peek = ({ background, logo, rows }: PeekContent) => {
+const Peek = ({ background, logo, name, facts, shelves }: PeekContent) => {
     const [broken, setBroken] = useState<string[]>([]);
     const onError = useCallback((event: React.SyntheticEvent<HTMLImageElement>) => {
         const src = event.currentTarget.getAttribute('src');
@@ -18,34 +20,38 @@ const Peek = ({ background, logo, rows }: PeekContent) => {
     }, []);
 
     return (
-        <div className={styles['peek']} aria-hidden={'true'}>
+        <div className={styles['peek']} aria-hidden={'true'} data-hero-scene={''}>
             <div className={styles['art']} data-hero-origin={''}>
                 <img className={styles['backdrop']} src={background} alt={''} draggable={false} />
                 <div className={styles['scrim']} />
             </div>
-            <div className={styles['hero']}>
+            <div className={styles['copy']}>
                 {
                     logo !== null && !broken.includes(logo) ?
                         <img className={styles['logo']} src={logo} alt={''} draggable={false} onError={onError} />
                         :
-                        <div className={styles['wordmark']} />
+                        <div className={styles['name']}>{name}</div>
                 }
-                <div className={styles['facts']}>
-                    <div className={styles['fact']} />
-                    <div className={styles['fact']} />
-                    <div className={styles['fact']} />
-                </div>
+                {
+                    facts.length > 0 ?
+                        <div className={styles['facts']}>
+                            {
+                                facts.map((fact, index) => (
+                                    <div key={index} className={styles['fact']}>{fact}</div>
+                                ))
+                            }
+                        </div>
+                        :
+                        null
+                }
                 <div className={styles['controls']}>
-                    <div className={styles['watch']}>
-                        <Icon className={styles['icon']} name={'play'} />
-                        <div className={styles['caption']} />
-                    </div>
-                    <div className={styles['round']}>
-                        <Icon className={styles['glyph']} name={'add-to-library'} />
-                    </div>
-                    <div className={styles['round']}>
-                        <Icon className={styles['glyph']} name={'trailer'} />
-                    </div>
+                    {
+                        CONTROLS.map((icon) => (
+                            <div key={icon} className={styles['control']}>
+                                <Icon className={styles['glyph']} name={icon} />
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
             <div className={styles['pager']}>
@@ -56,10 +62,10 @@ const Peek = ({ background, logo, rows }: PeekContent) => {
                 }
             </div>
             {
-                rows.map((posters, row) => (
-                    <div key={row} className={classNames(styles['shelf'], { [styles['leaving']]: row > 0 })}>
+                shelves.map(({ title, posters }, shelf) => (
+                    <div key={shelf} className={classNames(styles['shelf'], { [styles['leaving']]: shelf > 0 })}>
                         <div className={styles['row']}>
-                            <div className={styles['label']} />
+                            <div className={styles['label']}>{title}</div>
                             <div className={styles['posters']}>
                                 {
                                     posters.map((poster, index) => (
@@ -74,6 +80,16 @@ const Peek = ({ background, logo, rows }: PeekContent) => {
                     </div>
                 ))
             }
+            <div className={styles['frame']}>
+                <div className={styles['search']} />
+                <div className={styles['tabs']}>
+                    {
+                        Array.from({ length: TABS }, (_, index) => (
+                            <div key={index} className={styles['tab']} />
+                        ))
+                    }
+                </div>
+            </div>
         </div>
     );
 };

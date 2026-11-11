@@ -1,13 +1,23 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useEffect, useMemo, useState } from 'react';
+import useTranslate from 'stremio/common/useTranslate';
 
 type Catalogs = CatalogsWithExtra['catalogs'];
+
+type Watching = { poster?: string | null }[];
+
+type Shelf = {
+    title: string | null,
+    posters: string[],
+};
 
 type PeekContent = {
     background: string,
     logo: string | null,
-    rows: string[][],
+    name: string,
+    facts: string[],
+    shelves: Shelf[],
 };
 
 type Media = {
@@ -15,29 +25,13 @@ type Media = {
     image: string | null,
 };
 
-const ROWS = 2;
-const ROW_SIZE = 7;
+const SHELVES = 2;
+const SHELF_SIZE = 8;
+const FACTS = 3;
+const PATIENCE = 2500;
+const GENRES = 'Genres';
 
-const peekOf = (catalogs: Catalogs): PeekContent | null | undefined => {
-    const loaded = (catalogs ?? []).filter(({ content }) => content?.type !== 'Err');
-    const source = loaded[0]?.content;
-    if (loaded.length === 0 || source?.type !== 'Ready') {
-        return catalogs !== null && catalogs.length > 0 && loaded.length === 0 ? null : undefined;
-    }
-
-    const hero = source.content.find(({ background }) => typeof background === 'string' && background.length > 0);
-    if (hero === undefined || typeof hero.background !== 'string') {
-        return null;
-    }
-
-    return {
-        background: hero.background,
-        logo: hero.logo,
-        rows: loaded.slice(0, ROWS).flatMap(({ content }) => content?.type === 'Ready' ? [
-            content.content.flatMap(({ poster }) => typeof poster === 'string' && poster.length > 0 ? [poster] : []).slice(0, ROW_SIZE),
-        ] : []),
-    };
-};
+const filled = (value: unknown): value is string => typeof value === 'string' && value.length > 0;
 
 const useLoaded = (src: string | null) => {
     const [loaded, setLoaded] = useState<Record<string, boolean>>({});
@@ -64,24 +58,72 @@ const useLoaded = (src: string | null) => {
     return src !== null ? loaded[src] ?? null : false;
 };
 
-const useMedia = (notification: RemoteNotification | null, catalogs: Catalogs, live: boolean): Media | null => {
+const useMedia = (notification: RemoteNotification | null, catalogs: Catalogs, watching: Watching, live: boolean): Media | null => {
+    const { catalogTitle, string } = useTranslate();
     const prompted = notification !== null;
-    const peek = useMemo(() => prompted ? peekOf(catalogs) : null, [prompted, catalogs]);
+    const [late, setLate] = useState(false);
+
+    const peek = useMemo((): PeekContent | null | undefined => {
+        if (!prompted || !live) {
+            return null;
+        }
+
+        const loaded = (catalogs ?? []).filter(({ content }) => content?.type !== 'Err');
+        const source = loaded[0]?.content;
+        if (loaded.length === 0 || source?.type !== 'Ready') {
+            return catalogs !== null && catalogs.length > 0 && loaded.length === 0 ? null : undefined;
+        }
+
+        const hero = source.content.find(({ background }) => filled(background));
+        if (hero === undefined || !filled(hero.background)) {
+            return null;
+        }
+
+        const resumed = watching.map(({ poster }) => poster).filter(filled);
+        const rows = loaded.flatMap((catalog) => catalog.content?.type === 'Ready' ? [{
+            title: catalogTitle(catalog) as string | null,
+            posters: catalog.content.content.filter(({ id }) => id !== hero.id).map(({ poster }) => poster).filter(filled),
+        }] : []);
+        return {
+            background: hero.background,
+            logo: hero.logo,
+            name: hero.name,
+            facts: [hero.releaseInfo, hero.runtime, hero.links.find(({ category }) => category === GENRES)?.name].filter(filled).slice(0, FACTS),
+            shelves: [
+                ...(resumed.length > 0 ? [{ title: string('BOARD_CONTINUE_WATCHING') as string | null, posters: resumed }] : []),
+                ...rows,
+            ].slice(0, SHELVES).map(({ title, posters }) => ({ title, posters: posters.slice(0, SHELF_SIZE) })),
+        };
+    }, [prompted, live, catalogs, watching, catalogTitle, string]);
+
     const background = useLoaded(peek?.background ?? null);
     const image = useLoaded(notification?.image ?? null);
 
+    useEffect(() => {
+        if (!prompted) {
+            return;
+        }
+
+        const timeout = window.setTimeout(() => setLate(true), PATIENCE);
+        return () => {
+            window.clearTimeout(timeout);
+            setLate(false);
+        };
+    }, [prompted]);
+
     return useMemo(() => {
-        if (notification === null || image === null || (live && (peek === undefined || background === null))) {
+        const pending = image === null || (live && (peek === undefined || background === null));
+        if (notification === null || (pending && !late)) {
             return null;
         }
 
         return {
-            peek: live && background && peek ? peek : null,
-            image: image ? notification.image : null,
+            peek: background === true && peek ? peek : null,
+            image: image === true ? notification.image : null,
         };
-    }, [notification, live, peek, background, image]);
+    }, [notification, live, late, peek, background, image]);
 };
 
-export type { Catalogs, PeekContent, Media };
+export type { Catalogs, Watching, Shelf, PeekContent, Media };
 
 export default useMedia;

@@ -3,6 +3,7 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
+@primary: var(--primary-accent-color);
 @ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 @exit-duration-ms: 200;
 @radius: 1.5rem;
@@ -112,7 +113,7 @@
             }
 
             &.primary {
-                background-color: var(--primary-accent-color);
+                background-color: @primary;
                 color: @color-surface-light5;
             }
 

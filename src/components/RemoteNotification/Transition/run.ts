@@ -2,18 +2,16 @@
 
 import type { Stage } from './freeze';
 import type { Tier } from './quality';
-import type { Source } from './lock';
 import type { Hero } from './plan';
 import type { Box } from './paint';
-import paint, { warm } from './paint';
+import paint, { place } from './paint';
 import createSpring from './spring';
-import { createPlan, findHero } from './plan';
+import { createPlan, findHero, findRows, findChrome } from './plan';
 import { createNoise, createField, createSand } from './sand';
 
 type Options = {
     stage: Stage,
     tier: Tier,
-    keyboard: boolean,
     pressed: number,
     dispose: (disposer: () => void) => void,
     release: () => void,
@@ -22,46 +20,64 @@ type Options = {
 
 type Rect = { left: number, top: number, width: number, height: number };
 
-const WAVE = 560;
-const LEAD = 1.6;
-const HERO_CAP = 800;
-const SCRIM = 260;
-const RISE = 12;
-const STAGGER = 55;
-const ENTRANCE = 420;
+const HERO_CAP = 500;
+const SCRIM = 220;
+const HEAD_START = 60;
+const PATIENCE = 260;
+const STEP = 8;
+const SOLID = 0.7;
+const GHOST = 130;
+const COPY = 0.7;
+const STAGGER = 45;
+const ENTRANCE = 320;
+const RISE = 10;
+const WAVE = 200;
+const SOFT = 80;
+const EDGE = 48;
 const HURRY = 150;
 const FADE = 240;
 const WIPE = 400;
-const AREA = 2300000;
-const BUDGET = 9000;
-const GRAIN = 4;
-const POINTS = 56;
+const AREA = 4200000;
+const BUDGET = 3000;
+const GRAIN = 2.5;
+const DRIFT = 110;
+const INK = 96;
 const MARGIN = 24;
 const SLOW = 28;
 const STALLED = 50;
 const EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
-const OUTER = 'M-99999 -99999H99999V99999H-99999Z';
-const HERO = 'section[aria-roledescription="carousel"]';
-const ROWS = '[class*="board-row-"]';
-const TILE = createSpring(430, 0.86);
-const OPEN = createSpring(520, 1);
+const MASKS = ['mask-image', '-webkit-mask-image', 'mask-composite', '-webkit-mask-composite', 'mask-repeat', '-webkit-mask-repeat', 'mask-position', '-webkit-mask-position', 'mask-size', '-webkit-mask-size'];
+const FROZEN = ['transform', 'opacity'] as const;
+const ROWS = createSpring(300, 1);
+const ART = createSpring(360, 1);
 
 const smooth = (value: number) => {
     const t = Math.max(0, Math.min(1, value));
     return t * t * (3 - 2 * t);
 };
 
-const unsmooth = (value: number) => 0.5 - Math.sin(Math.asin(1 - 2 * Math.max(0, Math.min(1, value))) / 3);
+const zoomOf = (element: Element) => new DOMMatrixReadOnly(getComputedStyle(element).transform).a || 1;
 
-const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Options) => {
-    const { live, modal, card, button, under, over, sheet, copy, images, scrolled, view, zoom, origin } = stage;
+const bitmap = (shape: number, image: Element, frame: Rect): Rect => {
+    const { x, y, width, height } = place(shape, getComputedStyle(image), { x: frame.left, y: frame.top, width: frame.width, height: frame.height });
+    return { left: x, top: y, width, height };
+};
+
+const mix = (from: Rect, to: Rect, share: number): Rect => ({
+    left: from.left + (to.left - from.left) * share,
+    top: from.top + (to.top - from.top) * share,
+    width: from.width + (to.width - from.width) * share,
+    height: from.height + (to.height - from.height) * share,
+});
+
+const run = ({ stage, tier, pressed, dispose, release, finish }: Options) => {
+    const { live, modal, card, button, under, over, sheet, copy, scrolled, view, zoom, origin } = stage;
     const animations: Animation[] = [];
+    const restores: (() => void)[] = [];
     const span = Math.hypot(Math.max(origin.x, view.width - origin.x), Math.max(origin.y, view.height - origin.y));
-    const phases = [Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28];
-    const far = span / 0.9;
     let request = 0;
     let ended = false;
-    let hurried: Source | null = null;
+    let hurried = false;
     let hero: Hero | null = null;
     let decoded = false;
     let decoding = false;
@@ -73,70 +89,43 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
     };
 
     const local = (rect: DOMRect | Rect): Rect => ({ left: rect.left - view.left, top: rect.top - view.top, width: rect.width, height: rect.height });
-    const wobble = (angle: number) => 1 + 0.045 * Math.sin(3 * angle + phases[0]) + 0.03 * Math.sin(5 * angle + phases[1]) + 0.02 * Math.sin(9 * angle + phases[2]);
-    const reach = (x: number, y: number) => Math.hypot(x - origin.x, y - origin.y) / wobble(Math.atan2(y - origin.y, x - origin.x));
-    const nearest = ({ left, top, width, height }: Rect) => reach(Math.max(left, Math.min(origin.x, left + width)), Math.max(top, Math.min(origin.y, top + height)));
-    const farthest = ({ left, top, width, height }: Rect) => Math.max(reach(left, top), reach(left + width, top), reach(left, top + height), reach(left + width, top + height));
-    const radiusAt = (time: number) => far * smooth(time / WAVE);
-    const timeAt = (distance: number) => WAVE * unsmooth(distance / far);
+    const px = (value: number) => `${(value / zoom).toFixed(2)}px`;
 
-    const hole = (radius: number, offset: Rect) => {
-        let path = '';
-        for (let point = 0; point < POINTS; point++) {
-            const angle = point / POINTS * Math.PI * 2;
-            const length = radius * wobble(angle);
-            const x = ((origin.x + Math.cos(angle) * length - offset.left) / zoom).toFixed(1);
-            const y = ((origin.y + Math.sin(angle) * length - offset.top) / zoom).toFixed(1);
-            path += `${point === 0 ? 'M' : 'L'}${x} ${y}`;
-        }
-
-        return `${path}Z`;
+    const style = (element: HTMLElement, values: Record<string, string>) => {
+        const before = Object.keys(values).map((name) => [name, element.style.getPropertyValue(name)]);
+        Object.entries(values).forEach(([name, value]) => element.style.setProperty(name, value));
+        restores.push(() => before.forEach(([name, value]) => element.style.setProperty(name, value)));
     };
 
     const ready = () => {
-        const section = live.querySelector<HTMLElement>(HERO);
-        const image = section?.querySelector('img') ?? null;
-        if (section === null) {
+        const found = findHero(live);
+        if (found === null) {
             return false;
         }
-        if (image !== null && !decoded && !decoding) {
+        if (found.image !== null && !decoded && !decoding) {
             const settle = () => {
                 decoded = true;
             };
             decoding = true;
-            image.decode().then(settle, settle);
+            found.image.decode().then(settle, settle);
         }
 
-        return image === null || decoded;
+        return found.image === null || decoded;
     };
 
     const complete = () => {
-        if (ended) {
-            return;
-        }
-
-        ended = true;
-        const target = keyboard || hurried === 'keys' ? (hero ?? findHero(live))?.watch ?? null : null;
-        let attempts = 0;
-        const focus = () => {
-            if (modal.isConnected && attempts++ < 30) {
-                requestAnimationFrame(focus);
-            } else if (target !== null && target.isConnected) {
-                target.focus({ preventScroll: true });
-            }
-        };
-
-        if (finish() && target !== null) {
-            requestAnimationFrame(focus);
+        if (!ended) {
+            ended = true;
+            finish();
         }
     };
 
-    const hurry = (source: Source) => {
-        if (ended || hurried !== null) {
+    const hurry = () => {
+        if (ended || hurried) {
             return;
         }
 
-        hurried = source;
+        hurried = true;
         animations.forEach((animation) => animation.updatePlaybackRate(8));
         [under, over, card].forEach((element) => animate(element, { opacity: 0 }, { duration: HURRY, easing: 'ease-out', fill: 'forwards' }));
         window.setTimeout(complete, HURRY);
@@ -147,15 +136,19 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
         window.removeEventListener('resize', complete);
         document.removeEventListener('visibilitychange', complete);
         animations.forEach((animation) => animation.cancel());
+        restores.forEach((restore) => restore());
     });
-    dispose(() => {
-        modal.style.visibility = 'hidden';
-    });
-    window.addEventListener('resize', complete);
-    document.addEventListener('visibilitychange', complete);
-    scrolled.forEach((element) => {
-        element.scrollTop = 0;
-    });
+    const start = (frame: FrameRequestCallback) => {
+        dispose(() => {
+            modal.style.visibility = 'hidden';
+        });
+        window.addEventListener('resize', complete);
+        document.addEventListener('visibilitychange', complete);
+        scrolled.forEach((element) => {
+            element.scrollTop = 0;
+        });
+        request = requestAnimationFrame(frame);
+    };
 
     const veils = Array.from(modal.children).filter((child) => child !== card);
     const lift = (duration: number) => veils.forEach((veil) => animate(veil, { opacity: 0 }, { duration, easing: 'ease-out', fill: 'forwards' }));
@@ -175,8 +168,8 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
             }
 
             const cover = document.createElement('div');
-            const x = `${(origin.x / zoom).toFixed(1)}px`;
-            const y = `${(origin.y / zoom).toFixed(1)}px`;
+            const x = px(origin.x);
+            const y = px(origin.y);
             const frames = { clipPath: [`circle(0px at ${x} ${y})`, `circle(${Math.ceil(span / zoom)}px at ${x} ${y})`] };
             cover.style.cssText = sheet.style.cssText;
             under.appendChild(cover);
@@ -187,157 +180,227 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
             window.setTimeout(complete, WIPE);
         };
 
-        request = requestAnimationFrame(settle);
-        return hurry;
+        return { hurry, commit: () => start(settle) };
     }
 
+    const cardRect = local(card.getBoundingClientRect());
+    const spot = card.querySelector<HTMLElement>('[data-hero-origin]');
+    const scene = spot?.closest<HTMLElement>('[data-hero-scene]') ?? null;
+    const spotRect = spot !== null ? local(spot.getBoundingClientRect()) : null;
+    const spotStyle = spot !== null ? getComputedStyle(spot) : null;
+    const docked = spotStyle !== null && spotStyle.transform === 'none' && Number(spotStyle.opacity) === 1;
+    const region: Rect = {
+        left: Math.max(0, cardRect.left - DRIFT),
+        top: Math.max(0, cardRect.top - DRIFT),
+        width: Math.min(view.width, cardRect.left + cardRect.width + DRIFT) - Math.max(0, cardRect.left - DRIFT),
+        height: Math.min(view.height, cardRect.top + cardRect.height + DRIFT) - Math.max(0, cardRect.top - DRIFT),
+    };
     const ratio = window.devicePixelRatio || 1;
-    let upscale = Math.max(1, Math.round(ratio));
-    while (view.width * view.height * ratio * ratio / (upscale * upscale) > AREA) {
-        upscale++;
-    }
-
-    const scale = ratio / upscale;
-    const width = Math.round(view.width * scale);
-    const height = Math.round(view.height * scale);
+    const scale = Math.min(ratio, Math.sqrt(AREA / (region.width * region.height)));
     const grain = Math.max(3, Math.round(GRAIN * scale));
-    const dot = document.createElement('canvas');
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d')!;
-    const noise = createNoise();
-    const field = createField(width, height, span * scale, noise);
-    const sands: { sand: ReturnType<typeof createSand>, lead: number }[] = [];
-    const cardRect = local(card.getBoundingClientRect());
-    const peek = card.querySelector<HTMLElement>('[data-hero-origin]');
-    const peekRect = peek !== null ? local(peek.getBoundingClientRect()) : null;
-    const cardEnd = farthest(cardRect) + 4;
-    const hold = peekRect !== null ? Math.max(0, nearest(peekRect) - 6) : cardEnd;
+    const dot = document.createElement('canvas');
+    const far = Math.max(...[0, cardRect.width].flatMap((x) => [0, cardRect.height].map((y) => Math.hypot(cardRect.left + x - origin.x, cardRect.top + y - origin.y)))) + SOFT;
     const radii = getComputedStyle(card);
-    const corner = (value: string) => Math.min(parseFloat(value) || 0, cardRect.width / zoom / 2, cardRect.height / zoom / 2).toFixed(1);
+    const corner = (value: string) => Math.min(parseFloat(value) || 0, cardRect.width / zoom / 2, cardRect.height / zoom / 2);
     const [topLeft, topRight, bottomRight, bottomLeft] = [radii.borderTopLeftRadius, radii.borderTopRightRadius, radii.borderBottomRightRadius, radii.borderBottomLeftRadius].map(corner);
-    const boxWidth = (cardRect.width / zoom).toFixed(1);
-    const boxHeight = (cardRect.height / zoom).toFixed(1);
-    const outline = `M${topLeft} 0H${Number(boxWidth) - Number(topRight)}A${topRight} ${topRight} 0 0 1 ${boxWidth} ${topRight}V${Number(boxHeight) - Number(bottomRight)}A${bottomRight} ${bottomRight} 0 0 1 ${Number(boxWidth) - Number(bottomRight)} ${boxHeight}H${bottomLeft}A${bottomLeft} ${bottomLeft} 0 0 1 0 ${Number(boxHeight) - Number(bottomLeft)}V${topLeft}A${topLeft} ${topLeft} 0 0 1 ${topLeft} 0Z`;
-    const inset = { top: 0, right: 0, bottom: 0, left: 0 };
+    const boxWidth = cardRect.width / zoom;
+    const boxHeight = cardRect.height / zoom;
+    const outline = `M${topLeft} 0H${boxWidth - topRight}A${topRight} ${topRight} 0 0 1 ${boxWidth} ${topRight}V${boxHeight - bottomRight}A${bottomRight} ${bottomRight} 0 0 1 ${boxWidth - bottomRight} ${boxHeight}H${bottomLeft}A${bottomLeft} ${bottomLeft} 0 0 1 0 ${boxHeight - bottomLeft}V${topLeft}A${topLeft} ${topLeft} 0 0 1 ${topLeft} 0Z`;
+    const ink = paint(card, spot, new DOMRect(view.left + cardRect.left, view.top + cardRect.top, cardRect.width, cardRect.height), scale, zoom);
+    const offset: Box = { x: (cardRect.left - region.left) * scale, y: (cardRect.top - region.top) * scale, width: ink.text.width, height: ink.text.height };
+    const kept: Box[] = spotRect !== null ? [{ x: (spotRect.left - cardRect.left) * scale, y: (spotRect.top - cardRect.top) * scale, width: spotRect.width * scale, height: spotRect.height * scale }] : [];
+    const letters = (() => {
+        try {
+            return ink.text.getContext('2d')!.getImageData(0, 0, ink.text.width, ink.text.height).data;
+        } catch (_error) {
+            return null;
+        }
+    })();
+    const inked = letters !== null ? (x: number, y: number) => letters[(Math.min(ink.text.height - 1, y | 0) * ink.text.width + Math.min(ink.text.width - 1, x | 0)) * 4 + 3] > INK : null;
+    dot.width = grain;
+    dot.height = grain;
+    dot.getContext('2d')?.arc(grain / 2, grain / 2, grain / 2 - 0.25, 0, Math.PI * 2);
+    dot.getContext('2d')?.fill();
+    [ink.text, ink.image].forEach((source) => {
+        const surface = source.getContext('2d');
+        const pattern = surface?.createPattern(dot, 'repeat') ?? null;
+        if (surface !== null && pattern !== null) {
+            surface.globalAlpha = 1;
+            surface.globalCompositeOperation = 'destination-in';
+            surface.fillStyle = pattern;
+            surface.fillRect(0, 0, source.width, source.height);
+        }
+    });
+    canvas.width = Math.round(region.width * scale);
+    canvas.height = Math.round(region.height * scale);
+    canvas.style.cssText = `position:absolute;left:${px(region.left)};top:${px(region.top)};width:${px(region.width)};height:${px(region.height)}`;
+    over.appendChild(canvas);
+    dispose(() => {
+        [canvas, ink.text, ink.image].forEach((surface) => {
+            surface.width = 0;
+            surface.height = 0;
+        });
+    });
+
+    const field = createField(canvas.width, canvas.height, span * scale, createNoise());
+    const sand = createSand({
+        materials: [
+            { canvas: ink.text, region: offset, marks: ink.marks.filter(({ text }) => text), keep: kept, inked },
+            { canvas: ink.image, region: offset, marks: ink.marks.filter(({ text }) => !text), keep: kept, inked: null },
+        ],
+        origin: {
+            x: ((spotRect !== null ? spotRect.left + spotRect.width / 2 : origin.x) - region.left) * scale,
+            y: ((spotRect !== null ? spotRect.top + spotRect.height / 2 : origin.y) - region.top) * scale,
+        },
+        span: span * scale,
+        grain,
+        budget: BUDGET,
+        reach: (x, y) => Math.hypot(x / scale + region.left - origin.x, y / scale + region.top - origin.y) * scale,
+    });
     let last = performance.now();
-    let wave = 0;
     let gone = -1;
     let usable = Infinity;
     let done = Infinity;
+    let fading = Infinity;
     let slow = 0;
-    let leaving = 0;
-    let cardGone = false;
+    let dissolved = false;
     let released = false;
+    let ghost: HTMLElement | null = null;
 
-    const sandbox = (region: Rect): Box => {
-        const x = Math.max(0, Math.floor(region.left * scale));
-        const y = Math.max(0, Math.floor(region.top * scale));
-        return {
-            x,
-            y,
-            width: Math.min(width, Math.ceil((region.left + region.width) * scale)) - x,
-            height: Math.min(height, Math.ceil((region.top + region.height) * scale)) - y,
-        };
+    const snapshot = (source: HTMLElement, pane: Rect, round: boolean) => {
+        const frame = document.createElement('div');
+        const inner = source.cloneNode(true) as HTMLElement;
+        const area = local(source.getBoundingClientRect());
+        const sources = [source, ...Array.from(source.querySelectorAll<HTMLElement>('*'))];
+        const copies = [inner, ...Array.from(inner.querySelectorAll<HTMLElement>('*'))];
+        sources.forEach((element, index) => {
+            const computed = getComputedStyle(element);
+            FROZEN.forEach((property) => {
+                copies[index].style[property] = computed[property];
+            });
+        });
+        frame.style.cssText = `position:absolute;left:${px(pane.left)};top:${px(pane.top)};width:${px(pane.width)};height:${px(pane.height)};overflow:hidden;transform-origin:0 0;border-radius:${round ? `${topLeft}px ${topRight}px 0 0` : '0'}`;
+        inner.style.cssText += `;position:absolute;left:${px(area.left - pane.left)};top:${px(area.top - pane.top)};width:${px(area.width)};height:${px(area.height)};padding:0;margin:0`;
+        frame.appendChild(inner);
+        over.appendChild(frame);
+        return frame;
     };
 
-    const pour = (elements: Element[], region: Box, keep: Rect | null, budget: number, lead: number) => {
-        if (region.width <= 0 || region.height <= 0) {
-            return;
-        }
-
-        const area = new DOMRect(view.left + region.x / scale, view.top + region.y / scale, region.width / scale, region.height / scale);
-        const painted = paint(elements, area, scale, zoom, images);
-        const kept = keep !== null ? [{ x: keep.left * scale - region.x, y: keep.top * scale - region.y, width: keep.width * scale, height: keep.height * scale }] : [];
-        const surface = painted.canvas.getContext('2d');
-        const pattern = surface?.createPattern(dot, 'repeat') ?? null;
-        if (surface !== null && pattern !== null) {
-            surface.globalCompositeOperation = 'destination-in';
-            surface.fillStyle = pattern;
-            surface.fillRect(0, 0, region.width, region.height);
-        }
-
-        dispose(() => {
-            painted.canvas.width = 0;
-            painted.canvas.height = 0;
-        });
-        sands.push({
-            lead,
-            sand: createSand({
-                materials: [{
-                    canvas: painted.canvas,
-                    region,
-                    marks: painted.marks.filter((mark) => !kept.some((box) => mark.x < box.x + 3 && mark.y < box.y + 3 && mark.x + mark.width > box.x + box.width - 3 && mark.y + mark.height > box.y + box.height - 3)),
-                    keep: kept,
-                }],
-                origin: { x: origin.x * scale, y: origin.y * scale },
-                span: span * scale,
-                grain,
-                budget,
-                reach: (x, y) => reach(x / scale, y / scale) * scale,
-            }),
-        });
-    };
-
-    const travel = (element: HTMLElement, from: Rect, to: Rect, tall: number) => {
-        const inside = (rect: Rect) => rect.top + rect.height > 0 && rect.top < tall;
+    const travel = (element: HTMLElement, from: Rect, to: Rect) => {
+        const inside = (rect: Rect) => rect.top + rect.height > 0 && rect.top < view.height;
         const clamp = (rect: Rect, other: Rect) => {
             if (inside(rect)) {
                 return rect.top;
             }
 
-            return rect.top > other.top ? Math.min(rect.top, tall + MARGIN) : Math.max(rect.top, -rect.height - MARGIN);
+            return rect.top > other.top ? Math.min(rect.top, view.height + MARGIN) : Math.max(rect.top, -rect.height - MARGIN);
         };
-        const startX = from.left - to.left;
-        const startY = clamp(from, to) - to.top;
-        const endY = clamp(to, from) - to.top;
+        const start = { ...from, top: clamp(from, to) };
+        const end = { ...to, top: clamp(to, from) };
         const scaleX = to.width > 0 ? from.width / to.width : 1;
         const scaleY = to.height > 0 ? from.height / to.height : 1;
         const sized = Math.abs(scaleX - 1) > 0.01 || Math.abs(scaleY - 1) > 0.01;
-        if (Math.abs(startX) < 0.5 && Math.abs(startY - endY) < 0.5 && !sized) {
+        if (Math.abs(start.left - end.left) < 0.5 && Math.abs(start.top - end.top) < 0.5 && !sized) {
             return null;
         }
 
-        const anchor = inside(from) ? from : to;
-        const delay = Math.max(0, timeAt(reach(anchor.left + anchor.width / 2, Math.max(0, Math.min(tall, anchor.top + anchor.height / 2)))) - wave);
-        animate(element, TILE.left.map((left) => ({
+        animate(element, ROWS.left.map((left) => ({
             transformOrigin: '0 0',
-            transform: `translate(${(startX * left / zoom).toFixed(2)}px, ${((endY + (startY - endY) * left) / zoom).toFixed(2)}px)${sized ? ` scale(${(1 + (scaleX - 1) * left).toFixed(4)}, ${(1 + (scaleY - 1) * left).toFixed(4)})` : ''}`,
-        })), { duration: TILE.duration, delay, easing: 'linear', fill: 'backwards' });
-        return delay;
-    };
-
-    const open = (art: HTMLElement, from: Rect, radius: number, delay: number) => {
-        const to = local(art.getBoundingClientRect());
-        animate(art, OPEN.left.map((left) => {
-            const frame = {
-                left: to.left + (from.left - to.left) * left,
-                top: to.top + (from.top - to.top) * left,
-                width: to.width + (from.width - to.width) * left,
-                height: to.height + (from.height - to.height) * left,
-            };
-            const size = Math.max(frame.width / to.width, frame.height / to.height);
-            const x = frame.left + frame.width / 2 - to.width * size / 2 - to.left;
-            const y = frame.top + frame.height / 2 - to.height * size / 2 - to.top;
-            const cutLeft = (frame.left - to.left - x) / size;
-            const cutTop = (frame.top - to.top - y) / size;
-            const cutRight = to.width - cutLeft - frame.width / size;
-            const cutBottom = to.height - cutTop - frame.height / size;
-            return {
-                transformOrigin: '0 0',
-                transform: `translate(${(x / zoom).toFixed(2)}px, ${(y / zoom).toFixed(2)}px) scale(${size.toFixed(4)})`,
-                clipPath: `inset(${(cutTop / zoom).toFixed(2)}px ${(cutRight / zoom).toFixed(2)}px ${(cutBottom / zoom).toFixed(2)}px ${(cutLeft / zoom).toFixed(2)}px round ${(radius * left / size).toFixed(2)}px)`,
-            };
-        }), { duration: OPEN.duration, delay, easing: 'linear', fill: 'backwards' });
+            transform: `translate(${px((start.left - to.left) * left)}, ${px(end.top - to.top + (start.top - end.top) * left)})${sized ? ` scale(${(1 + (scaleX - 1) * left).toFixed(4)}, ${(1 + (scaleY - 1) * left).toFixed(4)})` : ''}`,
+        })), { duration: ROWS.duration, easing: 'linear', fill: 'backwards' });
+        return { start, end };
     };
 
     const arrive = (element: Element, delay: number) => (
         animate(element, [{ opacity: 0, transform: `translateY(${RISE}px)` }, {}], { duration: ENTRANCE, delay, easing: EASE, fill: 'backwards' })
     );
 
+    const counter = (box: Rect, parent: Rect, shown: Rect, frame: Rect, wanted: Rect) => {
+        const scaleX = frame.width / parent.width;
+        const scaleY = frame.height / parent.height;
+        const size = wanted.width / shown.width;
+        const moveX = parent.left - box.left + (size * (box.left - shown.left) + wanted.left - frame.left) / scaleX;
+        const moveY = parent.top - box.top + (size * (box.top - shown.top) + wanted.top - frame.top) / scaleY;
+        return `translate(${px(moveX)}, ${px(moveY)}) scale(${(size / scaleX).toFixed(5)}, ${(size / scaleY).toFixed(5)})`;
+    };
+
+    const open = ({ section, art, image }: Hero & { art: HTMLElement }, from: Rect, delay: number, veiled: number) => {
+        const to = local(art.getBoundingClientRect());
+        const holder = image !== null && image.parentElement !== art ? image.parentElement : null;
+        const shape = image !== null && image.naturalWidth > 0 && image.naturalHeight > 0 ? image.naturalWidth / image.naturalHeight : null;
+        const shot = spot?.querySelector('img') ?? image;
+        const frames = ART.left.map((left) => mix(from, to, 1 - left));
+        const timing = { duration: ART.duration, delay, easing: 'linear', fill: 'backwards' } as const;
+        let seed: Rect | null = null;
+        let views: Rect[] = [];
+        style(section, { 'z-index': String(Math.max(0, ...Array.from(section.parentElement?.children ?? []).map((sibling) => Number(getComputedStyle(sibling).zIndex) || 0)) + 1) });
+        if (holder !== null && image !== null && shape !== null && shot !== null) {
+            const box = local(holder.getBoundingClientRect());
+            const rest = bitmap(shape, image, box);
+            const wide = bitmap(shape, shot, from);
+            const grow = zoomOf(shot) / zoomOf(image);
+            const sown = {
+                left: from.left + from.width / 2 + (wide.left - from.left - from.width / 2) * grow,
+                top: from.top + from.height / 2 + (wide.top - from.top - from.height / 2) * grow,
+                width: wide.width * grow,
+                height: wide.height * grow,
+            };
+            seed = sown;
+            views = ART.left.map((left) => mix(sown, rest, 1 - left));
+            style(holder, { overflow: 'visible' });
+            style(image, {
+                'position': 'absolute',
+                'left': px(rest.left - box.left),
+                'top': px(rest.top - box.top),
+                'width': px(rest.width),
+                'height': px(rest.height),
+                'max-width': 'none',
+                'max-height': 'none',
+                'object-fit': 'fill',
+                'transform-origin': `${px(box.left + box.width / 2 - rest.left)} ${px(box.top + box.height / 2 - rest.top)}`,
+            });
+            animate(holder, frames.map((frame, index) => ({ transformOrigin: '0 0', transform: counter(box, to, rest, frame, views[index]) })), timing);
+        }
+
+        animate(art, frames.map((frame) => ({
+            transformOrigin: '0 0',
+            transform: `translate(${px(frame.left - to.left)}, ${px(frame.top - to.top)}) scale(${(frame.width / to.width).toFixed(5)}, ${(frame.height / to.height).toFixed(5)})`,
+        })), timing);
+        if (veiled < 1) {
+            animate(art, { opacity: [veiled, 1] }, { duration: GHOST, delay, easing: 'ease-out', fill: 'backwards' });
+        }
+        if (from.width < to.width - 2) {
+            const computed = getComputedStyle(art);
+            const mask = computed.maskImage !== undefined && computed.maskImage !== 'none' ? computed.maskImage : computed.webkitMaskImage;
+            const layered = typeof mask === 'string' && mask !== 'none' && mask !== '';
+            const feather = EDGE / (from.width / to.width) / zoom;
+            const side = `linear-gradient(90deg, transparent 0px, #000 ${feather.toFixed(1)}px, #000 calc(100% - ${feather.toFixed(1)}px), transparent 100%)`;
+            const sizes = ['100% 100%', `calc(100% + ${(feather * 2).toFixed(1)}px) 100%`].map((size) => layered ? `100% 100%, ${size}` : size);
+            const layers = layered ? `${mask}, ${side}` : side;
+            style(art, {
+                'mask-image': layers,
+                '-webkit-mask-image': layers,
+                'mask-composite': 'intersect',
+                '-webkit-mask-composite': 'source-in',
+                'mask-repeat': 'no-repeat',
+                '-webkit-mask-repeat': 'no-repeat',
+                'mask-position': 'center',
+                '-webkit-mask-position': 'center',
+                'mask-size': sizes[0],
+                '-webkit-mask-size': sizes[0],
+            });
+            animate(art, { maskSize: sizes, webkitMaskSize: sizes }, { duration: ART.until(0.02), delay, easing: 'cubic-bezier(0.3, 0.6, 0.3, 1)', fill: 'both' });
+        }
+
+        return { frames, seed, views, timing };
+    };
+
     const go = (time: number) => {
         gone = time;
         hero = findHero(live);
-        live.querySelectorAll(ROWS).forEach((row) => {
+        findRows(live).forEach((row) => {
             row.getAnimations().forEach((animation) => {
                 if (animation instanceof CSSAnimation) {
                     animation.finish();
@@ -346,104 +409,138 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
         });
 
         const plan = createPlan(copy, live, view, hero?.id ?? null);
-        const slide = hero !== null && hero.content.length > 0 ? local(hero.content[0].parentElement!.getBoundingClientRect()) : null;
-        let settled = 0;
-        let clear = 0;
+        const rows = plan.moves.flatMap(({ element, from, to }) => travel(element, local(from), local(to)) ?? []);
+        const content = plan.moves[0]?.element.parentElement ?? hero?.section.parentElement ?? null;
+        const holes = findChrome(live, content).map(local).map((rect) => `M${px(rect.left - region.left)} ${px(rect.top - region.top)}h${px(rect.width)}v${px(rect.height)}h-${px(rect.width)}Z`.replace(/px/g, ''));
+        const from = spotRect ?? (plan.poster !== null ? local(plan.poster.rect) : local(button.getBoundingClientRect()));
+        const target = hero !== null && hero.art !== null && (spotRect !== null || decoded) ? local(hero.art.getBoundingClientRect()) : null;
+        let delay = HEAD_START;
+        let settled = rows.length > 0 ? ROWS.until(0.02) : 0;
+        let finished = rows.length > 0 ? ROWS.duration : 0;
+        let text = HEAD_START;
+
+        const blocked = (wait: number) => {
+            if (target === null || spotRect === null) {
+                return false;
+            }
+            for (let moment = wait; moment <= wait + ART.duration; moment += STEP) {
+                const frame = mix(from, target, 1 - ART.at(moment - wait));
+                const solid = frame.top + frame.height * SOLID;
+                const crossed = rows.some(({ start, end }) => {
+                    const top = end.top + (start.top - end.top) * ROWS.at(moment);
+                    const left = Math.max(0, end.left);
+                    const right = Math.min(view.width, end.left + end.width);
+                    if (top >= solid - 1 || top + end.height <= frame.top || right <= frame.left || left >= frame.left + frame.width) {
+                        return false;
+                    }
+
+                    return left < frame.left - 1 || right > frame.left + frame.width + 1 || top < frame.top - 1;
+                });
+                if (crossed) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        while (delay < PATIENCE && blocked(delay)) {
+            delay += STEP;
+        }
+
+        canvas.style.clipPath = `path(evenodd, "M0 0H${px(region.width)}V${px(region.height)}H0Z${holes.join('')}")`.replace(/px/g, '');
         sheet.style.visibility = 'hidden';
         plan.leaving.forEach(({ element }) => {
             element.style.visibility = 'visible';
+            animate(element, { opacity: [1, 0], transform: ['none', `translateY(${RISE}px)`] }, { duration: HURRY, easing: 'ease-out', fill: 'forwards' });
         });
-        plan.moves.forEach(({ element, from, to }) => {
-            const start = local(from);
-            const delay = travel(element, start, local(to), view.height);
-            if (delay === null) {
-                return;
-            }
-
-            settled = Math.max(settled, delay + TILE.duration * 0.6);
-            if (slide !== null && start.top < slide.top + slide.height && start.top + start.height > slide.top && start.left < slide.left + slide.width && start.left + start.width > slide.left) {
-                clear = Math.max(clear, delay + TILE.duration * 0.3);
-            }
-        });
-        plan.entering.forEach(({ element, rect }) => {
-            const area = local(rect);
-            const delay = Math.max(0, timeAt(reach(area.left + area.width / 2, area.top + area.height / 2)) - wave) + 120;
-            arrive(element, delay);
-            settled = Math.max(settled, delay + ENTRANCE * 0.7);
-        });
-        if (plan.leaving.length > 0) {
-            leaving = Math.max(...plan.leaving.map(({ rect }) => farthest(local(rect)))) + 4;
-            pour(plan.leaving.map(({ element }) => element), { x: 0, y: 0, width, height }, null, BUDGET * 0.6, 1);
-        }
-        if (hero !== null) {
-            const source = peekRect ?? (plan.poster !== null ? local(plan.poster.rect) : local(button.getBoundingClientRect()));
-            const start = Math.max(0, timeAt(peekRect !== null ? (nearest(source) + (farthest(source) - nearest(source)) * 0.6) / LEAD : nearest(source)) - wave);
-            let text = Math.max(start + 200, clear);
-            if (hero.art !== null) {
-                open(hero.art, source, peekRect !== null ? parseFloat(radii.borderTopLeftRadius) * zoom : 10 * zoom, start);
-                settled = Math.max(settled, start + OPEN.duration * 0.6);
-            }
-            if (peekRect === null && plan.poster !== null) {
-                const ghost = plan.poster.element.cloneNode(false) as HTMLElement;
-                const style = getComputedStyle(plan.poster.element);
-                ghost.style.cssText = `position:absolute;left:${source.left / zoom}px;top:${source.top / zoom}px;width:${source.width / zoom}px;height:${source.height / zoom}px;object-fit:${style.objectFit};border-radius:${style.borderRadius};visibility:visible`;
-                under.appendChild(ghost);
-                animate(ghost, { opacity: [1, 0], transform: ['scale(1)', 'scale(1.12)'] }, { duration: 240, delay: start, easing: 'ease-out', fill: 'both' });
-            }
-
-            hero.content.forEach((part) => {
-                arrive(part, text);
-                text += STAGGER;
+        lift(SCRIM);
+        if (spot !== null && scene !== null && spotRect !== null) {
+            ghost = snapshot(scene, spotRect, Math.abs(spotRect.top - cardRect.top) < 2);
+            Array.from(ghost.firstElementChild?.children ?? []).forEach((layer, index) => {
+                if (scene.children[index] !== spot) {
+                    animate(layer, { opacity: 0 }, { duration: GHOST / 2, delay, easing: 'ease-out', fill: 'forwards' });
+                }
             });
-            settled = Math.max(settled, text + ENTRANCE * 0.5);
+            style(card, { 'clip-path': `path(evenodd, "${outline}M${px(spotRect.left - cardRect.left)} ${px(spotRect.top - cardRect.top)}h${px(spotRect.width)}v${px(spotRect.height)}h-${px(spotRect.width)}Z")`.replace(/px/g, '') });
+        } else if (plan.poster !== null && target !== null) {
+            ghost = snapshot(plan.poster.element, from, false);
+        }
+        if (hero !== null && hero.art !== null && target !== null) {
+            const { frames, seed, views, timing } = open({ ...hero, art: hero.art }, from, delay, spotStyle !== null ? Number(spotStyle.opacity) : 1);
+            const inner = ghost?.firstElementChild ?? null;
+            text = delay + ART.until(1 - COPY);
+            settled = Math.max(settled, delay + ART.until(0.015));
+            finished = Math.max(finished, delay + ART.duration);
+            if (ghost !== null && (docked || spot === null)) {
+                animate(ghost, frames.map((frame) => ({
+                    transform: `translate(${px(frame.left - from.left)}, ${px(frame.top - from.top)}) scale(${(frame.width / from.width).toFixed(5)}, ${(frame.height / from.height).toFixed(5)})`,
+                })), timing);
+                if (inner !== null && scene !== null && seed !== null && spot !== null) {
+                    const area = local(scene.getBoundingClientRect());
+                    animate(inner, frames.map((frame, index) => ({ transformOrigin: '0 0', transform: counter(area, from, seed, frame, views[index]) })), timing);
+                }
+            }
         }
 
-        usable = time + Math.max(settled, WAVE * 0.8);
-        done = usable + 220;
+        fading = time + delay;
+        (hero?.content ?? []).forEach((part, index) => {
+            arrive(part, text + index * STAGGER);
+            if (hero !== null && hero.watch !== null && part.contains(hero.watch)) {
+                settled = Math.max(settled, text + index * STAGGER + ENTRANCE * 0.5);
+            }
+
+            finished = Math.max(finished, text + index * STAGGER + ENTRANCE);
+        });
+        plan.entering.forEach(({ element }) => {
+            arrive(element, text + STAGGER);
+            finished = Math.max(finished, text + STAGGER + ENTRANCE);
+        });
+        usable = time + Math.max(settled, WAVE);
+        done = time + Math.max(finished, WAVE);
     };
 
     const tick = (time: number) => {
-        const delta = Math.min(0.034, Math.max(0, (time - last) / 1000));
         const elapsed = time - last;
+        const delta = Math.min(0.034, Math.max(0, elapsed / 1000));
         last = time;
-        if (hurried !== null) {
+        if (hurried) {
             return;
         }
-        if (gone < 0 && (ready() || time - pressed >= HERO_CAP)) {
+        if (gone < 0) {
+            if (!ready() && time - pressed < HERO_CAP) {
+                return;
+            }
+
             go(time);
         }
 
-        wave = gone >= 0 || radiusAt(wave + delta * 1000) * LEAD <= hold ? wave + delta * 1000 : Math.max(wave, timeAt(hold / LEAD));
-        const radius = radiusAt(wave);
-        if (!cardGone) {
-            if (radius * LEAD >= cardEnd) {
-                cardGone = true;
+        const radius = far * smooth((time - gone) / WAVE);
+        if (!dissolved) {
+            if (radius >= far) {
+                dissolved = true;
                 card.style.visibility = 'hidden';
             } else {
-                card.style.clipPath = `path(evenodd, "${outline}${hole(radius * LEAD, cardRect)}")`;
+                const mask = `radial-gradient(circle at ${px(origin.x - cardRect.left)} ${px(origin.y - cardRect.top)}, transparent ${px(Math.max(0, radius - SOFT))}, #000 ${px(radius)})`;
+                card.style.setProperty('-webkit-mask-image', mask);
+                card.style.setProperty('mask-image', mask);
             }
         }
-        if (gone >= 0 && leaving > 0) {
-            if (radius >= leaving) {
-                leaving = 0;
-                under.style.visibility = 'hidden';
-            } else {
-                sheet.style.clipPath = `path(evenodd, "${OUTER}${hole(radius, { left: 0, top: 0, width: 0, height: 0 })}")`;
-            }
+        if (ghost !== null && time >= fading && (decoded || hero === null || hero.image === null || time >= usable)) {
+            fading = Infinity;
+            animate(ghost, { opacity: [1, 0] }, { duration: GHOST, easing: 'ease-out', fill: 'forwards' });
         }
 
         field.update(time / 1000);
-        context.clearRect(0, 0, width, height);
-        const alive = sands.map(({ sand, lead }) => sand.advance(context, field, radius * lead * scale, delta)).some(Boolean);
-        if (gone >= 0) {
-            slow = elapsed > SLOW ? slow + (elapsed > STALLED ? 2 : 1) : Math.max(0, slow - 1);
-            if (slow >= 6) {
-                sands.forEach(({ sand }) => sand.thin(0.3));
-            }
-            if (slow >= 14) {
-                hurry('pointer');
-                return;
-            }
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        const alive = sand.advance(context, field, Math.max(0, radius - SOFT / 2) * scale, delta);
+        slow = elapsed > SLOW ? slow + (elapsed > STALLED ? 2 : 1) : Math.max(0, slow - 1);
+        if (slow >= 6) {
+            sand.thin(0.3);
+        }
+        if (slow >= 14) {
+            hurry();
+            return;
         }
         if (!released && time >= usable) {
             released = true;
@@ -451,7 +548,7 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
             over.style.pointerEvents = 'none';
             release();
         }
-        if (time >= done && (!alive || time >= done + 500)) {
+        if (time >= done && (!alive || time >= done + 200)) {
             complete();
         }
     };
@@ -465,40 +562,8 @@ const run = ({ stage, tier, keyboard, pressed, dispose, release, finish }: Optio
         }
     };
 
-    live.querySelectorAll('nav').forEach((nav) => {
-        const rect = local(nav.getBoundingClientRect());
-        if (rect.width >= view.width * 0.6 && rect.height > 0) {
-            if (rect.top < view.height / 2) {
-                inset.top = Math.max(inset.top, rect.top + rect.height);
-            } else {
-                inset.bottom = Math.max(inset.bottom, view.height - rect.top);
-            }
-        } else if (rect.height >= view.height * 0.6 && rect.width > 0) {
-            if (rect.left < view.width / 2) {
-                inset.left = Math.max(inset.left, rect.left + rect.width);
-            } else {
-                inset.right = Math.max(inset.right, view.width - rect.left);
-            }
-        }
-    });
-    dot.width = grain;
-    dot.height = grain;
-    dot.getContext('2d')?.arc(grain / 2, grain / 2, grain / 2, 0, Math.PI * 2);
-    dot.getContext('2d')?.fill();
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.cssText = `position:absolute;top:0;left:0;width:100%;height:100%;image-rendering:pixelated;clip-path:inset(${inset.top / zoom}px ${inset.right / zoom}px ${inset.bottom / zoom}px ${inset.left / zoom}px)`;
-    context.imageSmoothingEnabled = false;
-    over.appendChild(canvas);
-    dispose(() => {
-        canvas.width = 0;
-        canvas.height = 0;
-    });
-    warm(copy);
-    lift(SCRIM);
-    pour([card], sandbox(cardRect), peekRect, BUDGET, LEAD);
-    request = requestAnimationFrame(loop);
-    return hurry;
+    restores.push(() => MASKS.forEach((name) => card.style.removeProperty(name)));
+    return { hurry, commit: () => start(loop) };
 };
 
 export default run;

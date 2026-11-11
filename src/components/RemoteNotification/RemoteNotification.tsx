@@ -9,11 +9,12 @@ import { usePlatform } from 'stremio/common/Platform';
 import useBoardTransition from './useBoardTransition';
 import type { Outcome } from './useBoardTransition';
 import useMedia from './useMedia';
-import type { Catalogs, Media } from './useMedia';
+import type { Catalogs, Media, Watching } from './useMedia';
 import Prompt from './Prompt';
 
 type Props = {
     catalogs: Catalogs,
+    watching: Watching,
 };
 
 type Shown = {
@@ -29,7 +30,7 @@ const SPOTLIGHT_TEMPLATE = 'spotlight-intro';
 const DEEP_LINK_PREFIX = 'stremio:///';
 const SETTLE = 600;
 
-const RemoteNotification = ({ catalogs }: Props) => {
+const RemoteNotification = ({ catalogs, watching }: Props) => {
     const platform = usePlatform();
     const navigate = useNavigate();
     const routeActive = useRouteActive();
@@ -50,7 +51,7 @@ const RemoteNotification = ({ catalogs }: Props) => {
     }, [routeActive, legacyModalPending, remoteConfig.notifications]);
 
     const key = notification !== null ? `${notification.id}:${notification.rev}` : null;
-    const media = useMedia(notification, catalogs, notification?.template === SPOTLIGHT_TEMPLATE);
+    const media = useMedia(notification, catalogs, watching, notification?.template === SPOTLIGHT_TEMPLATE);
     const next = useRef<Shown | null>(null);
     next.current = key !== null && notification !== null && media !== null ? { key, notification, media } : null;
     const ready = next.current !== null;
