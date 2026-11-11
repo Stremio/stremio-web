@@ -3,7 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { useGamepad } from '../GamepadContext';
 
-const FOCUSABLE = '[tabindex]:not([data-focus-guard])';
+const SKIPPED = '[data-gamepad-skip]';
+const FOCUSABLE = `[tabindex]:not([data-focus-guard]):not(${SKIPPED})`;
 
 const getActiveScope = (fallback: HTMLDivElement | null): HTMLElement | null => {
     if (document.querySelector('[data-gamepad-modal]')) return null;
@@ -47,7 +48,7 @@ const useContentGamepadNavigation = (
 
             const activeElement = (scope ?? document)?.querySelector<HTMLDivElement>(':focus');
 
-            if (!activeElement) {
+            if (!activeElement || activeElement.matches(SKIPPED)) {
                 elements[0].focus();
                 return;
             }
@@ -113,7 +114,7 @@ const useContentGamepadNavigation = (
 
             const activeElement = (scope ?? document)?.querySelector<HTMLDivElement>(':focus');
 
-            if (!activeElement) {
+            if (!activeElement || activeElement.matches(SKIPPED)) {
                 elements[0].focus();
                 return;
             }
