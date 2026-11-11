@@ -12,6 +12,7 @@ type Props = {
     ariaLabel: string,
     header?: React.ReactNode,
     resetKey?: string | number | null,
+    hidden?: boolean,
     children: React.ReactNode,
 };
 
@@ -32,7 +33,7 @@ const getStickyOffset = (header: HTMLElement | null): number | null => {
         null;
 };
 
-const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
+const Panel = ({ className, ariaLabel, header, resetKey, hidden = false, children }: Props) => {
     const panelRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const bodyRef = useRef<HTMLDivElement>(null);
@@ -44,7 +45,7 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
     useEffect(() => {
         const sentinel = sentinelRef.current;
         const stickyOffset = getStickyOffset(headerRef.current);
-        if (!sentinel || stickyOffset === null) {
+        if (hidden || !sentinel || stickyOffset === null) {
             return;
         }
 
@@ -56,13 +57,13 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
         });
         observer.observe(sentinel);
         return () => observer.disconnect();
-    }, [hasHeader, isMobile]);
+    }, [hasHeader, isMobile, hidden]);
 
     useEffect(() => {
         const panel = panelRef.current;
         const body = bodyRef.current;
         const stickyOffset = getStickyOffset(headerRef.current);
-        if (!panel || !body) {
+        if (hidden || !panel || !body) {
             return;
         }
 
@@ -79,10 +80,10 @@ const Panel = ({ className, ariaLabel, header, resetKey, children }: Props) => {
         } else {
             body.scrollTop = 0;
         }
-    }, [resetKey]);
+    }, [resetKey, hidden]);
 
     return (
-        <section ref={panelRef} className={classNames(className, styles['panel'])} aria-label={ariaLabel}>
+        <section ref={panelRef} className={classNames(className, styles['panel'], { [styles['hidden']]: hidden })} aria-label={ariaLabel}>
             <div ref={sentinelRef} className={styles['sentinel']} aria-hidden={'true'} />
             {
                 hasHeader ?

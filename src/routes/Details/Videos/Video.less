@@ -18,16 +18,24 @@
         cursor: pointer;
         transition: background-color 0.15s @ease;
 
-        &:hover,
         &:focus-visible,
         &.selected,
         &:global(.active) {
             background-color: var(--overlay-color);
         }
 
-        &:hover .image,
         &:focus-visible .image {
             opacity: 1;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--overlay-color);
+            }
+
+            &:hover .image {
+                opacity: 1;
+            }
         }
 
         .thumbnail {

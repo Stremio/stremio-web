@@ -93,6 +93,13 @@ const Details = () => {
         setStreams(details.streams);
     }
 
+    const videosVisible = streamPath === null && metaPath !== null && !(type === 'movie' && metaLoading);
+    const [videosMounted, setVideosMounted] = useState(videosVisible);
+    if (videosVisible && !videosMounted) {
+        setVideosMounted(true);
+    }
+    const videosSeason = season ?? metaItem?.videos.find((episode) => episode.id === videoId)?.season ?? null;
+
     useExternalPlayerCallback({ type, id, videoId }, details);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
     useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta);
@@ -226,22 +233,26 @@ const Details = () => {
                                 <Placeholder variant={'streams'} />
                             </Panel>
                             :
-                            metaPath !== null ?
-                                <Videos
-                                    key={metaItem?.id}
-                                    metaItem={metaItem}
-                                    error={details.metaItem?.content.type === 'Err'}
-                                    libraryItem={details.libraryItem}
-                                    season={season}
-                                    onSeasonSelect={setSeason}
-                                    onToggleNotifications={actions.toggleNotifications}
-                                    onMarkVideoWatched={actions.markVideoWatched}
-                                    onMarkSeasonWatched={actions.markSeasonWatched}
-                                    onEpisodeSearch={onEpisodeSearch}
-                                    scrollMemoryRef={scrollMemoryRef}
-                                />
-                                :
-                                null
+                            null
+                }
+                {
+                    videosMounted ?
+                        <Videos
+                            key={metaItem?.id}
+                            hidden={!videosVisible}
+                            metaItem={metaItem}
+                            error={details.metaItem?.content.type === 'Err'}
+                            libraryItem={details.libraryItem}
+                            season={videosSeason}
+                            onSeasonSelect={setSeason}
+                            onToggleNotifications={actions.toggleNotifications}
+                            onMarkVideoWatched={actions.markVideoWatched}
+                            onMarkSeasonWatched={actions.markSeasonWatched}
+                            onEpisodeSearch={onEpisodeSearch}
+                            scrollMemoryRef={scrollMemoryRef}
+                        />
+                        :
+                        null
                 }
             </div>
             {

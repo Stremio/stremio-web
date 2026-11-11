@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import SegmentedControl from 'stremio/components/SegmentedControl';
 import Toggle from 'stremio/components/Toggle';
@@ -21,6 +21,7 @@ import styles from './Videos.less';
 export type { ScrollMemory };
 
 type Props = {
+    hidden: boolean,
     metaItem: MetaItemMetaDetails | null,
     error: boolean,
     libraryItem: LibraryItem | null,
@@ -36,6 +37,7 @@ type Props = {
 const NO_VIDEOS: Video[] = [];
 
 const Videos = ({
+    hidden,
     metaItem,
     error,
     libraryItem,
@@ -68,7 +70,7 @@ const Videos = ({
     const seasonWatched = useMemo(() => videos.every((video) => video.watched), [videos]);
 
     const ready = metaItem !== null && !error && videos.length > 0;
-    const onSelectVideo = useScrollMemory(listRef, scrollMemoryRef, `${metaItem?.id}:${selectedSeason}`, ready);
+    const onSelectVideo = useScrollMemory(listRef, scrollMemoryRef, `${metaItem?.id}:${selectedSeason}`, ready && !hidden);
 
     const handleSeasonSelect = useCallback((value: string) => {
         onSeasonSelect(Number(value));
@@ -78,7 +80,7 @@ const Videos = ({
 
     if (metaItem === null && !error) {
         return (
-            <Panel ariaLabel={t('VIDEOS')} header={<Placeholder variant={'control'} />}>
+            <Panel ariaLabel={t('VIDEOS')} header={<Placeholder variant={'control'} />} hidden={hidden}>
                 <Placeholder variant={'videos'} />
             </Panel>
         );
@@ -86,7 +88,7 @@ const Videos = ({
 
     if (!ready) {
         return (
-            <Panel ariaLabel={t('VIDEOS')}>
+            <Panel ariaLabel={t('VIDEOS')} hidden={hidden}>
                 <EpisodePicker seriesId={metaItem?.id ?? ''} onSubmit={onEpisodeSearch} />
                 <Message label={t('ERR_NO_VIDEOS_FOR_META')} />
             </Panel>
@@ -112,6 +114,7 @@ const Videos = ({
                         null
             }
             resetKey={`${metaItem.id}:${selectedSeason}`}
+            hidden={hidden}
         >
             <Search className={styles['search']} value={search} placeholder={t('SEARCH_VIDEOS')} onChange={setSearch} />
             {
@@ -148,4 +151,4 @@ const Videos = ({
     );
 };
 
-export default Videos;
+export default memo(Videos, (previous, next) => previous.hidden && next.hidden);
