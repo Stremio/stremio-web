@@ -7,6 +7,7 @@ import useEvents from 'stremio/components/EventModal/useEvents';
 import useRemoteConfig from 'stremio/common/RemoteConfig/useRemoteConfig';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { usePlatform } from 'stremio/common/Platform';
+import useBoardTransition from './useBoardTransition';
 import styles from './styles.less';
 
 const TEMPLATE = 'prompt';
@@ -29,6 +30,8 @@ const RemoteNotification = () => {
 
         return remoteConfig.notifications.find(({ template }) => template === TEMPLATE) ?? null;
     }, [routeActive, legacyModalPending, remoteConfig.notifications]);
+
+    const armTransition = useBoardTransition(notification !== null);
 
     useEffect(() => {
         if (routeActive) {
@@ -63,7 +66,8 @@ const RemoteNotification = () => {
             className: button.style === 'primary' ? undefined : styles['secondary-button'],
             label: button.label,
             props: {
-                onClick: () => {
+                onClick: (event: React.MouseEvent<HTMLElement>) => {
+                    armTransition(notification.id, event.currentTarget, event.detail === 0);
                     if (button.openUrl !== null) {
                         platform.openExternal(button.openUrl);
                     }
@@ -74,7 +78,7 @@ const RemoteNotification = () => {
                 },
             },
         }));
-    }, [notification, platform, navigate, notificationAction]);
+    }, [notification, platform, navigate, notificationAction, armTransition]);
 
     if (notification === null) {
         return null;
