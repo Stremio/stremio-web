@@ -10,6 +10,10 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    padding-top: var(--safe-area-inset-top);
+    padding-right: var(--safe-area-inset-right);
+    padding-bottom: var(--safe-area-inset-bottom);
+    padding-left: var(--safe-area-inset-left);
     overflow-y: auto;
 
     .background-container {
@@ -271,7 +275,10 @@
 @media only screen and (max-width: @xsmall) {
     .intro-container {
         justify-content: initial;
-        padding: 3rem 1.5rem;
+        padding-top: max(3rem, calc(var(--safe-area-inset-top) + 1.5rem));
+        padding-right: max(1.5rem, calc(var(--safe-area-inset-right) + 1rem));
+        padding-bottom: max(3rem, calc(var(--safe-area-inset-bottom) + 1.5rem));
+        padding-left: max(1.5rem, calc(var(--safe-area-inset-left) + 1rem));
 
         .heading-container {
             align-items: flex-start;
