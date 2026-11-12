@@ -9,7 +9,7 @@ import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from '../format';
 import useMetaLinks from 'stremio/common/useMetaLinks';
 import Logo from './Logo';
 import Still from './Still';
-import Facts from './Facts';
+import Facts from 'stremio/components/MetaPreview/Facts';
 import Description from './Description';
 import Links from './Links';
 import styles from './Hero.less';
@@ -86,6 +86,7 @@ const Hero = ({ className, metaItem, video, libraryItem, compact = false, childr
                                 metaItem.runtime,
                                 minutesLeft !== null ? t('CONTINUE_WATCHING_TIME_LEFT', { minutes: minutesLeft }) : null,
                             ]}
+                            imdb={null}
                         />
                         <Description className={styles['description']} text={video.overview || metaItem.description} />
                     </React.Fragment>

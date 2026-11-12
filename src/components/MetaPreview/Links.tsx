@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Button from 'stremio/components/Button';
-import { useTranslate } from 'stremio/common';
+import useTranslate from 'stremio/common/useTranslate';
 import type { MetaLinkGroup } from 'stremio/common/useMetaLinks';
 import styles from './Links.less';
 

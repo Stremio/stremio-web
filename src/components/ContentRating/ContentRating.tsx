@@ -3,14 +3,14 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import Image from 'stremio/components/Image';
-import styles from './Rating.less';
+import styles from './ContentRating.less';
 
 type Props = {
     className?: string,
     rating: ContentRating,
 };
 
-const Rating = ({ className, rating }: Props) => {
+const ContentRating = ({ className, rating }: Props) => {
     const renderFallback = useCallback(() => rating.value, [rating.value]);
 
     return (
@@ -25,4 +25,4 @@ const Rating = ({ className, rating }: Props) => {
     );
 };
 
-export default Rating;
+export default ContentRating;
