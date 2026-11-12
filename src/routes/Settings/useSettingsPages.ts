@@ -67,7 +67,13 @@ const useSettingsPages = () => {
 
     const pages = useMemo(() => groups.flatMap(({ pages }) => pages), [groups]);
 
-    return { groups, pages };
+    const menuGroups = useMemo(() => {
+        return groups
+            .map((group) => ({ ...group, pages: group.pages.filter(({ id }) => id !== PAGES.ACCOUNT) }))
+            .filter((group) => group.pages.length > 0);
+    }, [groups]);
+
+    return { groups, pages, menuGroups };
 };
 
 export type { SettingsPage, SettingsGroup };

@@ -6,23 +6,27 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import { Button } from 'stremio/components';
 import { SearchField } from '../components';
+import { PAGES } from '../constants';
+import AccountRow from '../AccountRow';
 import type { SettingsGroup } from '../useSettingsPages';
 import styles from './Menu.less';
 
 type Props = {
     groups: SettingsGroup[],
+    profile: Profile,
     selected: string | null,
     query: string,
     onQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
     onNavigate: () => void,
 };
 
-const Menu = ({ groups, selected, query, onQueryChange, onNavigate }: Props) => {
+const Menu = ({ groups, profile, selected, query, onQueryChange, onNavigate }: Props) => {
     const { t } = useTranslation();
 
     return (
         <nav className={styles['menu']} aria-label={t('SETTINGS')}>
-            <SearchField value={query} onChange={onQueryChange} />
+            <AccountRow profile={profile} selected={selected === PAGES.ACCOUNT} onClick={onNavigate} />
+            <SearchField className={styles['search']} value={query} onChange={onQueryChange} />
             {
                 groups.map((group) => (
                     <div key={group.id} className={styles['group']}>

@@ -7,7 +7,7 @@ import { interfaceLanguages, languageNames, usePlatform } from 'stremio/common';
 import { Button } from 'stremio/components';
 import { SearchField } from '../components';
 import { PAGES } from '../constants';
-import getAvatar from '../getAvatar';
+import AccountRow from '../AccountRow';
 import isTraktAuthenticated from '../isTraktAuthenticated';
 import type { SettingsGroup } from '../useSettingsPages';
 import styles from './Hub.less';
@@ -27,13 +27,6 @@ type Props = {
 const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, onOpenPage }: Props) => {
     const { t } = useTranslation();
     const platform = usePlatform();
-
-    const avatar = useMemo(() => getAvatar(profile.auth), [profile.auth]);
-    const hubGroups = useMemo(() => {
-        return groups
-            .map((group) => ({ ...group, pages: group.pages.filter(({ id }) => id !== PAGES.ACCOUNT) }))
-            .filter((group) => group.pages.length > 0);
-    }, [groups]);
 
     const summaries = useMemo<Record<string, string | null>>(() => {
         const { settings } = profile;
@@ -71,26 +64,11 @@ const Hub = ({ groups, profile, streamingServer, query, results, onQueryChange, 
 
     return (
         <div className={styles['hub']}>
-            <Button
-                className={styles['identity']}
-                href={`#/settings/${PAGES.ACCOUNT}`}
-                title={t('ACCOUNT')}
-                data-page={PAGES.ACCOUNT}
-                onClick={onOpenPage}
-            >
-                <div className={styles['avatar']} style={{ backgroundImage: avatar }} />
-                <div className={styles['text']}>
-                    <div className={styles['title']}>
-                        {profile.auth === null ? t('ANONYMOUS_USER') : profile.auth.user.email}
-                    </div>
-                    <div className={styles['summary']}>{profile.auth === null ? t('SETTINGS_GUEST_HINT') : t('ACCOUNT')}</div>
-                </div>
-                <Icon className={styles['chevron']} name={'chevron-forward'} />
-            </Button>
+            <AccountRow className={styles['account']} profile={profile} card={true} onClick={onOpenPage} />
             <SearchField className={styles['search']} value={query} onChange={onQueryChange} />
             {results}
             {
-                !results && hubGroups.map((group) => (
+                !results && groups.map((group) => (
                     <React.Fragment key={group.id}>
                         <div className={styles['label']}>{group.label}</div>
                         <div className={styles['card']}>
