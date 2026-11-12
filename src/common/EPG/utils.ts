@@ -66,6 +66,7 @@ export const toEpgProgram = (video: EPGShow, channel: EPGChannel): EPGProgram | 
         title: video.title || channel.name,
         overview: video.overview,
         thumbnail: video.thumbnail,
+        background: video.background,
         links: video.links,
         runtime: video.runtime,
         releaseInfo: video.releaseInfo,

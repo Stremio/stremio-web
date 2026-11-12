@@ -1,0 +1,50 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.search {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 2.75rem;
+    padding: 0 1.125rem;
+    border-radius: 2.75rem;
+    background-color: var(--overlay-color);
+    color: @text-tertiary;
+    cursor: text;
+    transition: background-color 0.15s @ease, color 0.15s @ease;
+
+    &:hover {
+        background-color: fade(#ffffff, 7%);
+    }
+
+    &:focus-within {
+        background-color: @overlay-hover;
+        color: @text-secondary;
+    }
+
+    .input {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        padding: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.875rem;
+        color: var(--primary-foreground-color);
+
+        &::placeholder {
+            color: @text-tertiary;
+            opacity: 1;
+        }
+    }
+
+    .icon {
+        flex: none;
+        width: 1.125rem;
+        height: 1.125rem;
+        color: currentColor;
+    }
+}
