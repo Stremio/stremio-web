@@ -1,0 +1,313 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+@import (reference) '~stremio/common/screen-sizes.less';
+
+@ease: cubic-bezier(0.22, 1, 0.36, 1);
+@ink: @color-surface-light5;
+@scrim-color: rgb(12, 11, 17);
+@beat: 0.45s;
+@rows: 0.55s;
+@bloom: 0.6s;
+@lead: 0.09s;
+@copy: (@beat + @lead + 0.17s);
+@art-height: 70%;
+@travel: 61%;
+@edge: 9.5%;
+
+.peek {
+    position: relative;
+    padding-top: 56.25%;
+    container-type: inline-size;
+    background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
+    color: @ink;
+    --unit: 0.56rem;
+
+    @supports (width: 1cqw) {
+        --unit: ~"max(0.4rem, 1.5cqw)";
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        height: 24%;
+        background: linear-gradient(180deg, transparent 0%, var(--modal-background-color) 100%);
+    }
+
+    .art {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: @art-height;
+        -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 62%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
+        mask-image: linear-gradient(180deg, #000 0%, #000 62%, rgba(0, 0, 0, 0.5) 82%, transparent 100%);
+        transform-origin: 50% 42%;
+        animation: bloom @bloom @ease (@beat + @lead) backwards;
+
+        .backdrop {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 72% 22%;
+            animation: settle 7s ease-out (@beat + @lead) backwards;
+        }
+
+        .scrim {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, fade(@scrim-color, 88%) 0%, fade(@scrim-color, 70%) 22%, fade(@scrim-color, 38%) 42%, fade(@scrim-color, 10%) 60%, fade(@scrim-color, 0%) 74%);
+        }
+    }
+
+    .copy {
+        position: absolute;
+        top: 14%;
+        left: @edge;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        gap: ~"calc(var(--unit) * 0.9)";
+        width: 40%;
+        height: 45%;
+        overflow: visible;
+
+        > * {
+            flex: none;
+            animation: arrive 0.4s @ease backwards;
+        }
+
+        .logo {
+            display: block;
+            max-width: 72%;
+            height: ~"calc(var(--unit) * 3.6)";
+            object-fit: contain;
+            object-position: left bottom;
+            filter: brightness(0) invert(1);
+            animation-delay: @copy;
+        }
+
+        .name {
+            max-width: 100%;
+            font-size: ~"calc(var(--unit) * 2.3)";
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            animation-delay: @copy;
+        }
+
+        .facts {
+            display: flex;
+            align-items: center;
+            gap: ~"calc(var(--unit) * 1.4)";
+            max-width: 100%;
+            animation-delay: (@copy + 0.045s);
+
+            .fact {
+                flex: none;
+                font-size: var(--unit);
+                font-weight: 500;
+                line-height: 1.3;
+                white-space: nowrap;
+                opacity: 0.78;
+            }
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: ~"calc(var(--unit) * 0.7)";
+            overflow: visible;
+            animation-delay: (@copy + 0.09s);
+
+            .control {
+                flex: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: ~"calc(var(--unit) * 2.3)";
+                height: ~"calc(var(--unit) * 2.3)";
+                border-radius: 50%;
+                background-color: fade(@ink, 14%);
+
+                .glyph {
+                    flex: none;
+                    width: ~"calc(var(--unit) * 1.05)";
+                    height: ~"calc(var(--unit) * 1.05)";
+                    color: @ink;
+                    opacity: 0.72;
+                }
+            }
+        }
+    }
+
+    .pager {
+        position: absolute;
+        top: 55.5%;
+        right: 4.5%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: ~"calc(var(--unit) * 0.5)";
+        width: 20%;
+        animation: arrive 0.4s @ease (@copy + 0.135s) backwards;
+
+        .tick {
+            flex: none;
+            width: ~"calc(var(--unit) * 0.5)";
+            height: ~"calc(var(--unit) * 0.5)";
+            border-radius: 50%;
+            background-color: fade(@ink, 38%);
+
+            &:first-child {
+                width: ~"calc(var(--unit) * 1.5)";
+                border-radius: ~"calc(var(--unit) * 1)";
+                background-color: fade(@ink, 92%);
+            }
+        }
+    }
+
+    .shelf {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateY(@travel);
+        animation: descend @rows @ease @beat backwards;
+
+        &.leaving {
+            opacity: 0;
+            animation-name: leave;
+        }
+
+        .row {
+            position: absolute;
+            top: 13.5%;
+            left: @edge;
+            width: (100% - @edge);
+            overflow: visible;
+
+            .label {
+                max-width: 70%;
+                margin-bottom: ~"calc(var(--unit) * 0.7)";
+                font-size: ~"calc(var(--unit) * 1.08)";
+                font-weight: 600;
+                line-height: 1.3;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                opacity: 0.9;
+            }
+
+            .posters {
+                display: flex;
+                align-items: flex-start;
+                gap: 1.7%;
+                overflow: visible;
+
+                .poster {
+                    flex: none;
+                    display: block;
+                    width: 12.4%;
+                    aspect-ratio: 2 / 3;
+                    border-radius: 0.35rem;
+                    background-color: var(--overlay-color);
+                    object-fit: cover;
+                }
+            }
+        }
+
+        &.leaving .row {
+            top: 58%;
+        }
+    }
+
+    .frame {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 4;
+        pointer-events: none;
+
+        .search {
+            position: absolute;
+            top: 4.6%;
+            left: 34%;
+            width: 32%;
+            height: 6.4%;
+            border-radius: ~"calc(var(--unit) * 2)";
+            background-color: fade(@ink, 12%);
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .peek {
+        .copy, .shelf .row {
+            left: 6%;
+        }
+
+        .shelf .row {
+            width: 94%;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .peek {
+        .art, .art .backdrop, .copy > *, .pager, .shelf {
+            animation: none;
+        }
+    }
+}
+
+@keyframes bloom {
+    from {
+        opacity: 0;
+        transform: scale(0.72);
+    }
+
+    45% {
+        opacity: 1;
+    }
+}
+
+@keyframes settle {
+    from {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes arrive {
+    from {
+        opacity: 0;
+        transform: translateY(0.4rem);
+    }
+}
+
+@keyframes descend {
+    from {
+        transform: none;
+    }
+}
+
+@keyframes leave {
+    from {
+        opacity: 1;
+        transform: none;
+    }
+}

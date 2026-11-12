@@ -12,7 +12,7 @@ const styles = require('./styles');
 const MetaRowPlaceholder = ({ className, title, deepLinks }) => {
     const { t } = useTranslation();
     return (
-        <div className={classnames(className, styles['meta-row-placeholder-container'])}>
+        <div className={classnames(className, styles['meta-row-placeholder-container'])} data-board-row={title ?? ''}>
             <div className={styles['header-container']}>
                 <div className={styles['title-container']} title={typeof title === 'string' && title.length > 0 ? title : null}>
                     {typeof title === 'string' && title.length > 0 ? title : null}

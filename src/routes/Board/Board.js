@@ -13,6 +13,7 @@ const { default: Spotlight, Placeholder: SpotlightPlaceholder } = require('./Spo
 const { default: useScrolledPast } = require('./Spotlight/useScrolledPast');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
+const { default: RemoteNotification } = require('stremio/components/RemoteNotification');
 
 const THRESHOLD = 5;
 
@@ -50,6 +51,7 @@ const Board = () => {
     return (
         <div className={styles['board-container']}>
             <EventModal />
+            <RemoteNotification catalogs={board.catalogs} watching={continueWatchingPreview.items} />
             <MainNavBars className={classnames(styles['board-content-container'], { [styles['with-spotlight']]: spotlightVisible, [styles['scrolled']]: scrolledPastSpotlight })} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
                     {
