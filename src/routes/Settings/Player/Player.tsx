@@ -13,6 +13,8 @@ const Player = ({ profile }: Props) => {
     const { t } = useTranslation();
 
     const {
+        subtitlesLanguageFilterToggle,
+        secondarySubtitlesLanguageSelect,
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
@@ -21,6 +23,7 @@ const Player = ({ profile }: Props) => {
         subtitlesOutlineColorInput,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
+        secondaryAudioLanguageSelect,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
@@ -34,6 +37,12 @@ const Player = ({ profile }: Props) => {
                 <SubtitlesPreview settings={profile.settings} />
                 <Row rowId={'subLang'} label={t('SETTINGS_SUBTITLES_LANGUAGE')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesLanguageSelect} />
+                </Row>
+                <Row rowId={'secondarySubLang'} label={t('SETTINGS_SECONDARY_SUBTITLES_LANGUAGE')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...secondarySubtitlesLanguageSelect} />
+                </Row>
+                <Row rowId={'subLangFilter'} label={t('SETTINGS_SUBTITLES_SHOW_ONLY_PREFERRED_LANGS')}>
+                    <Toggle aria-label={t('SETTINGS_SUBTITLES_SHOW_ONLY_PREFERRED_LANGS')} {...subtitlesLanguageFilterToggle} />
                 </Row>
                 <Row rowId={'subSize'} label={t('SETTINGS_SUBTITLES_SIZE')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...subtitlesSizeSelect} />
@@ -57,6 +66,9 @@ const Player = ({ profile }: Props) => {
             <Group title={t('SETTINGS_SECTION_AUDIO')}>
                 <Row rowId={'audio'} label={t('SETTINGS_DEFAULT_AUDIO_TRACK')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...audioLanguageSelect} />
+                </Row>
+                <Row rowId={'secondaryAudio'} label={t('SETTINGS_SECONDARY_AUDIO_TRACK')} control={'wide'}>
+                    <MultiselectMenu className={'multiselect'} portal={true} {...secondaryAudioLanguageSelect} />
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_CONTROLS')}>

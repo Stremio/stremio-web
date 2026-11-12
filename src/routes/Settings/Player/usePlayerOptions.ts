@@ -1,15 +1,21 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
-import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
+import { CONSTANTS, languages, languageNames, useLanguageSorting, usePlatform, useSettings } from 'stremio/common';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
 const SUBTITLES_OFFSETS = Array.from({ length: 21 }, (_, i) => i * 5);
+
+const getLanguageOptionValue = (language: string | null) => {
+    const code = languages.toCode(language ?? '');
+    return Object.keys(LANGUAGES_NAMES).find((value) => languages.toCode(value) === code) ?? language;
+};
 
 const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
+    const [, updateSettings] = useSettings();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
         value: code,
@@ -23,7 +29,7 @@ const usePlayerOptions = (profile: Profile) => {
             { value: null, label: t('NONE') },
             ...sortedLanguageOptions
         ],
-        value: profile.settings.subtitlesLanguage,
+        value: getLanguageOptionValue(profile.settings.subtitlesLanguage),
         onSelect: (value: string) => {
             core.transport.dispatch({
                 action: 'Ctx',
@@ -280,6 +286,15 @@ const usePlayerOptions = (profile: Profile) => {
     }), [profile.settings]);
 
     return {
+        subtitlesLanguageFilterToggle: {
+            checked: profile.settings.subtitlesLanguageFilterEnabled,
+            onClick: () => updateSettings({ subtitlesLanguageFilterEnabled: !profile.settings.subtitlesLanguageFilterEnabled }),
+        },
+        secondarySubtitlesLanguageSelect: {
+            options: [{ value: null, label: t('NONE') }, ...sortedLanguageOptions],
+            value: getLanguageOptionValue(profile.settings.secondarySubtitlesLanguage),
+            onSelect: (value: string | null) => updateSettings({ secondarySubtitlesLanguage: value }),
+        },
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
@@ -288,6 +303,11 @@ const usePlayerOptions = (profile: Profile) => {
         subtitlesOutlineColorInput,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
+        secondaryAudioLanguageSelect: {
+            options: [{ value: null, label: t('NONE') }, ...sortedLanguageOptions],
+            value: getLanguageOptionValue(profile.settings.secondaryAudioLanguage),
+            onSelect: (value: string | null) => updateSettings({ secondaryAudioLanguage: value }),
+        },
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
