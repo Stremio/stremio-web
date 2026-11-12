@@ -128,6 +128,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
             const left = bounds.left + parseFloat(padding.paddingLeft);
             const right = bounds.right - parseFloat(padding.paddingRight);
             const anchor = getInterfaceRect(label);
+            menu.style.setProperty('--anchor-width', `${anchor.width}px`);
             menu.style.maxWidth = `${right - left}px`;
             const width = getInterfaceRect(menu).width;
             const height = menu.scrollHeight;

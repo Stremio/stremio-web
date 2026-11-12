@@ -26,6 +26,12 @@
 @phone-landscape: ~"screen and (max-width: @{phone-portrait-size}) and (max-height: @{phone-landscape-size}) and (orientation: landscape)";
 @phone-portrait: ~"screen and (max-width: @{phone-landscape-size}) and (max-height: @{phone-portrait-size}) and (orientation: portrait)";
 
+@desktop-min: (@xxsmall + 1px);
+@desktop: ~"only screen and (min-width: @{desktop-min})";
+@desktop-short: ~"only screen and (min-width: @{desktop-min}) and (max-height: @{phone-landscape-size})";
+@mobile: ~"only screen and (max-width: @{xxsmall})";
+@phone: ~"only screen and (max-width: @{minimum})";
+
 
 :export {
     xxsmall: @xxsmall;

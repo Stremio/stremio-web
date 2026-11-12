@@ -9,11 +9,32 @@
         display: flex;
         flex-direction: row;
 
-        .sections-container {
+        .pane {
             flex: 1;
+            min-width: 0;
             align-self: stretch;
-            padding: 0 3rem;
+            padding: 1rem 3rem 5rem;
             overflow-y: auto;
+
+            .page-container {
+                width: 100%;
+                max-width: 46rem;
+                overflow: visible;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @xsmall) {
+    .settings-container {
+        .settings-content {
+            .pane {
+                padding: 0.5rem 2rem 4rem;
+
+                .page-container {
+                    margin: 0 auto;
+                }
+            }
         }
     }
 }
@@ -21,10 +42,17 @@
 @media only screen and (max-width: @minimum) {
     .settings-container {
         .settings-content {
-            flex-direction: column-reverse;
+            .pane {
+                padding: 0.25rem 1.25rem 2rem;
+                scrollbar-width: none;
 
-            .sections-container {
-                padding: 0 1.5rem;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .page-container {
+                    max-width: none;
+                }
             }
         }
     }

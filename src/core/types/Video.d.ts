@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 type VideoDeepLinks = {
+    metaDetailsVideos: string,
     metaDetailsStreams: string,
     player: string | null,
     externalPlayer: ExternalPlayerLinks | null,
@@ -18,6 +19,7 @@ type Video = {
     overview: string | null,
     released: string | null,
     thumbnail: string | null,
+    background?: string | null,
     season?: number,
     episode?: number,
     streams: Stream[],

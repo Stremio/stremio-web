@@ -1,0 +1,139 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.playback {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    min-width: 0;
+    max-width: 100%;
+
+    .primary {
+        flex: 0 1 auto;
+        min-width: 0;
+    }
+
+    .secondary {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: inherit;
+    }
+
+    .pill {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        height: 3.5rem;
+        padding: 0 1.75rem;
+        border-radius: 999px;
+        background-color: var(--overlay-color);
+        backdrop-filter: blur(5px);
+        color: var(--primary-foreground-color);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: background-color 0.15s @ease;
+
+        &:hover, &:focus, &.open {
+            background-color: @overlay-hover;
+        }
+
+        &.status {
+            color: @text-secondary;
+            cursor: default;
+
+            &:hover, &:focus {
+                background-color: var(--overlay-color);
+            }
+        }
+
+        .icon {
+            flex: none;
+            width: 1.375rem;
+            height: 1.375rem;
+            opacity: 0.9;
+        }
+
+        .count {
+            color: @text-tertiary;
+            font-variant-numeric: tabular-nums;
+
+            &.pending::after {
+                content: '\2026';
+            }
+        }
+    }
+
+    .spinner {
+        flex: none;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: playback-spin 0.8s linear infinite;
+    }
+
+    .library {
+        background-color: var(--overlay-color);
+        backdrop-filter: blur(5px);
+        transition: background-color 0.15s @ease;
+
+        &:hover, &:focus {
+            background-color: @overlay-hover;
+        }
+    }
+}
+
+@media @desktop-short {
+    .playback {
+        gap: 0.625rem;
+
+        .pill {
+            height: 3rem;
+            padding: 0 1.25rem;
+        }
+    }
+}
+
+@media @mobile {
+    .playback {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.625rem;
+        width: 100%;
+
+        .primary {
+            flex: none;
+            height: 3.25rem;
+        }
+
+        .pill {
+            height: 3.25rem;
+            padding: 0 1.25rem;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .library {
+            width: 3.25rem;
+            height: 3.25rem;
+        }
+    }
+}
+
+@keyframes playback-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .playback .spinner {
+        animation-duration: 2.4s;
+    }
+}

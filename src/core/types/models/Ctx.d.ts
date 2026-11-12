@@ -50,10 +50,18 @@ type Settings = {
     assSubtitlesStyling: boolean,
     surroundSound: boolean,
     pauseOnMinimize: boolean,
+    boardSpotlight: BoardSpotlight,
+};
+
+type BoardSpotlight = {
+    enabled: boolean,
+    catalogs: ResourceRequest[],
+    showCatalogRows: boolean,
 };
 
 type Profile = {
     auth: Auth | null,
+    addons: Addon[],
     settings: Settings,
 };
 

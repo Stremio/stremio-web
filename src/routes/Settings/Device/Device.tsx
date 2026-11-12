@@ -1,0 +1,93 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDiscord, usePlatform } from 'stremio/common';
+import { MultiselectMenu, Toggle } from 'stremio/components';
+import { Group, Row } from '../components';
+import useDeviceOptions from './useDeviceOptions';
+import styles from './Device.less';
+
+type Props = {
+    profile: Profile,
+};
+
+const Device = ({ profile }: Props) => {
+    const { t } = useTranslation();
+    const platform = usePlatform();
+    const { shell } = platform;
+    const discord = useDiscord();
+
+    const {
+        surroundSoundToggle,
+        hardwareDecodingToggle,
+        gpuVideoProcessingToggle,
+        videoModeSelect,
+        pauseOnMinimizeToggle,
+        quitOnCloseToggle,
+        escExitFullscreenToggle,
+        discordRpcToggle,
+        mpvConfigSelect,
+    } = useDeviceOptions(profile);
+
+    return (
+        <React.Fragment>
+            <Group title={t('PLAYBACK')}>
+                <Row rowId={'surround'} label={t('SETTINGS_SURROUND_SOUND')}>
+                    <Toggle aria-label={t('SETTINGS_SURROUND_SOUND')} {...surroundSoundToggle} />
+                </Row>
+                {
+                    shell.active &&
+                        <Row rowId={'hwdec'} label={t('SETTINGS_HWDEC')}>
+                            <Toggle aria-label={t('SETTINGS_HWDEC')} {...hardwareDecodingToggle} />
+                        </Row>
+                }
+                {
+                    shell.active && shell.capabilities.gpuVideoProcessing &&
+                        <Row rowId={'gpu'} label={t('SETTINGS_GPU_VIDEO_PROCESSING')}>
+                            <Toggle aria-label={t('SETTINGS_GPU_VIDEO_PROCESSING')} {...gpuVideoProcessingToggle} />
+                        </Row>
+                }
+                {
+                    shell.active && platform.name === 'windows' &&
+                        <Row rowId={'videoMode'} label={t('SETTINGS_VIDEO_MODE')} control={'wide'}>
+                            <MultiselectMenu className={'multiselect'} portal={true} {...videoModeSelect} />
+                        </Row>
+                }
+                {
+                    shell.active &&
+                        <Row rowId={'pause'} label={t('SETTINGS_PAUSE_MINIMIZED')}>
+                            <Toggle aria-label={t('SETTINGS_PAUSE_MINIMIZED')} {...pauseOnMinimizeToggle} />
+                        </Row>
+                }
+                {
+                    mpvConfigSelect !== null &&
+                        <Row rowId={'mpvConfig'} label={t('SETTINGS_MPV_CONFIG')} control={'wide'}>
+                            <div className={styles['mpv-config-control']} title={mpvConfigSelect.title}>
+                                <MultiselectMenu className={'multiselect'} portal={true} {...mpvConfigSelect} />
+                            </div>
+                        </Row>
+                }
+            </Group>
+            {
+                shell.active &&
+                    <Group title={t('SETTINGS_GROUP_DESKTOP_APP')}>
+                        <Row rowId={'quit'} label={t('SETTINGS_QUIT_ON_CLOSE')}>
+                            <Toggle aria-label={t('SETTINGS_QUIT_ON_CLOSE')} {...quitOnCloseToggle} />
+                        </Row>
+                        <Row rowId={'esc'} label={t('SETTINGS_FULLSCREEN_EXIT')}>
+                            <Toggle aria-label={t('SETTINGS_FULLSCREEN_EXIT')} {...escExitFullscreenToggle} />
+                        </Row>
+                        {
+                            discord.available &&
+                                <Row rowId={'discord'} label={t('SETTINGS_DISCORD')}>
+                                    <Toggle aria-label={t('SETTINGS_DISCORD')} {...discordRpcToggle} />
+                                </Row>
+                        }
+                    </Group>
+            }
+        </React.Fragment>
+    );
+};
+
+export default Device;
