@@ -146,6 +146,10 @@ const arm: Arm = (button, { keyboard, gamepad, onEnd, proceed }) => {
         }
 
         outcome = result;
+        if (result === 'dropped') {
+            stage?.resume();
+        }
+
         clear();
         onEnd(result);
         advance();

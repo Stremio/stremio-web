@@ -27,34 +27,6 @@ const SINK = 40;
 const RISE = 30;
 const HOLD = 0.3;
 const EDGE = 28;
-const VERTEX = `
-attribute vec2 cell;
-attribute vec4 grain;
-uniform vec2 frame;
-uniform vec2 sheet;
-uniform float size;
-varying vec2 corner;
-varying float alpha;
-void main() {
-    corner = cell / sheet;
-    alpha = grain.z;
-    gl_Position = grain.z > 0.0 ? vec4(grain.x / frame.x * 2.0 - 1.0, 1.0 - grain.y / frame.y * 2.0, 0.0, 1.0) : vec4(2.0, 2.0, 2.0, 1.0);
-    gl_PointSize = size * grain.w;
-}`;
-const FRAGMENT = `
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#else
-precision mediump float;
-#endif
-uniform sampler2D surface;
-uniform vec2 patch;
-varying vec2 corner;
-varying float alpha;
-void main() {
-    float disc = 1.0 - smoothstep(0.36, 0.5, distance(gl_PointCoord, vec2(0.5)));
-    gl_FragColor = texture2D(surface, corner + gl_PointCoord * patch) * (alpha * disc);
-}`;
 
 const createNoise = (): Noise => {
     const table = new Uint8Array(512);
@@ -291,99 +263,6 @@ const createSand = ({ region, filled, origin, unit, grain, budget, reach }: Opti
 
 type Sand = ReturnType<typeof createSand>;
 
-const createGlass = (canvas: HTMLCanvasElement) => {
-    const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false });
-    if (gl === null) {
-        return null;
-    }
-
-    const program = gl.createProgram();
-    [[gl.VERTEX_SHADER, VERTEX], [gl.FRAGMENT_SHADER, FRAGMENT]].forEach(([type, source]) => {
-        const shader = gl.createShader(type as number);
-        if (shader !== null && program !== null) {
-            gl.shaderSource(shader, source as string);
-            gl.compileShader(shader);
-            gl.attachShader(program, shader);
-        }
-    });
-    if (program === null) {
-        return null;
-    }
-
-    gl.bindAttribLocation(program, 0, 'cell');
-    gl.bindAttribLocation(program, 1, 'grain');
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        return null;
-    }
-
-    gl.useProgram(program);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0, 0, 0, 0);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.enableVertexAttribArray(0);
-    gl.enableVertexAttribArray(1);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
-    gl.uniform2f(gl.getUniformLocation(program, 'frame'), canvas.width, canvas.height);
-    const sheet = gl.getUniformLocation(program, 'sheet');
-    const patch = gl.getUniformLocation(program, 'patch');
-    const size = gl.getUniformLocation(program, 'size');
-    const blank = gl.createBuffer();
-    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.bindBuffer(gl.ARRAY_BUFFER, blank);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 0, 1]), gl.STATIC_DRAW);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
-    gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, 0);
-    gl.uniform2f(sheet, 1, 1);
-    gl.uniform2f(patch, 1, 1);
-    gl.uniform1f(size, 1);
-    gl.drawArrays(gl.POINTS, 0, 1);
-    gl.flush();
-
-    const add = (surface: HTMLCanvasElement, sand: Sand, grain: number) => {
-        const { width, height } = surface;
-        const texture = gl.createTexture();
-        const fixed = gl.createBuffer();
-        const moving = gl.createBuffer();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.bindBuffer(gl.ARRAY_BUFFER, fixed);
-        gl.bufferData(gl.ARRAY_BUFFER, sand.cells, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, moving);
-        gl.bufferData(gl.ARRAY_BUFFER, sand.data, gl.DYNAMIC_DRAW);
-        return () => {
-            const [head, tail] = sand.range();
-            if (tail <= head) {
-                return;
-            }
-
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.uniform2f(sheet, width, height);
-            gl.uniform2f(patch, grain / width, grain / height);
-            gl.uniform1f(size, grain);
-            gl.bindBuffer(gl.ARRAY_BUFFER, fixed);
-            gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-            gl.bindBuffer(gl.ARRAY_BUFFER, moving);
-            gl.bufferSubData(gl.ARRAY_BUFFER, head * 16, sand.data.subarray(head * 4, tail * 4));
-            gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, 0);
-            gl.drawArrays(gl.POINTS, head, tail - head);
-        };
-    };
-
-    return {
-        add,
-        clear: () => gl.clear(gl.COLOR_BUFFER_BIT),
-        drop: () => gl.getExtension('WEBGL_lose_context')?.loseContext(),
-    };
-};
-
 const createPlate = (canvas: HTMLCanvasElement) => {
     const context = canvas.getContext('2d')!;
     const add = (surface: HTMLCanvasElement, sand: Sand, grain: number) => () => {
@@ -404,10 +283,9 @@ const createPlate = (canvas: HTMLCanvasElement) => {
     return {
         add,
         clear: () => context.clearRect(0, 0, canvas.width, canvas.height),
-        drop: () => null,
     };
 };
 
 export type { Point, Noise, Field, Sand };
 
-export { createNoise, createField, createCover, createSand, createGlass, createPlate };
+export { createNoise, createField, createCover, createSand, createPlate };

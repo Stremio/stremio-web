@@ -2,14 +2,13 @@
 
 import type { Stage } from './freeze';
 import type { Tier } from './quality';
-import { glassy } from './quality';
 import type { Hero } from './plan';
 import type { Box } from './paint';
 import paint, { place } from './paint';
 import createSpring from './spring';
 import { createPlan, findHero, findRows, findChrome } from './plan';
 import type { Sand } from './sand';
-import { createNoise, createField, createCover, createSand, createGlass, createPlate } from './sand';
+import { createNoise, createField, createCover, createSand, createPlate } from './sand';
 
 type Rect = { left: number, top: number, width: number, height: number };
 
@@ -38,16 +37,15 @@ const QUICK = 150;
 const FADE = 240;
 const WIPE = 400;
 const AREA = 4200000;
-const TEXTURE = 4096;
-const CARD: Budget = { ink: 14000, shots: 2000 };
+const CARD: Budget = { ink: 3000, shots: 2000 };
 const SHELVES: Budget = { ink: 2000, shots: 2500 };
-const FLAT = 3000;
 const INKED = 64;
 const GRAIN = 3;
 const MARGIN = 24;
 const SLOW = 28;
 const STALLED = 50;
 const LINGER = 300;
+const HOLD = 2;
 const EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
 const MASKS = ['mask-image', '-webkit-mask-image'];
 const FROZEN = ['transform', 'opacity'] as const;
@@ -77,69 +75,50 @@ const within = ({ view }: Scope, rect: DOMRect | Rect): Rect => ({ left: rect.le
 
 const reach = (origin: Point, rect: Rect) => Math.max(...[0, rect.width].flatMap((x) => [0, rect.height].map((y) => Math.hypot(rect.left + x - origin.x, rect.top + y - origin.y))));
 
-const createAir = ({ view, zoom }: Scope, fast: boolean) => {
-    const scale = Math.min(window.devicePixelRatio || 1, Math.sqrt(AREA / (view.width * view.height)), TEXTURE / Math.max(view.width, view.height));
+const createAir = ({ view, zoom }: Scope) => {
+    const scale = Math.min(window.devicePixelRatio || 1, Math.sqrt(AREA / (view.width * view.height)));
     const width = Math.round(view.width * scale);
     const height = Math.round(view.height * scale);
-    const sheet = () => {
-        const canvas = document.createElement('canvas');
-        canvas.style.cssText = `position:absolute;left:0;top:0;width:${(view.width / zoom).toFixed(2)}px;height:${(view.height / zoom).toFixed(2)}px`;
-        return canvas;
-    };
-    const front = sheet();
-    const back = sheet();
-    front.width = width;
-    front.height = height;
-    const glass = fast ? createGlass(front) : null;
-    const plate = createPlate(back);
+    const canvas = document.createElement('canvas');
+    const sands: Sand[] = [];
+    const draws: (() => void)[] = [];
+    let dirty = false;
+    canvas.style.cssText = `position:absolute;left:0;top:0;width:${(view.width / zoom).toFixed(2)}px;height:${(view.height / zoom).toFixed(2)}px`;
+    canvas.width = width;
+    canvas.height = height;
+    const plate = createPlate(canvas);
     const field = createField(width, height, Math.hypot(width, height), createNoise());
-    const layers = [glass, plate].map((renderer) => ({ renderer, sands: [] as Sand[], draws: [] as (() => void)[], dirty: false }));
-    back.width = 0;
-    back.height = 0;
 
-    const stock = (flat: boolean, surface: HTMLCanvasElement, sand: Sand, grain: number) => {
-        const layer = layers[flat ? 1 : 0];
-        if (sand.count === 0 || layer.renderer === null) {
-            return;
+    const stock = (surface: HTMLCanvasElement, sand: Sand, grain: number) => {
+        if (sand.count > 0) {
+            sands.push(sand);
+            draws.push(plate.add(surface, sand, grain));
         }
-        if (flat && back.width === 0) {
-            back.width = width;
-            back.height = height;
-        }
-
-        layer.sands.push(sand);
-        layer.draws.push(layer.renderer.add(surface, sand, grain));
     };
     const advance = (seconds: number, radius: number, delta: number, hole: Rect | null) => {
         const gap = hole !== null ? { x: hole.left * scale, y: hole.top * scale, width: hole.width * scale, height: hole.height * scale } : null;
         field.update(seconds);
-        return layers.map((layer) => {
-            const alive = layer.sands.map((sand) => sand.advance(field, radius * scale, delta, gap)).some(Boolean);
-            const flying = layer.sands.some((sand) => sand.range()[1] > sand.range()[0]);
-            if (flying || layer.dirty) {
-                layer.renderer?.clear();
-                layer.draws.forEach((draw) => draw());
-            }
+        const alive = sands.map((sand) => sand.advance(field, radius * scale, delta, gap)).some(Boolean);
+        const flying = sands.some((sand) => sand.range()[1] > sand.range()[0]);
+        if (flying || dirty) {
+            plate.clear();
+            draws.forEach((draw) => draw());
+        }
 
-            layer.dirty = flying;
-            return alive;
-        }).some(Boolean);
+        dirty = flying;
+        return alive;
     };
     const discard = () => {
-        glass?.drop();
-        [front, back].forEach((canvas) => {
-            canvas.width = 0;
-            canvas.height = 0;
-        });
+        canvas.width = 0;
+        canvas.height = 0;
     };
 
     return {
         scale,
-        fast: glass !== null,
-        canvases: [front, back],
+        canvas,
         stock,
         advance,
-        thin: (share: number) => layers.forEach(({ sands }) => sands.forEach((sand) => sand.thin(share))),
+        thin: (share: number) => sands.forEach((sand) => sand.thin(share)),
         discard,
     };
 };
@@ -189,23 +168,14 @@ const mill = (air: Air, { view, zoom }: Scope, roots: Element[], skip: Element |
 
         return canvas;
     };
-    const letter = grind((x, y) => marked(x, y) && !kept(x, y) && inked(x, y), air.fast ? budget.ink : Math.min(FLAT, budget.ink));
-    if (air.fast) {
-        air.stock(false, drawn.ink.canvas, letter, grain);
-    } else {
-        const copy = document.createElement('canvas');
-        copy.width = width;
-        copy.height = height;
-        copy.getContext('2d')?.drawImage(drawn.ink.canvas, 0, 0);
-        scraps.push(copy);
-        air.stock(true, stamp(copy), letter, grain);
-    }
+    const copy = document.createElement('canvas');
+    copy.width = width;
+    copy.height = height;
+    copy.getContext('2d')?.drawImage(drawn.ink.canvas, 0, 0);
+    scraps.push(copy);
+    air.stock(stamp(copy), grind((x, y) => marked(x, y) && !kept(x, y) && inked(x, y), budget.ink), grain);
     if (drawn.shot.length > 0) {
-        air.stock(true, stamp(drawn.shots), grind((x, y) => shot(x, y) && !kept(x, y), budget.shots), grain);
-    }
-
-    if (air.fast && drawn.shot.length === 0) {
-        scrap();
+        air.stock(stamp(drawn.shots), grind((x, y) => shot(x, y) && !kept(x, y), budget.shots), grain);
     }
 
     return scrap;
@@ -250,7 +220,7 @@ const prepare = (button: HTMLElement, settled: boolean) => {
 
     const { card, spot, scope, cardRect, buttonRect, spotRect } = shape;
     const origin = { x: buttonRect.left + buttonRect.width / 2, y: buttonRect.top + buttonRect.height / 2 };
-    const air = createAir(scope, settled && glassy);
+    const air = createAir(scope);
     try {
         const scrap = mill(air, scope, [card], spot, cardRect, spotRect, origin, CARD, new Map());
         const discard = () => {
@@ -287,6 +257,7 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
     const span = Math.hypot(Math.max(origin.x, view.width - origin.x), Math.max(origin.y, view.height - origin.y));
     let request = 0;
     let ended = false;
+    let arranging = false;
     let hero: Hero | null = null;
     let decoded = false;
     let decoding = false;
@@ -294,6 +265,10 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
     const animate = (element: Element, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions) => {
         const animation = element.animate(keyframes, options);
         animations.push(animation);
+        if (arranging) {
+            animation.pause();
+        }
+
         return animation;
     };
 
@@ -398,6 +373,7 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
     const fabric: { element: HTMLElement, rect: Rect }[] = [{ element: card, rect: cardRect }];
     let far = near;
     let last = performance.now();
+    let held = -1;
     let gone = -1;
     let usable = Infinity;
     let done = Infinity;
@@ -536,8 +512,8 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
         return { frames, seed, views, timing };
     };
 
-    const go = (time: number) => {
-        gone = time;
+    const arrange = () => {
+        arranging = true;
         hero = findHero(live);
         findRows(live).forEach((row) => {
             row.getAnimations().forEach((animation) => {
@@ -608,10 +584,7 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
             }
         }
 
-        air.canvases.forEach((canvas) => {
-            const holes = chrome.map((rect) => `M${px(rect.left)} ${px(rect.top)}h${px(rect.width)}v${px(rect.height)}h-${px(rect.width)}Z`);
-            canvas.style.clipPath = `path(evenodd, "M0 0H${px(view.width)}V${px(view.height)}H0Z${holes.join('')}")`.replace(/px/g, '');
-        });
+        air.canvas.style.clipPath = `path(evenodd, "M0 0H${px(view.width)}V${px(view.height)}H0Z${chrome.map((rect) => `M${px(rect.left)} ${px(rect.top)}h${px(rect.width)}v${px(rect.height)}h-${px(rect.width)}Z`).join('')}")`.replace(/px/g, '');
         lift(SCRIM);
         if (spot !== null && scene !== null && spotRect !== null) {
             ghost = snapshot(scene, spotRect, Math.abs(spotRect.top - cardRect.top) < 2);
@@ -627,11 +600,10 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
         if (hero !== null && hero.art !== null && target !== null) {
             const { frames, seed, views, timing } = open({ ...hero, art: hero.art }, from, delay);
             const inner = ghost?.firstElementChild ?? null;
-            const opened = time + delay;
             text = delay + ART.until(1 - COPY);
             settled = Math.max(settled, delay + ART.until(0.015));
             finished = Math.max(finished, delay + ART.duration);
-            frameAt = (moment) => mix(from, target, 1 - ART.at(moment - opened));
+            frameAt = (moment) => mix(from, target, 1 - ART.at(moment - delay));
             if (ghost !== null && (docked || spot === null)) {
                 animate(ghost, frames.map((frame) => ({
                     transform: `translate(${px(frame.left - from.left)}, ${px(frame.top - from.top)}) scale(${(frame.width / from.width).toFixed(5)}, ${(frame.height / from.height).toFixed(5)})`,
@@ -645,7 +617,7 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
             frameAt = () => spotRect;
         }
 
-        fading = time + delay;
+        fading = delay;
         (hero?.content ?? []).forEach((part, index) => {
             arrive(part, text + index * STAGGER);
             if (hero !== null && hero.watch !== null && part.contains(hero.watch)) {
@@ -658,24 +630,34 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
             arrive(element, text + STAGGER);
             finished = Math.max(finished, text + STAGGER + ENTRANCE);
         });
-        usable = time + Math.max(settled, WAVE);
-        done = time + Math.max(finished, WAVE * (1 + Math.max(0, far / near - 1) / TAIL));
+        usable = Math.max(settled, WAVE);
+        done = Math.max(finished, WAVE * (1 + Math.max(0, far / near - 1) / TAIL));
+        arranging = false;
     };
 
     const tick = (time: number) => {
         const elapsed = time - last;
         const delta = Math.min(0.034, Math.max(0, elapsed / 1000));
         last = time;
-        if (gone < 0) {
+        if (held < 0) {
             if (!ready() && time - pressed < HERO_CAP) {
                 return;
             }
 
-            go(time);
+            arrange();
+        }
+        if (gone < 0) {
+            if (++held < HOLD) {
+                return;
+            }
+
+            gone = time;
+            animations.forEach((animation) => animation.play());
         }
 
-        const radius = near * spread((time - gone) / WAVE);
-        const frame = frameAt?.(time) ?? null;
+        const moment = time - gone;
+        const radius = near * spread(moment / WAVE);
+        const frame = frameAt?.(moment) ?? null;
         slow = elapsed > SLOW ? slow + (elapsed > STALLED ? 2 : 1) : Math.max(0, slow - 1);
         if (slow >= 4) {
             air.thin(slow >= 8 ? 0.15 : 0.5);
@@ -698,19 +680,19 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
                 MASKS.forEach((name) => element.style.setProperty(name, mask));
             });
         }
-        if (ghost !== null && time >= fading && (decoded || hero === null || hero.image === null || time >= usable)) {
+        if (ghost !== null && moment >= fading && (decoded || hero === null || hero.image === null || moment >= usable)) {
             fading = Infinity;
             animate(ghost, { opacity: [1, 0] }, { duration: GHOST, easing: 'ease-out', fill: 'forwards' });
         }
 
         const alive = air.advance(time / 1000, Math.max(0, radius - SOFT / 2), delta, frame);
-        if (!released && time >= usable) {
+        if (!released && moment >= usable) {
             released = true;
             modal.style.pointerEvents = 'none';
             over.style.pointerEvents = 'none';
             release();
         }
-        if (time >= done && (!alive || time >= done + LINGER)) {
+        if (moment >= done && (!alive || moment >= done + LINGER)) {
             complete();
         }
     };
@@ -725,7 +707,7 @@ const run = ({ stage, tier, pressed, prepared, dispose, release, finish }: Optio
     };
 
     restores.push(() => MASKS.forEach((name) => card.style.removeProperty(name)));
-    over.append(...air.canvases);
+    over.append(air.canvas);
     dispose(plate.discard);
     return { commit: () => start(loop) };
 };

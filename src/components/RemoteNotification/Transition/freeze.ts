@@ -17,6 +17,7 @@ type Stage = {
     view: DOMRect,
     zoom: number,
     origin: { x: number, y: number },
+    resume: () => void,
 };
 
 const COVER = 'position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden';
@@ -96,9 +97,7 @@ const freeze = (button: HTMLElement, dispose: (disposer: () => void) => void): S
     dispose(() => {
         under.remove();
         over.remove();
-        playing.forEach((animation) => animation.play());
     });
-    playing.forEach((animation) => animation.pause());
     freezer.textContent = FREEZE;
     under.inert = true;
     sheet.style.cssText = COVER;
@@ -122,6 +121,7 @@ const freeze = (button: HTMLElement, dispose: (disposer: () => void) => void): S
         sheet.style.backgroundPosition = `${(area.left - view.left) / zoom}px ${(area.top - view.top) / zoom}px`;
     }
 
+    playing.forEach((animation) => animation.pause());
     return {
         images,
         route,
@@ -140,6 +140,7 @@ const freeze = (button: HTMLElement, dispose: (disposer: () => void) => void): S
             x: rect.left + rect.width / 2 - view.left,
             y: rect.top + rect.height / 2 - view.top,
         },
+        resume: () => playing.forEach((animation) => animation.play()),
     };
 };
 
