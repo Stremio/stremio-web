@@ -9,6 +9,8 @@ const { ContinueWatchingItem, EventModal, LiveTvContinueWatchingItem, MainNavBar
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
+const { default: Spotlight, Placeholder: SpotlightPlaceholder } = require('./Spotlight');
+const { default: useScrolledPast } = require('./Spotlight/useScrolledPast');
 const styles = require('./styles');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
@@ -26,7 +28,10 @@ const Board = () => {
         items: (Array.isArray(liveTvContinueWatching.items) ? liveTvContinueWatching.items : [])
             .map((item) => ({ ...item, posterShape: 'landscape' })),
     }), [liveTvContinueWatching.items]);
+    const spotlightItems = board.spotlight?.type === 'Ready' ? board.spotlight.content : [];
+    const spotlightVisible = spotlightItems.length > 0 || board.spotlight?.type === 'Loading';
     const boardCatalogsOffset =
+        (spotlightVisible ? 1 : 0) +
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
     const showStreamingServerWarning = React.useMemo(() => {
@@ -40,11 +45,27 @@ const Board = () => {
         leadingRows: boardCatalogsOffset,
         preloadRows: THRESHOLD,
     });
+    const spotlightSentinelRef = React.useRef(null);
+    const scrolledPastSpotlight = useScrolledPast(spotlightSentinelRef, scrollContainerRef, spotlightItems.length > 0);
     return (
         <div className={styles['board-container']}>
             <EventModal />
-            <MainNavBars className={styles['board-content-container']} route={'board'}>
+            <MainNavBars className={classnames(styles['board-content-container'], { [styles['with-spotlight']]: spotlightVisible, [styles['scrolled']]: scrolledPastSpotlight })} route={'board'}>
                 <div ref={scrollContainerRef} className={styles['board-content']} onScroll={onScroll}>
+                    {
+                        spotlightItems.length > 0 ?
+                            <Spotlight
+                                key={spotlightItems[0].id}
+                                className={styles['board-spotlight']}
+                                items={spotlightItems}
+                                sentinelRef={spotlightSentinelRef}
+                            />
+                            :
+                            spotlightVisible ?
+                                <SpotlightPlaceholder className={styles['board-spotlight']} />
+                                :
+                                null
+                    }
                     {
                         continueWatchingPreview.items.length > 0 ?
                             <MetaRow

@@ -3,7 +3,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Image from 'stremio/components/Image';
-import Logo from '../Hero/Logo';
+import Logo from 'stremio/components/Logo';
 import styles from './HeroArt.less';
 
 type Props = {

@@ -12,17 +12,33 @@ const Tooltip = ({ label, position, margin = 15 }) => {
 
     const id = React.useRef(createId());
     const element = React.useRef(null);
+    const hovered = React.useRef(false);
+    const focused = React.useRef(false);
 
-    const onMouseEnter = () => {
+    const sync = () => {
         tooltip.update(id.current, {
-            active: true,
+            active: hovered.current || focused.current,
         });
     };
 
+    const onMouseEnter = () => {
+        hovered.current = true;
+        sync();
+    };
+
     const onMouseLeave = () => {
-        tooltip.update(id.current, {
-            active: false,
-        });
+        hovered.current = false;
+        sync();
+    };
+
+    const onFocusIn = () => {
+        focused.current = true;
+        sync();
+    };
+
+    const onFocusOut = () => {
+        focused.current = false;
+        sync();
     };
 
     React.useEffect(() => {
@@ -44,6 +60,8 @@ const Tooltip = ({ label, position, margin = 15 }) => {
 
             parentElement.addEventListener('mouseenter', onMouseEnter);
             parentElement.addEventListener('mouseleave', onMouseLeave);
+            parentElement.addEventListener('focusin', onFocusIn);
+            parentElement.addEventListener('focusout', onFocusOut);
         }
 
         return () => {
@@ -51,6 +69,8 @@ const Tooltip = ({ label, position, margin = 15 }) => {
                 const parentElement = element.current.parentElement;
                 parentElement.removeEventListener('mouseenter', onMouseEnter);
                 parentElement.removeEventListener('mouseleave', onMouseLeave);
+                parentElement.removeEventListener('focusin', onFocusIn);
+                parentElement.removeEventListener('focusout', onFocusOut);
 
                 tooltip.remove(id.current);
             }
