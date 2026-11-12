@@ -1,6 +1,6 @@
 
 type StreamDeepLinks = {
-    player: string | null,
+    player: string,
     externalPlayer: ExternalPlayerLinks,
 };
 
@@ -12,8 +12,8 @@ type Stream = {
     fileIdx?: number,
     url?: string,
     externalUrl?: string,
-    deepLinks?: {
-        player: string,
-        externalPlayer: ExternalPlayerLinks,
-    },
+    thumbnail?: string | null,
+    progress?: number | null,
+    lastUsed?: boolean | null,
+    deepLinks?: StreamDeepLinks,
 };

@@ -1,0 +1,156 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+.hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+
+    .logo {
+        flex: none;
+    }
+
+    .still {
+        flex: none;
+        margin-top: 2.25rem;
+    }
+
+    .title {
+        flex: none;
+        margin-top: 1.5rem;
+        font-size: 1.875rem;
+        line-height: 1.2;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        color: var(--primary-foreground-color);
+        overflow-wrap: anywhere;
+    }
+
+    .facts {
+        --imdb-gap: 0.625rem;
+        --imdb-height: 2rem;
+        --imdb-size: 3.5rem;
+        --imdb-margin: -1rem -0.3rem;
+        flex: none;
+        justify-content: flex-start;
+        gap: 0.5rem 2.5rem;
+        margin-top: 2.25rem;
+        padding: 0;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        color: var(--primary-foreground-color);
+    }
+
+    .still ~ .facts, .title ~ .facts {
+        margin-top: 1.25rem;
+        font-size: 1rem;
+    }
+
+    .description {
+        flex: none;
+        margin-top: 1.5rem;
+    }
+
+    .title ~ .description {
+        margin-top: 1rem;
+    }
+
+    .description.expanded {
+        -webkit-line-clamp: unset;
+    }
+
+    .more {
+        flex: none;
+        align-self: center;
+        margin-top: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.9375rem;
+        font-weight: 700;
+        color: var(--primary-accent-color);
+    }
+
+    .links {
+        flex: none;
+        margin-top: 1.75rem;
+    }
+
+    .spacer {
+        flex: 1;
+        min-height: 1.5rem;
+    }
+}
+
+@media @mobile {
+    .hero {
+        .facts {
+            justify-content: center;
+            gap: 0.375rem 1.75rem;
+            margin-top: 0;
+            font-size: 1rem;
+        }
+
+        .description {
+            margin-top: 0.875rem;
+            text-align: center;
+        }
+
+        .links {
+            margin-top: 1.25rem;
+        }
+
+        .spacer {
+            min-height: 1.75rem;
+        }
+    }
+}
+
+@media @desktop {
+    .hero {
+        .logo {
+            margin-bottom: auto;
+        }
+
+        .spacer {
+            flex: none;
+            min-height: 2.5rem;
+        }
+    }
+}
+
+@media @desktop and (max-height: 700px) {
+    .hero .still {
+        display: none;
+    }
+}
+
+@media @desktop-short {
+    .hero {
+        .still, .links {
+            display: none;
+        }
+
+        .title {
+            margin-top: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .facts {
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+        .description {
+            margin-top: 0.75rem;
+            -webkit-line-clamp: 2;
+        }
+
+        .spacer {
+            min-height: 0.75rem;
+        }
+    }
+}

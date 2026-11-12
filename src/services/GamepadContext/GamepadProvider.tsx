@@ -48,8 +48,9 @@ const GamepadProvider = ({ enabled, onGuide, children }: GamepadProviderProps) =
         handlers.set(id, callback);
     }, []);
 
-    const off = useCallback((event: string, id: string) => {
+    const off = useCallback((event: string, id: string, callback?: (data?: string) => void) => {
         const handlersMap = eventHandlers.current.get(event);
+        if (callback && handlersMap?.get(id) !== callback) return;
         handlersMap?.delete(id);
         if (handlersMap?.size === 0) {
             eventHandlers.current.delete(event);

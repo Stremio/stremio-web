@@ -1,0 +1,169 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../../variables.less';
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.25rem 0 0.25rem 0.25rem;
+    overflow: visible;
+
+    > * {
+        flex: none;
+    }
+
+    .title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        overflow: visible;
+
+        .title {
+            flex: 1;
+            min-width: 0;
+            font-size: 1.125rem;
+            line-height: 1.5;
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .groups {
+            flex: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow: visible;
+        }
+    }
+
+    .view-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        overflow: visible;
+    }
+
+    .controls {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 0.125rem;
+        overflow: visible;
+        transition: opacity 0.15s @ease, visibility 0s;
+    }
+
+    .round, .now {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.25rem;
+        border-radius: 999px;
+        color: var(--primary-foreground-color);
+        transition: background-color 0.15s @ease, opacity 0.15s @ease;
+
+        &:hover, &:focus {
+            background-color: var(--overlay-color);
+        }
+
+        &.inactive {
+            opacity: 0.35;
+            cursor: default;
+
+            &:hover, &:focus {
+                background-color: transparent;
+            }
+        }
+    }
+
+    .round {
+        width: 2.25rem;
+
+        .icon {
+            width: 1rem;
+            height: 1rem;
+            opacity: 0.9;
+        }
+    }
+
+    .now {
+        padding: 0 0.875rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+}
+
+.mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: visible;
+
+    > * {
+        flex: none;
+    }
+
+    .segments {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.125rem;
+        border-radius: 999px;
+        background-color: var(--overlay-color);
+        backdrop-filter: blur(5px);
+        overflow: visible;
+        transition: opacity 0.15s @ease, visibility 0s;
+    }
+
+    .round, .now {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 999px;
+        color: var(--primary-foreground-color);
+        transition: opacity 0.15s @ease, background-color 0.15s @ease;
+
+        .icon {
+            width: 1.125rem;
+            height: 1.125rem;
+            opacity: 0.9;
+        }
+
+        &.inactive {
+            opacity: 0.35;
+        }
+    }
+
+    .now {
+        width: 2.75rem;
+        height: 2.75rem;
+        background-color: var(--overlay-color);
+        backdrop-filter: blur(5px);
+        transition: opacity 0.15s @ease, visibility 0s, background-color 0.15s @ease;
+
+        &:hover, &:focus {
+            background-color: @overlay-hover;
+        }
+    }
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s @ease, visibility 0s linear 0.15s;
+}

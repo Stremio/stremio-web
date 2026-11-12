@@ -42,6 +42,12 @@
             }
         }
     }
+
+    &.selected {
+        .program-inner {
+            outline-style: solid;
+        }
+    }
 }
 
 .program-inner {
@@ -88,12 +94,12 @@
     }
 }
 
-.program:focus-within {
+.program:not(.selected):focus-within {
     .expanded();
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .program:hover {
+    .program:not(.selected):hover {
         .expanded();
     }
 }
