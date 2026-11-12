@@ -9,6 +9,7 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
+const PictureInPictureIcon = require('./PictureInPictureIcon');
 const { useBinaryState, usePlatform } = require('stremio/common');
 const { t } = require('i18next');
 
@@ -27,6 +28,8 @@ const ControlBar = React.forwardRef(({
     volume,
     muted,
     playbackSpeed,
+    pictureInPicture,
+    pictureInPictureSupported,
     subtitlesTracks,
     audioTracks,
     metaItem,
@@ -55,6 +58,8 @@ const ControlBar = React.forwardRef(({
     buffering,
     onVideoScaleChanged,
     onToggleStatisticsMenu,
+    onPipEnableRequested,
+    onPipDisableRequested,
     onTouchEnd,
     ...props
 }, ref) => {
@@ -123,6 +128,13 @@ const ControlBar = React.forwardRef(({
         }
         chromecast.transport.requestSession();
     }, [castButtonDisabled, platform.shell.active, shellCastSupported, onToggleCastDevicesMenu]);
+    const onPictureInPictureButtonClick = React.useCallback(() => {
+        if (pictureInPicture) {
+            onPipDisableRequested?.();
+        } else {
+            onPipEnableRequested?.();
+        }
+    }, [pictureInPicture, onPipDisableRequested, onPipEnableRequested]);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -189,6 +201,20 @@ const ControlBar = React.forwardRef(({
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
                     {
+                        pictureInPictureSupported ?
+                            <Button
+                                className={classnames(styles['control-bar-button'], { 'disabled': typeof duration !== 'number' })}
+                                title={t(pictureInPicture ? 'PLAYER_EXIT_PICTURE_IN_PICTURE' : 'PLAYER_PICTURE_IN_PICTURE', {
+                                    defaultValue: pictureInPicture ? 'Exit picture-in-picture' : 'Picture-in-picture'
+                                })}
+                                tabIndex={-1}
+                                onClick={onPictureInPictureButtonClick}
+                            >
+                                <PictureInPictureIcon className={styles['icon']} active={pictureInPicture} />
+                            </Button>
+                            : null
+                    }
+                    {
                         statisticsAvailable &&
                             <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                                 <Icon className={styles['icon']} name={'network'} />
@@ -235,6 +261,8 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     playbackSpeed: PropTypes.number,
+    pictureInPicture: PropTypes.bool,
+    pictureInPictureSupported: PropTypes.bool,
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
     live: PropTypes.bool,
@@ -263,6 +291,8 @@ ControlBar.propTypes = {
     shellCastSupported: PropTypes.bool,
     onToggleCastDevicesMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onPipEnableRequested: PropTypes.func,
+    onPipDisableRequested: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,
