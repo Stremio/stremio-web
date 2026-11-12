@@ -1,0 +1,50 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.group {
+    margin-top: 2rem;
+    overflow: visible;
+
+    .heading {
+        display: flex;
+        align-items: center;
+        min-height: 2rem;
+        margin-bottom: 0.65rem;
+
+        .title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary-foreground-color);
+        }
+    }
+
+    .description {
+        margin: -0.25rem 0 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+    }
+
+    .card {
+        position: relative;
+        border-radius: 1.25rem;
+        background-color: var(--overlay-color);
+        overflow: visible;
+
+        &.padded {
+            padding: 1.25rem;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .group {
+        margin-top: 1.5rem;
+
+        .card.padded {
+            padding: 1rem;
+        }
+    }
+}

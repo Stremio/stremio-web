@@ -10,6 +10,7 @@ import CatalogGroups from './CatalogGroups';
 import CatalogTray from './CatalogTray';
 import CatalogsEmpty from './CatalogsEmpty';
 import { MAX_CATALOGS, type Nudge } from './useBoardSpotlight';
+import useInitialFocus from './useInitialFocus';
 import styles from './CatalogSheet.less';
 
 type Props = {
@@ -23,24 +24,29 @@ type Props = {
     onRemove: (catalog: BoardCatalog) => void,
     onReset: () => void,
     onClose: () => void,
+    onExited: () => void,
 };
 
-const CatalogSheet = ({ show, catalogs, empty, picks, isDefault, nudge, onToggle, onRemove, onReset, onClose }: Props) => {
+const CatalogSheet = ({ show, catalogs, empty, picks, isDefault, nudge, onToggle, onRemove, onReset, onClose, onExited }: Props) => {
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
+    const selectionRef = useInitialFocus(show, empty || catalogs.length > 0);
 
     return (
         <BottomSheet
             className={styles['sheet']}
             show={show}
             onCloseRequest={onClose}
-            onExited={() => setQuery('')}
+            onExited={() => {
+                setQuery('');
+                onExited();
+            }}
             closeOnContentClick={false}
             closeOnOrientationChange={false}
             flush={true}
             ariaLabel={t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')}
         >
-            <div className={styles['selection']}>
+            <div ref={selectionRef} className={styles['selection']}>
                 <div className={styles['header']}>
                     <Icon className={styles['heading-icon']} name={'home'} />
                     <div className={styles['heading']}>{t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')}</div>

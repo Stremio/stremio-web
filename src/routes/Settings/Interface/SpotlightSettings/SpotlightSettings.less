@@ -41,6 +41,13 @@
 }
 
 .preview {
-    margin: -0.5rem 0 2rem;
+    width: auto;
+    margin: 0 1.25rem 0.75rem;
     transition: opacity 0.2s @ease, filter 0.15s ease-out;
+}
+
+@media @phone {
+    .preview {
+        margin: 0 1rem 0.75rem;
+    }
 }

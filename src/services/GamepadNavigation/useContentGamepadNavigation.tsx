@@ -4,8 +4,15 @@ import { useEffect, useRef } from 'react';
 import { useGamepad } from '../GamepadContext';
 
 const FOCUSABLE = '[tabindex]:not([data-focus-guard])';
+const OPEN_DROPDOWN = '[class*="dropdown"][class*="open"]';
 
 const isVisible = (element: HTMLElement) => element.checkVisibility?.({ visibilityProperty: true }) ?? true;
+
+const toRovingStop = (element: HTMLElement, activeElement: HTMLElement) => {
+    const group = element.closest<HTMLElement>('[role="radiogroup"]');
+    if (!group || group.contains(activeElement) || element.getAttribute('tabindex') !== '-1') return element;
+    return group.querySelector<HTMLElement>('[role="radio"][tabindex="0"]') ?? element;
+};
 
 const getActiveScope = (fallback: HTMLDivElement | null): HTMLElement | null => {
     if (document.querySelector('[data-gamepad-modal]')) return null;
@@ -15,7 +22,10 @@ const getActiveScope = (fallback: HTMLDivElement | null): HTMLElement | null => 
         if (modal.children.length > 0) return modal;
     }
 
-    const dropdown = fallback?.querySelector<HTMLElement>('[class*="dropdown"][class*="open"]');
+    const portalDropdown = fallback?.closest('.route-container')?.querySelector<HTMLElement>(`[class*="portal-layer"] ${OPEN_DROPDOWN}`);
+    if (portalDropdown) return portalDropdown;
+
+    const dropdown = fallback?.querySelector<HTMLElement>(OPEN_DROPDOWN);
     if (dropdown) return dropdown;
 
     return fallback;
@@ -87,8 +97,9 @@ const useContentGamepadNavigation = (
                 }
             });
 
-            if (closestElement) {
-                closestElement.focus();
+            const target = closestElement as HTMLDivElement | null;
+            if (target) {
+                toRovingStop(target, activeElement).focus();
             }
         };
 
@@ -133,12 +144,13 @@ const useContentGamepadNavigation = (
             }
         };
 
-        gamepad?.on('analog', gamepadHandlerId, handleGamepadNavigation);
+        const onAnalog = handleGamepadNavigation as (data?: string) => void;
+        gamepad?.on('analog', gamepadHandlerId, onAnalog);
         gamepad?.on('buttonA', gamepadHandlerId, onSelect);
 
         return () => {
-            gamepad?.off('analog', gamepadHandlerId);
-            gamepad?.off('buttonA', gamepadHandlerId);
+            gamepad?.off('analog', gamepadHandlerId, onAnalog);
+            gamepad?.off('buttonA', gamepadHandlerId, onSelect);
         };
     }, [gamepad, gamepadHandlerId, sectionRef]);
 };

@@ -1,60 +1,73 @@
-@import (reference) '~stremio/common/screen-sizes.less';
+// Copyright (C) 2017-2026 Smart code 203358507
 
 .menu {
     flex: none;
     align-self: stretch;
     display: flex;
     flex-direction: column;
-    width: 18rem;
-    padding: 3rem 1.5rem;
+    width: 19rem;
+    padding: 1rem 1rem 2rem 1.5rem;
+    overflow-y: auto;
+    scrollbar-width: none;
 
-    .button {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .group {
         flex: none;
-        align-self: stretch;
         display: flex;
-        align-items: center;
-        height: 4rem;
-        border-radius: 4rem;
-        padding: 2rem;
-        margin-bottom: 0.5rem;
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: var(--primary-foreground-color);
-        opacity: 0.4;
+        flex-direction: column;
+        gap: 0.15rem;
+        margin-top: 1.5rem;
 
-        &.selected {
+        .label {
+            display: flex;
+            align-items: center;
+            min-height: 2rem;
+            padding: 0 1.25rem;
+            font-size: 0.8125rem;
             font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
             color: var(--primary-foreground-color);
-            background-color: var(--overlay-color);
-            opacity: 1;
+            opacity: 0.6;
         }
 
-        &:hover {
-            background-color: var(--overlay-color);
+        .item {
+            flex: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            height: 3.1rem;
+            padding: 0 1.25rem;
+            border-radius: 3.1rem;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+            opacity: 0.4;
+
+            .icon {
+                flex: none;
+                width: 1.35rem;
+                height: 1.35rem;
+            }
+
+            .item-label {
+                flex: 1;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            &:hover {
+                background-color: var(--overlay-color);
+            }
+
+            &.selected {
+                font-weight: 600;
+                background-color: var(--overlay-color);
+                opacity: 1;
+            }
         }
-    }
-
-    .spacing {
-        flex: 1;
-    }
-
-    .version-info-label {
-        flex: 0 1 auto;
-        margin: 0.5rem 0;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        opacity: 0.3;
-    }
-}
-
-@media only screen and (max-width: @xsmall) {
-    .menu {
-        display: none;
-    }
-}
-
-@media only screen and (max-width: @minimum) {
-    .menu {
-        display: none;
     }
 }

@@ -10,6 +10,7 @@ import CatalogGroups from './CatalogGroups';
 import CatalogTray from './CatalogTray';
 import CatalogsEmpty from './CatalogsEmpty';
 import { MAX_CATALOGS, type Nudge } from './useBoardSpotlight';
+import useInitialFocus from './useInitialFocus';
 import styles from './CatalogPicker.less';
 
 type Props = {
@@ -27,10 +28,11 @@ type Props = {
 const CatalogPicker = ({ catalogs, empty, picks, isDefault, nudge, onToggle, onRemove, onReset, onClose }: Props) => {
     const { t } = useTranslation();
     const [query, setQuery] = useState('');
+    const headerRef = useInitialFocus(true, empty || catalogs.length > 0);
 
     return (
         <ModalDialog className={styles['picker']} onCloseRequest={onClose}>
-            <div className={styles['header']}>
+            <div ref={headerRef} className={styles['header']}>
                 <div className={styles['title']}>{t('SETTINGS_SPOTLIGHT_CATALOGS_TITLE')}</div>
                 <Button className={styles['reset']} disabled={isDefault} onClick={onReset}>
                     {t('SETTINGS_SPOTLIGHT_USE_DEFAULT')}

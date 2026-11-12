@@ -51,7 +51,7 @@ export default [
         element: <routes.Addons />,
     },
     {
-        path: '/settings',
+        path: '/settings/:page?',
         view: 3,
         element: <routes.Settings />,
     },

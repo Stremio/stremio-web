@@ -10,7 +10,7 @@ const { useModalsContainer } = require('../ModalsContainerContext');
 const Modal = React.forwardRef(({ className, autoFocus, disabled, children, ...props }, ref) => {
     const modalsContainer = useModalsContainer();
     return ReactDOM.createPortal(
-        <FocusLock ref={ref} className={classnames(className, 'modal-container')} autoFocus={!!autoFocus} disabled={!!disabled} lockProps={props}>
+        <FocusLock ref={ref} className={classnames(className, 'modal-container')} autoFocus={!!autoFocus} focusOptions={{ focusVisible: false }} disabled={!!disabled} lockProps={props}>
             {children}
         </FocusLock>,
         modalsContainer
