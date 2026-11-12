@@ -6,7 +6,6 @@ import Icon from '@stremio/stremio-icons/react';
 import type { PeekContent } from './useMedia';
 import styles from './Peek.less';
 
-const TABS = 5;
 const TICKS = 5;
 const CONTROLS = ['play', 'add-to-library', 'trailer'];
 
@@ -82,13 +81,6 @@ const Peek = ({ background, logo, name, facts, shelves }: PeekContent) => {
             }
             <div className={styles['frame']}>
                 <div className={styles['search']} />
-                <div className={styles['tabs']}>
-                    {
-                        Array.from({ length: TABS }, (_, index) => (
-                            <div key={index} className={styles['tab']} />
-                        ))
-                    }
-                </div>
             </div>
         </div>
     );

@@ -13,7 +13,6 @@
 @copy: (@beat + @lead + 0.17s);
 @art-height: 70%;
 @travel: 61%;
-@rail: 5.6%;
 @edge: 9.5%;
 
 .peek {
@@ -253,31 +252,6 @@
             border-radius: ~"calc(var(--unit) * 2)";
             background-color: fade(@ink, 12%);
         }
-
-        .tabs {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: ~"calc(var(--unit) * 1.1)";
-            width: @rail;
-
-            .tab {
-                flex: none;
-                width: ~"calc(var(--unit) * 0.95)";
-                height: ~"calc(var(--unit) * 0.95)";
-                border-radius: 30%;
-                background-color: fade(@ink, 24%);
-
-                &:nth-child(2) {
-                    background-color: fade(@ink, 92%);
-                }
-            }
-        }
     }
 }
 
@@ -289,10 +263,6 @@
 
         .shelf .row {
             width: 94%;
-        }
-
-        .frame .tabs {
-            display: none;
         }
     }
 }
