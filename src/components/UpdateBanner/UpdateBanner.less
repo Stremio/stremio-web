@@ -1,12 +1,12 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .update-banner {
-    height: 4rem;
+    height: calc(4rem + var(--safe-area-inset-bottom));
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 0 1rem;
+    padding: 0 max(1rem, var(--safe-area-inset-right)) var(--safe-area-inset-bottom) max(1rem, var(--safe-area-inset-left));
     font-size: 1rem;
     font-weight: bold;
     color: var(--primary-foreground-color);
@@ -33,7 +33,7 @@
 
     .close {
         position: absolute;
-        right: 0;
+        right: var(--safe-area-inset-right);
         height: 4rem;
         width: 4rem;
         display: flex;
