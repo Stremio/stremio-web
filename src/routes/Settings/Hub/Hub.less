@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
 
-    .identity, .row {
+    .row {
         position: relative;
         display: flex;
         align-items: center;
@@ -45,23 +45,8 @@
         }
     }
 
-    .identity {
-        flex: none;
+    .account {
         margin-top: 0.5rem;
-        border-radius: 1.25rem;
-        background-color: var(--overlay-color);
-
-        .avatar {
-            flex: none;
-            width: 3.5rem;
-            height: 3.5rem;
-            border: 2px solid var(--primary-accent-color);
-            border-radius: 50%;
-            background-color: var(--primary-foreground-color);
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
     }
 
     .search {

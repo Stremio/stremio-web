@@ -35,7 +35,7 @@ const Settings = () => {
     const profile = useProfile();
     const streamingServer = useStreamingServer();
     const hubLayout = useMediaQuery(`(max-width: ${screenSizes.xsmall})`);
-    const { groups, pages } = useSettingsPages();
+    const { groups, pages, menuGroups } = useSettingsPages();
     const trakt = useTraktAuth(profile);
     const dataExport = useAccountExport();
     const [spotlightPickerOpen, openSpotlightPicker, closeSpotlightPicker] = useBinaryState(false);
@@ -163,7 +163,7 @@ const Settings = () => {
     if (page === null) {
         content = (
             <Hub
-                groups={groups}
+                groups={menuGroups}
                 profile={profile}
                 streamingServer={streamingServer}
                 query={query}
@@ -195,7 +195,8 @@ const Settings = () => {
                 {
                     !hubLayout && page &&
                         <Menu
-                            groups={groups}
+                            groups={menuGroups}
+                            profile={profile}
                             selected={searching ? null : page.id}
                             query={query}
                             onQueryChange={onQueryChange}
