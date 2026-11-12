@@ -22,13 +22,14 @@ const AccountRow = ({ className, profile, card, selected, onClick }: Props) => {
 
     const avatar = useMemo(() => getAvatar(profile.auth), [profile.auth]);
     const guest = profile.auth === null;
-    const title = profile.auth === null ? t('SETTINGS_ACCOUNT_GUEST') : profile.auth.user.email;
+    const title = profile.auth === null ? t('SETTINGS_ACCOUNT_GUEST') : t('ACCOUNT');
+    const caption = profile.auth === null ? t('SETTINGS_ACCOUNT_LOG_IN_SIGN_UP') : profile.auth.user.email;
 
     return (
         <Button
             className={classNames(className, styles['account-row'], { [styles['card']]: card, [styles['selected']]: selected })}
             href={guest ? '#/intro' : `#/settings/${PAGES.ACCOUNT}`}
-            title={title}
+            title={profile.auth === null ? title : profile.auth.user.email}
             data-page={guest ? undefined : PAGES.ACCOUNT}
             aria-current={selected ? 'page' : undefined}
             onClick={guest ? undefined : onClick}
@@ -36,7 +37,7 @@ const AccountRow = ({ className, profile, card, selected, onClick }: Props) => {
             <div className={styles['avatar']} style={{ backgroundImage: avatar }} />
             <div className={styles['text']}>
                 <div className={styles['title']}>{title}</div>
-                <div className={styles['caption']}>{guest ? t('SETTINGS_ACCOUNT_LOG_IN_SIGN_UP') : t('ACCOUNT')}</div>
+                <div className={styles['caption']}>{caption}</div>
             </div>
             <Icon className={styles['chevron']} name={'chevron-forward'} />
         </Button>
