@@ -18,8 +18,8 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: https://stremio.github.io/stremio-core/stremio-core-web/feat/remote-config/stremio-stremio-core-web-0.66.0.tgz
-        version: https://stremio.github.io/stremio-core/stremio-core-web/feat/remote-config/stremio-stremio-core-web-0.66.0.tgz
+        specifier: 0.67.0
+        version: 0.67.0
       '@stremio/stremio-icons':
         specifier: 5.15.0
         version: 5.15.0
@@ -1444,9 +1444,8 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/remote-config/stremio-stremio-core-web-0.66.0.tgz':
-    resolution: {integrity: sha512-xOZzaAytXHhN1LesS0wo3bgp8La/lYXLmW2VrY+TLq9B4c8f/zYSjZ4vjfXdocORKQ7BdJnF0zEFzPa4lTr5GQ==, tarball: https://stremio.github.io/stremio-core/stremio-core-web/feat/remote-config/stremio-stremio-core-web-0.66.0.tgz}
-    version: 0.66.0
+  '@stremio/stremio-core-web@0.67.0':
+    resolution: {integrity: sha512-6u2pUxmUjxIuRPo0gAzkck2sN3vt8NnL3Zb9ZDcB/zhZgmseDTrZrqez/qZGuTMBpt8gDJS+FO+b6EP+pUWWTg==}
 
   '@stremio/stremio-icons@5.15.0':
     resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
@@ -6580,7 +6579,7 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@https://stremio.github.io/stremio-core/stremio-core-web/feat/remote-config/stremio-stremio-core-web-0.66.0.tgz':
+  '@stremio/stremio-core-web@0.67.0':
     dependencies:
       '@babel/runtime': 7.24.1
 
