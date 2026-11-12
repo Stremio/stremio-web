@@ -18,11 +18,11 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: 0.66.0
-        version: 0.66.0
+        specifier: 0.67.1
+        version: 0.67.1
       '@stremio/stremio-icons':
-        specifier: 5.15.0
-        version: 5.15.0
+        specifier: 5.18.0
+        version: 5.18.0
       '@stremio/stremio-video':
         specifier: 0.0.103
         version: 0.0.103
@@ -99,8 +99,8 @@ importers:
         specifier: github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6
         version: https://codeload.github.com/Stremio/spatial-navigation/tar.gz/64871b1422466f5f45d24ebc8bbd315b2ebab6a6
       stremio-translations:
-        specifier: github:Stremio/stremio-translations#f2c808a0cb74701e3a41ff1e6ca21a1fde7be4ae
-        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/f2c808a0cb74701e3a41ff1e6ca21a1fde7be4ae
+        specifier: github:Stremio/stremio-translations#13a78f0ff5f280de8d52bd5f7e7f59904b33ed08
+        version: https://codeload.github.com/Stremio/stremio-translations/tar.gz/13a78f0ff5f280de8d52bd5f7e7f59904b33ed08
       url:
         specifier: 0.11.4
         version: 0.11.4
@@ -1444,11 +1444,11 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@0.66.0':
-    resolution: {integrity: sha512-KeXTtj4AGeAFDh/VM5/bYGOu+h7MAKxsy0Rcm5KS250kRgFfTN+XrJTuZ7WI5j9VmOsClIZFRk3spwziekTHgg==}
+  '@stremio/stremio-core-web@0.67.1':
+    resolution: {integrity: sha512-Tpsfv/8Zrc7NprECnEi6v1FxJGGAzmgydjRQFyptMLfaCCcYJpIhGuYQ6GqeCSPjbpDfnWv3rTNOMHxIih0j4A==}
 
-  '@stremio/stremio-icons@5.15.0':
-    resolution: {integrity: sha512-UaYBgpJBaHZOPLhfZkAIzf99Xy62mxvEKOmeOeNmsSCSc05O05/FXihbA3zKefZBKN6cOy8uWBRGsCrXryV4zg==}
+  '@stremio/stremio-icons@5.18.0':
+    resolution: {integrity: sha512-Hll2y0Yb/3dkBdW8DE36QBy2jo65+OcklJ8mrBCSMjpyNOiN4GeAvnHoAazRZZc9nLssChGZdExtYHCUQCZp1g==}
 
   '@stremio/stremio-video@0.0.103':
     resolution: {integrity: sha512-6Y/IfP8UgiPINTdJae8MaNiqCrE/oC1vtPbDr4cwBbLp32Oi6ud/+GrWstuEc4NezhWQ/0YspouzvMRCk3R5Vg==}
@@ -4522,9 +4522,9 @@ packages:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/f2c808a0cb74701e3a41ff1e6ca21a1fde7be4ae:
-    resolution: {gitHosted: true, integrity: sha512-iFNDzeLweD2bgSVS3J0lSIRIYnx35QX3ZSbn7Ur3au/GUSDgB4equ+hrhf45Qap1uuZ6GlxxWLxaGHpLRC56ug==, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/f2c808a0cb74701e3a41ff1e6ca21a1fde7be4ae}
-    version: 1.55.0
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/13a78f0ff5f280de8d52bd5f7e7f59904b33ed08:
+    resolution: {gitHosted: true, integrity: sha512-LdS2HaWWuAQ2r999zKhytUItvkGMX+hn0/f4LhRXpEgitXdxTdp2Q/UP2oFgm897kSWv3dzjzVO/aYJ7DEuR0A==, tarball: https://codeload.github.com/Stremio/stremio-translations/tar.gz/13a78f0ff5f280de8d52bd5f7e7f59904b33ed08}
+    version: 1.56.0
 
   string-length@4.0.2:
     resolution: {integrity: sha512-+l6rNN5fYHNhZZy41RXsYptCjA2Igmq4EG7kZAYFQI1E1VTXarr6ZPXBg6eq7Y6eK4FEhY6AJlyuFIb/v/S0VQ==}
@@ -6579,11 +6579,11 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@0.66.0':
+  '@stremio/stremio-core-web@0.67.1':
     dependencies:
       '@babel/runtime': 7.24.1
 
-  '@stremio/stremio-icons@5.15.0': {}
+  '@stremio/stremio-icons@5.18.0': {}
 
   '@stremio/stremio-video@0.0.103':
     dependencies:
@@ -10200,7 +10200,7 @@ snapshots:
       es-errors: 1.3.0
       internal-slot: 1.1.0
 
-  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/f2c808a0cb74701e3a41ff1e6ca21a1fde7be4ae: {}
+  stremio-translations@https://codeload.github.com/Stremio/stremio-translations/tar.gz/13a78f0ff5f280de8d52bd5f7e7f59904b33ed08: {}
 
   string-length@4.0.2:
     dependencies:

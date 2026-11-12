@@ -1,0 +1,121 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+.hub {
+    display: flex;
+    flex-direction: column;
+
+    .identity, .row {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        min-height: 4.25rem;
+        padding: 0.6rem 1rem;
+        color: var(--primary-foreground-color);
+
+        .text {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+
+            .title {
+                font-weight: 500;
+                line-height: 1.35;
+            }
+
+            .summary {
+                font-size: 0.85rem;
+                line-height: 1.35;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                opacity: 0.6;
+            }
+        }
+
+        .chevron {
+            flex: none;
+            width: 1rem;
+            height: 1rem;
+            opacity: 0.6;
+        }
+
+        &:hover {
+            background-color: var(--overlay-color);
+        }
+    }
+
+    .identity {
+        flex: none;
+        margin-top: 0.5rem;
+        border-radius: 1.25rem;
+        background-color: var(--overlay-color);
+
+        .avatar {
+            flex: none;
+            width: 3.5rem;
+            height: 3.5rem;
+            border: 2px solid var(--primary-accent-color);
+            border-radius: 50%;
+            background-color: var(--primary-foreground-color);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    }
+
+    .search {
+        margin-top: 1rem;
+    }
+
+    .label {
+        flex: none;
+        display: flex;
+        align-items: center;
+        min-height: 2rem;
+        margin: 1.5rem 0 0.35rem;
+        padding: 0 0.25rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+    }
+
+    .card {
+        flex: none;
+        border-radius: 1.25rem;
+        background-color: var(--overlay-color);
+
+        .row {
+            &:first-child {
+                border-radius: 1.25rem 1.25rem 0 0;
+            }
+
+            &:last-child {
+                border-radius: 0 0 1.25rem 1.25rem;
+            }
+
+            &:only-child {
+                border-radius: 1.25rem;
+            }
+
+            & + .row::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 1rem;
+                left: 1rem;
+                height: 1px;
+                background-color: var(--overlay-color);
+            }
+
+            .icon {
+                flex: none;
+                width: 1.6rem;
+                height: 1.6rem;
+            }
+        }
+    }
+}

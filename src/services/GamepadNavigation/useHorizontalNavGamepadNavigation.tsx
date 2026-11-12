@@ -11,12 +11,13 @@ const useHorizontalNavGamepadNavigation = (gamepadHandlerId: string, onGoBack?: 
     useEffect(() => {
         const goBack = () => onGoBack?.();
 
-        gamepad?.on('buttonY', gamepadHandlerId, toggleFullscreen as () => void);
+        const onFullscreen = toggleFullscreen as () => void;
+        gamepad?.on('buttonY', gamepadHandlerId, onFullscreen);
         gamepad?.on('buttonB', gamepadHandlerId, goBack);
 
         return () => {
-            gamepad?.off('buttonY', gamepadHandlerId);
-            gamepad?.off('buttonB', gamepadHandlerId);
+            gamepad?.off('buttonY', gamepadHandlerId, onFullscreen);
+            gamepad?.off('buttonB', gamepadHandlerId, goBack);
         };
     }, [gamepad, gamepadHandlerId, onGoBack, toggleFullscreen]);
 };

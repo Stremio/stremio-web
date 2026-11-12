@@ -10,6 +10,7 @@ type LiveTvGuideShow = {
     released: string | null,
     overview: string | null,
     thumbnail: string | null,
+    background?: string | null,
     startTime?: string,
     endTime?: string,
     runtime?: string | null,

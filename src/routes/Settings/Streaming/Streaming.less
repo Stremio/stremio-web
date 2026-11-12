@@ -1,59 +1,49 @@
-:import('~stremio/routes/Settings/components/Option/Option.less') {
-    option-content: content;
-}
-
-.configure-input-container {
-    .option-content {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        overflow: hidden;
-
-        .label {
-            flex: auto;
-            white-space: pre;
-            text-overflow: ellipsis;
-            color: var(--primary-foreground-color);
-            padding: 0 1rem;
-        }
-
-        .configure-button-container {
-            flex: none;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--overlay-color);
-
-            &:hover {
-                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
-                background-color: transparent;
-            }
-
-            .icon {
-                flex: none;
-                width: 1rem;
-                height: 1rem;
-                margin: 0;
-                color: var(--primary-foreground-color);
-            }
-        }
-    }
-}
-
-.cache-location-container .option-content {
-    min-width: 0;
-}
+// Copyright (C) 2017-2026 Smart code 203358507
 
 .cache-location-control {
     width: 100%;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
     overflow: visible;
+
+    .cache-location-error {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--primary-foreground-color);
+    }
 }
 
-.cache-location-error {
-    margin-top: 0.5rem;
-    color: var(--primary-foreground-color);
+.notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1.25rem;
+
+    .icon {
+        flex: none;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-top: 0.05rem;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+    }
+
+    .text {
+        flex: 1;
+        min-width: 0;
+
+        .title {
+            line-height: 1.4;
+            color: var(--primary-foreground-color);
+        }
+
+        .description {
+            margin-top: 0.15rem;
+            font-size: 0.875rem;
+            line-height: 1.45;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+        }
+    }
 }

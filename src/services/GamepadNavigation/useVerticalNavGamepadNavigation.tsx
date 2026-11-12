@@ -22,12 +22,14 @@ const useVerticalGamepadNavigation = (_sectionRef: React.RefObject<HTMLDivElemen
             }
         };
 
-        gamepad?.on('buttonLT', currentRoute, () => navigate('prev'));
-        gamepad?.on('buttonRT', currentRoute, () => navigate('next'));
+        const onPrev = () => navigate('prev');
+        const onNext = () => navigate('next');
+        gamepad?.on('buttonLT', currentRoute, onPrev);
+        gamepad?.on('buttonRT', currentRoute, onNext);
 
         return () => {
-            gamepad?.off('buttonLT', currentRoute);
-            gamepad?.off('buttonRT', currentRoute);
+            gamepad?.off('buttonLT', currentRoute, onPrev);
+            gamepad?.off('buttonRT', currentRoute, onNext);
         };
     }, [gamepad, currentRoute]);
 };
