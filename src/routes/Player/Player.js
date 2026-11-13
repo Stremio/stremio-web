@@ -19,6 +19,7 @@ const { default: Buffering } = require('./Buffering');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
 const Error = require('./Error');
 const ControlBar = require('./ControlBar');
+const { default: PlayerClock } = require('./PlayerClock');
 const NextVideoPopup = require('./NextVideoPopup');
 const StatisticsMenu = require('./StatisticsMenu');
 const OptionsMenu = require('./OptionsMenu');
@@ -1010,6 +1011,7 @@ const Player = () => {
                     selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
                 />
             </ContextMenu>
+            <PlayerClock visible={settings.showClockInPlayer && fullscreen && !overlayHidden} />
             <HorizontalNavBar
                 className={classnames(styles['layer'], styles['nav-bar-layer'])}
                 title={player.title !== null ? player.title : ''}
