@@ -34,7 +34,13 @@ const usePlaybackSpeedHold = (enabled: boolean, stream: unknown, playbackSpeed: 
     }, [finish]);
 
     const start = useCallback((source: Source) => {
-        if (!enabled || holdRef.current) return;
+        if (!enabled) return;
+        if (holdRef.current) {
+            if (holdRef.current.source === source) return;
+            // A hold from another source never got its release event (e.g. mouseup lost
+            // while the system slept). Drop it so it can't swallow this input forever.
+            finish();
+        }
 
         suppressClickRef.current = false;
         const hold: Hold = { source, timer: null, speed: speedRef.current ?? 1, active: false };
@@ -44,7 +50,7 @@ const usePlaybackSpeedHold = (enabled: boolean, stream: unknown, playbackSpeed: 
             setPlaybackSpeed(2);
         }, 400);
         holdRef.current = hold;
-    }, [enabled, setPlaybackSpeed, speedRef]);
+    }, [enabled, finish, setPlaybackSpeed, speedRef]);
 
     const isActive = useCallback(() => holdRef.current !== null, []);
     const consumeClick = useCallback(() => {

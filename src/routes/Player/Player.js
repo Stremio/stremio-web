@@ -905,6 +905,12 @@ const Player = () => {
             setImmersedDebounced(true);
         };
 
+        // Sleep or closing the lid may hide the page without blurring the window,
+        // so key/mouse release events can be lost. Reset holds the same way as on blur.
+        const onVisibilityChange = () => {
+            if (document.hidden) onBlur();
+        };
+
         if (routeFocused) {
             window.addEventListener('keyup', onKeyUp);
             window.addEventListener('keydown', onKeyDown);
@@ -912,6 +918,7 @@ const Player = () => {
             window.addEventListener('mousedown', onMouseDownHold);
             window.addEventListener('mouseup', onMouseUp);
             window.addEventListener('blur', onBlur);
+            document.addEventListener('visibilitychange', onVisibilityChange);
         } else {
             cancelKeyboardSeek();
         }
@@ -922,6 +929,7 @@ const Player = () => {
             window.removeEventListener('mousedown', onMouseDownHold);
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('blur', onBlur);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
         };
     }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold, cancelKeyboardSeek, flushKeyboardSeek, releaseKeyboardSeek, startPlaybackSpeedHold, finishPlaybackSpeedHold, cancelPlaybackSpeedHold]);
 
