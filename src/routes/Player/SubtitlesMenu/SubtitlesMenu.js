@@ -294,6 +294,9 @@ SubtitleTrackMenu.propTypes = {
 
 const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
     const [slot, setSlot] = React.useState('primary');
+    const onMouseDown = React.useCallback((event) => {
+        event.nativeEvent.subtitlesMenuClosePrevented = true;
+    }, []);
     const hasPrimary = props.selectedSubtitlesTrackId !== null || props.selectedExtraSubtitlesTrackId !== null;
     const secondary = props.secondarySubtitlesSupported && hasPrimary && slot === 'secondary';
     const track = props.secondarySubtitlesTrack;
@@ -331,7 +334,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
     } : {};
 
     return (
-        <div ref={ref} className={props.className}>
+        <div ref={ref} className={props.className} onMouseDown={onMouseDown}>
             {props.secondarySubtitlesSupported && <div className={styles['slot-selector']}>
                 <Button aria-pressed={!secondary} className={classnames(styles['slot-option'], { 'selected': !secondary })} onClick={() => setSlot('primary')}>
                     {t('PLAYER_SUBTITLES_PRIMARY')}
