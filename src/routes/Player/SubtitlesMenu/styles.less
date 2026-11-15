@@ -92,3 +92,24 @@
         }
     }
 }
+
+.slot-selector {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0;
+
+    .slot-option {
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        color: var(--primary-foreground-color);
+
+        &:global(.selected), &:hover {
+            background-color: var(--overlay-color);
+        }
+    }
+}
+
+.secondary-status {
+    padding: 0 1.5rem 1rem;
+    color: var(--primary-foreground-color);
+}

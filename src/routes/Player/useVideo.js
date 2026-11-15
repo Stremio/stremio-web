@@ -42,6 +42,10 @@ const useVideo = () => {
         extraSubtitlesTextColor: null,
         extraSubtitlesBackgroundColor: null,
         extraSubtitlesOutlineColor: null,
+        secondarySubtitlesTrack: null,
+        secondarySubtitlesLoading: false,
+        secondarySubtitlesOffset: 95,
+        secondarySubtitlesDelay: 0,
         assSubtitlesStylingActive: false,
         fullscreen: null,
     });
@@ -133,6 +137,18 @@ const useVideo = () => {
         setProp('selectedExtraSubtitlesTrackId', id);
     }, [setProp]);
 
+    const setSecondarySubtitlesTrack = React.useCallback((track) => {
+        setProp('secondarySubtitlesTrack', track);
+    }, [setProp]);
+
+    const setSecondarySubtitlesOffset = React.useCallback((offset) => {
+        setProp('secondarySubtitlesOffset', offset);
+    }, [setProp]);
+
+    const setSecondarySubtitlesDelay = React.useCallback((delay) => {
+        setProp('secondarySubtitlesDelay', delay);
+    }, [setProp]);
+
     const setSubtitlesDelay = React.useCallback((delay) => {
         setProp('extraSubtitlesDelay', delay);
     }, [setProp]);
@@ -209,6 +225,8 @@ const useVideo = () => {
         setState((state) => ({
             ...state,
             manifest,
+            secondarySubtitlesTrack: null,
+            secondarySubtitlesLoading: false,
             live: null,
         }));
         manifest.props.forEach((propName) => dispatch(({ type: 'observeProp', propName })));
@@ -253,6 +271,9 @@ const useVideo = () => {
         setPlaybackSpeed,
         setAudioTrack,
         setSubtitlesTrack,
+        setSecondarySubtitlesTrack,
+        setSecondarySubtitlesOffset,
+        setSecondarySubtitlesDelay,
         setSubtitlesDelay,
         setSubtitlesSize,
         setSubtitlesOffset,

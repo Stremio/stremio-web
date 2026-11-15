@@ -1,5 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
+import type { SubtitleTrack, SubtitleSource, UseSubtitlesArgs, UseSubtitlesResult } from './useSubtitles.d';
+import useSecondarySubtitles from './useSecondarySubtitles';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONSTANTS, getKeyboardShortcutKeys, languages, useFileDropListener, useInterval, useShortcut, useTimeout, useToast } from 'stremio/common';
@@ -182,6 +184,7 @@ const useSubtitles = ({
     const { t } = useTranslation();
     const { setSubtitlesTrack, setExtraSubtitlesTrack, setSubtitlesDelay, setSubtitlesSize, setSubtitlesOffset } = video;
     const toast = useToast();
+    const { clearForPrimary, menuProps: secondaryMenuProps } = useSecondarySubtitles(video);
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
     const trackSelectionLocked = useRef(false);
@@ -229,12 +232,13 @@ const useSubtitles = ({
     }, [streamStateChanged]);
 
     const disableSubtitles = useCallback(() => {
+        clearForPrimary(null);
         trackSelectionLocked.current = true;
         appliedTrack.current = null;
         setSubtitlesTrack(null);
         setExtraSubtitlesTrack(null);
         streamStateChanged({ subtitlesEnabled: false });
-    }, [streamStateChanged, setSubtitlesTrack, setExtraSubtitlesTrack]);
+    }, [streamStateChanged, setSubtitlesTrack, setExtraSubtitlesTrack, clearForPrimary]);
 
     const selectEmbeddedTrack = useCallback((track: SubtitleTrack | null) => {
         if (!track) {
@@ -243,10 +247,11 @@ const useSubtitles = ({
         }
 
         trackSelectionLocked.current = true;
+        clearForPrimary(track);
         appliedTrack.current = { id: track.id, source: 'embedded' };
         setSubtitlesTrack(track.id);
         rememberTrack(track, true);
-    }, [disableSubtitles, rememberTrack, setSubtitlesTrack]);
+    }, [disableSubtitles, rememberTrack, setSubtitlesTrack, clearForPrimary]);
 
     const selectExtraTrack = useCallback((track: SubtitleTrack | null) => {
         if (!track) {
@@ -255,10 +260,11 @@ const useSubtitles = ({
         }
 
         trackSelectionLocked.current = true;
+        clearForPrimary(track);
         appliedTrack.current = { id: track.id, source: 'external' };
         setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
-    }, [disableSubtitles, rememberTrack, setExtraSubtitlesTrack]);
+    }, [disableSubtitles, rememberTrack, setExtraSubtitlesTrack, clearForPrimary]);
 
     const changeDelay = useCallback((delay: number) => {
         setSubtitlesDelay(delay);
@@ -415,7 +421,7 @@ const useSubtitles = ({
             findCandidateRank(candidates, selectedSource, selectedTrack)
             :
             -1;
-        const trackToApply = selectedRank === bestCandidate.rank && selectedTrack && selectedSource ?
+        const trackToApply: { source: SubtitleSource, track: SubtitleTrack } = selectedRank === bestCandidate.rank && selectedTrack && selectedSource ?
             { source: selectedSource, track: selectedTrack }
             :
             bestCandidate;
@@ -577,6 +583,7 @@ const useSubtitles = ({
     }, [closeMenus, hasTracks, toggleSubtitlesMenu]));
 
     const menuProps = useMemo(() => ({
+        ...secondaryMenuProps,
         subtitlesLanguage: settings.subtitlesLanguage,
         interfaceLanguage: settings.interfaceLanguage,
         subtitlesTracks: video.state.subtitlesTracks,
@@ -597,6 +604,7 @@ const useSubtitles = ({
         onExtraSubtitlesDelayChanged: changeDelay,
         onExtraSubtitlesSizeChanged: changeSize,
     }), [
+        secondaryMenuProps,
         changeDelay,
         changeOffset,
         changeSize,

@@ -32,7 +32,7 @@ const sortByValues = (items, values, getValue = (item) => item) => items.sort((a
     return left - right;
 });
 
-const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
+const SubtitleTrackMenu = React.memo(React.forwardRef((props, ref) => {
     const subtitlesTracks = React.useMemo(() => {
         return normalizeTracksLang(Array.isArray(props.subtitlesTracks) ? props.subtitlesTracks : []);
     }, [props.subtitlesTracks]);
@@ -211,47 +211,50 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
             <div className={styles['subtitles-settings-container']}>
                 <div className={styles['settings-header']}>{t('PLAYER_SUBTITLES_SETTINGS')}</div>
                 <div className={styles['settings-list']}>
-                    <Stepper
-                        accelerate
-                        className={styles['stepper']}
-                        label={'DELAY'}
-                        value={props.extraSubtitlesDelay / 1000}
-                        unit={'s'}
-                        step={SUBTITLES_DELAY_STEP_MS / 1000}
-                        disabled={props.extraSubtitlesDelay === null}
-                        onChange={onSubtitlesDelayChanged}
-                    />
-                    <Stepper
-                        className={styles['stepper']}
-                        label={'SIZE'}
-                        value={props.selectedSubtitlesTrackId ? props.subtitlesSize : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesSize : null}
-                        unit={'%'}
-                        step={25}
-                        min={SUBTITLES_SIZES[0]}
-                        max={SUBTITLES_SIZES[SUBTITLES_SIZES.length - 1]}
-                        disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
-                        onChange={onSubtitlesSizeChanged}
-                    />
-                    <Stepper
-                        className={styles['stepper']}
-                        label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}
-                        value={props.selectedSubtitlesTrackId ? props.subtitlesOffset : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesOffset : null}
-                        unit={'%'}
-                        step={1}
-                        min={0}
-                        max={100}
-                        disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
-                        onChange={onSubtitlesOffsetChanged}
-                    />
+                    {props.settingsContent || <>
+                        <Stepper
+                            accelerate
+                            className={styles['stepper']}
+                            label={'DELAY'}
+                            value={props.extraSubtitlesDelay / 1000}
+                            unit={'s'}
+                            step={SUBTITLES_DELAY_STEP_MS / 1000}
+                            disabled={props.extraSubtitlesDelay === null}
+                            onChange={onSubtitlesDelayChanged}
+                        />
+                        <Stepper
+                            className={styles['stepper']}
+                            label={'SIZE'}
+                            value={props.selectedSubtitlesTrackId ? props.subtitlesSize : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesSize : null}
+                            unit={'%'}
+                            step={25}
+                            min={SUBTITLES_SIZES[0]}
+                            max={SUBTITLES_SIZES[SUBTITLES_SIZES.length - 1]}
+                            disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesSize === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesSize === null)}
+                            onChange={onSubtitlesSizeChanged}
+                        />
+                        <Stepper
+                            className={styles['stepper']}
+                            label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}
+                            value={props.selectedSubtitlesTrackId ? props.subtitlesOffset : props.selectedExtraSubtitlesTrackId ? props.extraSubtitlesOffset : null}
+                            unit={'%'}
+                            step={1}
+                            min={0}
+                            max={100}
+                            disabled={props.assSubtitlesStylingActive || (props.selectedSubtitlesTrackId && props.subtitlesOffset === null) || (props.selectedExtraSubtitlesTrackId && props.extraSubtitlesOffset === null)}
+                            onChange={onSubtitlesOffsetChanged}
+                        />
+                    </>}
                 </div>
             </div>
         </div>
     );
 }));
 
-SubtitlesMenu.displayName = 'MainNavBars';
+SubtitleTrackMenu.displayName = 'SubtitleTrackMenu';
 
-SubtitlesMenu.propTypes = {
+SubtitleTrackMenu.propTypes = {
+    settingsContent: PropTypes.node,
     className: PropTypes.string,
     subtitlesLanguage: PropTypes.string,
     interfaceLanguage: PropTypes.string,
@@ -287,6 +290,73 @@ SubtitlesMenu.propTypes = {
     onExtraSubtitlesOffsetChanged: PropTypes.func,
     onExtraSubtitlesDelayChanged: PropTypes.func,
     onExtraSubtitlesSizeChanged: PropTypes.func
+};
+
+const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
+    const [slot, setSlot] = React.useState('primary');
+    const hasPrimary = props.selectedSubtitlesTrackId !== null || props.selectedExtraSubtitlesTrackId !== null;
+    const secondary = props.secondarySubtitlesSupported && hasPrimary && slot === 'secondary';
+    const track = props.secondarySubtitlesTrack;
+    const secondaryProps = secondary ? {
+        subtitlesTracks: props.secondarySubtitlesTracks.filter((item) => item.embedded),
+        extraSubtitlesTracks: props.secondarySubtitlesTracks.filter((item) => !item.embedded),
+        selectedSubtitlesTrackId: track && track.embedded ? track.id : null,
+        selectedExtraSubtitlesTrackId: track && !track.embedded ? track.id : null,
+        onSubtitlesTrackSelected: props.onSecondarySubtitlesTrackSelected,
+        onExtraSubtitlesTrackSelected: props.onSecondarySubtitlesTrackSelected,
+        settingsContent: <>
+            {props.secondarySubtitlesLoading && <div role="status" className={styles['secondary-status']}>{t('PLAYER_SUBTITLES_SECONDARY_LOADING')}</div>}
+            {track && <>
+                <Stepper
+                    accelerate
+                    className={styles['stepper']}
+                    label={'DELAY'}
+                    value={props.secondarySubtitlesDelay / 1000}
+                    unit={'s'}
+                    step={SUBTITLES_DELAY_STEP_MS / 1000}
+                    onChange={(value) => props.onSecondarySubtitlesDelayChanged(Math.round(value * 1000))}
+                />
+                <Stepper
+                    className={styles['stepper']}
+                    label={'PLAYER_SUBTITLES_VERTICAL_POSITION'}
+                    value={props.secondarySubtitlesOffset}
+                    unit={'%'}
+                    step={1}
+                    min={0}
+                    max={100}
+                    onChange={props.onSecondarySubtitlesOffsetChanged}
+                />
+            </>}
+        </>,
+    } : {};
+
+    return (
+        <div ref={ref} className={props.className}>
+            {props.secondarySubtitlesSupported && <div className={styles['slot-selector']}>
+                <Button aria-pressed={!secondary} className={classnames(styles['slot-option'], { 'selected': !secondary })} onClick={() => setSlot('primary')}>
+                    {t('PLAYER_SUBTITLES_PRIMARY')}
+                </Button>
+                <Button aria-pressed={secondary} disabled={!hasPrimary} className={classnames(styles['slot-option'], { 'selected': secondary })} onClick={() => setSlot('secondary')}>
+                    {t('PLAYER_SUBTITLES_SECONDARY')}
+                </Button>
+            </div>}
+            <SubtitleTrackMenu {...props} {...secondaryProps} className={undefined} />
+        </div>
+    );
+}));
+
+SubtitlesMenu.displayName = 'SubtitlesMenu';
+SubtitlesMenu.propTypes = {
+    ...SubtitleTrackMenu.propTypes,
+    secondarySubtitlesSupported: PropTypes.bool,
+    secondarySubtitlesTracks: PropTypes.array,
+    secondarySubtitlesTrack: PropTypes.object,
+    secondarySubtitlesLoading: PropTypes.bool,
+    secondarySubtitlesOffset: PropTypes.number,
+    secondarySubtitlesDelay: PropTypes.number,
+    onSecondarySubtitlesTrackSelected: PropTypes.func,
+    onSecondarySubtitlesOffsetChanged: PropTypes.func,
+    onSecondarySubtitlesDelayChanged: PropTypes.func,
 };
 
 module.exports = SubtitlesMenu;

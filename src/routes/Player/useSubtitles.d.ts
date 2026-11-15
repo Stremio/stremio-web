@@ -8,6 +8,7 @@ type SubtitleTrack = {
     url?: string | null,
     fallbackUrl?: string | null,
     embedded?: boolean,
+    secondarySupported?: boolean,
     local?: boolean,
     exclusive?: boolean,
     ass?: boolean,
@@ -17,6 +18,11 @@ type SubtitleTrack = {
 type SubtitleSource = 'embedded' | 'external';
 
 type VideoSubtitleState = {
+    manifest: { props: string[] } | null,
+    secondarySubtitlesTrack: SubtitleTrack | null,
+    secondarySubtitlesLoading: boolean,
+    secondarySubtitlesOffset: number,
+    secondarySubtitlesDelay: number,
     stream: unknown | null,
     subtitlesTracks: SubtitleTrack[],
     selectedSubtitlesTrackId: string | null,
@@ -40,6 +46,9 @@ type VideoController = {
     state: VideoSubtitleState,
     addExtraSubtitlesTracks: (tracks: SubtitleTrack[]) => void,
     addLocalSubtitles: (filename: string, buffer: ArrayBuffer) => void,
+    setSecondarySubtitlesTrack: (track: SubtitleTrack | null) => void,
+    setSecondarySubtitlesOffset: (offset: number) => void,
+    setSecondarySubtitlesDelay: (delay: number) => void,
     setSubtitlesTrack: (id: string | null) => void,
     setExtraSubtitlesTrack: (id: string | null) => void,
     setSubtitlesDelay: (delay: number) => void,
@@ -62,6 +71,15 @@ type UseSubtitlesArgs = {
 };
 
 type SubtitlesMenuProps = {
+    secondarySubtitlesSupported: boolean,
+    secondarySubtitlesTracks: SubtitleTrack[],
+    secondarySubtitlesTrack: SubtitleTrack | null,
+    secondarySubtitlesLoading: boolean,
+    secondarySubtitlesOffset: number,
+    secondarySubtitlesDelay: number,
+    onSecondarySubtitlesTrackSelected: (track: SubtitleTrack | null) => void,
+    onSecondarySubtitlesOffsetChanged: (offset: number) => void,
+    onSecondarySubtitlesDelayChanged: (delay: number) => void,
     subtitlesLanguage: string | null,
     interfaceLanguage: string,
     subtitlesTracks: SubtitleTrack[],
@@ -90,3 +108,5 @@ type UseSubtitlesResult = {
     selectedExtraSubtitleTrackId: string | null,
     subtitlesMenuProps: SubtitlesMenuProps,
 };
+
+export type { SubtitleTrack, SubtitleSource, VideoController, UseSubtitlesArgs, UseSubtitlesResult };
