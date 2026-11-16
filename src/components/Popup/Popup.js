@@ -176,7 +176,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
     });
     return <>
         {label}
-        {portal && open && createPortal(<div ref={layerRef} className={styles['portal-layer']} onMouseDown={menuOnMouseDown} onPointerDown={menuOnMouseDown} onClick={portalOnClick}>
+        {portal && open && createPortal(<div ref={layerRef} className={styles['portal-layer']} onMouseDown={menuOnMouseDown} onPointerDown={menuOnMouseDown} onClick={portalOnClick} onContextMenu={props.onContextMenu}>
             {menu}
         </div>, labelRef.current?.closest('.modal-container, .route-container') ?? document.body)}
     </>;
@@ -192,6 +192,7 @@ Popup.propTypes = {
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
     dataset: PropTypes.object,
+    onContextMenu: PropTypes.func,
     onCloseRequest: PropTypes.func
 };
 
