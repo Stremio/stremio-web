@@ -8,6 +8,26 @@ const { useCore } = require('stremio/core');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
 
+const equalResults = new WeakMap();
+
+const isEqual = (prev, next) => {
+    if (prev === null || typeof prev !== 'object' || next === null || typeof next !== 'object') {
+        return deepEqual(prev, next);
+    }
+
+    let results = equalResults.get(prev);
+    if (!results) {
+        results = new WeakMap();
+        equalResults.set(prev, results);
+    }
+
+    if (!results.has(next)) {
+        results.set(next, deepEqual(prev, next));
+    }
+
+    return results.get(next);
+};
+
 const useModelState = ({ action, ...args }) => {
     const core = useCore();
     const routeActive = useRouteActive();
@@ -20,7 +40,7 @@ const useModelState = ({ action, ...args }) => {
             const keys = Object.keys(nextState);
             let changed = keys.length !== Object.keys(prevState).length;
             const state = keys.reduce((result, key) => {
-                const equal = Object.prototype.hasOwnProperty.call(prevState, key) && deepEqual(prevState[key], nextState[key]);
+                const equal = Object.prototype.hasOwnProperty.call(prevState, key) && isEqual(prevState[key], nextState[key]);
                 changed = changed || !equal;
                 result[key] = equal ? prevState[key] : nextState[key];
                 return result;
