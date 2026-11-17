@@ -1,0 +1,10 @@
+subtitles_preview.jpg
+
+Still frame from Big Buck Bunny (2008), 00:01:25, taken from the official
+1080p release (big_buck_bunny_1080p_h264.mov) and resized to 1280x720.
+Shown in Settings with sample subtitles drawn over it.
+
+(c) copyright 2008, Blender Foundation / www.bigbuckbunny.org
+https://peach.blender.org/
+Licensed under the Creative Commons Attribution 3.0 license:
+https://creativecommons.org/licenses/by/3.0/
