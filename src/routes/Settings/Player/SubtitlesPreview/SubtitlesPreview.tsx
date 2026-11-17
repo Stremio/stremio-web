@@ -16,7 +16,8 @@ const SubtitlesPreview = ({ settings }: Props) => {
         '--outline': settings.subtitlesOutlineColor,
         color: settings.subtitlesTextColor,
         backgroundColor: settings.subtitlesBackgroundColor,
-    } as React.CSSProperties), [settings.subtitlesSize, settings.subtitlesOutlineColor, settings.subtitlesTextColor, settings.subtitlesBackgroundColor]);
+        fontWeight: settings.subtitlesBold ? 'bold' : 'normal',
+    } as React.CSSProperties), [settings.subtitlesSize, settings.subtitlesOutlineColor, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesBold]);
 
     return (
         <div className={styles['subtitles-preview']} role={'img'} aria-label={t('SETTINGS_SUBTITLES_PREVIEW')}>
