@@ -69,6 +69,7 @@ const useSettingsSearch = (query: string, groups: SettingsGroup[], profile: Prof
                 row(PAGES.PLAYER, 'subColor', t('SETTINGS_SUBTITLES_COLOR'), 'captions'),
                 row(PAGES.PLAYER, 'subBg', t('SETTINGS_SUBTITLES_COLOR_BACKGROUND'), 'captions'),
                 row(PAGES.PLAYER, 'subOutline', t('SETTINGS_SUBTITLES_COLOR_OUTLINE'), 'captions'),
+                row(PAGES.PLAYER, 'subBold', t('BOLD'), 'captions subtitles font weight'),
                 row(PAGES.PLAYER, 'ass', t('SETTINGS_ASS_SUBTITLES_STYLING'), 'captions'),
                 row(PAGES.PLAYER, 'audio', t('SETTINGS_DEFAULT_AUDIO_TRACK'), 'language dub'),
                 row(PAGES.PLAYER, 'seek', t('SETTINGS_SEEK_KEY'), 'skip'),

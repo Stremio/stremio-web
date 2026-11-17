@@ -19,6 +19,7 @@ const Player = ({ profile }: Props) => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        subtitlesBoldToggle,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
         seekTimeDurationSelect,
@@ -49,6 +50,9 @@ const Player = ({ profile }: Props) => {
                 </Row>
                 <Row rowId={'subOutline'} label={t('SETTINGS_SUBTITLES_COLOR_OUTLINE')} control={'wide'}>
                     <ColorInput className={'color-input'} {...subtitlesOutlineColorInput} />
+                </Row>
+                <Row rowId={'subBold'} label={t('BOLD')}>
+                    <Toggle aria-label={t('BOLD')} {...subtitlesBoldToggle} />
                 </Row>
                 <Row rowId={'ass'} label={t('SETTINGS_ASS_SUBTITLES_STYLING')}>
                     <Toggle aria-label={t('SETTINGS_ASS_SUBTITLES_STYLING')} {...assSubtitlesStylingToggle} />

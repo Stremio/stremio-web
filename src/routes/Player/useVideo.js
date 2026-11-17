@@ -34,6 +34,7 @@ const useVideo = () => {
         subtitlesTextColor: null,
         subtitlesBackgroundColor: null,
         subtitlesOutlineColor: null,
+        subtitlesBold: null,
         extraSubtitlesTracks: [],
         selectedExtraSubtitlesTrackId: null,
         extraSubtitlesSize: null,
@@ -42,6 +43,7 @@ const useVideo = () => {
         extraSubtitlesTextColor: null,
         extraSubtitlesBackgroundColor: null,
         extraSubtitlesOutlineColor: null,
+        extraSubtitlesBold: null,
         assSubtitlesStylingActive: false,
         fullscreen: null,
     });
@@ -178,6 +180,11 @@ const useVideo = () => {
         setProp('extraSubtitlesOutlineColor', color);
     }, [setProp]);
 
+    const setSubtitlesBold = React.useCallback((bold) => {
+        setProp('subtitlesBold', bold);
+        setProp('extraSubtitlesBold', bold);
+    }, [setProp]);
+
     const onError = (error) => {
         events.emit('error', error);
     };
@@ -260,6 +267,7 @@ const useVideo = () => {
         setSubtitlesTextColor,
         setSubtitlesBackgroundColor,
         setSubtitlesOutlineColor,
+        setSubtitlesBold,
         setExtraSubtitlesTrack,
         setVideoScale,
         setFullscreen,

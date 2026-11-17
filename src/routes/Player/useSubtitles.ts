@@ -215,6 +215,7 @@ const useSubtitles = ({
         currentVideo.setSubtitlesTextColor(currentSettings.subtitlesTextColor);
         currentVideo.setSubtitlesBackgroundColor(currentSettings.subtitlesBackgroundColor);
         currentVideo.setSubtitlesOutlineColor(currentSettings.subtitlesOutlineColor);
+        currentVideo.setSubtitlesBold(currentSettings.subtitlesBold);
     }, []);
 
     const rememberTrack = useCallback((track: SubtitleTrack, embedded: boolean) => {
