@@ -36,7 +36,7 @@
         overflow: visible;
 
         .logo {
-            height: ~"min(7.5rem, calc(26rem / var(--logo-ratio)), calc(13.2rem * var(--logo-root)))";
+            --logo-height: ~"min(7.5rem, calc(26rem / var(--logo-ratio)), calc(13.2rem * var(--logo-root)))";
             filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.4));
         }
     }
@@ -169,7 +169,7 @@
         text-align: center;
 
         .title .logo {
-            height: ~"min(5rem, calc(min(18rem, 70vw) / var(--logo-ratio)), calc(8.6rem * var(--logo-root)))";
+            --logo-height: ~"min(5rem, calc(min(18rem, 70vw) / var(--logo-ratio)), calc(8.6rem * var(--logo-root)))";
         }
 
         .facts {
@@ -208,7 +208,7 @@
         gap: 0.75rem;
 
         .title .logo {
-            height: ~"min(4.5rem, calc(20rem / var(--logo-ratio)), calc(8rem * var(--logo-root)))";
+            --logo-height: ~"min(4.5rem, calc(20rem / var(--logo-ratio)), calc(8rem * var(--logo-root)))";
         }
 
         .description {
