@@ -8,8 +8,18 @@ const createTransport = (): CoreTransport => {
         return bridge.call(['init'], [args]);
     };
 
+    const pendingStates = new Map<string, Promise<object>>();
+
     const getState = (model: string): Promise<object> => {
-        return bridge.call(['getState'], [model]);
+        const pending = pendingStates.get(model);
+        if (pending) {
+            return pending.catch(() => bridge.call(['getState'], [model]));
+        }
+
+        const request: Promise<object> = bridge.call(['getState'], [model]);
+        pendingStates.set(model, request);
+        queueMicrotask(() => pendingStates.delete(model));
+        return request;
     };
 
     const dispatch = (action: DispatchAction, model?: string): Promise<void> => {
