@@ -25,7 +25,7 @@ type Props = {
 const Slide = ({ id, item, active, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
     const { groups, imdb } = useMetaLinks(item.links);
-    const genres = groups.find(({ category }) => category === CONSTANTS.GENRES_LINK_CATEGORY)?.links.map(({ label }) => label).join(', ') ?? null;
+    const genres = groups.find(({ category }) => category === CONSTANTS.GENRES_LINK_CATEGORY)?.links.map(({ label }) => t(label)).join(', ') ?? null;
     const detailsHref = getMetaDetailsHref(item.deepLinks);
     const watchHref = item.deepLinks.player ?? item.deepLinks.metaDetailsStreams ?? item.deepLinks.metaDetailsVideos;
     const trailerHref = item.trailerStreams[0]?.deepLinks.player ?? null;
