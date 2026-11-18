@@ -53,7 +53,7 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, current, live, n
     const { href, target, download, play } = useStreamPlay(watchStream?.stream ?? null);
 
     return (
-        <div className={classNames(className, styles['playback'])}>
+        <div className={classNames(className, styles['playback'], { [styles['idle']]: watchStream === null })}>
             {
                 watchStream !== null ?
                     <PlayButton

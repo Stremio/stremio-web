@@ -76,6 +76,12 @@
     max-width: 100%;
 }
 
+@media @desktop {
+    .actions .secondary {
+        max-width: calc(100% + var(--hero-bleed-end));
+    }
+}
+
 @media @desktop-short {
     .actions {
         gap: 0.625rem;
