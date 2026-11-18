@@ -24,8 +24,8 @@ importers:
         specifier: 5.18.0
         version: 5.18.0
       '@stremio/stremio-video':
-        specifier: 0.0.106
-        version: 0.0.106
+        specifier: 0.1.0
+        version: 0.1.0
       bowser:
         specifier: 2.14.1
         version: 2.14.1
@@ -1450,8 +1450,8 @@ packages:
   '@stremio/stremio-icons@5.18.0':
     resolution: {integrity: sha512-Hll2y0Yb/3dkBdW8DE36QBy2jo65+OcklJ8mrBCSMjpyNOiN4GeAvnHoAazRZZc9nLssChGZdExtYHCUQCZp1g==}
 
-  '@stremio/stremio-video@0.0.106':
-    resolution: {integrity: sha512-USYOVjSZKO+o+BXRWr+MNYjzJPQZvwoNHL+A3qZzTQTCFFo3BPeyv1w2nmh6HNZeZ46p001fHaKLchpXTEDHTw==}
+  '@stremio/stremio-video@0.1.0':
+    resolution: {integrity: sha512-BPmOpByOKoO8A+QdDJb3UU0oPdnbcUbq/KivPItWi8clCswN7JGrDrCdbhvBpI/+42s9ChCeFl7Ap8GXsD/R0A==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6585,7 +6585,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.18.0': {}
 
-  '@stremio/stremio-video@0.0.106':
+  '@stremio/stremio-video@0.1.0':
     dependencies:
       '@stremio/libass-wasm': https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.7/stremio-libass-wasm-4.2.7.tgz
       buffer: 6.0.3

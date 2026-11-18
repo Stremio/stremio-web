@@ -20,6 +20,7 @@ const Device = ({ profile }: Props) => {
 
     const {
         surroundSoundToggle,
+        audioPassthroughToggle,
         hardwareDecodingToggle,
         gpuVideoProcessingToggle,
         videoModeSelect,
@@ -36,6 +37,12 @@ const Device = ({ profile }: Props) => {
                 <Row rowId={'surround'} label={t('SETTINGS_SURROUND_SOUND')}>
                     <Toggle aria-label={t('SETTINGS_SURROUND_SOUND')} {...surroundSoundToggle} />
                 </Row>
+                {
+                    shell.active && shell.capabilities.audioPassthrough &&
+                        <Row rowId={'passthrough'} label={t('SETTINGS_AUDIO_PASSTHROUGH')}>
+                            <Toggle aria-label={t('SETTINGS_AUDIO_PASSTHROUGH')} {...audioPassthroughToggle} />
+                        </Row>
+                }
                 {
                     shell.active &&
                         <Row rowId={'hwdec'} label={t('SETTINGS_HWDEC')}>
