@@ -91,6 +91,7 @@ const Player = () => {
 
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
+    const barPressed = React.useRef(false);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
 
     React.useEffect(() => {
@@ -127,6 +128,7 @@ const Player = () => {
         nextVideoRemainingTime !== null && nextVideoRemainingTime > 0 &&
         nextVideoRemainingTime <= settings.nextVideoNotificationDuration;
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
+    const [controlBarMenuOpen, setControlBarMenuOpen] = React.useState(false);
 
     const menusOpen = React.useMemo(() => {
         return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || castDevicesMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
@@ -331,8 +333,8 @@ const Player = () => {
         seekByKeyboard(offset);
     }, [canSeek, seekByKeyboard]);
     const overlayHidden = React.useMemo(() => {
-        return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
-    }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
+        return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !controlBarMenuOpen;
+    }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen, controlBarMenuOpen]);
 
     React.useEffect(() => {
         if (!video.state.manifest?.props.includes('subtitlesOffsetMinimum')) {
@@ -435,12 +437,10 @@ const Player = () => {
         closeSideDrawer();
     }, []);
 
-    const onContainerMouseMove = React.useCallback((event) => {
+    const onContainerMouseMove = React.useCallback(() => {
         setImmersed(false);
-        if (!event.nativeEvent.immersePrevented) {
+        if (!barPressed.current) {
             setImmersedDebounced(true);
-        } else {
-            setImmersedDebounced.cancel();
         }
     }, []);
 
@@ -449,8 +449,12 @@ const Player = () => {
         setImmersed(true);
     }, []);
 
-    const onBarMouseMove = React.useCallback((event) => {
-        event.nativeEvent.immersePrevented = true;
+    const onBarMouseDown = React.useCallback((event) => {
+        if (event.button !== 0) return;
+
+        barPressed.current = true;
+        setImmersedDebounced.cancel();
+        setImmersed(false);
     }, []);
 
     const onPlayPause = React.useCallback(() => {
@@ -936,6 +940,22 @@ const Player = () => {
         };
     }, [onEnded]);
 
+    React.useEffect(() => {
+        const onBarMouseUp = () => {
+            if (!barPressed.current) return;
+
+            barPressed.current = false;
+            setImmersedDebounced(true);
+        };
+
+        window.addEventListener('mouseup', onBarMouseUp);
+        window.addEventListener('blur', onBarMouseUp);
+        return () => {
+            window.removeEventListener('mouseup', onBarMouseUp);
+            window.removeEventListener('blur', onBarMouseUp);
+        };
+    }, []);
+
     React.useLayoutEffect(() => {
         return () => {
             clearTimeout(detailsHold.current?.timer);
@@ -1017,8 +1037,7 @@ const Player = () => {
                 backButton={true}
                 fullscreenButton={true}
                 hdrInfo={video.state.hdrInfo}
-                onMouseMove={onBarMouseMove}
-                onMouseOver={onBarMouseMove}
+                onMouseDown={onBarMouseDown}
             />
             {
                 player.metaItem?.type === 'Ready' ?
@@ -1067,8 +1086,8 @@ const Player = () => {
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onToggleSideDrawer={toggleSideDrawer}
-                onMouseMove={onBarMouseMove}
-                onMouseOver={onBarMouseMove}
+                onButtonsMenuOpenChanged={setControlBarMenuOpen}
+                onMouseDown={onBarMouseDown}
                 onTouchEnd={onContainerMouseLeave}
             />
             <Indicator
