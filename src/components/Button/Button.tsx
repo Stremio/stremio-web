@@ -16,6 +16,7 @@ type Props = {
     disabled?: boolean,
     role?: React.AriaRole,
     tabIndex?: number,
+    activateOnSpace?: boolean,
     children: React.ReactNode,
     onKeyDown?: (event: React.KeyboardEvent) => void,
     onMouseDown?: (event: React.MouseEvent) => void,
@@ -26,7 +27,7 @@ type Props = {
     onDoubleClick?: () => void,
 };
 
-const Button = forwardRef(({ className, href, disabled, children, onLongPress, onDoubleClick, ...props }: Props, ref) => {
+const Button = forwardRef(({ className, href, disabled, children, onLongPress, onDoubleClick, activateOnSpace, ...props }: Props, ref) => {
     const longPress = useLongPress(onLongPress!, { detect: LongPressEventType.Pointer });
     const to = typeof href === 'string' && href.startsWith('#/') && typeof props.download !== 'string' ? href.slice(1) : null;
     const component: React.ElementType = to !== null ? Link : typeof href === 'string' && href.length > 0 ? 'a' : 'div';
@@ -36,14 +37,16 @@ const Button = forwardRef(({ className, href, disabled, children, onLongPress, o
             props.onKeyDown(event);
         }
 
-        if (event.key === 'Enter') {
+        const space = activateOnSpace && event.key === ' ';
+        if (event.key === 'Enter' || space) {
             event.preventDefault();
+            if (space && event.repeat) return;
             // @ts-expect-error: Property 'buttonClickPrevented' does not exist on type 'KeyboardEvent'.
             if (!event.nativeEvent.buttonClickPrevented) {
                 event.currentTarget.click();
             }
         }
-    }, [props.onKeyDown]);
+    }, [props.onKeyDown, activateOnSpace]);
 
     const onMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         if (typeof props.onMouseDown === 'function') {

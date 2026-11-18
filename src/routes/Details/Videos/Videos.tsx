@@ -2,16 +2,14 @@
 
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import SegmentedControl from 'stremio/components/SegmentedControl';
 import Toggle from 'stremio/components/Toggle';
-import useMediaQuery from 'stremio/common/useMediaQuery';
-import screenSizes from 'stremio/common/screen-sizes.less';
 import EpisodePicker from '../EpisodePicker';
 import Message from '../Message';
 import Panel from '../Panel';
 import Placeholder from '../Placeholder';
 import { formatDate, getMinutesLeft } from '../format';
 import Search from './Search';
+import SeasonsBar from './SeasonsBar';
 import VideoRow from './Video';
 import useScrollMemory from './useScrollMemory';
 import useSeasons from 'stremio/common/useSeasons';
@@ -50,7 +48,6 @@ const Videos = ({
     scrollMemoryRef,
 }: Props) => {
     const { t, i18n } = useTranslation();
-    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
     const [search, setSearch] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
 
@@ -99,12 +96,10 @@ const Videos = ({
         <Panel
             ariaLabel={t('VIDEOS')}
             header={
-                seasons.length > 1 ?
-                    <SegmentedControl
+                seasons.length > 1 && !hidden ?
+                    <SeasonsBar
                         options={options}
                         value={selectedSeason !== null ? String(selectedSeason) : null}
-                        ariaLabel={t('SEASON')}
-                        size={isMobile ? 'large' : 'medium'}
                         onSelect={handleSeasonSelect}
                     />
                     :

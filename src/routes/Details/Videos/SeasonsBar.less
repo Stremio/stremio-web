@@ -1,0 +1,73 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '../variables.less';
+
+:import('~stremio/components/MultiselectMenu/Label/Label.less') {
+    multiselect-button: button;
+}
+
+@control-height: 2.75rem;
+
+.seasons-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .step {
+        flex: none;
+        max-width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: @control-height;
+        height: @control-height;
+        border-radius: @control-height;
+        background-color: var(--overlay-color);
+        color: var(--primary-foreground-color);
+        transition: background-color 0.15s @ease;
+
+        &:hover,
+        &:focus-visible {
+            background-color: @overlay-hover;
+        }
+
+        .icon {
+            flex: none;
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+
+    .seasons {
+        flex: 1;
+        min-width: 0;
+        background-color: var(--overlay-color);
+
+        .multiselect-button {
+            height: @control-height;
+            padding: 0 min(1.125rem, 11%);
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: background-color 0.15s @ease;
+
+            &:hover,
+            &:focus-visible {
+                background-color: @overlay-hover;
+            }
+        }
+    }
+}
+
+@media @mobile {
+    .seasons-bar {
+        .step {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 3rem;
+        }
+
+        .seasons .multiselect-button {
+            height: 3rem;
+        }
+    }
+}

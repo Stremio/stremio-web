@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useGoBack } from 'stremio-router';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
-import SegmentedControl from 'stremio/components/SegmentedControl';
+import MultiselectMenu from 'stremio/components/MultiselectMenu';
 import { useProfile } from 'stremio/common';
 import { getEpisodeLabel } from '../format';
 import Panel from '../Panel';
@@ -51,14 +51,13 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
 
     const options = useMemo(() => {
         return [
-            { value: ALL_ADDONS_KEY, label: t('ALL_ADDONS'), count: total },
-            ...groups.map(({ addon, streams }) => ({
+            { value: ALL_ADDONS_KEY, label: t('ALL_ADDONS') },
+            ...groups.map(({ addon }) => ({
                 value: addon.transportUrl,
                 label: addon.manifest.name,
-                count: streams.length,
             })),
         ];
-    }, [groups, total, t]);
+    }, [groups, t]);
 
     const visibleGroups = useMemo(() => {
         return effectiveSelectedAddon === ALL_ADDONS_KEY ?
@@ -114,13 +113,12 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                     null
             }
             {
-                streams.length > 1 ?
-                    <SegmentedControl
+                groups.length > 1 ?
+                    <MultiselectMenu
                         className={styles['addons']}
                         options={options}
                         value={effectiveSelectedAddon}
-                        ariaLabel={t('STREAMS')}
-                        size={'large'}
+                        portal={true}
                         onSelect={setSelectedAddon}
                     />
                     :
