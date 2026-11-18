@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { usePlatform } from 'stremio/common';
 
 const useMediaSession = (
@@ -52,38 +52,46 @@ const useMediaSession = (
     }, [shellActive, shellSend]);
 
     // Metadata
-    useEffect(() => {
+    const metadata = useMemo(() => {
         const metaItem = player.metaItem && player.metaItem?.type === 'Ready' ? player.metaItem.content as MetaItemPlayer : null;
         const videoId = player.selected ? player.selected?.streamRequest?.path?.id : null;
         const video = metaItem?.videos.find(({ id }) => id === videoId);
 
-        const videoInfo = video?.season && video?.episode ? ` (${video.season}x${video.episode})` : null;
-        const videoTitle = video ? `${video.title}${videoInfo}` : null;
+        const videoInfo = video?.season && video?.episode ? `(${video.season}x${video.episode})` : null;
+        const videoTitle = video ? [video.title?.trim(), videoInfo].filter(Boolean).join(' ') || null : null;
         const metaTitle = metaItem ? metaItem.name : null;
         const imageUrl = metaItem ? metaItem.logo : null;
 
         const title = videoTitle ?? metaTitle;
         const artist = (videoTitle && metaTitle) ?? undefined;
-        const artwork = imageUrl ? [{ src: imageUrl }] : undefined;
 
-        if (title) {
-            if (navigator.mediaSession) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title,
-                    artist,
-                    artwork,
-                });
-            }
-
-            if (shell.active) {
-                shell.send('media.metadata', {
-                    title,
-                    artist,
-                    artUrl: imageUrl,
-                });
-            }
-        }
+        return title ? { title, artist, imageUrl } : null;
     }, [player.metaItem, player.selected]);
+
+    // A reload of the stream makes the shell drop the title, so it is sent again once the stream is loaded
+    const loaded = videoState.loaded === true;
+    const sentMetadata = useRef<typeof metadata>(null);
+    useEffect(() => {
+        if (!metadata || (metadata === sentMetadata.current && !loaded)) return;
+        sentMetadata.current = metadata;
+
+        const { title, artist, imageUrl } = metadata;
+        if (navigator.mediaSession) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title,
+                artist,
+                artwork: imageUrl ? [{ src: imageUrl }] : undefined,
+            });
+        }
+
+        if (shell.active) {
+            shell.send('media.metadata', {
+                title,
+                artist,
+                artUrl: imageUrl,
+            });
+        }
+    }, [metadata, loaded]);
 
     // Callbacks
     useEffect(() => {
