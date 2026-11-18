@@ -84,6 +84,7 @@ const useSettingsSearch = (query: string, groups: SettingsGroup[], profile: Prof
             ],
             [PAGES.DEVICE]: [
                 row(PAGES.DEVICE, 'surround', t('SETTINGS_SURROUND_SOUND'), 'audio 5.1'),
+                ...(shell.active && shell.capabilities.audioPassthrough ? [row(PAGES.DEVICE, 'passthrough', t('SETTINGS_AUDIO_PASSTHROUGH'), 'audio spdif dolby dts truehd receiver')] : []),
                 ...(shell.active ? [row(PAGES.DEVICE, 'hwdec', t('SETTINGS_HWDEC'), 'gpu hwdec')] : []),
                 ...(shell.active && shell.capabilities.gpuVideoProcessing ? [row(PAGES.DEVICE, 'gpu', t('SETTINGS_GPU_VIDEO_PROCESSING'), 'rtx vsr hdr')] : []),
                 ...(shell.active && platform.name === 'windows' ? [row(PAGES.DEVICE, 'videoMode', t('SETTINGS_VIDEO_MODE'), 'renderer')] : []),

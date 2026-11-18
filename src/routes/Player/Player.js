@@ -547,6 +547,7 @@ const Player = () => {
                     0,
                 forceTranscoding: forceTranscoding || casting,
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
+                audioPassthrough: platform.shell.capabilities.audioPassthrough ? settings.audioPassthrough : undefined,
                 hardwareDecoding: settings.hardwareDecoding,
                 assSubtitlesStyling: settings.assSubtitlesStyling,
                 gpuVideoProcessing: settings.gpuVideoProcessing && platform.shell.capabilities.gpuVideoProcessing,
