@@ -51,14 +51,14 @@ const useMediaSession = (
         };
     }, [shellActive, shellSend]);
 
-    // Metadata
+    // Metadata, sent again once the stream loads because the shell drops it when a stream is reloaded
     useEffect(() => {
         const metaItem = player.metaItem && player.metaItem?.type === 'Ready' ? player.metaItem.content as MetaItemPlayer : null;
         const videoId = player.selected ? player.selected?.streamRequest?.path?.id : null;
         const video = metaItem?.videos.find(({ id }) => id === videoId);
 
-        const videoInfo = video?.season && video?.episode ? ` (${video.season}x${video.episode})` : null;
-        const videoTitle = video ? `${video.title}${videoInfo}` : null;
+        const videoInfo = video?.season && video?.episode ? `(${video.season}x${video.episode})` : null;
+        const videoTitle = video ? [video.title, videoInfo].filter(Boolean).join(' ') || null : null;
         const metaTitle = metaItem ? metaItem.name : null;
         const imageUrl = metaItem ? metaItem.logo : null;
 
@@ -83,7 +83,7 @@ const useMediaSession = (
                 });
             }
         }
-    }, [player.metaItem, player.selected]);
+    }, [player.metaItem, player.selected, videoState.loaded]);
 
     // Callbacks
     useEffect(() => {
