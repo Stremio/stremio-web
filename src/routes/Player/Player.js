@@ -288,6 +288,18 @@ const Player = () => {
     }, []);
 
     const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
+
+    // Shared toggle for hardware media keys (keyboard, shell). The short time guard
+    // prevents a double toggle when the same press arrives through two channels.
+    const lastMediaToggleAt = React.useRef(0);
+    const onPlayPauseToggleRequested = React.useCallback(() => {
+        const now = Date.now();
+        if (now - lastMediaToggleAt.current < 300) return;
+        lastMediaToggleAt.current = now;
+        if (video.state.paused === null) return;
+        video.state.paused ? onPlayRequested() : onPauseRequested();
+    }, [video.state.paused, onPlayRequested, onPauseRequested]);
+
     const onMuteRequested = React.useCallback(() => {
         video.setMuted(true);
     }, []);
@@ -691,9 +703,7 @@ const Player = () => {
         const onMediaKey = (action) => {
             switch (action) {
                 case 'play-pause':
-                    if (video.state.paused !== null) {
-                        video.state.paused ? onPlayRequested() : onPauseRequested();
-                    }
+                    onPlayPauseToggleRequested();
                     break;
                 case 'play':
                     onPlayRequested();
@@ -711,7 +721,7 @@ const Player = () => {
         };
         platform.shell.on('media-key', onMediaKey);
         return () => platform.shell.off('media-key', onMediaKey);
-    }, [isEpg, video.state.paused, player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
+    }, [isEpg, player.nextVideo, onPlayRequested, onPauseRequested, onPlayPauseToggleRequested, onNextVideoRequested]);
 
     useShortcut('seekForward', React.useCallback((combo) => {
         const seekDuration = combo === 1 ? settings.seekShortTimeDuration : settings.seekTimeDuration;
@@ -832,6 +842,22 @@ const Player = () => {
 
         const onKeyDown = (e) => {
             const keyboardKey = getKeyboardShortcutKey(e);
+
+            // Hardware media keys (multimedia keyboards, some remotes / headsets).
+            // Kept separate from Space so they never trigger the playback speed hold.
+            if (keyboardKey === 'MediaPlayPause' || keyboardKey === 'MediaPlay' || keyboardKey === 'MediaPause') {
+                if (e.repeat || menusOpen) return;
+                e.preventDefault();
+                if (keyboardKey === 'MediaPlay') {
+                    onPlayRequested();
+                } else if (keyboardKey === 'MediaPause') {
+                    onPauseRequested();
+                } else {
+                    onPlayPauseToggleRequested();
+                }
+                return;
+            }
+
             if (keyboardKey !== 'Space' || e.repeat) return;
             if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey) return;
 
@@ -923,7 +949,7 @@ const Player = () => {
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('blur', onBlur);
         };
-    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, finishDetailsHold, releaseDetailsHold, cancelKeyboardSeek, flushKeyboardSeek, releaseKeyboardSeek, startPlaybackSpeedHold, finishPlaybackSpeedHold, cancelPlaybackSpeedHold]);
+    }, [routeFocused, menusOpen, video.state.volume, video.state.paused, onPlayRequested, onPauseRequested, onPlayPauseToggleRequested, finishDetailsHold, releaseDetailsHold, cancelKeyboardSeek, flushKeyboardSeek, releaseKeyboardSeek, startPlaybackSpeedHold, finishPlaybackSpeedHold, cancelPlaybackSpeedHold]);
 
     React.useEffect(() => {
         video.events.on('error', onError);

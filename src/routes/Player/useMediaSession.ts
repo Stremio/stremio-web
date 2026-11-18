@@ -90,14 +90,26 @@ const useMediaSession = (
         const mediaSession = navigator.mediaSession;
         if (!mediaSession) return;
 
-        mediaSession.setActionHandler('play', onPlayRequested);
-        mediaSession.setActionHandler('pause', onPauseRequested);
-        mediaSession.setActionHandler('nexttrack', player.nextVideo ? onNextVideoRequested : null);
+        // Older browsers throw for unsupported actions, so register each one safely.
+        const setHandler = (action: MediaSessionAction, handler: MediaSessionActionHandler | null) => {
+            try {
+                mediaSession.setActionHandler(action, handler);
+            } catch (_) {
+                // action not supported
+            }
+        };
+
+        setHandler('play', onPlayRequested);
+        setHandler('pause', onPauseRequested);
+        // Some headsets / OS integrations (e.g. in-ear detection) send "stop"
+        setHandler('stop', onPauseRequested);
+        setHandler('nexttrack', player.nextVideo ? onNextVideoRequested : null);
 
         return () => {
-            mediaSession.setActionHandler('play', null);
-            mediaSession.setActionHandler('pause', null);
-            mediaSession.setActionHandler('nexttrack', null);
+            setHandler('play', null);
+            setHandler('pause', null);
+            setHandler('stop', null);
+            setHandler('nexttrack', null);
         };
     }, [player.nextVideo, onPlayRequested, onPauseRequested, onNextVideoRequested]);
 
