@@ -92,7 +92,6 @@ const Player = () => {
     const [immersed, setImmersed] = React.useState(true);
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const barPressed = React.useRef(false);
-    const lastPointerPosition = React.useRef(null);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
 
     React.useEffect(() => {
@@ -129,6 +128,7 @@ const Player = () => {
         nextVideoRemainingTime !== null && nextVideoRemainingTime > 0 &&
         nextVideoRemainingTime <= settings.nextVideoNotificationDuration;
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
+    const [controlBarMenuOpen, setControlBarMenuOpen] = React.useState(false);
 
     const menusOpen = React.useMemo(() => {
         return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || castDevicesMenuOpen || sideDrawerOpen || nextVideoPopupOpen;
@@ -333,8 +333,8 @@ const Player = () => {
         seekByKeyboard(offset);
     }, [canSeek, seekByKeyboard]);
     const overlayHidden = React.useMemo(() => {
-        return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen;
-    }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen]);
+        return keyboardSeekTime === null && immersed && !casting && video.state.paused !== null && !video.state.paused && !menusOpen && !controlBarMenuOpen;
+    }, [keyboardSeekTime, immersed, casting, video.state.paused, menusOpen, controlBarMenuOpen]);
 
     React.useEffect(() => {
         if (!video.state.manifest?.props.includes('subtitlesOffsetMinimum')) {
@@ -437,11 +437,7 @@ const Player = () => {
         closeSideDrawer();
     }, []);
 
-    const onContainerMouseMove = React.useCallback((event) => {
-        const { clientX, clientY } = event;
-        if (lastPointerPosition.current?.x === clientX && lastPointerPosition.current?.y === clientY) return;
-
-        lastPointerPosition.current = { x: clientX, y: clientY };
+    const onContainerMouseMove = React.useCallback(() => {
         setImmersed(false);
         if (!barPressed.current) {
             setImmersedDebounced(true);
@@ -449,7 +445,6 @@ const Player = () => {
     }, []);
 
     const onContainerMouseLeave = React.useCallback(() => {
-        lastPointerPosition.current = null;
         setImmersedDebounced.cancel();
         setImmersed(true);
     }, []);
@@ -1090,6 +1085,7 @@ const Player = () => {
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
                 onToggleSideDrawer={toggleSideDrawer}
+                onButtonsMenuOpenChanged={setControlBarMenuOpen}
                 onMouseDown={onBarMouseDown}
                 onTouchEnd={onContainerMouseLeave}
             />
