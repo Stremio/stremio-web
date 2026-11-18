@@ -139,8 +139,6 @@ const SegmentedControl = ({ className, options, value, ariaLabel, size = 'medium
                     }
                 </div>
             </div>
-            <Icon className={classNames(styles['arrow'], styles['start'])} name={'chevron-back'} />
-            <Icon className={classNames(styles['arrow'], styles['end'])} name={'chevron-forward'} />
         </div>
     );
 };

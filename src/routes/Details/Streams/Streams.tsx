@@ -7,7 +7,9 @@ import { useGoBack } from 'stremio-router';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import MultiselectMenu from 'stremio/components/MultiselectMenu';
+import SegmentedControl from 'stremio/components/SegmentedControl';
 import { useProfile } from 'stremio/common';
+import useMediaQuery from 'stremio/common/useMediaQuery';
 import { getEpisodeLabel } from '../format';
 import Panel from '../Panel';
 import useEpisodeNavigation from '../useEpisodeNavigation';
@@ -33,6 +35,7 @@ const ALL_ADDONS_KEY = 'ALL';
 const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisodeSearch }: Props) => {
     const { t } = useTranslation();
     const profile = useProfile();
+    const isTouch = useMediaQuery('(hover: none) and (pointer: coarse)');
     const goBack = useGoBack();
     const { openVideos } = useEpisodeNavigation();
     const { groups, loadingCount, total } = useStreamsByAddon(streams);
@@ -51,13 +54,14 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
 
     const options = useMemo(() => {
         return [
-            { value: ALL_ADDONS_KEY, label: t('ALL_ADDONS') },
-            ...groups.map(({ addon }) => ({
+            { value: ALL_ADDONS_KEY, label: t('ALL_ADDONS'), count: total },
+            ...groups.map(({ addon, streams }) => ({
                 value: addon.transportUrl,
                 label: addon.manifest.name,
+                count: streams.length,
             })),
         ];
-    }, [groups, t]);
+    }, [groups, total, t]);
 
     const visibleGroups = useMemo(() => {
         return effectiveSelectedAddon === ALL_ADDONS_KEY ?
@@ -114,13 +118,23 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
             }
             {
                 groups.length > 1 ?
-                    <MultiselectMenu
-                        className={styles['addons']}
-                        options={options}
-                        value={effectiveSelectedAddon}
-                        portal={true}
-                        onSelect={setSelectedAddon}
-                    />
+                    isTouch ?
+                        <SegmentedControl
+                            className={styles['addons']}
+                            options={options}
+                            value={effectiveSelectedAddon}
+                            ariaLabel={t('STREAMS')}
+                            size={'large'}
+                            onSelect={setSelectedAddon}
+                        />
+                        :
+                        <MultiselectMenu
+                            className={styles['addons']}
+                            options={options}
+                            value={effectiveSelectedAddon}
+                            portal={true}
+                            onSelect={setSelectedAddon}
+                        />
                     :
                     null
             }

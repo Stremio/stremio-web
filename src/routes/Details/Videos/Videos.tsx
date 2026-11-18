@@ -2,7 +2,10 @@
 
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import SegmentedControl from 'stremio/components/SegmentedControl';
 import Toggle from 'stremio/components/Toggle';
+import useMediaQuery from 'stremio/common/useMediaQuery';
+import screenSizes from 'stremio/common/screen-sizes.less';
 import EpisodePicker from '../EpisodePicker';
 import Message from '../Message';
 import Panel from '../Panel';
@@ -48,6 +51,8 @@ const Videos = ({
     scrollMemoryRef,
 }: Props) => {
     const { t, i18n } = useTranslation();
+    const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
+    const isTouch = useMediaQuery('(hover: none) and (pointer: coarse)');
     const [search, setSearch] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
 
@@ -97,11 +102,20 @@ const Videos = ({
             ariaLabel={t('VIDEOS')}
             header={
                 seasons.length > 1 && !hidden ?
-                    <SeasonsBar
-                        options={options}
-                        value={selectedSeason !== null ? String(selectedSeason) : null}
-                        onSelect={handleSeasonSelect}
-                    />
+                    isTouch ?
+                        <SegmentedControl
+                            options={options}
+                            value={selectedSeason !== null ? String(selectedSeason) : null}
+                            ariaLabel={t('SEASON')}
+                            size={isMobile ? 'large' : 'medium'}
+                            onSelect={handleSeasonSelect}
+                        />
+                        :
+                        <SeasonsBar
+                            options={options}
+                            value={selectedSeason !== null ? String(selectedSeason) : null}
+                            onSelect={handleSeasonSelect}
+                        />
                     :
                     options.length === 1 ?
                         <div className={styles['season']}>{options[0].label}</div>
