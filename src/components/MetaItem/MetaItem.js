@@ -78,8 +78,8 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     ), []);
     const hasOptions = Array.isArray(options) && options.length > 0;
     const onContextMenu = React.useCallback((event) => {
-        const menuLabel = hasOptions ? event.currentTarget.querySelector(`.${styles['menu-label-container']}`) : null;
-        if (menuLabel === null || event.ctrlKey || event.shiftKey || !event.currentTarget.contains(event.target)) {
+        const menuLabel = hasOptions ? event.currentTarget.parentElement.querySelector(`.${styles['menu-label-container']}`) : null;
+        if (menuLabel === null || event.ctrlKey || event.shiftKey) {
             return;
         }
 
@@ -87,8 +87,8 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
         menuLabel.click();
     }, [hasOptions]);
     return (
-        <div {...hoverProps} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })} onContextMenu={onContextMenu}>
-            <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick}>
+        <div {...hoverProps} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })}>
+            <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick} onContextMenu={onContextMenu}>
                 <div className={classnames(styles['poster-container'], { 'poster-change-cursor': artwork.changeCursor })}>
                     {
                         onDismissClick ?
