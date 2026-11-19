@@ -89,6 +89,28 @@ const ActionMenu = ({ className, title, tabIndex, options, children, onOpen, onC
         }
     }, [closeMenuAndRestoreFocus]);
 
+    const layerOnContextMenu = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+        if (event.target !== event.currentTarget) return;
+
+        const layer = event.currentTarget;
+        closeMenu();
+        const target = document.elementsFromPoint(event.clientX, event.clientY).find((element) => !layer.contains(element));
+        const handled = target && !target.dispatchEvent(new MouseEvent('contextmenu', {
+            bubbles: true,
+            cancelable: true,
+            clientX: event.clientX,
+            clientY: event.clientY,
+            button: event.button,
+            ctrlKey: event.ctrlKey,
+            shiftKey: event.shiftKey,
+            altKey: event.altKey,
+            metaKey: event.metaKey,
+        }));
+        if (handled) {
+            event.preventDefault();
+        }
+    }, [closeMenu]);
+
     const menuOnKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Escape') {
             event.preventDefault();
@@ -152,7 +174,7 @@ const ActionMenu = ({ className, title, tabIndex, options, children, onOpen, onC
             {
                 open ?
                     createPortal(
-                        <div className={styles['layer']} onClick={layerOnClick}>
+                        <div className={styles['layer']} onClick={layerOnClick} onContextMenu={layerOnContextMenu}>
                             <div
                                 ref={menuRef}
                                 className={styles['menu-container']}
