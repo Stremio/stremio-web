@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { useCore } from 'stremio/core';
-import { usePlatform, useProfile } from 'stremio/common';
+import { usePlatform } from 'stremio/common';
 import useToast from 'stremio/common/Toast/useToast';
 
 type StreamHref = {
@@ -19,9 +19,8 @@ type Options = {
     onPlay?: (stream: Stream) => void,
 };
 
-const useStreamPlay = (stream: Stream | null, { videoId, videoReleased, canMarkWatched, onPlay }: Options = {}) => {
+const useStreamPlay = (stream: Stream | null, playerType: Settings['playerType'], { videoId, videoReleased, canMarkWatched, onPlay }: Options = {}) => {
     const core = useCore();
-    const profile = useProfile();
     const platform = usePlatform();
     const toast = useToast();
     const deepLinks = stream?.deepLinks;
@@ -54,8 +53,8 @@ const useStreamPlay = (stream: Stream | null, { videoId, videoReleased, canMarkW
             return;
         }
 
-        if (profile.settings.playerType !== null) {
-            if (profile.settings.playerType !== 'infuse' || !platform.shell.active || !canMarkWatched) {
+        if (playerType !== null) {
+            if (playerType !== 'infuse' || !platform.shell.active || !canMarkWatched) {
                 if (typeof videoId === 'string') {
                     core.transport.dispatch({
                         action: 'MetaDetails',
@@ -86,7 +85,7 @@ const useStreamPlay = (stream: Stream | null, { videoId, videoReleased, canMarkW
             args: { stream },
         });
         onPlay?.(stream);
-    }, [core, profile.settings.playerType, platform.shell.active, canMarkWatched, videoId, videoReleased, stream, toast, onPlay]);
+    }, [core, playerType, platform.shell.active, canMarkWatched, videoId, videoReleased, stream, toast, onPlay]);
 
     return { ...streamHref, play };
 };

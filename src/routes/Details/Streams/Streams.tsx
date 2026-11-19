@@ -183,6 +183,7 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                                                     <Stream
                                                         key={index}
                                                         stream={stream}
+                                                        playerType={profile.settings.playerType}
                                                         addonName={addon.manifest.name}
                                                         videoId={video?.id}
                                                         videoReleased={video?.released}
