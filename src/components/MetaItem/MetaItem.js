@@ -79,7 +79,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
     const hasOptions = Array.isArray(options) && options.length > 0;
     const onContextMenu = React.useCallback((event) => {
         const menuLabel = hasOptions ? event.currentTarget.querySelector(`.${styles['menu-label-container']}`) : null;
-        if (menuLabel === null) {
+        if (menuLabel === null || event.ctrlKey || event.shiftKey || !event.currentTarget.contains(event.target)) {
             return;
         }
 
