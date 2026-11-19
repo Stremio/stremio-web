@@ -4,7 +4,6 @@ import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
-import { useProfile } from 'stremio/common';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
@@ -12,13 +11,14 @@ import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
 import WatchedBadge from 'stremio/components/WatchedBadge';
 import useRowMenu from '../useRowMenu';
-import useEpisodeNavigation from '../useEpisodeNavigation';
 import { formatDate, hidesSpoiler } from '../format';
 import { getScrollParent } from './useScrollMemory';
 import styles from './Video.less';
 
 type Props = {
     video: Video,
+    hideSpoilers: boolean,
+    openEpisode: (href: string) => void,
     selected: boolean,
     seasonWatched: boolean,
     minutesLeft: number | null,
@@ -37,16 +37,14 @@ const renderThumbnailFallback = () => (
     </div>
 );
 
-const Video = ({ video, selected, seasonWatched, minutesLeft, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
+const Video = ({ video, hideSpoilers, openEpisode, selected, seasonWatched, minutesLeft, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
     const { t, i18n } = useTranslation();
-    const profile = useProfile();
-    const { openEpisode } = useEpisodeNavigation();
     const { open, closeMenu, labelProps, menuProps } = useRowMenu();
     const rowRef = useRef<HTMLDivElement>(null);
 
     const { id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, deepLinks } = video;
     const hasProgress = typeof progress === 'number' && progress > 0;
-    const blurThumbnail = hidesSpoiler(video, profile.settings.hideSpoilers);
+    const blurThumbnail = hidesSpoiler(video, hideSpoilers);
     const releasedLabel = formatDate(released, i18n.language);
     const shouldScroll = selected && (!watched || hasProgress);
 

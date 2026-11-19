@@ -22,6 +22,8 @@ export type { ScrollMemory };
 
 type Props = {
     hidden: boolean,
+    hideSpoilers: boolean,
+    openEpisode: (href: string) => void,
     metaItem: MetaItemMetaDetails | null,
     error: boolean,
     libraryItem: LibraryItem | null,
@@ -38,6 +40,8 @@ const NO_VIDEOS: Video[] = [];
 
 const Videos = ({
     hidden,
+    hideSpoilers,
+    openEpisode,
     metaItem,
     error,
     libraryItem,
@@ -131,6 +135,8 @@ const Videos = ({
                         <VideoRow
                             key={video.id}
                             video={video}
+                            hideSpoilers={hideSpoilers}
+                            openEpisode={openEpisode}
                             selected={video.id === libraryItem?.state.video_id}
                             seasonWatched={seasonWatched}
                             minutesLeft={getMinutesLeft(libraryItem, video.id)}
