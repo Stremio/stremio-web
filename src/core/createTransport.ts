@@ -18,11 +18,12 @@ const createTransport = (): CoreTransport => {
 
         const request: Promise<object> = bridge.call(['getState'], [model]);
         pendingStates.set(model, request);
-        queueMicrotask(() => {
+        const settle = () => {
             if (pendingStates.get(model) === request) {
                 pendingStates.delete(model);
             }
-        });
+        };
+        request.then(settle, settle);
         return request;
     };
 
