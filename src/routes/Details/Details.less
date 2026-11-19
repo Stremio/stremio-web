@@ -50,13 +50,29 @@
 }
 
 @media @desktop {
+    .details .content {
+        overflow: hidden;
+    }
+}
+
+@media @desktop-tiny {
+    :global(.route-content):has(> .details) {
+        container: details-viewport / size;
+    }
+}
+
+@container details-viewport (height < @desktop-content-min-height) {
     .details {
-        .content {
-            overflow: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
         }
 
-        .hero {
-            overflow: visible;
+        .content {
+            min-height: @desktop-content-min-height;
+            animation-duration: 0s;
         }
     }
 }

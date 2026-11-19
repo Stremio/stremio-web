@@ -33,25 +33,38 @@
         .main {
             min-height: 0;
 
-            > * {
-                flex: none;
-            }
+            .body {
+                .hero-body();
+                display: flex;
+                flex-direction: column;
 
-            .spacer {
-                flex: 1;
-                min-height: 1.5rem;
-            }
+                > * {
+                    flex: none;
+                }
 
-            .playback {
-                margin-top: 2.5rem;
+                .spacer {
+                    flex: 1;
+                    min-height: 1.5rem;
+                }
+
+                .playback {
+                    margin-top: 2.5rem;
+                }
             }
         }
     }
 }
 
 @media @desktop-short {
-    .live .main .playback {
+    .live .main .body .playback {
         margin-top: 0.75rem;
+    }
+}
+
+@container details-viewport (height < @desktop-content-min-height) {
+    .live .content {
+        min-height: @desktop-content-min-height;
+        animation-duration: 0s;
     }
 }
 

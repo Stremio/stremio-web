@@ -342,6 +342,14 @@
 
 @media @desktop {
     .placeholder {
+        &.hero, &.episode {
+            .hero-body();
+        }
+
+        &.live {
+            padding-bottom: var(--hero-reserve);
+        }
+
         .art {
             margin-bottom: auto;
         }
