@@ -80,8 +80,13 @@ const ActionMenu = ({ className, title, tabIndex, options, children, onOpen, onC
             top: Math.max(VIEWPORT_PADDING, Math.min(preferredTop, maxTop)),
             left: Math.max(VIEWPORT_PADDING, Math.min(preferredLeft, maxLeft))
         });
-        menuRef.current.querySelector<HTMLButtonElement>('[role="menuitem"]')?.focus();
     }, [open]);
+
+    useLayoutEffect(() => {
+        if (position) {
+            menuRef.current?.querySelector<HTMLButtonElement>('[role="menuitem"]')?.focus();
+        }
+    }, [position]);
 
     const layerOnClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) {
