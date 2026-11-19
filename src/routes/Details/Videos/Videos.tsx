@@ -10,7 +10,7 @@ import EpisodePicker from '../EpisodePicker';
 import Message from '../Message';
 import Panel from '../Panel';
 import Placeholder from '../Placeholder';
-import { formatDate, getMinutesLeft } from '../format';
+import { DATE_FORMAT, getMinutesLeft, parseDate } from '../format';
 import Search from './Search';
 import VideoRow from './Video';
 import useScrollMemory from './useScrollMemory';
@@ -60,16 +60,24 @@ const Videos = ({
 
     const { seasons, selectedSeason, videos, options } = useSeasons(metaItem?.videos ?? NO_VIDEOS, season, libraryItem);
 
+    const datedVideos = useMemo(() => {
+        const formatter = new Intl.DateTimeFormat(i18n.language, DATE_FORMAT);
+        return videos.map((video) => {
+            const released = parseDate(video.released);
+            return { video, releasedLabel: released && formatter.format(released) };
+        });
+    }, [videos, i18n.language]);
+
     const filteredVideos = useMemo(() => {
         const query = search.toLowerCase();
         return query.length === 0 ?
-            videos
+            datedVideos
             :
-            videos.filter((video) => {
+            datedVideos.filter(({ video, releasedLabel }) => {
                 return video.title?.toLowerCase().includes(query) ||
-                    formatDate(video.released, i18n.language)?.toLowerCase().includes(query);
+                    releasedLabel?.toLowerCase().includes(query);
             });
-    }, [videos, search, i18n.language]);
+    }, [datedVideos, search]);
 
     const seasonWatched = useMemo(() => videos.every((video) => video.watched), [videos]);
 
@@ -131,10 +139,11 @@ const Videos = ({
             }
             <div ref={listRef} className={styles['list']}>
                 {
-                    filteredVideos.map((video) => (
+                    filteredVideos.map(({ video, releasedLabel }) => (
                         <VideoRow
                             key={video.id}
                             video={video}
+                            releasedLabel={releasedLabel}
                             hideSpoilers={hideSpoilers}
                             openEpisode={openEpisode}
                             selected={video.id === libraryItem?.state.video_id}

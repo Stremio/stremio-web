@@ -11,12 +11,13 @@ import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
 import WatchedBadge from 'stremio/components/WatchedBadge';
 import useRowMenu from '../useRowMenu';
-import { formatDate, hidesSpoiler } from '../format';
+import { hidesSpoiler } from '../format';
 import { getScrollParent } from './useScrollMemory';
 import styles from './Video.less';
 
 type Props = {
     video: Video,
+    releasedLabel: string | null,
     hideSpoilers: boolean,
     openEpisode: (href: string) => void,
     selected: boolean,
@@ -37,15 +38,14 @@ const renderThumbnailFallback = () => (
     </div>
 );
 
-const Video = ({ video, hideSpoilers, openEpisode, selected, seasonWatched, minutesLeft, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
-    const { t, i18n } = useTranslation();
+const Video = ({ video, releasedLabel, hideSpoilers, openEpisode, selected, seasonWatched, minutesLeft, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
+    const { t } = useTranslation();
     const { open, closeMenu, labelProps, menuProps } = useRowMenu();
     const rowRef = useRef<HTMLDivElement>(null);
 
     const { id, title, thumbnail, season, episode, released, upcoming, watched, progress, scheduled, deepLinks } = video;
     const hasProgress = typeof progress === 'number' && progress > 0;
     const blurThumbnail = hidesSpoiler(video, hideSpoilers);
-    const releasedLabel = formatDate(released, i18n.language);
     const shouldScroll = selected && (!watched || hasProgress);
 
     useEffect(() => {
