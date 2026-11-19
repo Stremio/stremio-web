@@ -120,6 +120,8 @@ const useMediaSession = (
             shell.off('media.status', onMediaStatus);
         };
     }, [shell, onPlayRequested, onPauseRequested]);
+
+    return metadata;
 };
 
 export default useMediaSession;
