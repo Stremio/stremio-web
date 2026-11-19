@@ -77,8 +77,17 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
         <Icon className={styles['icon']} name={'more-vertical'} />
     ), []);
     const hasOptions = Array.isArray(options) && options.length > 0;
+    const onContextMenu = React.useCallback((event) => {
+        const menuLabel = hasOptions ? event.currentTarget.querySelector(`.${styles['menu-label-container']}`) : null;
+        if (menuLabel === null) {
+            return;
+        }
+
+        event.preventDefault();
+        menuLabel.click();
+    }, [hasOptions]);
     return (
-        <div {...hoverProps} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })}>
+        <div {...hoverProps} className={classnames(className, styles['meta-item-container'], styles['poster-shape-poster'], styles[`poster-shape-${artwork.shape}`], { 'active': menuOpen, 'hovered': isHovered })} onContextMenu={onContextMenu}>
             <Button title={name} href={href} {...filterInvalidDOMProps(props)} className={styles['meta-item-link']} onClick={metaItemOnClick}>
                 <div className={classnames(styles['poster-container'], { 'poster-change-cursor': artwork.changeCursor })}>
                     {
