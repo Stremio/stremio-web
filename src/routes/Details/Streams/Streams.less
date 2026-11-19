@@ -2,7 +2,27 @@
 
 @import (reference) '../variables.less';
 
+:import('~stremio/components/MultiselectMenu/Label/Label.less') {
+    multiselect-button: button;
+}
+
 .streams {
+    .addons {
+        background-color: var(--overlay-color);
+
+        .multiselect-button {
+            padding: 0 1.125rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: background-color 0.15s @ease;
+
+            &:hover,
+            &:focus-visible {
+                background-color: @overlay-hover;
+            }
+        }
+    }
+
     .title-row {
         display: flex;
         align-items: center;

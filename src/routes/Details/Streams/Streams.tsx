@@ -6,8 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { useGoBack } from 'stremio-router';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
+import MultiselectMenu from 'stremio/components/MultiselectMenu';
 import SegmentedControl from 'stremio/components/SegmentedControl';
 import { useProfile } from 'stremio/common';
+import useMediaQuery from 'stremio/common/useMediaQuery';
 import { getEpisodeLabel } from '../format';
 import Panel from '../Panel';
 import useEpisodeNavigation from '../useEpisodeNavigation';
@@ -33,6 +35,7 @@ const ALL_ADDONS_KEY = 'ALL';
 const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisodeSearch }: Props) => {
     const { t } = useTranslation();
     const profile = useProfile();
+    const isTouch = useMediaQuery('(hover: none) and (pointer: coarse)');
     const goBack = useGoBack();
     const { openVideos } = useEpisodeNavigation();
     const { groups, loadingCount, total } = useStreamsByAddon(streams);
@@ -114,15 +117,24 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                     null
             }
             {
-                streams.length > 1 ?
-                    <SegmentedControl
-                        className={styles['addons']}
-                        options={options}
-                        value={effectiveSelectedAddon}
-                        ariaLabel={t('STREAMS')}
-                        size={'large'}
-                        onSelect={setSelectedAddon}
-                    />
+                groups.length > 1 ?
+                    isTouch ?
+                        <SegmentedControl
+                            className={styles['addons']}
+                            options={options}
+                            value={effectiveSelectedAddon}
+                            ariaLabel={t('STREAMS')}
+                            size={'large'}
+                            onSelect={setSelectedAddon}
+                        />
+                        :
+                        <MultiselectMenu
+                            className={styles['addons']}
+                            options={options}
+                            value={effectiveSelectedAddon}
+                            portal={true}
+                            onSelect={setSelectedAddon}
+                        />
                     :
                     null
             }
