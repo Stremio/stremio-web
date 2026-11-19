@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
@@ -195,4 +195,4 @@ const Stream = ({ className, stream, playerType, addonName, videoId, videoReleas
     );
 };
 
-export default Stream;
+export default memo(Stream);
