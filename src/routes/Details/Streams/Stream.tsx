@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
@@ -16,6 +16,7 @@ import styles from './Stream.less';
 type Props = {
     className?: string,
     stream: Stream,
+    playerType: Settings['playerType'],
     addonName: string,
     videoId?: string | null,
     videoReleased?: string | null,
@@ -38,11 +39,11 @@ const COPY_MESSAGES: Record<CopyKind, { success: string, error: string }> = {
 
 const renderThumbnailFallback = () => <Icon className={styles['thumbnail-fallback']} name={'ic_broken_link'} />;
 
-const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkWatched, card, onPlay }: Props) => {
+const Stream = ({ className, stream, playerType, addonName, videoId, videoReleased, canMarkWatched, card, onPlay }: Props) => {
     const { t } = useTranslation();
     const toast = useToast();
     const { open, closeMenu, labelProps, menuProps } = useRowMenu();
-    const { href, target, download, external, play } = useStreamPlay(stream, { videoId, videoReleased, canMarkWatched, onPlay });
+    const { href, target, download, external, play } = useStreamPlay(stream, playerType, { videoId, videoReleased, canMarkWatched, onPlay });
     const externalPlayer = stream.deepLinks?.externalPlayer;
     const name = stream.name || addonName;
     const lastUsed = stream.lastUsed === true;
@@ -194,4 +195,4 @@ const Stream = ({ className, stream, addonName, videoId, videoReleased, canMarkW
     );
 };
 
-export default Stream;
+export default memo(Stream);

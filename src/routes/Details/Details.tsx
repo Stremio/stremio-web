@@ -86,7 +86,7 @@ const Details = () => {
     const primary = usePrimaryAction(metaItem, video, details.libraryItem, details.streams, canMarkWatched);
     const originPath = useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     const leave = useGoBack(originPath);
-    const { fromVideos, insertVideos } = useEpisodeNavigation();
+    const { fromVideos, insertVideos, openEpisode } = useEpisodeNavigation();
     const directVideo = video !== null && video.id === videoId && !fromVideos && !metaItem?.behaviorHints.defaultVideoId ? video : null;
     const [streams, setStreams] = useState(details.streams);
     if (directVideo === null && streams !== details.streams) {
@@ -241,6 +241,8 @@ const Details = () => {
                             key={metaItem?.id}
                             hidden={!videosVisible}
                             metaItem={metaItem}
+                            hideSpoilers={profile.settings.hideSpoilers}
+                            openEpisode={openEpisode}
                             error={details.metaItem?.content.type === 'Err'}
                             libraryItem={details.libraryItem}
                             season={videosSeason}

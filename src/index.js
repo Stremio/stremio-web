@@ -21,6 +21,7 @@ const App = require('./App');
 const { default: WebUpdateScreen } = require('./App/WebUpdateScreen');
 const { CoreProvider } = require('./core');
 const { FileDropProvider, PlatformProvider } = require('./common');
+const { WindowFocusedProvider } = require('./common/useRouteFocused');
 const { name: os } = require('./common/Platform/device');
 
 const translations = Object.fromEntries(Object.entries(stremioTranslations()).map(([key, value]) => [key, {
@@ -53,10 +54,10 @@ root.render(
             <CoreProvider appInfo={appInfo}>
                 <FileDropProvider>
                     <HashRouter>
-                        <>
+                        <WindowFocusedProvider>
                             <WebUpdateScreen />
                             <App />
-                        </>
+                        </WindowFocusedProvider>
                     </HashRouter>
                 </FileDropProvider>
             </CoreProvider>
