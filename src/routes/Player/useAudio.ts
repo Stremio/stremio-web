@@ -10,8 +10,10 @@ type Args = {
             stream: unknown | null,
             audioTracks: AudioTrack[],
             selectedAudioTrackId: string | null,
+            audioDelay?: number | null,
         },
         setAudioTrack: (id: string) => void,
+        setAudioDelay: (delay: number) => void,
     },
     settings: Settings,
     streamStateChanged: (state: Partial<StreamState>) => void,
@@ -114,7 +116,35 @@ const useAudio = ({ player, video, settings, streamStateChanged }: Args) => {
         video.state.stream,
     ]);
 
-    return selectTrack;
+    const audioDelaySupported = typeof video.state.audioDelay === 'number';
+    const savedAudioDelay = player.streamState?.audioDelay;
+
+    const appliedDelay = useRef<number | null>(null);
+
+    const changeDelay = useCallback((delay: number) => {
+        appliedDelay.current = delay;
+        videoRef.current.setAudioDelay(delay);
+        streamStateChanged({ audioDelay: delay });
+    }, [streamStateChanged]);
+
+    useEffect(() => {
+        appliedDelay.current = null;
+    }, [video.state.stream]);
+
+    useEffect(() => {
+        if (video.state.stream === null || !audioDelaySupported || typeof savedAudioDelay !== 'number' || savedAudioDelay === appliedDelay.current) {
+            return;
+        }
+
+        appliedDelay.current = savedAudioDelay;
+        videoRef.current.setAudioDelay(savedAudioDelay);
+    }, [audioDelaySupported, savedAudioDelay, video.state.stream]);
+
+    return {
+        selectTrack,
+        audioDelay: audioDelaySupported ? video.state.audioDelay as number : null,
+        changeDelay,
+    };
 };
 
 export default useAudio;

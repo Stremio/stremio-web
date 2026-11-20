@@ -52,6 +52,7 @@ type StreamState = {
     subtitleSize?: number,
     subtitleOffset?: number,
     audioTrack?: AudioTrackState,
+    audioDelay?: number,
     playbackSpeed?: number,
     videoScale?: VideoScale,
 };
