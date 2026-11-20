@@ -270,11 +270,11 @@ const Player = () => {
             toast.show({
                 type: 'error',
                 title: t('ERROR'),
-                message: error.message,
+                message: t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message }),
                 timeout: 3000
             });
         }
-    }, []);
+    }, [t, toast]);
 
     const onPlayRequested = React.useCallback(() => {
         setSeeking(false);
@@ -938,7 +938,7 @@ const Player = () => {
             video.events.off('error', onError);
             video.events.off('ended', onEnded);
         };
-    }, [onEnded]);
+    }, [onEnded, onError]);
 
     React.useEffect(() => {
         const onBarMouseUp = () => {
@@ -1003,6 +1003,7 @@ const Player = () => {
                         className={classnames(styles['layer'], styles['error-layer'])}
                         stream={video.state.stream}
                         {...error}
+                        message={t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message })}
                     />
                     :
                     null
