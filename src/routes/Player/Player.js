@@ -530,12 +530,19 @@ const Player = () => {
         };
     }, [onPlayPause, onGamepadSeekAndVol]);
 
+    const videoLoadPending = React.useRef(false);
+
     React.useEffect(() => {
         setError(null);
         cancelKeyboardSeek();
         video.unload();
+        videoLoadPending.current = true;
+    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
 
-        if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
+    // Recheck a pending load on each commit so a settings refresh can unblock it.
+    React.useEffect(() => {
+        if (videoLoadPending.current && player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
+            videoLoadPending.current = false;
             video.load({
                 stream: {
                     ...player.stream.content,
@@ -570,7 +577,7 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
+    });
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
