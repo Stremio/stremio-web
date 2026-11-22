@@ -37,6 +37,9 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
         }
     };
     React.useEffect(() => {
+        if (!routeFocused || !open) {
+            return;
+        }
         const onCloseEvent = (event) => {
             if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
                 const closeEvent = {
@@ -63,11 +66,9 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
                 }
             }
         };
-        if (routeFocused && open) {
-            window.addEventListener('keydown', onCloseEvent, portal);
-            window.addEventListener('mousedown', onCloseEvent);
-            window.addEventListener('pointerdown', onCloseEvent);
-        }
+        window.addEventListener('keydown', onCloseEvent, portal);
+        window.addEventListener('mousedown', onCloseEvent);
+        window.addEventListener('pointerdown', onCloseEvent);
         return () => {
             window.removeEventListener('keydown', onCloseEvent, portal);
             window.removeEventListener('mousedown', onCloseEvent);

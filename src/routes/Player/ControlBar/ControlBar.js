@@ -9,7 +9,8 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
-const { useBinaryState, usePlatform } = require('stremio/common');
+const { useBinaryState, useMediaQuery, usePlatform } = require('stremio/common');
+const screenSizes = require('stremio/common/screen-sizes.less');
 const { t } = require('i18next');
 
 const VIDEO_SCALE_ICONS = {
@@ -56,12 +57,14 @@ const ControlBar = React.forwardRef(({
     onVideoScaleChanged,
     onToggleStatisticsMenu,
     onTouchEnd,
+    onButtonsMenuOpenChanged,
     ...props
 }, ref) => {
     const { chromecast } = useServices();
     const platform = usePlatform();
     const [chromecastServiceActive, setChromecastServiceActive] = React.useState(() => chromecast.active);
     const [buttonsMenuOpen, , , toggleButtonsMenu] = useBinaryState(false);
+    const buttonsMenuCollapsed = useMediaQuery(`(max-width: ${screenSizes.minimum})`);
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
@@ -123,6 +126,11 @@ const ControlBar = React.forwardRef(({
         }
         chromecast.transport.requestSession();
     }, [castButtonDisabled, platform.shell.active, shellCastSupported, onToggleCastDevicesMenu]);
+    React.useEffect(() => {
+        if (typeof onButtonsMenuOpenChanged === 'function') {
+            onButtonsMenuOpenChanged(buttonsMenuOpen && buttonsMenuCollapsed);
+        }
+    }, [buttonsMenuOpen, buttonsMenuCollapsed, onButtonsMenuOpenChanged]);
     React.useEffect(() => {
         const onStateChanged = () => {
             setChromecastServiceActive(chromecast.active);
@@ -266,6 +274,7 @@ ControlBar.propTypes = {
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,
+    onButtonsMenuOpenChanged: PropTypes.func,
 };
 
 module.exports = ControlBar;

@@ -8,8 +8,9 @@ export const useRouteActive = () => {
     return React.useContext(RouteFocusedContext);
 };
 
-const useRouteFocused = () => {
-    const routeActive = useRouteActive();
+const WindowFocusedContext = React.createContext(true);
+
+export const WindowFocusedProvider = ({ children }: React.PropsWithChildren) => {
     const [isFocused, setIsFocused] = React.useState(document.hasFocus());
 
     React.useEffect(() => {
@@ -28,6 +29,12 @@ const useRouteFocused = () => {
         };
     }, []);
 
+    return React.createElement(WindowFocusedContext.Provider, { value: isFocused }, children);
+};
+
+const useRouteFocused = () => {
+    const routeActive = useRouteActive();
+    const isFocused = React.useContext(WindowFocusedContext);
     return routeActive && isFocused;
 };
 

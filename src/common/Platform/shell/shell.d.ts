@@ -27,6 +27,7 @@ type ShellCapabilities = {
     cacheDirectoryPicker: boolean;
     nativeInterfaceScale: boolean;
     mpvConfig: boolean;
+    audioPassthrough: boolean;
 };
 
 type ShellState = {

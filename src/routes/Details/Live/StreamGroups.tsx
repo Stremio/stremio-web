@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useProfile } from 'stremio/common';
 import { Stream } from '../Streams';
 import LiveFlag from './LiveFlag';
 import styles from './StreamGroups.less';
@@ -16,6 +17,7 @@ type Props = {
 
 const StreamGroups = ({ streams, live, programmeTitle, channelName, onClose }: Props) => {
     const { t } = useTranslation();
+    const profile = useProfile();
     const subtitle = [programmeTitle, channelName].filter((part) => typeof part === 'string' && part.length > 0).join(' · ');
 
     return (
@@ -44,6 +46,7 @@ const StreamGroups = ({ streams, live, programmeTitle, channelName, onClose }: P
                                             key={index}
                                             card={true}
                                             stream={stream}
+                                            playerType={profile.settings.playerType}
                                             addonName={resource.addon.manifest.name}
                                             onPlay={onClose}
                                         />

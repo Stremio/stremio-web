@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
+import { useProfile } from 'stremio/common';
 import { EPGProgram } from 'stremio/common/EPG';
 import PlayButton from '../Actions/PlayButton';
 import useStreamPlay from '../Streams/useStreamPlay';
@@ -25,6 +26,7 @@ type Props = {
 
 const Playback = ({ className, streams, streamsOpen, inLibrary, current, live, now, onStreamsToggle, onToggleLibrary }: Props) => {
     const { t } = useTranslation();
+    const profile = useProfile();
 
     const readyStreams = useMemo(() => {
         return streams.flatMap((resource) => {
@@ -50,10 +52,10 @@ const Playback = ({ className, streams, streamsOpen, inLibrary, current, live, n
             current.title.length > 0 ? current.title : null;
     }, [current, live, now, t]);
     const sublabel = programmeSublabel ?? streamSublabel;
-    const { href, target, download, play } = useStreamPlay(watchStream?.stream ?? null);
+    const { href, target, download, play } = useStreamPlay(watchStream?.stream ?? null, profile.settings.playerType);
 
     return (
-        <div className={classNames(className, styles['playback'])}>
+        <div className={classNames(className, styles['playback'], { [styles['idle']]: watchStream === null })}>
             {
                 watchStream !== null ?
                     <PlayButton

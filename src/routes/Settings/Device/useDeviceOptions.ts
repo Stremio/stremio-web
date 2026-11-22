@@ -26,6 +26,22 @@ const useDeviceOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
+    const audioPassthroughToggle = useMemo(() => ({
+        checked: profile.settings.audioPassthrough,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        audioPassthrough: !profile.settings.audioPassthrough
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
     const hardwareDecodingToggle = useMemo(() => ({
         checked: profile.settings.hardwareDecoding,
         onClick: () => {
@@ -156,6 +172,7 @@ const useDeviceOptions = (profile: Profile) => {
 
     return {
         surroundSoundToggle,
+        audioPassthroughToggle,
         hardwareDecodingToggle,
         gpuVideoProcessingToggle,
         videoModeSelect,

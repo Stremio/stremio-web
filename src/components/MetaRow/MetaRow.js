@@ -73,7 +73,9 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
     );
 };
 
-MetaRow.Placeholder = MetaRowPlaceholder;
+const MemoMetaRow = React.memo(MetaRow);
+
+MemoMetaRow.Placeholder = MetaRowPlaceholder;
 
 MetaRow.propTypes = {
     className: PropTypes.string,
@@ -109,4 +111,4 @@ MetaRow.propTypes = {
     notifications: PropTypes.object,
 };
 
-module.exports = MetaRow;
+module.exports = MemoMetaRow;

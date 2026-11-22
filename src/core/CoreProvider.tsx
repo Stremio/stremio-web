@@ -15,20 +15,20 @@ const Core = (props: Props) => {
     const [ready, setReady] = useState(false);
     const [error, setError] = useState<Error | null>();
 
-    const stateListeners = useRef<CoreStateListener[]>([]);
-    const eventListeners = useRef<CoreEventListener[]>([]);
-    const errorListeners = useRef<CoreErrorListener[]>([]);
+    const stateListeners = useRef(new Set<CoreStateListener>());
+    const eventListeners = useRef(new Set<CoreEventListener>());
+    const errorListeners = useRef(new Set<CoreErrorListener>());
 
     const on = (name: CoreListenerType, listener: CoreListener) => {
-        if (name === 'state') stateListeners.current = [...stateListeners.current, listener as CoreStateListener];
-        if (name === 'event') eventListeners.current = [...eventListeners.current, listener as CoreEventListener];
-        if (name === 'error') errorListeners.current = [...errorListeners.current, listener as CoreErrorListener];
+        if (name === 'state') stateListeners.current.add(listener as CoreStateListener);
+        if (name === 'event') eventListeners.current.add(listener as CoreEventListener);
+        if (name === 'error') errorListeners.current.add(listener as CoreErrorListener);
     };
 
     const off = (name: CoreListenerType, listener: CoreListener) => {
-        if (name === 'state') stateListeners.current = stateListeners.current.filter((l) => l !== listener);
-        if (name === 'event') eventListeners.current = eventListeners.current.filter((l) => l !== listener);
-        if (name === 'error') errorListeners.current = errorListeners.current.filter((l) => l !== listener);
+        if (name === 'state') stateListeners.current.delete(listener as CoreStateListener);
+        if (name === 'event') eventListeners.current.delete(listener as CoreEventListener);
+        if (name === 'error') errorListeners.current.delete(listener as CoreErrorListener);
     };
 
     useEffect(() => {
@@ -38,21 +38,21 @@ const Core = (props: Props) => {
         const onCoreEvent = ({ name, args }: NewStateEvent | CoreEventEvent) => {
             switch (name) {
                 case 'NewState':
-                    stateListeners.current.forEach((listener) => listener(args));
+                    Array.from(stateListeners.current).forEach((listener) => listener(args));
                     break;
 
                 case 'CoreEvent': {
                     switch (args.event) {
                         case 'Error': {
                             const { source, error } = args.args;
-                            errorListeners.current.forEach((listener) => listener(
+                            Array.from(errorListeners.current).forEach((listener) => listener(
                                 source,
                                 error,
                             ));
                             break;
                         }
                         default:
-                            eventListeners.current.forEach((listener) => listener(
+                            Array.from(eventListeners.current).forEach((listener) => listener(
                                 args.event,
                                 args.args,
                             ));
@@ -81,9 +81,9 @@ const Core = (props: Props) => {
             });
 
         return () => {
-            stateListeners.current = [];
-            eventListeners.current = [];
-            errorListeners.current = [];
+            stateListeners.current = new Set();
+            eventListeners.current = new Set();
+            errorListeners.current = new Set();
         };
     }, []);
 

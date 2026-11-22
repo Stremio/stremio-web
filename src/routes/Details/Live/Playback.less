@@ -89,6 +89,27 @@
     }
 }
 
+@media @desktop {
+    .playback.idle {
+        align-items: stretch;
+
+        .pill {
+            flex: 0 1 auto;
+            min-width: min-content;
+            height: auto;
+            line-height: 1.2;
+            white-space: normal;
+            word-break: normal;
+        }
+
+        .secondary {
+            flex: 0 1 auto;
+            align-items: stretch;
+            min-width: min-content;
+        }
+    }
+}
+
 @media @desktop-short {
     .playback {
         gap: 0.625rem;
