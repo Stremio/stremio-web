@@ -120,7 +120,7 @@ const Player = () => {
             shellSend('win-set-pip', { enabled: false });
             setShellPictureInPicture(false);
         };
-    }, [shellPictureInPictureSupported, video.state.loaded, shellSend, shellOn, shellOff]);
+    }, [shellPictureInPictureSupported, shellSend, shellOn, shellOff]);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
