@@ -96,7 +96,7 @@ const Player = () => {
     const { active: shellActive, capabilities: shellCapabilities, send: shellSend, on: shellOn, off: shellOff } = platform.shell;
     const setVideoPictureInPicture = video.setPictureInPicture;
     const [shellPictureInPicture, setShellPictureInPicture] = React.useState(false);
-    const shellPictureInPictureSupported = shellActive && shellCapabilities.pictureInPicture && video.state.manifest?.name?.startsWith('ShellVideo') === true;
+    const shellPictureInPictureSupported = shellActive && shellCapabilities.pictureInPicture;
     const pictureInPictureSupported = shellPictureInPictureSupported || video.state.pictureInPicturePossible === true;
     const pictureInPicture = shellPictureInPictureSupported ? shellPictureInPicture : video.state.pictureInPictureActive === true;
 
