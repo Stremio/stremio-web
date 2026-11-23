@@ -10,6 +10,7 @@ type LibraryItemState = {
     watched: string,
     lastVidReleased: string,
     noNotif: boolean,
+    allEpisodesWatched?: boolean,
 };
 
 type LibraryItem = {
