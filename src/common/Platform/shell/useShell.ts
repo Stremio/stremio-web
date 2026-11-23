@@ -64,6 +64,7 @@ const useShell = (): Shell => {
         nativeInterfaceScale: false,
         mpvConfig: false,
         audioPassthrough: false,
+        pictureInPicture: false,
     });
 
     useEffect(() => {
@@ -125,6 +126,7 @@ const useShell = (): Shell => {
                         nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
                         mpvConfig: shellProperties.mpvConfig !== undefined,
                         audioPassthrough: shellProperties.audioPassthrough === 'true',
+                        pictureInPicture: shellProperties.pictureInPicture === 'true',
                     });
                 }
 

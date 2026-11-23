@@ -59,8 +59,7 @@ const ControlBar = React.forwardRef(({
     buffering,
     onVideoScaleChanged,
     onToggleStatisticsMenu,
-    onPipEnableRequested,
-    onPipDisableRequested,
+    onTogglePictureInPicture,
     onTouchEnd,
     onButtonsMenuOpenChanged,
     ...props
@@ -131,13 +130,6 @@ const ControlBar = React.forwardRef(({
         }
         chromecast.transport.requestSession();
     }, [castButtonDisabled, platform.shell.active, shellCastSupported, onToggleCastDevicesMenu]);
-    const onPictureInPictureButtonClick = React.useCallback(() => {
-        if (pictureInPicture) {
-            onPipDisableRequested?.();
-        } else {
-            onPipEnableRequested?.();
-        }
-    }, [pictureInPicture, onPipDisableRequested, onPipEnableRequested]);
     React.useEffect(() => {
         if (typeof onButtonsMenuOpenChanged === 'function') {
             onButtonsMenuOpenChanged(buttonsMenuOpen && buttonsMenuCollapsed);
@@ -216,7 +208,7 @@ const ControlBar = React.forwardRef(({
                                     defaultValue: pictureInPicture ? 'Exit picture-in-picture' : 'Picture-in-picture'
                                 })}
                                 tabIndex={-1}
-                                onClick={onPictureInPictureButtonClick}
+                                onClick={onTogglePictureInPicture}
                             >
                                 <PictureInPictureIcon className={styles['icon']} active={pictureInPicture} />
                             </Button>
@@ -299,8 +291,7 @@ ControlBar.propTypes = {
     shellCastSupported: PropTypes.bool,
     onToggleCastDevicesMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
-    onPipEnableRequested: PropTypes.func,
-    onPipDisableRequested: PropTypes.func,
+    onTogglePictureInPicture: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,

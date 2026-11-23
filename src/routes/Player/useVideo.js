@@ -46,7 +46,8 @@ const useVideo = () => {
         extraSubtitlesBold: null,
         assSubtitlesStylingActive: false,
         fullscreen: null,
-        pictureInPicture: false,
+        pictureInPicturePossible: null,
+        pictureInPictureActive: null,
     });
 
     const dispatch = React.useCallback((action, options) => {
@@ -167,11 +168,8 @@ const useVideo = () => {
     }, [setProp]);
 
     const setPictureInPicture = React.useCallback((state) => {
-        setState((currentState) => ({
-            ...currentState,
-            pictureInPicture: state,
-        }));
-    }, []);
+        setProp('pictureInPictureActive', state);
+    }, [setProp]);
 
     const setSubtitlesTextColor = React.useCallback((color) => {
         setProp('subtitlesTextColor', color);

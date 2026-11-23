@@ -28,6 +28,7 @@ type ShellCapabilities = {
     nativeInterfaceScale: boolean;
     mpvConfig: boolean;
     audioPassthrough: boolean;
+    pictureInPicture: boolean;
 };
 
 type ShellState = {
