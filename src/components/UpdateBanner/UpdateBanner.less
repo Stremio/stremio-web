@@ -1,12 +1,12 @@
 @import (reference) '~stremio/common/screen-sizes.less';
 
 .update-banner {
-    height: 4rem;
+    height: calc(4rem + var(--safe-area-inset-bottom));
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 0 1rem;
+    padding: 0 max(1rem, var(--safe-area-inset-right)) var(--safe-area-inset-bottom) max(1rem, var(--safe-area-inset-left));
     font-size: 1rem;
     font-weight: bold;
     color: var(--primary-foreground-color);
@@ -33,7 +33,7 @@
 
     .close {
         position: absolute;
-        right: 0;
+        right: var(--safe-area-inset-right);
         height: 4rem;
         width: 4rem;
         display: flex;
@@ -49,25 +49,38 @@
 
 @media only screen and (max-width: @minimum) {
     .update-banner {
+        position: relative;
         height: auto;
-        min-height: 4rem;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 0.75rem 3.5rem 0.75rem 1rem;
-        border-radius: var(--border-radius);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.875rem;
+        padding: 1rem;
+        border-radius: 1.25rem;
         box-shadow: var(--outer-glow);
 
         .label {
-            flex: auto;
+            padding-right: 2.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.4;
         }
 
         .button {
-            flex: none;
+            height: 2.75rem;
+            border-radius: 2.75rem;
+            font-weight: 600;
         }
 
         .close {
-            height: 100%;
-            width: 3.5rem;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+
+            .icon {
+                height: 1.25rem;
+            }
         }
     }
 }

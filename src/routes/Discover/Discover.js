@@ -15,12 +15,12 @@ const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { useNavigateWithOrigin } = require('stremio-router');
 const { AddonDetailsModal, Button, DelayedRenderer, Image, MainNavBars, MetaItem, MetaPreview, ModalDialog, MultiselectMenu } = require('stremio/components');
 const { default: MetaPreviewSheet } = require('stremio/components/MetaPreviewSheet');
-const { default: EpgProgramModal } = require('stremio/components/EpgProgramModal');
 const useDiscover = require('./useDiscover');
 const useSelectableInputs = require('./useSelectableInputs');
 const { default: FiltersSheet } = require('./FiltersSheet');
 const { default: Guide } = require('./Guide');
 const { default: DaySelector } = require('./Guide/DaySelector');
+const { default: ProgramPreview } = require('./Guide/ProgramPreview');
 const { default: useLiveTvGuide } = require('./useLiveTvGuide');
 const styles = require('./styles');
 
@@ -68,25 +68,40 @@ const Discover = () => {
     }, [discover.catalog, selectedMetaItemIndex]);
 
     const metasContainerRef = React.useRef();
-    const metaPreviewRef = React.useRef();
     const previousCatalogSizeRef = React.useRef(0);
 
-    const [selectedEpgProgram, setSelectedEpgProgram] = React.useState(null);
-    const [epgPreviewOpen, openEpgPreview, closeEpgPreviewModal] = useBinaryState(false);
+    const [epgSelection, setEpgSelection] = React.useState(null);
     const isEpgLayout = discover.selectable.catalogs.find(({ selected }) => selected)?.isEpgGuide === true;
     const guide = useLiveTvGuide(discover, epgDate, isEpgLayout);
+    const selectedEpg = React.useMemo(() => {
+        if (!isEpgLayout) {
+            return null;
+        }
+
+        const selectedProgram = epgSelection && guide.programs[epgSelection.channelId]?.find(({ startTime }) => startTime.getTime() === epgSelection.start);
+        const channel = guide.channels.find(({ id }) => selectedProgram ? id === epgSelection.channelId : guide.programs[id]?.length > 0);
+        if (!channel) {
+            return null;
+        }
+
+        const programs = guide.programs[channel.id];
+        return {
+            program: selectedProgram ?? programs.find(({ endTime }) => endTime.getTime() > guide.now) ?? programs[0],
+            channelHref: getMetaDetailsHref(channel.deepLinks),
+        };
+    }, [isEpgLayout, epgSelection, guide.channels, guide.programs, guide.now]);
     const onEpgDayChange = React.useCallback((day) => {
         const date = epgDateKey(day);
+        setEpgSelection(null);
         setQueryParams((params) => {
             const nextParams = new URLSearchParams(params);
             nextParams.set('epg_date', date);
             return nextParams;
         }, { replace: true });
     }, [setQueryParams]);
-    const onProgramSelect = React.useCallback((program, channel) => {
-        setSelectedEpgProgram({ program, channel });
-        openEpgPreview();
-    }, [openEpgPreview]);
+    const onEpgProgramFocus = React.useCallback((program, channel) => {
+        setEpgSelection({ channelId: channel.id, start: program.startTime.getTime() });
+    }, []);
 
     React.useEffect(() => {
         if (!isEpgLayout && discover.catalog?.content.type === 'Loading' && metasContainerRef.current) {
@@ -172,12 +187,24 @@ const Discover = () => {
             return;
         }
 
-        const visible = metaPreviewRef.current && window.getComputedStyle(metaPreviewRef.current).display !== 'none';
-        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString() && visible) {
+        if (event.currentTarget.dataset.index !== selectedMetaItemIndex.toString()) {
             event.preventDefault();
             event.currentTarget.focus();
         }
     }, [isMobile, selectedMetaItemIndex, openMobilePreview]);
+    const onEpgProgramClick = React.useCallback((program, channel) => {
+        if (!isMobile && program === selectedEpg?.program) {
+            if (selectedEpg.channelHref !== null) {
+                navigateWithOrigin(selectedEpg.channelHref);
+            }
+            return;
+        }
+
+        onEpgProgramFocus(program, channel);
+        if (isMobile) {
+            openMobilePreview();
+        }
+    }, [isMobile, selectedEpg, onEpgProgramFocus, openMobilePreview, navigateWithOrigin]);
     const onScrollToBottom = React.useCallback(() => {
         if (hasNextPage) {
             loadNextPage();
@@ -189,7 +216,7 @@ const Discover = () => {
         closeAddonModal();
         closeMobilePreview();
         setSelectedMetaItemIndex(0);
-        setSelectedEpgProgram(null);
+        setEpgSelection(null);
     }, [discover.selected, isMobile, closeFilters, closeAddonModal, closeMobilePreview]);
     const renderEmptyState = () => (
         <DelayedRenderer delay={500}>
@@ -214,7 +241,9 @@ const Discover = () => {
             return (
                 <Guide
                     {...guide}
-                    onProgramSelect={onProgramSelect}
+                    selectedProgram={isMobile ? null : selectedEpg?.program ?? null}
+                    onProgramClick={onEpgProgramClick}
+                    onProgramFocus={onEpgProgramFocus}
                 />
             );
         }
@@ -258,73 +287,72 @@ const Discover = () => {
         );
     };
 
+    const showHref = selectedMetaItem?.deepLinks.player ?? selectedMetaItem?.deepLinks.metaDetailsStreams ?? selectedMetaItem?.deepLinks.metaDetailsVideos ?? null;
     const metaPreviewProps = selectedMetaItem && {
-        compact: true,
         name: selectedMetaItem.name,
         logo: selectedMetaItem.logo,
         runtime: selectedMetaItem.runtime,
         releaseInfo: selectedMetaItem.releaseInfo,
         released: selectedMetaItem.released,
         description: selectedMetaItem.description,
-        deepLinks: selectedMetaItem.deepLinks,
-        trailerStreams: selectedMetaItem.trailerStreams,
+        trailerHref: selectedMetaItem.trailerStreams[0]?.deepLinks.player ?? null,
         inLibrary: selectedMetaItem.inLibrary,
-        toggleInLibrary: selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary,
+        onToggleLibrary: selectedMetaItem.inLibrary ? removeFromLibrary : addToLibrary,
         watched: selectedMetaItem.watched,
-        toggleWatched,
-        metaId: selectedMetaItem.id,
-        like: selectedMetaItem.like,
+        onToggleWatched: toggleWatched,
     };
 
     const renderMetaPreview = () => {
+        if (isMobile) {
+            return null;
+        }
+
         if (isEpgLayout) {
+            if (selectedEpg !== null) {
+                return (
+                    <ProgramPreview
+                        className={styles['preview']}
+                        program={selectedEpg.program}
+                        now={guide.now}
+                        channelHref={selectedEpg.channelHref}
+                    />
+                );
+            } else if (guide.loading) {
+                return <div className={styles['preview']} />;
+            }
+
             return null;
         }
 
         if (selectedMetaItem !== null) {
-            return <MetaPreview
-                {...metaPreviewProps}
-                className={styles['meta-preview-container']}
-                ref={metaPreviewRef}
-                background={selectedMetaItem.poster}
-                links={selectedMetaItem.links}
-            />;
-        } else if (discover.catalog !== null && discover.catalog.content.type === 'Loading') {
-            return <div className={styles['meta-preview-container']} />;
+            return (
+                <MetaPreview
+                    {...metaPreviewProps}
+                    className={styles['preview']}
+                    background={selectedMetaItem.poster}
+                    links={selectedMetaItem.links}
+                    show={showHref !== null ? { href: showHref } : null}
+                />
+            );
+        } else if (discover.catalog?.content.type === 'Loading') {
+            return <div className={styles['preview']} />;
         }
 
         return null;
-    };
-    const renderEpgPreviewModal = () => {
-        if (!isEpgLayout || selectedEpgProgram === null) {
-            return null;
-        }
-
-        const { program, channel } = selectedEpgProgram;
-        return (
-            <EpgProgramModal
-                program={program}
-                now={guide.now}
-                show={epgPreviewOpen}
-                onCloseRequest={closeEpgPreviewModal}
-                channelHref={getMetaDetailsHref(channel.deepLinks)}
-            />
-        );
     };
 
     React.useEffect(() => {
         if (!routeActive) {
             closeFilters();
             closeMobilePreview();
-            setSelectedEpgProgram(null);
         }
     }, [routeActive, closeFilters, closeMobilePreview]);
     const pendingHrefRef = React.useRef(null);
     const onMobileShowClick = React.useCallback((event) => {
         event.preventDefault();
-        pendingHrefRef.current = getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
+        pendingHrefRef.current = selectedEpg !== null ? selectedEpg.channelHref : getMetaDetailsHref(selectedMetaItem && selectedMetaItem.deepLinks);
         closeMobilePreview();
-    }, [selectedMetaItem, closeMobilePreview]);
+    }, [selectedEpg, selectedMetaItem, closeMobilePreview]);
     const onMobilePreviewExited = React.useCallback(() => {
         const href = pendingHrefRef.current;
         pendingHrefRef.current = null;
@@ -332,6 +360,27 @@ const Discover = () => {
             navigateWithOrigin(href);
         }
     }, [navigateWithOrigin]);
+    const renderMobilePreview = () => {
+        if (selectedEpg !== null) {
+            return (
+                <ProgramPreview
+                    program={selectedEpg.program}
+                    now={guide.now}
+                    channelHref={selectedEpg.channelHref}
+                    onShowClick={onMobileShowClick}
+                />
+            );
+        }
+
+        return (
+            <MetaPreview
+                {...metaPreviewProps}
+                background={selectedMetaItem.background || selectedMetaItem.poster}
+                links={selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
+                show={showHref !== null ? { href: showHref, icon: 'chevron-forward', onClick: onMobileShowClick } : null}
+            />
+        );
+    };
     return (
         <MainNavBars className={styles['discover-container']} route={'discover'}>
             <div className={styles['discover-content']}>
@@ -409,22 +458,15 @@ const Discover = () => {
                 </div>
                 {renderMetaPreview()}
             </div>
-            {renderEpgPreviewModal()}
             {
-                selectedMetaItem !== null ?
+                selectedEpg !== null || selectedMetaItem !== null ?
                     <MetaPreviewSheet
                         show={isMobile && mobilePreviewOpen}
                         onCloseRequest={closeMobilePreview}
                         onExited={onMobilePreviewExited}
-                        ariaLabel={selectedMetaItem.name}
+                        ariaLabel={selectedEpg?.program.title ?? selectedMetaItem.name}
                     >
-                        <MetaPreview
-                            {...metaPreviewProps}
-                            background={selectedMetaItem.background || selectedMetaItem.poster}
-                            links={selectedMetaItem.links?.filter((link) => link?.category !== 'Cast' && link?.category !== 'Directors')}
-                            onShowClick={onMobileShowClick}
-                            showIcon={'chevron-forward'}
-                        />
+                        {renderMobilePreview()}
                     </MetaPreviewSheet>
                     :
                     null

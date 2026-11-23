@@ -79,6 +79,7 @@ const LiveTvContinueWatchingItem = ({ className, channel, deepLinks, shows, noti
             className={classNames(className, styles['live-item'], { [styles['channel-card']]: !hasProgram })}
             _id={channel?.id}
             removable={true}
+            actionMenu={true}
             type={channel?.type}
             name={name}
             poster={poster}

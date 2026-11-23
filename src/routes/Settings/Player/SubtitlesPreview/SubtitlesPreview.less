@@ -1,0 +1,47 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+@outline: 0.15rem;
+
+.subtitles-preview {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 1.25rem 1.25rem 0 0;
+    background-color: @color-background-dark5;
+
+    .image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .layer {
+        position: absolute;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .line {
+        display: inline-block;
+        padding: 0.2em;
+        font-size: calc(var(--size) * 1vmin);
+        font-weight: normal;
+        line-height: normal;
+        white-space: pre-wrap;
+        text-shadow:
+            -@outline -@outline @outline var(--outline),
+            0 -@outline @outline var(--outline),
+            @outline -@outline @outline var(--outline),
+            -@outline 0 @outline var(--outline),
+            @outline 0 @outline var(--outline),
+            -@outline @outline @outline var(--outline),
+            0 @outline @outline var(--outline),
+            @outline @outline @outline var(--outline);
+    }
+}

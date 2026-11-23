@@ -11,9 +11,9 @@
     z-index: 101;
 
     @media only screen and (max-width: @minimum) {
-        right: 0.5rem;
+        right: calc(var(--safe-area-inset-right) + 0.5rem);
         bottom: calc(var(--vertical-nav-bar-size) + var(--safe-area-inset-bottom) + 0.5rem);
-        left: 0.5rem;
+        left: calc(var(--safe-area-inset-left) + 0.5rem);
     }
 }
 

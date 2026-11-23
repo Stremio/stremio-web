@@ -1,0 +1,129 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+@fill-duration: 8s;
+
+.pager {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: visible;
+
+    .control {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 50%;
+        background-color: @media-surface;
+        backdrop-filter: blur(5px);
+        opacity: 0.8;
+        transition: opacity 0.15s @ease, background-color 0.15s @ease;
+
+        .icon {
+            flex: none;
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        &:hover, &:focus {
+            opacity: 1;
+            background-color: @media-surface-strong;
+        }
+    }
+
+    .segments {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0 0.45rem;
+
+        .segment {
+            flex: none;
+            display: flex;
+            align-items: center;
+            width: 1.75rem;
+            height: 2.75rem;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+            .bar {
+                position: relative;
+                flex: 1;
+                height: 0.3rem;
+                border-radius: 0.3rem;
+                background-color: fade(@media-ink, 30%);
+                transition: background-color 0.15s @ease;
+
+                .fill {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 0;
+                    border-radius: inherit;
+                    background-color: @media-ink;
+                }
+            }
+
+            &.on {
+                width: 3.5rem;
+
+                .fill {
+                    animation: fill @fill-duration linear forwards;
+                    animation-play-state: var(--spotlight-play-state, running);
+                }
+            }
+
+            &:hover .bar {
+                background-color: fade(@media-ink, 50%);
+            }
+
+            &:focus {
+                outline-style: none;
+
+                .bar {
+                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                    outline-offset: 0.25rem;
+                }
+            }
+        }
+    }
+}
+
+.pager.stopped .segments .segment.on .fill {
+    animation: none;
+    width: 100%;
+}
+
+@keyframes fill {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@media @mobile {
+    .pager {
+        .control {
+            display: none;
+        }
+
+        .segments {
+            padding: 0;
+
+            .segment {
+                width: 1.5rem;
+
+                &.on {
+                    width: 3rem;
+                }
+            }
+        }
+    }
+}

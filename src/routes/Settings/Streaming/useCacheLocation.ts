@@ -20,9 +20,22 @@ const localServerUrl = (value: string | null | undefined) => {
 
 type PickerResult = { requestId: number, path: string | null, error: string | null };
 
+type Platform = ReturnType<typeof usePlatform>;
+
+const isCacheLocationSupported = ({ shell, name }: Platform, streamingServer: StreamingServer) => {
+    const option = streamingServer.settingsOptions?.find(({ id }) => id === 'cacheRoot');
+    const localUrl = localServerUrl(streamingServer.selected?.transportUrl);
+    return ['macos', 'windows'].includes(name) && shell.capabilities.cacheDirectoryPicker === true &&
+        option?.supportsDirectory === true &&
+        localUrl !== null && localUrl === localServerUrl(shell.state.streamingServerUrl) &&
+        (option?.selections ?? []).length > 0 && streamingServer.settings?.type === 'Ready' &&
+        streamingServer.cacheRootUpdate !== undefined;
+};
+
 const useCacheLocation = (streamingServer: StreamingServer) => {
     const core = useCore();
-    const { shell, name } = usePlatform();
+    const platform = usePlatform();
+    const { shell } = platform;
     const { t } = useTranslation();
     const request = useRef<{ id: number, transportUrl: string } | null>(null);
     const [choosing, setChoosing] = useState(false);
@@ -33,11 +46,7 @@ const useCacheLocation = (streamingServer: StreamingServer) => {
     const selections = option?.selections ?? [];
     const update = streamingServer.cacheRootUpdate;
     const busy = update?.type === 'Loading';
-    const localUrl = localServerUrl(transportUrl);
-    const supported = ['macos', 'windows'].includes(name) && shell.capabilities.cacheDirectoryPicker &&
-        option?.supportsDirectory === true &&
-        localUrl !== null && localUrl === localServerUrl(shell.state.streamingServerUrl) &&
-        selections.length && settings && update !== undefined;
+    const supported = isCacheLocationSupported(platform, streamingServer) && settings !== null;
 
     useEffect(() => {
         const onSelected = ({ requestId, path, error }: PickerResult) => {
@@ -96,5 +105,7 @@ const useCacheLocation = (streamingServer: StreamingServer) => {
         } : null,
     };
 };
+
+export { isCacheLocationSupported };
 
 export default useCacheLocation;

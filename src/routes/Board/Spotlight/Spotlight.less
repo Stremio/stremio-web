@@ -1,0 +1,137 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) './variables.less';
+
+.spotlight {
+    position: relative;
+    z-index: 0;
+    flex: none;
+    width: 100%;
+    height: @hero-height;
+    isolation: isolate;
+    color: var(--primary-foreground-color);
+    touch-action: pan-y;
+
+    * {
+        scroll-margin-top: 100vh;
+    }
+
+    .sentinel {
+        position: absolute;
+        top: calc(100% - var(--horizontal-nav-bar-size) - var(--safe-area-inset-top));
+        left: 0;
+        width: 1px;
+        height: 1px;
+        pointer-events: none;
+    }
+
+    .art {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        -webkit-mask-image: linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.8) calc(@nav-size - 1.1rem), #000 calc(@nav-size + 2.5rem), #000 68%, rgba(0, 0, 0, 0.55) 84%, transparent 100%);
+        mask-image: linear-gradient(180deg, transparent 0, rgba(0, 0, 0, 0.8) calc(@nav-size - 1.1rem), #000 calc(@nav-size + 2.5rem), #000 68%, rgba(0, 0, 0, 0.55) 84%, transparent 100%);
+
+        .backdrop {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.9s ease;
+
+            .image {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: 72% 22%;
+                transform: scale(1.06);
+                transition: transform 0s linear 0.9s;
+            }
+
+            &.on {
+                opacity: 1;
+
+                .image {
+                    transform: scale(1);
+                    transition: transform 14s ease-out;
+                }
+            }
+        }
+
+        .scrim {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            background: linear-gradient(90deg, fade(@scrim-color, 88%) 0%, fade(@scrim-color, 70%) 22%, fade(@scrim-color, 38%) 42%, fade(@scrim-color, 10%) 60%, fade(@scrim-color, 0%) 74%);
+        }
+    }
+
+    .pager {
+        position: absolute;
+        right: 2rem;
+        bottom: @pager-bottom;
+        z-index: 4;
+    }
+}
+
+@media (hover: hover) {
+    .spotlight:hover {
+        --spotlight-play-state: paused;
+    }
+}
+
+@starting-style {
+    .spotlight .art .backdrop.on .image {
+        transform: scale(1.06);
+    }
+}
+
+@media @mobile {
+    .spotlight {
+        height: @hero-height-mobile;
+
+        .art {
+            .backdrop .image {
+                object-position: center 20%;
+            }
+
+            .scrim {
+                background: linear-gradient(180deg, fade(@scrim-color, 0%) 28%, fade(@scrim-color, 55%) 62%, fade(@scrim-color, 86%) 100%);
+            }
+        }
+
+        .pager {
+            right: 0;
+            left: 0;
+            bottom: @pager-bottom-mobile;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
+@media @short-viewport {
+    .spotlight {
+        height: @hero-height-short;
+
+        .pager {
+            bottom: @pager-bottom-short;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spotlight .art .backdrop .image, .spotlight .art .backdrop.on .image {
+        transform: none;
+        transition: none;
+    }
+}

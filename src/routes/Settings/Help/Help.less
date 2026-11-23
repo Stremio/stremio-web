@@ -1,0 +1,19 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.value {
+    max-width: 15rem;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--primary-foreground-color);
+    opacity: 0.6;
+}
+
+@media only screen and (max-width: @minimum) {
+    .value {
+        max-width: 10rem;
+    }
+}

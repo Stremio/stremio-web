@@ -32,14 +32,16 @@ type Props = {
     hasNextPage: boolean;
     loadNextPage: () => void;
     now: number;
-    onProgramSelect: (program: EPGProgram, channel: EPGChannel) => void;
+    selectedProgram: EPGProgram | null;
+    onProgramClick: (program: EPGProgram, channel: EPGChannel) => void;
+    onProgramFocus: (program: EPGProgram, channel: EPGChannel) => void;
 };
 
 const currentProgramIndex = (programs: EPGProgram[], now: number) => {
     return programs.findIndex((program) => programStartMs(program) <= now && now < programEndMs(program));
 };
 
-const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, error, onRetry, hasNextPage, loadNextPage, now, onProgramSelect }: Props) => {
+const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, error, onRetry, hasNextPage, loadNextPage, now, selectedProgram, onProgramClick, onProgramFocus }: Props) => {
     const { t } = useTranslation();
     const todayDate = useMemo(() => parseEpgDate(today) ?? new Date(), [today]);
     const effectiveDay = useMemo(() => parseEpgDate(selectedDate) ?? todayDate, [selectedDate, todayDate]);
@@ -134,7 +136,9 @@ const Guide = ({ channels, programs, loading, selectedDate, today, dayWindow, er
                                                 visibleStart={visibleStart}
                                                 visibleEnd={visibleEnd}
                                                 pixelsPerHour={pixelsPerHour}
-                                                onProgramClick={onProgramSelect}
+                                                selectedProgram={selectedProgram}
+                                                onProgramClick={onProgramClick}
+                                                onProgramFocus={onProgramFocus}
                                             />
                                         );
                                     })}

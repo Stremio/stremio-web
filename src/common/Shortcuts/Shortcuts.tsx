@@ -68,8 +68,8 @@ const ShortcutsProvider = ({ children, onShortcut }: Props) => {
             ));
 
             if (modifiers && keyMatched) {
-                // Consume repeats and limit hits too, otherwise the browser also zooms.
-                if (interfaceScale) event.preventDefault();
+                // Consume repeats and limit hits too, otherwise the browser also zooms. Allow browser zoom reset.
+                if (interfaceScale && !keys.includes('0')) event.preventDefault();
                 if (throttled) return;
                 const combo = combos.indexOf(keys);
                 listeners.current.get(name)?.forEach((listener) => listener(combo, key, repeat));

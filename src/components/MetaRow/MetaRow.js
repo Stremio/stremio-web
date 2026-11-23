@@ -27,7 +27,7 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
     }, [catalog]);
 
     return (
-        <div className={classnames(className, styles['meta-row-container'])}>
+        <div className={classnames(className, styles['meta-row-container'])} data-board-row={catalogTitle ?? ''}>
             <div className={styles['header-container']}>
                 {
                     typeof catalogTitle === 'string' && catalogTitle.length > 0 ?
@@ -58,6 +58,7 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
                                         key: index,
                                         className: classnames(styles['meta-item'], styles['poster-shape-poster'], styles[`poster-shape-${item.posterShape}`]),
                                         notifications,
+                                        'data-board-tile': item.id ?? item._id,
                                     });
                                 })
                                 :
@@ -72,7 +73,9 @@ const MetaRow = ({ className, title, catalog, message, itemComponent, notificati
     );
 };
 
-MetaRow.Placeholder = MetaRowPlaceholder;
+const MemoMetaRow = React.memo(MetaRow);
+
+MemoMetaRow.Placeholder = MetaRowPlaceholder;
 
 MetaRow.propTypes = {
     className: PropTypes.string,
@@ -108,4 +111,4 @@ MetaRow.propTypes = {
     notifications: PropTypes.object,
 };
 
-module.exports = MetaRow;
+module.exports = MemoMetaRow;

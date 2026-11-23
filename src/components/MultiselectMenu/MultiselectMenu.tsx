@@ -4,6 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import useBinaryState from 'stremio/common/useBinaryState';
 import useOutsideClick from 'stremio/common/useOutsideClick';
+import { useRouteActive } from 'stremio/common/useRouteFocused';
 import Popup from 'stremio/components/Popup';
 import Dropdown from './Dropdown';
 import Label from './Label';
@@ -25,6 +26,7 @@ const MultiselectMenu = ({ className, title, icon, options, value, disabled, por
     const [autoFocus, setAutoFocus] = React.useState(false);
     const multiselectMenuRef = useOutsideClick(closeMenu);
     const [level, setLevel] = React.useState<number>(0);
+    const routeActive = useRouteActive();
 
     const selectedOption = options.find((opt) => opt.value === value);
     const labelText = typeof title === 'function' ? title() : title ?? selectedOption?.label;
@@ -41,6 +43,10 @@ const MultiselectMenu = ({ className, title, icon, options, value, disabled, por
         setAutoFocus(event.detail === 0);
         toggleMenu();
     }, [toggleMenu]);
+
+    React.useEffect(() => {
+        if (portal && !routeActive) closeMenu();
+    }, [portal, routeActive, closeMenu]);
 
     const containerClassName = classNames(styles['multiselect-menu'], { [styles['active']]: menuOpen }, className);
     const renderLabel = React.useCallback(({ ref, className: popupClassName }: { ref: React.Ref<HTMLDivElement>; className?: string }) => (

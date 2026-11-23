@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCore } from 'stremio/core';
 import { CONSTANTS, languageNames, useLanguageSorting, usePlatform } from 'stremio/common';
-import useMpvConfig from './useMpvConfig';
 
 const LANGUAGES_NAMES: Record<string, string> = languageNames;
 const SUBTITLES_OFFSETS = Array.from({ length: 21 }, (_, i) => i * 5);
@@ -11,7 +10,6 @@ const usePlayerOptions = (profile: Profile) => {
     const { t } = useTranslation();
     const core = useCore();
     const platform = usePlatform();
-    const mpvConfigSelect = useMpvConfig();
 
     const languageOptions = useMemo(() => Object.keys(LANGUAGES_NAMES).map((code) => ({
         value: code,
@@ -134,6 +132,22 @@ const usePlayerOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
+    const subtitlesBoldToggle = useMemo(() => ({
+        checked: profile.settings.subtitlesBold,
+        onClick: () => {
+            core.transport.dispatch({
+                action: 'Ctx',
+                args: {
+                    action: 'UpdateSettings',
+                    args: {
+                        ...profile.settings,
+                        subtitlesBold: !profile.settings.subtitlesBold
+                    }
+                }
+            });
+        }
+    }), [profile.settings]);
+
     const subtitlesOutlineColorInput = useMemo(() => ({
         value: profile.settings.subtitlesOutlineColor,
         onChange: (value: string) => {
@@ -166,22 +180,6 @@ const usePlayerOptions = (profile: Profile) => {
             });
         }
     }), [profile.settings, sortedLanguageOptions]);
-
-    const surroundSoundToggle = useMemo(() => ({
-        checked: profile.settings.surroundSound,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        surroundSound: !profile.settings.surroundSound
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
 
     const seekTimeDurationSelect = useMemo(() => ({
         options: CONSTANTS.SEEK_TIME_DURATIONS.map((size) => ({
@@ -297,102 +295,6 @@ const usePlayerOptions = (profile: Profile) => {
         }
     }), [profile.settings]);
 
-    const playInBackgroundToggle = useMemo(() => ({
-        checked: profile.settings.playInBackground,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        playInBackground: !profile.settings.playInBackground
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
-    const hardwareDecodingToggle = useMemo(() => ({
-        checked: profile.settings.hardwareDecoding,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        hardwareDecoding: !profile.settings.hardwareDecoding
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
-    const gpuVideoProcessingToggle = useMemo(() => ({
-        checked: profile.settings.gpuVideoProcessing,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        gpuVideoProcessing: !profile.settings.gpuVideoProcessing
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
-    const videoModeSelect = useMemo(() => ({
-        options: [
-            {
-                value: null,
-                label: t('SETTINGS_VIDEO_MODE_DEFAULT'),
-            },
-            {
-                value: 'legacy',
-                label: t('SETTINGS_VIDEO_MODE_LEGACY'),
-            }
-        ],
-        value: profile.settings.videoMode,
-        title: () => {
-            return profile.settings.videoMode === 'legacy' ?
-                t('SETTINGS_VIDEO_MODE_LEGACY')
-                :
-                t('SETTINGS_VIDEO_MODE_DEFAULT');
-        },
-        onSelect: (value: string | null) => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        videoMode: value,
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
-    const pauseOnMinimizeToggle = useMemo(() => ({
-        checked: profile.settings.pauseOnMinimize,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        pauseOnMinimize: !profile.settings.pauseOnMinimize,
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
     return {
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
@@ -400,20 +302,14 @@ const usePlayerOptions = (profile: Profile) => {
         subtitlesTextColorInput,
         subtitlesBackgroundColorInput,
         subtitlesOutlineColorInput,
+        subtitlesBoldToggle,
         assSubtitlesStylingToggle,
         audioLanguageSelect,
-        surroundSoundToggle,
         seekTimeDurationSelect,
         seekShortTimeDurationSelect,
         playInExternalPlayerSelect,
         nextVideoPopupDurationSelect,
         bingeWatchingToggle,
-        playInBackgroundToggle,
-        hardwareDecodingToggle,
-        gpuVideoProcessingToggle,
-        videoModeSelect,
-        pauseOnMinimizeToggle,
-        mpvConfigSelect,
     };
 };
 

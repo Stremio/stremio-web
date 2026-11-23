@@ -1,0 +1,190 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
+
+@keyframes hit {
+    0%, 55% {
+        background-color: @color-surface-light5-10;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+.row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 4.25rem;
+    padding: 0.75rem 1.25rem;
+    overflow: visible;
+
+    &.thin {
+        min-height: 3.25rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+
+    &.end {
+        min-height: 3.75rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    &.keys {
+        min-height: 3.75rem;
+        padding-top: 0.6rem;
+        padding-bottom: 0.9rem;
+
+        .heading {
+            min-width: 8rem;
+        }
+
+        .control {
+            flex: 0 1 auto;
+        }
+    }
+
+    &:focus {
+        outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+        outline-offset: calc(-1 * var(--focus-outline-size));
+    }
+
+    &.hit {
+        animation: hit 1.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+        &:first-child {
+            border-radius: 1.25rem 1.25rem 0 0;
+        }
+
+        &:last-child {
+            border-radius: 0 0 1.25rem 1.25rem;
+        }
+
+        &:only-child {
+            border-radius: 1.25rem;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+            background-color: @color-surface-light5-10;
+        }
+    }
+
+    & + .row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 1.25rem;
+        left: 1.25rem;
+        height: 1px;
+        background-color: var(--overlay-color);
+    }
+
+    .heading {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+
+        .icon {
+            flex: none;
+            width: 1.75rem;
+            height: 1.75rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .text {
+            flex: 1;
+            min-width: 0;
+
+            .label {
+                line-height: 1.4;
+                color: var(--primary-foreground-color);
+            }
+
+            .description {
+                margin-top: 0.15rem;
+                font-size: 0.875rem;
+                line-height: 1.45;
+                color: var(--primary-foreground-color);
+                opacity: 0.6;
+            }
+        }
+    }
+
+    .control {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        min-width: 0;
+        overflow: visible;
+
+        &.wide {
+            width: 15rem;
+        }
+
+        &.scale {
+            width: 19rem;
+        }
+
+        :global(.multiselect) {
+            width: 100%;
+            background-color: var(--overlay-color);
+        }
+
+        :global(.color-input) {
+            width: 100%;
+            padding: 1.3rem 1rem;
+            border-radius: 3rem;
+            border: 2px solid transparent;
+            transition: 0.3s all ease-in-out;
+
+            &:hover {
+                border-color: var(--overlay-color);
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .row {
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+
+        & + .row::before {
+            right: 1rem;
+            left: 1rem;
+        }
+
+        .control {
+            &.wide {
+                width: 11.5rem;
+                max-width: 55%;
+            }
+
+            &.scale {
+                width: 100%;
+            }
+        }
+
+        &.stack {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+
+            .control {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+    }
+}

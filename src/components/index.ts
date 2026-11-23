@@ -26,8 +26,10 @@ import MultiselectMenu from './MultiselectMenu';
 import { HorizontalNavBar, VerticalNavBar } from './NavBar';
 import NumberInput from './NumberInput';
 import Popup from './Popup';
+import ProgressBar from './ProgressBar';
 import RadioButton from './RadioButton';
 import SearchBar from './SearchBar';
+import SegmentedControl from './SegmentedControl';
 import SharePrompt from './SharePrompt';
 import Slider from './Slider';
 import ShortcutsGroup from './ShortcutsGroup';
@@ -66,8 +68,10 @@ export {
     VerticalNavBar,
     NumberInput,
     Popup,
+    ProgressBar,
     RadioButton,
     SearchBar,
+    SegmentedControl,
     SharePrompt,
     Slider,
     ShortcutsGroup,

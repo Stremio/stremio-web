@@ -48,6 +48,7 @@ type VideoController = {
     setSubtitlesTextColor: (color: string) => void,
     setSubtitlesBackgroundColor: (color: string) => void,
     setSubtitlesOutlineColor: (color: string) => void,
+    setSubtitlesBold: (bold: boolean) => void,
 };
 
 type UseSubtitlesArgs = {

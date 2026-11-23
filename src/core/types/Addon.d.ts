@@ -28,6 +28,13 @@ type Addon = {
     transportUrl: string,
 };
 
+type AddonPreview = {
+    manifest: {
+        id: string,
+        name: string,
+    },
+};
+
 type AddonsDeepLinks = {
     addons: string,
 };

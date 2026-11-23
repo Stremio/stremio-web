@@ -3,6 +3,7 @@
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 @import (reference) '~stremio/components/MetaRow/styles.less';
+@import (reference) './Spotlight/variables.less';
 
 :import('~stremio/components/MetaRow/styles.less') {
     meta-item: meta-item;
@@ -10,6 +11,10 @@
 
 :import('~stremio/components/MetaRow/MetaRowPlaceholder/styles.less') {
     meta-item-placeholder: meta-item;
+}
+
+:import('~stremio/components/MainNavBars/MainNavBars.less') {
+    nav-content-container: nav-content-container;
 }
 
 .board-container {
@@ -21,6 +26,48 @@
     .board-content-container {
         flex: 1;
         align-self: stretch;
+
+        &.with-spotlight {
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 0;
+                background: linear-gradient(41deg, var(--primary-background-color) 0%, var(--secondary-background-color) 100%);
+                clip-path: inset(0 0 calc(100% - var(--horizontal-nav-bar-size) - var(--safe-area-inset-top)) 0);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s ease-out;
+            }
+
+            &.scrolled::after {
+                opacity: 1;
+            }
+
+            .nav-content-container {
+                top: 0;
+                left: 0;
+            }
+
+            .board-content {
+                padding-left: calc(var(--vertical-nav-bar-size) + 1rem);
+                scroll-padding-top: calc(var(--horizontal-nav-bar-size) + var(--safe-area-inset-top));
+
+                .board-spotlight {
+                    margin: 0 -1rem 0 calc(-1 * (var(--vertical-nav-bar-size) + 1rem));
+                    width: auto;
+                }
+
+                .board-spotlight + .board-row {
+                    position: relative;
+                    z-index: 1;
+                    margin-top: -@row-overlap;
+                }
+            }
+        }
 
         .board-content {
             height: 100%;
@@ -91,6 +138,24 @@
         .board-warning-container {
             bottom: calc(var(--vertical-nav-bar-size) + 0.5rem);
             height: 7rem;
+        }
+    }
+}
+
+@media @mobile {
+    .board-container {
+        .board-content-container.with-spotlight {
+            .board-content {
+                padding-left: 1rem;
+
+                .board-spotlight {
+                    margin-left: -1rem;
+                }
+
+                .board-spotlight + .board-row {
+                    margin-top: -@row-overlap-mobile;
+                }
+            }
         }
     }
 }

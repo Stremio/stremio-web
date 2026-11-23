@@ -1,0 +1,164 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/routes/Board/Spotlight/variables.less';
+
+.tray {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.25rem 0 0.75rem;
+
+    .picks {
+        flex: 0 1 auto;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+
+        .pick {
+            flex: 0 1 auto;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            height: 2.75rem;
+            padding: 0 0.35rem 0 0.4rem;
+            border-radius: 2.75rem;
+            background-color: var(--overlay-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--primary-foreground-color);
+
+            &.solo {
+                padding-right: 1.1rem;
+            }
+
+            .number {
+                flex: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.9rem;
+                height: 1.9rem;
+                border-radius: 50%;
+                background-color: var(--primary-accent-color);
+                font-size: 0.85rem;
+                font-weight: 700;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .title {
+                min-width: 0;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .remove {
+                flex: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50%;
+
+                .icon {
+                    width: 0.85rem;
+                    height: 0.85rem;
+                    opacity: 0.6;
+                    transition: opacity 0.1s ease-out;
+                }
+
+                &:hover, &:focus {
+                    .icon {
+                        opacity: 1;
+                    }
+                }
+
+                &:focus {
+                    outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                    outline-offset: calc(-1 * var(--focus-outline-size));
+                }
+            }
+        }
+    }
+
+    .status {
+        flex: none;
+        margin-left: auto;
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+        color: @text-tertiary;
+
+        &.full {
+            color: @text-secondary;
+        }
+
+        &.nudge {
+            color: var(--primary-foreground-color);
+            animation: tray-nudge 0.35s @ease-pop;
+        }
+    }
+
+    &.compact {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 0.35rem 0 0.75rem 1.25rem;
+
+        .picks {
+            gap: 0.45rem;
+            padding-right: 1.25rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .pick {
+                flex: none;
+                max-width: 13rem;
+                gap: 0.45rem;
+                height: 2.5rem;
+                padding: 0 0.15rem 0 0.3rem;
+                font-size: 0.88rem;
+
+                &.solo {
+                    padding-right: 1rem;
+                }
+
+                .number {
+                    width: 1.6rem;
+                    height: 1.6rem;
+                    font-size: 0.78rem;
+                }
+
+                .remove {
+                    width: 2.2rem;
+                    height: 2.2rem;
+                }
+            }
+        }
+
+        .status {
+            margin-left: 0;
+        }
+    }
+}
+
+@keyframes tray-nudge {
+    45% {
+        transform: scale(1.06);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tray .status.nudge {
+        animation: none;
+    }
+}

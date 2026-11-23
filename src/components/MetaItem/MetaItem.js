@@ -12,6 +12,7 @@ const { default: ActionMenu } = require('stremio/components/ActionMenu');
 const { default: Button } = require('stremio/components/Button');
 const { default: Image } = require('stremio/components/Image');
 const Multiselect = require('stremio/components/Multiselect');
+const { default: WatchedBadge } = require('stremio/components/WatchedBadge');
 const useBinaryState = require('stremio/common/useBinaryState');
 const { default: getMetaDetailsHref } = require('stremio/common/getMetaDetailsHref');
 const { ICON_FOR_TYPE } = require('stremio/common/CONSTANTS');
@@ -91,9 +92,7 @@ const MetaItem = React.memo(({ className, type, name, poster, posterShape, poste
                     }
                     {
                         watched ?
-                            <div className={styles['watched-icon-layer']}>
-                                <Icon className={styles['watched-icon']} name={'checkmark'} />
-                            </div>
+                            <WatchedBadge className={styles['watched-icon-layer']} />
                             :
                             null
                     }

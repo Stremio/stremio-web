@@ -37,6 +37,9 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
         }
     };
     React.useEffect(() => {
+        if (!routeFocused || !open) {
+            return;
+        }
         const onCloseEvent = (event) => {
             if (!event.closePopupPrevented && typeof onCloseRequest === 'function') {
                 const closeEvent = {
@@ -63,11 +66,9 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
                 }
             }
         };
-        if (routeFocused && open) {
-            window.addEventListener('keydown', onCloseEvent, portal);
-            window.addEventListener('mousedown', onCloseEvent);
-            window.addEventListener('pointerdown', onCloseEvent);
-        }
+        window.addEventListener('keydown', onCloseEvent, portal);
+        window.addEventListener('mousedown', onCloseEvent);
+        window.addEventListener('pointerdown', onCloseEvent);
         return () => {
             window.removeEventListener('keydown', onCloseEvent, portal);
             window.removeEventListener('mousedown', onCloseEvent);
@@ -128,6 +129,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
             const left = bounds.left + parseFloat(padding.paddingLeft);
             const right = bounds.right - parseFloat(padding.paddingRight);
             const anchor = getInterfaceRect(label);
+            menu.style.setProperty('--anchor-width', `${anchor.width}px`);
             menu.style.maxWidth = `${right - left}px`;
             const width = getInterfaceRect(menu).width;
             const height = menu.scrollHeight;
@@ -175,7 +177,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
     });
     return <>
         {label}
-        {portal && open && createPortal(<div ref={layerRef} className={styles['portal-layer']} onMouseDown={menuOnMouseDown} onPointerDown={menuOnMouseDown} onClick={portalOnClick}>
+        {portal && open && createPortal(<div ref={layerRef} className={styles['portal-layer']} onMouseDown={menuOnMouseDown} onPointerDown={menuOnMouseDown} onClick={portalOnClick} onContextMenu={props.onContextMenu}>
             {menu}
         </div>, labelRef.current?.closest('.modal-container, .route-container') ?? document.body)}
     </>;
@@ -191,6 +193,7 @@ Popup.propTypes = {
     renderLabel: PropTypes.func.isRequired,
     renderMenu: PropTypes.func.isRequired,
     dataset: PropTypes.object,
+    onContextMenu: PropTypes.func,
     onCloseRequest: PropTypes.func
 };
 

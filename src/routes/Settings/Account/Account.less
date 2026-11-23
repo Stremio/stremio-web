@@ -1,0 +1,90 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+:import('~stremio/routes/Settings/components/Row/Row.less') {
+    row-label: label;
+}
+
+.identity {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+
+    .avatar {
+        flex: none;
+        width: 5rem;
+        height: 5rem;
+        border: 2px solid var(--primary-accent-color);
+        border-radius: 50%;
+        background-color: var(--primary-foreground-color);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .text {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+
+        .name {
+            max-width: 100%;
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.3;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: var(--primary-foreground-color);
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: var(--primary-foreground-color);
+            opacity: 0.6;
+        }
+    }
+}
+
+section.danger {
+    margin-top: 3rem;
+
+    .row-label {
+        font-weight: 500;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .identity {
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1rem;
+
+        .avatar {
+            width: 4rem;
+            height: 4rem;
+        }
+
+        .text {
+            flex: 1 1 calc(100% - 5rem);
+
+            .name {
+                white-space: normal;
+                overflow-wrap: anywhere;
+            }
+        }
+
+        > :last-child {
+            flex: 1 1 100%;
+        }
+    }
+
+    section.danger {
+        margin-top: 1.5rem;
+    }
+}

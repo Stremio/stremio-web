@@ -8,11 +8,27 @@ const createTransport = (): CoreTransport => {
         return bridge.call(['init'], [args]);
     };
 
+    const pendingStates = new Map<string, Promise<object>>();
+
     const getState = (model: string): Promise<object> => {
-        return bridge.call(['getState'], [model]);
+        const pending = pendingStates.get(model);
+        if (pending) {
+            return pending.catch(() => bridge.call(['getState'], [model]));
+        }
+
+        const request: Promise<object> = bridge.call(['getState'], [model]);
+        pendingStates.set(model, request);
+        const settle = () => {
+            if (pendingStates.get(model) === request) {
+                pendingStates.delete(model);
+            }
+        };
+        request.then(settle, settle);
+        return request;
     };
 
     const dispatch = (action: DispatchAction, model?: string): Promise<void> => {
+        pendingStates.clear();
         return bridge.call(['dispatch'], [action, model, location.hash]);
     };
 

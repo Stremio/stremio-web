@@ -63,6 +63,7 @@ const useShell = (): Shell => {
         cacheDirectoryPicker: false,
         nativeInterfaceScale: false,
         mpvConfig: false,
+        audioPassthrough: false,
     });
 
     useEffect(() => {
@@ -123,6 +124,7 @@ const useShell = (): Shell => {
                         cacheDirectoryPicker: shellProperties.cacheDirectoryPicker === 'true',
                         nativeInterfaceScale: shellProperties.nativeInterfaceScale === 'true',
                         mpvConfig: shellProperties.mpvConfig !== undefined,
+                        audioPassthrough: shellProperties.audioPassthrough === 'true',
                     });
                 }
 

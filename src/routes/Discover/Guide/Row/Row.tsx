@@ -20,12 +20,14 @@ type Props = {
     visibleStart: number;
     visibleEnd: number;
     pixelsPerHour: number;
+    selectedProgram: EPGProgram | null;
     onProgramClick: (program: EPGProgram, channel: EPGChannel) => void;
+    onProgramFocus: (program: EPGProgram, channel: EPGChannel) => void;
 };
 
 const formatTime = (time: number) => new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-const Row = ({ channel, programs, currentProgramIndex, dayStart, dayEnd, visibleStart, visibleEnd, pixelsPerHour, onProgramClick }: Props) => {
+const Row = ({ channel, programs, currentProgramIndex, dayStart, dayEnd, visibleStart, visibleEnd, pixelsPerHour, selectedProgram, onProgramClick, onProgramFocus }: Props) => {
     const { t } = useTranslation();
     const totalWidth = ((dayEnd - dayStart) / HOUR_IN_MS) * pixelsPerHour;
     const channelHref = channel.deepLinks?.metaDetailsStreams ?? channel.deepLinks?.metaDetailsVideos ?? null;
@@ -46,8 +48,9 @@ const Row = ({ channel, programs, currentProgramIndex, dayStart, dayEnd, visible
                     return (
                         <div
                             key={program.id ?? startMs}
-                            className={classNames(styles['program'], { [styles['current']]: index === currentProgramIndex, [styles['compact']]: compact })}
+                            className={classNames(styles['program'], { [styles['current']]: index === currentProgramIndex, [styles['compact']]: compact, [styles['selected']]: program === selectedProgram })}
                             style={{ left, width }}
+                            onFocus={() => onProgramFocus(program, channel)}
                         >
                             <Button
                                 role={'button'}

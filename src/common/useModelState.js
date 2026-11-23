@@ -8,6 +8,59 @@ const { useCore } = require('stremio/core');
 const { useCoreSuspender } = require('stremio/common/CoreSuspender');
 const { useRouteActive } = require('stremio/common/useRouteFocused');
 
+const isPlainObject = (value) => {
+    return value !== null && typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype;
+};
+
+const shareObject = (prev, next, shareValue) => {
+    const keys = Object.keys(next);
+    let changed = keys.length !== Object.keys(prev).length;
+    const shared = keys.reduce((result, key) => {
+        const own = Object.prototype.hasOwnProperty.call(prev, key);
+        result[key] = own ? shareValue(prev[key], next[key]) : next[key];
+        changed = changed || !own || result[key] !== prev[key];
+        return result;
+    }, {});
+    return changed ? shared : prev;
+};
+
+const shareEqual = (prev, next) => {
+    if (prev === next) {
+        return prev;
+    }
+
+    if (Array.isArray(prev) && Array.isArray(next)) {
+        const shared = next.map((value, index) => shareEqual(prev[index], value));
+        return shared.length === prev.length && shared.every((value, index) => value === prev[index]) ? prev : shared;
+    }
+
+    if (isPlainObject(prev) && isPlainObject(next)) {
+        return shareObject(prev, next, shareEqual);
+    }
+
+    return deepEqual(prev, next) ? prev : next;
+};
+
+const sharedResults = new WeakMap();
+
+const share = (prev, next) => {
+    if (prev === null || typeof prev !== 'object' || next === null || typeof next !== 'object') {
+        return shareEqual(prev, next);
+    }
+
+    let results = sharedResults.get(prev);
+    if (!results) {
+        results = new WeakMap();
+        sharedResults.set(prev, results);
+    }
+
+    if (!results.has(next)) {
+        results.set(next, shareEqual(prev, next));
+    }
+
+    return results.get(next);
+};
+
 const useModelState = ({ action, ...args }) => {
     const core = useCore();
     const routeActive = useRouteActive();
@@ -16,17 +69,7 @@ const useModelState = ({ action, ...args }) => {
     }, []);
     const { getState } = useCoreSuspender();
     const [state, setState] = React.useReducer(
-        (prevState, nextState) => {
-            const keys = Object.keys(nextState);
-            let changed = keys.length !== Object.keys(prevState).length;
-            const state = keys.reduce((result, key) => {
-                const equal = Object.prototype.hasOwnProperty.call(prevState, key) && deepEqual(prevState[key], nextState[key]);
-                changed = changed || !equal;
-                result[key] = equal ? prevState[key] : nextState[key];
-                return result;
-            }, {});
-            return changed ? state : prevState;
-        },
+        (prevState, nextState) => shareObject(prevState, nextState, share),
         undefined,
         () => {
             const state = getState(model);

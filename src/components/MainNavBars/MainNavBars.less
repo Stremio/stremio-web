@@ -21,7 +21,7 @@
 
     .vertical-nav-bar {
         position: absolute;
-        top: var(--horizontal-nav-bar-size);
+        top: calc(var(--horizontal-nav-bar-size) + var(--safe-area-inset-top));
         bottom: 0;
         left: 0;
         z-index: 1;

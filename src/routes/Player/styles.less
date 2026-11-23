@@ -86,9 +86,14 @@ html:not(.active-slider-within) {
         &.side-drawer-button-layer {
             position: fixed;
             top: 50%;
-            right: -4rem;
+            right: calc(var(--safe-area-inset-right) - 4rem);
             left: initial;
             transform: translateY(-50%);
+
+            &.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
         }
 
         &.control-bar-layer {
@@ -121,10 +126,10 @@ html:not(.active-slider-within) {
         &.menu-layer {
             top: initial;
             left: initial;
-            right: 4rem;
-            bottom: 7.5rem;
-            max-height: calc(100% - 13rem);
-            max-width: calc(100% - 4rem);
+            right: calc(4rem + var(--safe-area-inset-right));
+            bottom: calc(7.5rem + var(--safe-area-inset-bottom));
+            max-height: calc(100% - 13rem - var(--safe-area-inset-bottom));
+            max-width: calc(100% - 4rem - var(--safe-area-inset-left) - var(--safe-area-inset-right));
             border-radius: var(--border-radius);
             background-color: var(--modal-background-color);
             box-shadow: 0 1.35rem 2.7rem @color-background-dark5-40,
@@ -146,7 +151,7 @@ html:not(.active-slider-within) {
     .player-container {
         .layer {
             &.side-drawer-button-layer {
-                right: -2rem;
+                right: calc(var(--safe-area-inset-right) - 2rem);
             }
         }
     }
@@ -157,7 +162,7 @@ html:not(.active-slider-within) {
         .layer {
             &.menu-layer {
                 right: 2.5rem;
-                bottom: 11rem;
+                bottom: calc(11rem + var(--safe-area-inset-bottom));
             }
         }
     }

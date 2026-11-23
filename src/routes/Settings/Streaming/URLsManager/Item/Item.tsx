@@ -34,7 +34,7 @@ const Item = ({ url, selected, settings, deleteServerUrl, selectServerUrl }: Pro
         <div className={styles['item']}>
             <div className={styles['content']}>
                 <RadioButton className={styles['selectable']} selected={selected} onChange={handleSelect} disabled={selected} />
-                <div className={styles['label']}>{url}</div>
+                <div className={styles['label']} title={url}>{url}</div>
             </div>
             <div className={styles['actions']}>
                 {

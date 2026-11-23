@@ -38,12 +38,12 @@ export default [
     {
         path: META_DETAILS_PATH,
         view: 2,
-        element: <routes.MetaDetails />,
+        element: <routes.Details />,
     },
     {
         path: LEGACY_META_DETAILS_PATH,
         view: 2,
-        element: <routes.MetaDetails />,
+        element: <routes.Details />,
     },
     {
         path: '/addons/:type?/:transportUrl?/:catalogId?',
@@ -51,7 +51,7 @@ export default [
         element: <routes.Addons />,
     },
     {
-        path: '/settings',
+        path: '/settings/:page?',
         view: 3,
         element: <routes.Settings />,
     },

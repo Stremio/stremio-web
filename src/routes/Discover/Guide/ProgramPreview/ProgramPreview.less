@@ -1,0 +1,46 @@
+// Copyright (C) 2017-2026 Smart code 203358507
+
+@import (reference) '~stremio/routes/Details/variables.less';
+
+.status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: @text-secondary;
+    font-variant-numeric: tabular-nums;
+
+    .live, .aired {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: uppercase;
+    }
+
+    .live {
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: var(--primary-foreground-color);
+
+        &::before {
+            content: '';
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: @live-color;
+        }
+    }
+
+    .aired {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+}
+
+.genres {
+    margin-top: 1.5rem;
+}

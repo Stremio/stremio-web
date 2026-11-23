@@ -1,74 +1,118 @@
-.scale {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    width: 100%;
+@import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
-    .ticks {
-        display: grid;
-        width: 100%;
+@track-height: 1.7rem;
+@thumb-size: 1.2rem;
+@thumb-inset: calc((@track-height - @thumb-size) / 2);
+@dot-size: 0.3rem;
+@step: calc(var(--index) * (100% - @track-height) / (var(--count) - 1));
+
+.scale {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--count), 1fr);
+    width: 100%;
+    touch-action: pan-y;
+    user-select: none;
+
+    .stop {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        padding-bottom: calc(@track-height + 0.5rem);
+
+        &:focus-visible {
+            outline: none;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: @thumb-inset;
+                left: 50%;
+                width: @thumb-size;
+                height: @thumb-size;
+                margin-left: calc(@thumb-size / -2);
+                border-radius: 50%;
+                outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+                outline-offset: 2px;
+            }
+        }
 
         .label {
-            display: flex;
-            justify-content: center;
             font-size: 0.8rem;
-            opacity: 0.6;
-            cursor: pointer;
+            font-weight: 500;
+            opacity: 0.5;
+        }
 
-            &.active {
-                font-weight: 700;
-                opacity: 1;
-            }
-
-            &:focus-visible {
-                outline: var(--focus-outline-size) solid var(--primary-accent-color);
-                outline-offset: -2px;
-            }
+        &.active .label {
+            font-weight: 600;
+            opacity: 1;
         }
     }
 
-    input {
-        height: 1.5rem;
-        width: 100%;
-        outline: none;
-        padding: 0 1.5rem;
-        cursor: pointer;
-        touch-action: none;
+    .track {
+        position: absolute;
+        bottom: 0;
+        left: calc(50% / var(--count) - @track-height / 2);
+        right: calc(50% / var(--count) - @track-height / 2);
+        height: @track-height;
+        border-radius: @track-height;
+        background-color: var(--overlay-color);
+        overflow: hidden;
+        pointer-events: none;
 
-        &:focus-visible {
-            outline: var(--focus-outline-size) solid var(--primary-accent-color);
-            outline-offset: -2px;
+        .fill {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: calc(@step + @track-height);
+            border-radius: @track-height;
+            background-color: var(--primary-accent-color);
+            transition: width 0.1s ease-in-out;
         }
 
-        &::-webkit-slider-runnable-track {
-            appearance: none;
-            height: 0.25rem;
-            border-radius: 1rem;
-            background: var(--overlay-color);
+        .dots {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: calc(@track-height / 2 - @dot-size / 2);
+            right: calc(@track-height / 2 - @dot-size / 2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .dot {
+                width: @dot-size;
+                height: @dot-size;
+                border-radius: 50%;
+                background-color: @color-surface-light5-20;
+            }
         }
 
-        &::-webkit-slider-thumb {
-            appearance: none;
-            width: 0.5rem;
-            height: 1rem;
-            margin-top: -0.375rem;
-            border-radius: 1rem;
-            background: var(--primary-accent-color);
+        .thumb {
+            position: absolute;
+            top: @thumb-inset;
+            left: calc(@thumb-inset + @step);
+            width: @thumb-size;
+            height: @thumb-size;
+            border-radius: 50%;
+            background-color: var(--primary-foreground-color);
+            transition: left 0.1s ease-in-out;
         }
+    }
+}
 
-        &::-moz-range-track {
-            border-radius: 1rem;
-            background: var(--overlay-color);
-        }
+@media (hover: hover) and (pointer: fine) {
+    .scale .stop:hover .label {
+        opacity: 1;
+    }
+}
 
-        &::-moz-range-thumb {
-            width: 0.5rem;
-            height: 1rem;
-            border-radius: 1rem;
-            border: none;
-            background: var(--primary-accent-color);
+@media (prefers-reduced-motion: reduce) {
+    .scale .track {
+        .fill, .thumb {
+            transition: none;
         }
     }
 }

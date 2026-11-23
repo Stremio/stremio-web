@@ -36,9 +36,6 @@ const useInterfaceOptions = (profile: Profile) => {
     }), [profile.settings, sortedOptions]);
 
     const interfaceSize = useMemo(() => ({
-        min: INTERFACE_SCALES[0],
-        max: INTERFACE_SCALES[INTERFACE_SCALES.length - 1],
-        step: 25,
         value: normalizeInterfaceScale(profile.settings.interfaceScale),
         options: INTERFACE_SCALES,
         onChange: (value: number) => {
@@ -54,38 +51,6 @@ const useInterfaceOptions = (profile: Profile) => {
             });
         }
     }), [profile.settings, core.transport]);
-
-    const escExitFullscreenToggle = useMemo(() => ({
-        checked: profile.settings.escExitFullscreen,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        escExitFullscreen: !profile.settings.escExitFullscreen
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
-
-    const quitOnCloseToggle = useMemo(() => ({
-        checked: profile.settings.quitOnClose,
-        onClick: () => {
-            core.transport.dispatch({
-                action: 'Ctx',
-                args: {
-                    action: 'UpdateSettings',
-                    args: {
-                        ...profile.settings,
-                        quitOnClose: !profile.settings.quitOnClose
-                    }
-                }
-            });
-        }
-    }), [profile.settings]);
 
     const hideSpoilersToggle = useMemo(() => ({
         checked: profile.settings.hideSpoilers,
@@ -122,8 +87,6 @@ const useInterfaceOptions = (profile: Profile) => {
     return {
         interfaceLanguageSelect,
         interfaceSize,
-        escExitFullscreenToggle,
-        quitOnCloseToggle,
         hideSpoilersToggle,
         gamepadSupportToggle,
     };

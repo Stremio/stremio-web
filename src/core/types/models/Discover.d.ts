@@ -6,6 +6,7 @@ type DiscoverDeepLinks = {
 
 type MetaItemPreviewDiscover = MetaItemPreview & {
     inLibrary: boolean,
+    watched: boolean,
     deepLinks: MetaItemDeepLinks,
 };
 
