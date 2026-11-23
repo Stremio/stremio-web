@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
@@ -35,18 +35,11 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     const { t } = useTranslation();
     const active = useRouteActive();
     const now = useLiveRefresh('MetaDetails', 'meta_details', active);
-    const { channel, programmes, current } = useProgrammes(meta, now);
     const rootRef = useRef<HTMLDivElement>(null);
     const [selectedKey, setSelectedKey] = useState<string | null>(null);
     const [streamsOpen, setStreamsOpen] = useState(false);
     const [liveVisible, setLiveVisible] = useState(true);
-
-    const selected = useMemo(() => {
-        return programmes.find((programme) => getProgrammeKey(programme) === selectedKey)
-            ?? programmes.find((programme) => programme.endTime.getTime() > now)
-            ?? programmes[programmes.length - 1]
-            ?? null;
-    }, [programmes, selectedKey, now]);
+    const { channel, programmes, current, selected } = useProgrammes(meta, now, selectedKey);
     const selectedProgrammeKey = selected !== null ? getProgrammeKey(selected) : null;
     const live = selected !== null && selected === current;
     const artwork = selected?.background ?? selected?.thumbnail ?? meta.background;

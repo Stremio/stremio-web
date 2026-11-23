@@ -72,6 +72,23 @@
         margin: 0.5rem @padding @padding;
     }
 
+    .programme {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .logo {
+            flex: none;
+            max-width: calc(100% - 3rem);
+            margin-bottom: 1rem;
+        }
+    }
+
     .videos {
         flex: 2;
         min-height: 0;
