@@ -6,6 +6,8 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const styles = require('./styles');
 
+const FORWARDED_KEYS = ['Space', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyM', 'Minus', 'Equal', 'KeyG', 'KeyH', 'BracketLeft', 'BracketRight', 'KeyV', 'KeyC', 'KeyN'];
+
 const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWindow, videoRef, onVideoClick, children }) => {
     const videoSlotRef = React.useRef(null);
 
@@ -32,7 +34,7 @@ const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWin
 
     React.useEffect(() => {
         const forwardKeyboardEvent = (event) => {
-            if (event.key === 'Escape') {
+            if (!FORWARDED_KEYS.includes(event.code)) {
                 return;
             }
 
@@ -51,11 +53,11 @@ const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWin
                 event.preventDefault();
             }
         };
-        pictureInPictureWindow.addEventListener('keydown', forwardKeyboardEvent);
-        pictureInPictureWindow.addEventListener('keyup', forwardKeyboardEvent);
+        pictureInPictureWindow.addEventListener('keydown', forwardKeyboardEvent, true);
+        pictureInPictureWindow.addEventListener('keyup', forwardKeyboardEvent, true);
         return () => {
-            pictureInPictureWindow.removeEventListener('keydown', forwardKeyboardEvent);
-            pictureInPictureWindow.removeEventListener('keyup', forwardKeyboardEvent);
+            pictureInPictureWindow.removeEventListener('keydown', forwardKeyboardEvent, true);
+            pictureInPictureWindow.removeEventListener('keyup', forwardKeyboardEvent, true);
         };
     }, [pictureInPictureWindow]);
 

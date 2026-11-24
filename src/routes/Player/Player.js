@@ -74,7 +74,8 @@ const Player = () => {
     const streamingServer = useStreamingServer();
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
-    const routeFocused = useRouteFocused();
+    const [pictureInPictureFocused, setPictureInPictureFocused] = React.useState(false);
+    const routeFocused = useRouteFocused() || pictureInPictureFocused;
     const platform = usePlatform();
     const toast = useToast();
     const discord = useDiscord();
@@ -152,7 +153,17 @@ const Player = () => {
             return;
         }
 
-        return () => pictureInPictureWindow.close();
+        const onFocus = () => setPictureInPictureFocused(true);
+        const onBlur = () => setPictureInPictureFocused(false);
+        setPictureInPictureFocused(pictureInPictureWindow.document.hasFocus());
+        pictureInPictureWindow.addEventListener('focus', onFocus);
+        pictureInPictureWindow.addEventListener('blur', onBlur);
+        return () => {
+            pictureInPictureWindow.removeEventListener('focus', onFocus);
+            pictureInPictureWindow.removeEventListener('blur', onBlur);
+            setPictureInPictureFocused(false);
+            pictureInPictureWindow.close();
+        };
     }, [pictureInPictureWindow]);
 
     React.useEffect(() => {
