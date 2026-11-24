@@ -68,6 +68,7 @@
     }
 
     .seasons {
+        max-width: calc(100% - @padding * 2);
         margin: 0.5rem @padding @padding;
     }
 
@@ -125,6 +126,12 @@
 
         .info {
             padding: calc(@padding / 2);
+        }
+
+        .seasons {
+            max-width: calc(100% - @padding);
+            margin-right: calc(@padding / 2);
+            margin-left: calc(@padding / 2);
         }
     }
 }
