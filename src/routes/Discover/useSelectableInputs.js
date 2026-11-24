@@ -53,13 +53,15 @@ const mapSelectableInputs = (discover, t, navigate) => {
     };
     const extraSelects = discover.selectable.extra.map(({ name, isRequired, options }) => {
         const selectedExtra = options.find(({ selected }) => selected);
+        const translateGenre = name === 'genre' && selectedCatalog?.addon.manifest.id === 'com.linvo.cinemeta';
+        const optionLabel = (value) => translateGenre ? t.string(value) : value;
         return {
             id: `extra:${name}`,
             label: t.stringWithPrefix(name.toUpperCase(), '', name.charAt(0).toUpperCase() + name.slice(1)),
             active: typeof selectedExtra?.value === 'string',
             isRequired: isRequired,
             options: options.map(({ value, deepLinks }) => ({
-                label: typeof value === 'string' ? t.string(value) : t.string('NONE'),
+                label: typeof value === 'string' ? optionLabel(value) : t.string('NONE'),
                 default: value === null,
                 value: JSON.stringify({
                     href: deepLinks.discover,
@@ -70,9 +72,9 @@ const mapSelectableInputs = (discover, t, navigate) => {
                 href: selectedExtra.deepLinks.discover,
                 value: selectedExtra.value,
             }) : undefined,
-            title: options.some(({ selected, value }) => selected && value === null) ?
-                () => t.string(name.toUpperCase())
-                : selectedExtra ? t.string(selectedExtra.value) : () => t.string(name.toUpperCase()),
+            title: typeof selectedExtra?.value === 'string'
+                ? optionLabel(selectedExtra.value)
+                : () => t.string(name.toUpperCase()),
             onSelect: (value) => {
                 const { href } = JSON.parse(value);
                 navigate(toPath(href));
