@@ -41,7 +41,7 @@ const useDetails = ({ type, id, videoId }: Params): MetaDetails => {
         };
     }, [type, id, videoId]);
 
-    return useModelState({ model: 'meta_details', action }) as MetaDetails;
+    return useModelState({ model: 'meta_details', action, deps: ['streaming_server'] }) as MetaDetails;
 };
 
 export default useDetails;
