@@ -185,7 +185,7 @@ const useSubtitles = ({
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
     const trackSelectionLocked = useRef(false);
-    const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
+    const appliedTrack = useRef<{ id: string, source: SubtitleSource, confirmed: boolean } | null>(null);
     const subtitleDelayHold = useRef<SubtitleDelayHold | null>(null);
     const subtitleDelayInterval = useInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS);
     const subtitleDelayTimeout = useTimeout(SUBTITLES_DELAY_REPEAT_DELAY_MS);
@@ -244,7 +244,7 @@ const useSubtitles = ({
         }
 
         trackSelectionLocked.current = true;
-        appliedTrack.current = { id: track.id, source: 'embedded' };
+        appliedTrack.current = { id: track.id, source: 'embedded', confirmed: false };
         setSubtitlesTrack(track.id);
         rememberTrack(track, true);
     }, [disableSubtitles, rememberTrack, setSubtitlesTrack]);
@@ -256,7 +256,7 @@ const useSubtitles = ({
         }
 
         trackSelectionLocked.current = true;
-        appliedTrack.current = { id: track.id, source: 'external' };
+        appliedTrack.current = { id: track.id, source: 'external', confirmed: false };
         setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
     }, [disableSubtitles, rememberTrack, setExtraSubtitlesTrack]);
@@ -421,10 +421,14 @@ const useSubtitles = ({
             :
             bestCandidate;
 
-        // Reapply once per stream even if the controller already reports the same track.
-        if (appliedTrack.current?.id === trackToApply.track.id &&
-            appliedTrack.current.source === trackToApply.source) {
-            return;
+        const isSelected = selectedSource === trackToApply.source && selectedTrack?.id === trackToApply.track.id;
+        const applied = appliedTrack.current;
+        if (applied?.id === trackToApply.track.id && applied.source === trackToApply.source) {
+            applied.confirmed ||= isSelected;
+            // Restore a cleared selection once. Wait for confirmation before retrying again.
+            if (!applied.confirmed || selectedSource !== undefined) {
+                return;
+            }
         }
 
         trackToApply.source === 'embedded' ?
@@ -440,6 +444,7 @@ const useSubtitles = ({
         appliedTrack.current = {
             id: trackToApply.track.id,
             source: trackToApply.source,
+            confirmed: isSelected,
         };
     }, [
         player.streamState,
@@ -509,7 +514,7 @@ const useSubtitles = ({
         const onExtraSubtitlesTrackAdded = (track: SubtitleTrack) => {
             if (track.local) {
                 trackSelectionLocked.current = true;
-                appliedTrack.current = { id: track.id, source: 'external' };
+                appliedTrack.current = { id: track.id, source: 'external', confirmed: false };
                 videoRef.current.setExtraSubtitlesTrack(track.id);
             }
         };
