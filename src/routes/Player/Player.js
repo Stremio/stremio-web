@@ -838,7 +838,7 @@ const Player = () => {
         const onKeyDown = (e) => {
             const keyboardKey = getKeyboardShortcutKey(e);
             if (keyboardKey !== 'Space' || e.repeat) return;
-            if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey) return;
+            if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
             startPlaybackSpeedHold('keyboard');
         };
@@ -851,9 +851,10 @@ const Player = () => {
                 return;
             }
 
-            if (!keyboardKeys.includes('Space') && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
-            if (e.ctrlKey || e.metaKey || e.altKey) {
-                if (keyboardKeys.includes('Space')) finishPlaybackSpeedHold('keyboard');
+            const isSpace = keyboardKeys.includes('Space');
+            if (!isSpace && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
+            if (e.ctrlKey || e.metaKey || e.altKey || (isSpace && e.shiftKey)) {
+                if (isSpace) finishPlaybackSpeedHold('keyboard');
                 return;
             }
 
@@ -863,7 +864,7 @@ const Player = () => {
                 setImmersedDebounced(true);
                 return;
             }
-            if (keyboardKeys.includes('Space')) {
+            if (isSpace) {
                 const phase = finishPlaybackSpeedHold('keyboard');
                 if (phase === 'pending' && !menusOpen && video.state.paused !== null) {
                     if (video.state.paused) {
