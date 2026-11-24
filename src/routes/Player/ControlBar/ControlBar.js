@@ -9,7 +9,6 @@ const { useServices } = require('stremio/services');
 const SeekBar = require('./SeekBar');
 const VolumeSlider = require('./VolumeSlider');
 const styles = require('./styles');
-const PictureInPictureIcon = require('./PictureInPictureIcon');
 const { useBinaryState, useMediaQuery, usePlatform } = require('stremio/common');
 const screenSizes = require('stremio/common/screen-sizes.less');
 const { t } = require('i18next');
@@ -214,7 +213,7 @@ const ControlBar = React.forwardRef(({
                                 tabIndex={-1}
                                 onClick={onTogglePictureInPicture}
                             >
-                                <PictureInPictureIcon className={styles['icon']} active={pictureInPicture} />
+                                <Icon className={styles['icon']} name={pictureInPicture ? 'pip-exit' : 'pip-enter'} />
                             </Button>
                             : null
                     }
