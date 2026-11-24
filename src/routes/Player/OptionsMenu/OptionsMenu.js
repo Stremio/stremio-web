@@ -14,6 +14,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
     const platform = usePlatform();
     const toast = useToast();
     const { streamingUrl, playOnDevice } = usePlayOnDevice(stream);
+    const ownerWindowRef = React.useRef(window);
     const [downloadUrl, magnetUrl] = React.useMemo(() => {
         return stream !== null ?
             stream.deepLinks &&
@@ -36,7 +37,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
 
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
-            navigator.clipboard.writeText(streamingUrl || downloadUrl)
+            ownerWindowRef.current.navigator.clipboard.writeText(streamingUrl || downloadUrl)
                 .then(() => {
                     toast.show({
                         type: 'success',
@@ -58,7 +59,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
     }, [streamingUrl, downloadUrl]);
     const onCopyMagnetButtonClick = React.useCallback(() => {
         if (magnetUrl) {
-            navigator.clipboard.writeText(magnetUrl)
+            ownerWindowRef.current.navigator.clipboard.writeText(magnetUrl)
                 .then(() => {
                     toast.show({
                         type: 'success',
@@ -90,6 +91,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
 
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
+        ownerWindowRef.current = event.currentTarget.ownerDocument.defaultView;
     }, []);
 
     return (

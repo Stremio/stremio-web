@@ -39,6 +39,8 @@ const { default: useAudio } = require('./useAudio');
 const { default: useSubtitles } = require('./useSubtitles');
 const styles = require('./styles');
 const Video = require('./Video');
+const videoStyles = require('./Video/styles');
+const PictureInPictureWindow = require('./PictureInPictureWindow');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
 
@@ -96,17 +98,62 @@ const Player = () => {
     const { active: shellActive, capabilities: shellCapabilities, send: shellSend, on: shellOn, off: shellOff } = platform.shell;
     const setVideoPictureInPicture = video.setPictureInPicture;
     const [shellPictureInPicture, setShellPictureInPicture] = React.useState(false);
+    const [pictureInPictureWindow, setPictureInPictureWindow] = React.useState(null);
     const shellPictureInPictureSupported = shellActive && shellCapabilities.pictureInPicture;
-    const pictureInPictureSupported = shellPictureInPictureSupported || video.state.pictureInPicturePossible === true;
-    const pictureInPicture = shellPictureInPictureSupported ? shellPictureInPicture : video.state.pictureInPictureActive === true;
+    const documentPictureInPictureSupported = !shellActive && typeof window.documentPictureInPicture?.requestWindow === 'function';
+    const pictureInPictureWindowPending = React.useRef(false);
+    const pictureInPictureSupported = shellPictureInPictureSupported || documentPictureInPictureSupported || video.state.pictureInPicturePossible === true;
+    const pictureInPicture = shellPictureInPictureSupported ? shellPictureInPicture :
+        documentPictureInPictureSupported ? pictureInPictureWindow !== null :
+            video.state.pictureInPictureActive === true;
+
+    const openPictureInPictureWindow = React.useCallback(() => {
+        if (pictureInPictureWindowPending.current) {
+            return;
+        }
+
+        pictureInPictureWindowPending.current = true;
+        const videoRect = video.containerRef.current?.getBoundingClientRect();
+        const height = 360;
+        const width = videoRect && videoRect.height > 0 ? Math.round(height * videoRect.width / videoRect.height) : 640;
+        window.documentPictureInPicture.requestWindow({ width, height })
+            .then((newWindow) => {
+                document.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
+                    newWindow.document.head.appendChild(node.cloneNode(true));
+                });
+                newWindow.document.documentElement.style.cssText = document.documentElement.style.cssText;
+                newWindow.addEventListener('pagehide', () => {
+                    setPictureInPictureWindow((currentWindow) => currentWindow === newWindow ? null : currentWindow);
+                });
+                setPictureInPictureWindow(newWindow);
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                pictureInPictureWindowPending.current = false;
+            });
+    }, []);
 
     const togglePictureInPicture = React.useCallback(() => {
         if (shellPictureInPictureSupported) {
             shellSend('win-set-pip', { enabled: !pictureInPicture });
+        } else if (documentPictureInPictureSupported) {
+            if (pictureInPictureWindow !== null) {
+                pictureInPictureWindow.close();
+            } else {
+                openPictureInPictureWindow();
+            }
         } else {
             setVideoPictureInPicture(!pictureInPicture);
         }
-    }, [shellPictureInPictureSupported, pictureInPicture, shellSend, setVideoPictureInPicture]);
+    }, [shellPictureInPictureSupported, documentPictureInPictureSupported, pictureInPicture, pictureInPictureWindow, openPictureInPictureWindow, shellSend, setVideoPictureInPicture]);
+
+    React.useEffect(() => {
+        if (pictureInPictureWindow === null) {
+            return;
+        }
+
+        return () => pictureInPictureWindow.close();
+    }, [pictureInPictureWindow]);
 
     React.useEffect(() => {
         if (!shellPictureInPictureSupported) {
@@ -171,6 +218,12 @@ const Player = () => {
         closeCastDevicesMenu();
         closeSideDrawer();
     }, []);
+
+    React.useEffect(() => {
+        if (pictureInPictureWindow !== null) {
+            closeMenus();
+        }
+    }, [pictureInPictureWindow]);
 
     const castDevices = React.useMemo(() => {
         return playbackDevices
@@ -393,7 +446,7 @@ const Player = () => {
         resizeObserver.observe(videoContainerElement);
         resizeObserver.observe(controlBarElement);
         return () => resizeObserver.disconnect();
-    }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetMinimum]);
+    }, [overlayHidden, pictureInPictureWindow, video.state.manifest, video.setSubtitlesOffsetMinimum]);
 
     const onPlaybackSpeedChanged = React.useCallback((speed) => {
         video.setPlaybackSpeed(speed);
@@ -993,6 +1046,67 @@ const Player = () => {
         };
     }, []);
 
+    const controlBar = (
+        <ControlBar
+            ref={controlBarRef}
+            className={classnames(styles['layer'], styles['control-bar-layer'])}
+            paused={video.state.paused}
+            time={keyboardSeekTime ?? video.state.time}
+            duration={video.state.duration}
+            buffered={video.state.buffered}
+            volume={video.state.volume}
+            muted={video.state.muted}
+            playbackSpeed={video.state.playbackSpeed}
+            pictureInPicture={pictureInPicture}
+            pictureInPictureSupported={pictureInPictureSupported}
+            subtitlesTracks={allSubtitleTracks}
+            audioTracks={video.state.audioTracks}
+            metaItem={player.metaItem}
+            nextVideo={isEpg ? null : player.nextVideo}
+            stream={player.selected !== null ? player.selected.stream : null}
+            statisticsAvailable={statisticsMenuAvailable}
+            onPlayRequested={onPlayRequested}
+            onPauseRequested={onPauseRequested}
+            onNextVideoRequested={onNextVideoRequested}
+            onMuteRequested={onMuteRequested}
+            onUnmuteRequested={onUnmuteRequested}
+            onVolumeChangeRequested={onVolumeChangeRequested}
+            onSeekRequested={onSeekRequested}
+            onToggleOptionsMenu={toggleOptionsMenu}
+            shellCastSupported={shellCastSupported}
+            onToggleCastDevicesMenu={toggleCastDevicesMenu}
+            onToggleSubtitlesMenu={toggleSubtitlesMenu}
+            onToggleAudioMenu={toggleAudioMenu}
+            onToggleSpeedMenu={toggleSpeedMenu}
+            videoScale={video.state.videoScale}
+            videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
+            live={livePlayback}
+            liveTiming={video.state.live}
+            seekable={canSeek}
+            buffering={video.state.buffering || !video.state.loaded}
+            onVideoScaleChanged={onVideoScaleChanged}
+            onToggleStatisticsMenu={toggleStatisticsMenu}
+            onTogglePictureInPicture={togglePictureInPicture}
+            menusHidden={pictureInPictureWindow !== null}
+            onToggleSideDrawer={toggleSideDrawer}
+            onButtonsMenuOpenChanged={setControlBarMenuOpen}
+            onMouseDown={onBarMouseDown}
+            onTouchEnd={onContainerMouseLeave}
+        />
+    );
+
+    const optionsMenu = (
+        <Transition when={optionsMenuOpen} name={'fade'}>
+            <OptionsMenu
+                className={classnames(styles['layer'], styles['menu-layer'])}
+                stream={player.selected?.stream}
+                playbackDevices={playbackDevices}
+                extraSubtitlesTracks={extraSubtitleTracks}
+                selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
+            />
+        </Transition>
+    );
+
     return (
         <div ref={playerRef} className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden })}
             onMouseDown={onContainerMouseDown}
@@ -1050,7 +1164,7 @@ const Player = () => {
                     :
                     null
             }
-            <ContextMenu on={[video.containerRef, bufferingRef, errorRef]} autoClose>
+            <ContextMenu on={pictureInPictureWindow === null ? [video.containerRef, bufferingRef, errorRef] : [bufferingRef, errorRef]} autoClose>
                 <OptionsMenu
                     className={classnames(styles['layer'], styles['menu-layer'])}
                     stream={player?.selected?.stream}
@@ -1076,51 +1190,20 @@ const Player = () => {
                     :
                     null
             }
-            <ControlBar
-                ref={controlBarRef}
-                className={classnames(styles['layer'], styles['control-bar-layer'])}
-                paused={video.state.paused}
-                time={keyboardSeekTime ?? video.state.time}
-                duration={video.state.duration}
-                buffered={video.state.buffered}
-                volume={video.state.volume}
-                muted={video.state.muted}
-                playbackSpeed={video.state.playbackSpeed}
-                pictureInPicture={pictureInPicture}
-                pictureInPictureSupported={pictureInPictureSupported}
-                subtitlesTracks={allSubtitleTracks}
-                audioTracks={video.state.audioTracks}
-                metaItem={player.metaItem}
-                nextVideo={isEpg ? null : player.nextVideo}
-                stream={player.selected !== null ? player.selected.stream : null}
-                statisticsAvailable={statisticsMenuAvailable}
-                onPlayRequested={onPlayRequested}
-                onPauseRequested={onPauseRequested}
-                onNextVideoRequested={onNextVideoRequested}
-                onMuteRequested={onMuteRequested}
-                onUnmuteRequested={onUnmuteRequested}
-                onVolumeChangeRequested={onVolumeChangeRequested}
-                onSeekRequested={onSeekRequested}
-                onToggleOptionsMenu={toggleOptionsMenu}
-                shellCastSupported={shellCastSupported}
-                onToggleCastDevicesMenu={toggleCastDevicesMenu}
-                onToggleSubtitlesMenu={toggleSubtitlesMenu}
-                onToggleAudioMenu={toggleAudioMenu}
-                onToggleSpeedMenu={toggleSpeedMenu}
-                videoScale={video.state.videoScale}
-                videoScaleLabel={VIDEO_SCALE_LABELS[video.state.videoScale || 'contain']}
-                live={livePlayback}
-                liveTiming={video.state.live}
-                seekable={canSeek}
-                buffering={video.state.buffering || !video.state.loaded}
-                onVideoScaleChanged={onVideoScaleChanged}
-                onToggleStatisticsMenu={toggleStatisticsMenu}
-                onTogglePictureInPicture={togglePictureInPicture}
-                onToggleSideDrawer={toggleSideDrawer}
-                onButtonsMenuOpenChanged={setControlBarMenuOpen}
-                onMouseDown={onBarMouseDown}
-                onTouchEnd={onContainerMouseLeave}
-            />
+            {
+                pictureInPictureWindow === null ?
+                    controlBar
+                    :
+                    <PictureInPictureWindow
+                        className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden })}
+                        videoClassName={classnames(styles['layer'], videoStyles['video-container'])}
+                        pictureInPictureWindow={pictureInPictureWindow}
+                        videoRef={video.containerRef}
+                        onVideoClick={onVideoClick}>
+                        {controlBar}
+                        {optionsMenu}
+                    </PictureInPictureWindow>
+            }
             <Indicator
                 className={classnames(styles['layer'], styles['indicator-layer'])}
                 videoState={video.state}
@@ -1184,15 +1267,12 @@ const Player = () => {
                     onPlaybackSpeedChanged={onPlaybackSpeedChanged}
                 />
             </Transition>
-            <Transition when={optionsMenuOpen} name={'fade'}>
-                <OptionsMenu
-                    className={classnames(styles['layer'], styles['menu-layer'])}
-                    stream={player.selected?.stream}
-                    playbackDevices={playbackDevices}
-                    extraSubtitlesTracks={extraSubtitleTracks}
-                    selectedExtraSubtitlesTrackId={selectedExtraSubtitleTrackId}
-                />
-            </Transition>
+            {
+                pictureInPictureWindow === null ?
+                    optionsMenu
+                    :
+                    null
+            }
         </div>
     );
 };

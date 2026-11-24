@@ -117,7 +117,7 @@ const SeekBar = ({ className, time, duration, buffered, onSeekRequested, onPlayR
                             <div className={styles['seek-tooltip']} style={{ left: `${hover.x}px`, top: `${hover.y}px` }}>
                                 {live ? maximum - hover.time <= liveTiming.tolerance ? t('PLAYER_LIVE') : formatLiveDelay(maximum - hover.time) : formatTime(hover.time)}
                             </div>,
-                            document.body
+                            sliderRef.current?.ownerDocument.body ?? document.body
                         )
                         :
                         null

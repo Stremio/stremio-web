@@ -60,6 +60,7 @@ const ControlBar = React.forwardRef(({
     onVideoScaleChanged,
     onToggleStatisticsMenu,
     onTogglePictureInPicture,
+    menusHidden,
     onTouchEnd,
     onButtonsMenuOpenChanged,
     ...props
@@ -196,10 +197,15 @@ const ControlBar = React.forwardRef(({
                         : null
                 }
                 <div className={styles['spacing']} />
-                <Button className={styles['control-bar-buttons-menu-button']} onClick={toggleButtonsMenu}>
-                    <Icon className={styles['icon']} name={'more-vertical'} />
-                </Button>
-                <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
+                {
+                    !menusHidden ?
+                        <Button className={styles['control-bar-buttons-menu-button']} onClick={toggleButtonsMenu}>
+                            <Icon className={styles['icon']} name={'more-vertical'} />
+                        </Button>
+                        :
+                        null
+                }
+                <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen, [styles['inline']]: menusHidden })}>
                     {
                         pictureInPictureSupported ?
                             <Button
@@ -213,28 +219,35 @@ const ControlBar = React.forwardRef(({
                             : null
                     }
                     {
-                        statisticsAvailable &&
-                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
-                                <Icon className={styles['icon']} name={'network'} />
-                            </Button>
-                    }
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
-                        <Icon className={styles['icon']} name={'speed'} />
-                    </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': castButtonDisabled })} tabIndex={-1} onMouseDown={onCastDevicesButtonMouseDown} onClick={onChromecastButtonClick}>
-                        <Icon className={styles['icon']} name={'cast'} />
-                    </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
-                        <Icon className={styles['icon']} name={'subtitles'} />
-                    </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(audioTracks) || audioTracks.length === 0 })} tabIndex={-1} onMouseDown={onAudioButtonMouseDown} onClick={onToggleAudioMenu}>
-                        <Icon className={styles['icon']} name={'audio-tracks'} />
-                    </Button>
-                    {
-                        metaItem?.content?.videos?.length > 0 ?
-                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onToggleSideDrawer}>
-                                <Icon className={styles['icon']} name={'episodes'} />
-                            </Button>
+                        !menusHidden ?
+                            <React.Fragment>
+                                {
+                                    statisticsAvailable &&
+                                    <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
+                                        <Icon className={styles['icon']} name={'network'} />
+                                    </Button>
+                                }
+                                <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
+                                    <Icon className={styles['icon']} name={'speed'} />
+                                </Button>
+                                <Button className={classnames(styles['control-bar-button'], { 'disabled': castButtonDisabled })} tabIndex={-1} onMouseDown={onCastDevicesButtonMouseDown} onClick={onChromecastButtonClick}>
+                                    <Icon className={styles['icon']} name={'cast'} />
+                                </Button>
+                                <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
+                                    <Icon className={styles['icon']} name={'subtitles'} />
+                                </Button>
+                                <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(audioTracks) || audioTracks.length === 0 })} tabIndex={-1} onMouseDown={onAudioButtonMouseDown} onClick={onToggleAudioMenu}>
+                                    <Icon className={styles['icon']} name={'audio-tracks'} />
+                                </Button>
+                                {
+                                    metaItem?.content?.videos?.length > 0 ?
+                                        <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onToggleSideDrawer}>
+                                            <Icon className={styles['icon']} name={'episodes'} />
+                                        </Button>
+                                        :
+                                        null
+                                }
+                            </React.Fragment>
                             :
                             null
                     }
@@ -261,6 +274,7 @@ ControlBar.propTypes = {
     playbackSpeed: PropTypes.number,
     pictureInPicture: PropTypes.bool,
     pictureInPictureSupported: PropTypes.bool,
+    menusHidden: PropTypes.bool,
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
     live: PropTypes.bool,
