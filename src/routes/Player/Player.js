@@ -70,6 +70,8 @@ const Player = () => {
     const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
+    const torrentServerOffline = typeof player.selected?.stream.infoHash === 'string' &&
+        streamingServer.baseUrl === null && streamingServer.settings?.type === 'Err';
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
@@ -208,6 +210,7 @@ const Player = () => {
         closeCastDevicesMenu();
     };
     const [error, setError] = React.useState(null);
+    const playbackError = torrentServerOffline ? { message: t('SETTINGS_SERVER_OFFLINE_TITLE') } : error;
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
@@ -535,7 +538,7 @@ const Player = () => {
         cancelKeyboardSeek();
         video.unload();
 
-        if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
+        if (player.selected && player.stream?.type === 'Ready' && !torrentServerOffline && streamingServer.settings?.type !== 'Loading') {
             video.load({
                 stream: {
                     ...player.stream.content,
@@ -570,7 +573,7 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
+    }, [streamingServer.baseUrl, torrentServerOffline, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
@@ -986,7 +989,7 @@ const Player = () => {
                     null
             }
             {
-                (video.state.buffering || !video.state.loaded) && !error ?
+                (video.state.buffering || !video.state.loaded) && !playbackError ?
                     <Buffering
                         ref={bufferingRef}
                         className={classnames(styles['layer'], styles['buffering-layer'])}
@@ -997,12 +1000,12 @@ const Player = () => {
                     null
             }
             {
-                error !== null ?
+                playbackError !== null ?
                     <Error
                         ref={errorRef}
                         className={classnames(styles['layer'], styles['error-layer'])}
-                        stream={video.state.stream}
-                        {...error}
+                        stream={torrentServerOffline ? null : video.state.stream}
+                        {...playbackError}
                     />
                     :
                     null
