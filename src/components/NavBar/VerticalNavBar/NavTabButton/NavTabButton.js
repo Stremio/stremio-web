@@ -25,7 +25,7 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
         });
     };
     return (
-        <Link className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} tabIndex={-1} to={href} onClick={onClick} onDoubleClick={onDoubleClick}>
+        <Link className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} to={href} onClick={onClick} onDoubleClick={onDoubleClick}>
             {
                 typeof logo === 'string' && logo.length > 0 ?
                     <Image

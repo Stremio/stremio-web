@@ -10,6 +10,15 @@
     justify-content: center;
     border-radius: 0.75rem;
 
+    &:focus-visible {
+        outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+        outline-offset: calc(-1 * var(--focus-outline-size));
+
+        .label {
+            opacity: 1;
+        }
+    }
+
     @media (pointer: fine) {
         &:hover {
             background-color: var(--overlay-color);
