@@ -23,7 +23,7 @@ type Props = {
     selected: boolean,
     seasonWatched: boolean,
     minutesLeft: number | null,
-    onSelect: () => void,
+    onSelect?: () => void,
     onMarkVideoWatched: (video: Pick<Video, 'id' | 'released'>, watched: boolean) => void,
     onMarkSeasonWatched: (season: number, watched: boolean) => void,
 };
@@ -67,7 +67,7 @@ const Video = ({ video, releasedLabel, hideSpoilers, openEpisode, selected, seas
     }, [shouldScroll]);
 
     const handleClick = useCallback(() => {
-        onSelect();
+        onSelect?.();
         openEpisode(deepLinks.metaDetailsStreams);
     }, [onSelect, openEpisode, deepLinks.metaDetailsStreams]);
 
@@ -75,7 +75,7 @@ const Video = ({ video, releasedLabel, hideSpoilers, openEpisode, selected, seas
         closeMenu();
         if (deepLinks.player !== null) {
             event.stopPropagation();
-            onSelect();
+            onSelect?.();
         }
     }, [closeMenu, onSelect, deepLinks.player]);
 

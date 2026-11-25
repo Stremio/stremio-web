@@ -1,7 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import type { EPGChannel, EPGProgram, EPGShow } from './types';
-import { HOUR_IN_MS } from './constants';
 
 type EpgSkeletonProgram = {
     index: number;
@@ -28,7 +27,6 @@ export const epgDayWindow = (day: Date): { start: number; end: number } => ({
     start: new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime(),
     end: new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1).getTime(),
 });
-const EPG_PROGRAMS_LIMIT_IN_HOURS = 12;
 const EPG_SKELETON_MIN_DURATION_MINUTES = 30;
 const EPG_SKELETON_MAX_DURATION_MINUTES = 120;
 const EPG_SKELETON_STEP_MINUTES = 30;
@@ -98,80 +96,8 @@ export const getEpgProgress = (
     return Math.min(100, Math.max(0, ((now - range.startTime) / (range.endTime - range.startTime)) * 100));
 };
 
-export const getEpgValue = (
-    isEpgVideo: boolean,
-    video: Record<string, unknown> | null | undefined,
-    meta: Record<string, unknown>,
-    key: string
-): unknown => {
-    const value = video?.[key];
-
-    if (!isEpgVideo) {
-        return meta[key];
-    }
-
-    if (typeof value === 'string' && value.length > 0) {
-        return value;
-    }
-
-    if (Array.isArray(value) && value.length > 0) {
-        return value;
-    }
-
-    return meta[key];
-};
-
-export const getEpgDescription = (
-    isEpgVideo: boolean,
-    video: Record<string, unknown> | null | undefined,
-    meta: Record<string, unknown>
-): unknown => {
-    const value = video?.overview ?? video?.description;
-
-    return isEpgVideo && typeof value === 'string' && value.length > 0 ?
-        value
-        :
-        meta.description;
-};
-
-export const getEpgTitle = (
-    isEpgVideo: boolean,
-    video: Record<string, unknown> | null | undefined,
-    meta: Record<string, unknown>
-): unknown => {
-    return isEpgVideo && typeof video?.title === 'string' && video.title.length > 0 ?
-        video.title
-        :
-        meta.name;
-};
-
 export const getNonEmptyString = (value: unknown): string | null => {
     return typeof value === 'string' && value.length > 0 ? value : null;
-};
-
-export const filterVisibleEpgPrograms = <T extends { startTime?: unknown; endTime?: unknown }>(
-    videos: T[],
-    now: number,
-    limitInHours = EPG_PROGRAMS_LIMIT_IN_HOURS
-): T[] => {
-    const maxTime = now + limitInHours * HOUR_IN_MS;
-
-    return videos
-        .filter((video) => {
-            const range = getEpgTimeRange(video);
-
-            return (
-                range !== null &&
-                range.endTime > now &&
-                range.startTime < maxTime
-            );
-        })
-        .sort((a, b) => {
-            const aRange = getEpgTimeRange(a);
-            const bRange = getEpgTimeRange(b);
-
-            return (aRange?.startTime ?? 0) - (bRange?.startTime ?? 0);
-        });
 };
 
 export const formatEpgTimeRange = (
