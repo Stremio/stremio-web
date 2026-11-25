@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@stremio/stremio-video@0.1.1': f5a1ca7988d3f0f1024ebfd9a33bfdd1f0e279a618a41f31dacf4e8bbb99a335
+
 importers:
 
   .:
@@ -25,7 +28,7 @@ importers:
         version: 5.18.0
       '@stremio/stremio-video':
         specifier: 0.1.1
-        version: 0.1.1
+        version: 0.1.1(patch_hash=f5a1ca7988d3f0f1024ebfd9a33bfdd1f0e279a618a41f31dacf4e8bbb99a335)
       bowser:
         specifier: 2.14.1
         version: 2.14.1
@@ -6585,7 +6588,7 @@ snapshots:
 
   '@stremio/stremio-icons@5.18.0': {}
 
-  '@stremio/stremio-video@0.1.1':
+  '@stremio/stremio-video@0.1.1(patch_hash=f5a1ca7988d3f0f1024ebfd9a33bfdd1f0e279a618a41f31dacf4e8bbb99a335)':
     dependencies:
       '@stremio/libass-wasm': https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.7/stremio-libass-wasm-4.2.7.tgz
       buffer: 6.0.3

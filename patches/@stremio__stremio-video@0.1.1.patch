@@ -1,0 +1,13 @@
+diff --git a/src/withHTMLSubtitles/withHTMLSubtitles.js b/src/withHTMLSubtitles/withHTMLSubtitles.js
+index 479dbf4ef71843a8915f5b5d67dfb9ab898d3096..5de74423164a98a4702f6c7c306b80d1a0f14528 100644
+--- a/src/withHTMLSubtitles/withHTMLSubtitles.js
++++ b/src/withHTMLSubtitles/withHTMLSubtitles.js
+@@ -300,6 +300,8 @@ function withHTMLSubtitles(Video) {
+                 cueNode.style.display = 'inline-block';
+                 cueNode.style.padding = '0.2em';
+                 cueNode.style.whiteSpace = 'pre-wrap';
++                cueNode.style.maxWidth = '80%';
++                cueNode.style.maxWidth = 'min(80%, 36ch)';
+                 var fontSizeMultiplier = window.screen720p ? 1.538 : 1;
+                 cueNode.style.fontSize = Math.floor((size / 25) * fontSizeMultiplier) + 'vmin';
+                 cueNode.style.color = textColor;
