@@ -18,14 +18,14 @@ importers:
         specifier: 5.2.0
         version: 5.2.0
       '@stremio/stremio-core-web':
-        specifier: 0.67.1
-        version: 0.67.1
+        specifier: 0.67.2
+        version: 0.67.2
       '@stremio/stremio-icons':
         specifier: 5.18.0
         version: 5.18.0
       '@stremio/stremio-video':
-        specifier: 0.1.0
-        version: 0.1.0
+        specifier: 0.1.1
+        version: 0.1.1
       bowser:
         specifier: 2.14.1
         version: 2.14.1
@@ -1444,14 +1444,14 @@ packages:
   '@stremio/stremio-colors@5.2.0':
     resolution: {integrity: sha512-dYlPgu9W/H7c9s1zmW5tiDnRenaUa4Hg1QCyOg1lhOcgSfM/bVTi5nnqX+IfvGTTUNA0zgzh8hI3o3miwnZxTg==}
 
-  '@stremio/stremio-core-web@0.67.1':
-    resolution: {integrity: sha512-Tpsfv/8Zrc7NprECnEi6v1FxJGGAzmgydjRQFyptMLfaCCcYJpIhGuYQ6GqeCSPjbpDfnWv3rTNOMHxIih0j4A==}
+  '@stremio/stremio-core-web@0.67.2':
+    resolution: {integrity: sha512-nyLUPJf0N2I11tbJrAKtEKU6BhDLhsTBCoS+2GTxzrGwDxNIWxZ4AxcLLGOwo1y76xhQiuegwA3QPKqU8OiPdw==}
 
   '@stremio/stremio-icons@5.18.0':
     resolution: {integrity: sha512-Hll2y0Yb/3dkBdW8DE36QBy2jo65+OcklJ8mrBCSMjpyNOiN4GeAvnHoAazRZZc9nLssChGZdExtYHCUQCZp1g==}
 
-  '@stremio/stremio-video@0.1.0':
-    resolution: {integrity: sha512-BPmOpByOKoO8A+QdDJb3UU0oPdnbcUbq/KivPItWi8clCswN7JGrDrCdbhvBpI/+42s9ChCeFl7Ap8GXsD/R0A==}
+  '@stremio/stremio-video@0.1.1':
+    resolution: {integrity: sha512-G/Bz2TS9aoOkBVVIRJ+vv63Ya+BkxRIQBJj6jJAGpylli2XX3Wc8U7vNgWuVAR2HkIDdahhiUbLXCE1ZqGR00w==}
 
   '@stylistic/eslint-plugin-jsx@4.4.1':
     resolution: {integrity: sha512-83SInq4u7z71vWwGG+6ViOtlOmZ6tSrDkMPhrvdBBTGMLA0gs22WSdhQ4vZP3oJ5Xg4ythvqeUiFSedvVxzhyA==}
@@ -6579,13 +6579,13 @@ snapshots:
 
   '@stremio/stremio-colors@5.2.0': {}
 
-  '@stremio/stremio-core-web@0.67.1':
+  '@stremio/stremio-core-web@0.67.2':
     dependencies:
       '@babel/runtime': 7.24.1
 
   '@stremio/stremio-icons@5.18.0': {}
 
-  '@stremio/stremio-video@0.1.0':
+  '@stremio/stremio-video@0.1.1':
     dependencies:
       '@stremio/libass-wasm': https://github.com/Stremio/JavascriptSubtitlesOctopus/releases/download/v4.2.7/stremio-libass-wasm-4.2.7.tgz
       buffer: 6.0.3

@@ -22,7 +22,7 @@ const Label = ({ text, icon, disabled, open, onClick }: Props) => (
         tabIndex={0}
         aria-haspopup={'listbox'}
         aria-expanded={open}
-        role={icon ? 'button' : undefined}
+        role={'button'}
         aria-label={icon ? text : undefined}
         title={icon ? text ?? undefined : undefined}
     >

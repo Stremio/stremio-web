@@ -7,9 +7,11 @@ import Icon from '@stremio/stremio-icons/react';
 import { useCore } from 'stremio/core';
 import { CONSTANTS } from 'stremio/common';
 import { filterVisibleEpgPrograms, getEpgDescription, getEpgProgress, getEpgTitle, getEpgValue, getEpgTimeRange, getNonEmptyString, useEpgNow } from 'stremio/common/EPG';
+import useMediaQuery from 'stremio/common/useMediaQuery';
 import useSeasons from 'stremio/common/useSeasons';
 import { MetaPreview, Video } from 'stremio/components';
 import SegmentedControl from 'stremio/components/SegmentedControl';
+import SeasonsBar from 'stremio/routes/Details/Videos/SeasonsBar';
 import styles from './SideDrawer.less';
 
 type Props = {
@@ -24,6 +26,7 @@ type Props = {
 const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, className, closeSideDrawer, selected, isEpg, ...props }: Props, ref) => {
     const { t } = useTranslation();
     const core = useCore();
+    const isTouch = useMediaQuery('(hover: none) and (pointer: coarse)');
     const [season, setSeason] = useState<number | null>(seriesInfo?.season ?? null);
     const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
     const videosRef = useRef<HTMLDivElement>(null);
@@ -122,13 +125,21 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
             />
             {
                 seriesInfo && !isEpg && options.length > 1 ?
-                    <SegmentedControl
-                        className={styles['seasons']}
-                        options={options}
-                        value={selectedSeason !== null ? String(selectedSeason) : null}
-                        ariaLabel={t('SEASON')}
-                        onSelect={seasonOnSelect}
-                    />
+                    isTouch ?
+                        <SegmentedControl
+                            className={styles['seasons']}
+                            options={options}
+                            value={selectedSeason !== null ? String(selectedSeason) : null}
+                            ariaLabel={t('SEASON')}
+                            onSelect={seasonOnSelect}
+                        />
+                        :
+                        <SeasonsBar
+                            className={styles['seasons']}
+                            options={options}
+                            value={selectedSeason !== null ? String(selectedSeason) : null}
+                            onSelect={seasonOnSelect}
+                        />
                     :
                     null
             }

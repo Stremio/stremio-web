@@ -25,6 +25,7 @@ const Option = forwardRef<HTMLButtonElement, Props>(({ option, selectedValue, on
             className={classNames(styles['option'], { [styles['selected']]: selected })}
             key={option.id}
             onClick={handleClick}
+            role={'option'}
             aria-selected={selected}
             data-autofocus={selected || undefined}
         >

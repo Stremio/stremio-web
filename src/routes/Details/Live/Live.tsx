@@ -148,10 +148,12 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                         :
                         <React.Fragment>
                             <div className={styles['main']}>
-                                <Logo logo={channel.logo} name={channel.name} />
-                                <div className={styles['spacer']} />
-                                <Programme programme={selected} now={now} centered={isMobile} />
-                                {playback}
+                                <div className={styles['body']}>
+                                    <Logo logo={channel.logo} name={channel.name} />
+                                    <div className={styles['spacer']} />
+                                    <Programme programme={selected} now={now} centered={isMobile} />
+                                    {playback}
+                                </div>
                             </div>
                             {
                                 streamsOpen ?
