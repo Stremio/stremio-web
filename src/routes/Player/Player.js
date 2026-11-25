@@ -530,15 +530,23 @@ const Player = () => {
         };
     }, [onPlayPause, onGamepadSeekAndVol]);
 
+    const canGuessTorrentFile = !casting && streamingServer.baseUrl !== null &&
+        player.selected?.streamRequest?.path?.type === 'series' &&
+        typeof player.selected.stream.infoHash === 'string' &&
+        typeof player.selected.stream.fileIdx !== 'number' && !player.selected.stream.fileMustInclude?.length;
+    const waitingForTorrentEpisode = canGuessTorrentFile && player.metaItem?.type === 'Loading';
+    const torrentEpisode = canGuessTorrentFile ? player.seriesInfo : null;
+
     React.useEffect(() => {
         setError(null);
         cancelKeyboardSeek();
         video.unload();
 
-        if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
+        if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading' && !waitingForTorrentEpisode) {
             video.load({
                 stream: {
-                    ...player.stream.content,
+                    // A prebuilt torrent URL bypasses the video player's episode lookup.
+                    ...(torrentEpisode ? player.selected.stream : player.stream.content),
                     subtitles: streamSubtitles
                 },
                 autoplay: true,
@@ -571,7 +579,7 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
+    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek, waitingForTorrentEpisode, torrentEpisode]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
