@@ -58,12 +58,11 @@
             padding: 0.5rem 0.625rem 2rem;
             overflow-y: auto;
             overscroll-behavior: contain;
-            scrollbar-width: none;
             mask-image: linear-gradient(180deg, transparent, #000000 0.75rem, #000000 calc(100% - 3rem), transparent);
+        }
 
-            &::-webkit-scrollbar {
-                display: none;
-            }
+        .sentinel + .body {
+            padding-top: 1.25rem;
         }
     }
 }
@@ -76,6 +75,10 @@
 
         .header {
             padding: 1rem 1rem 0;
+        }
+
+        .sentinel + .body {
+            padding-top: 1rem;
         }
     }
 }
@@ -92,6 +95,10 @@
 
         .body {
             padding-bottom: 1rem;
+        }
+
+        .sentinel + .body {
+            padding-top: 0.875rem;
         }
     }
 }
@@ -135,6 +142,10 @@
 
         .body {
             padding: 0 0.75rem 3rem;
+        }
+
+        .sentinel + .body {
+            padding-top: 0.75rem;
         }
     }
 }

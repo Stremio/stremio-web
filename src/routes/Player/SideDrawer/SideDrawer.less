@@ -68,7 +68,25 @@
     }
 
     .seasons {
+        max-width: calc(100% - @padding * 2);
         margin: 0.5rem @padding @padding;
+    }
+
+    .programme {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .logo {
+            flex: none;
+            max-width: calc(100% - 3rem);
+            margin-bottom: 1rem;
+        }
     }
 
     .videos {
@@ -125,6 +143,12 @@
 
         .info {
             padding: calc(@padding / 2);
+        }
+
+        .seasons {
+            max-width: calc(100% - @padding);
+            margin-right: calc(@padding / 2);
+            margin-left: calc(@padding / 2);
         }
     }
 }
