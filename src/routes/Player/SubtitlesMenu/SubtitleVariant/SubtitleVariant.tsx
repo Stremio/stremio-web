@@ -25,17 +25,19 @@ type SubtitlesTrack = {
 type Props = {
     track: SubtitlesTrack,
     selected: boolean,
+    loadStatus?: ExtraSubtitleLoadStatus,
     onSelect: (track: SubtitlesTrack) => void,
 };
 
 const hasValidLabel = (label?: string) => label && label.length > 0 && !label.startsWith('http');
 const ASS_BADGE = 'ASS';
 
-const SubtitleVariant = ({ track, selected, onSelect }: Props) => {
+const SubtitleVariant = ({ track, selected, loadStatus, onSelect }: Props) => {
     const { t } = useTranslation();
     const toast = useToast();
     const buttonRef = useRef<HTMLElement>(null);
     const triggers = useMemo(() => [buttonRef], []);
+    const isActive = selected && !loadStatus;
 
     const downloadUrl = track.fallbackUrl || track.url;
     const variantLabel = hasValidLabel(track.label) ? track.label : languages.label(track.lang);
@@ -72,7 +74,7 @@ const SubtitleVariant = ({ track, selected, onSelect }: Props) => {
             ref={buttonRef}
             title={hoverTitle}
             onClick={onSelectClick}
-            className={classNames(styles['variant-option'], { 'selected': selected })}
+            className={classNames(styles['variant-option'], { 'selected': isActive })}
         >
             <div className={styles['info']}>
                 <div className={styles['variant-title']}>
@@ -82,10 +84,15 @@ const SubtitleVariant = ({ track, selected, onSelect }: Props) => {
                     {track.ass ? <div className={styles['ass-badge']}>{ASS_BADGE}</div> : null}
                 </div>
                 <div className={styles['variant-origin']}>
-                    {t(track.origin)}
+                    {
+                        loadStatus ?
+                            <span role={'status'}>{t(loadStatus === 'loading' ? 'SUBTITLES_LOADING' : 'ERR_SUBS_LOADING_TITLE')}</span>
+                            :
+                            t(track.origin)
+                    }
                 </div>
             </div>
-            {selected ? <div className={styles['icon']} /> : null}
+            {isActive ? <div className={styles['icon']} /> : null}
             {!track.embedded &&
                 <ContextMenu on={triggers} autoClose={true} lock={'bottom'}>
                     {downloadUrl ?

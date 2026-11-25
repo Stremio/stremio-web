@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CONSTANTS, getKeyboardShortcutKeys, languages, useFileDropListener, useInterval, useShortcut, useTimeout, useToast } from 'stremio/common';
 import {
@@ -10,6 +10,8 @@ import {
     SUBTITLES_DELAY_REPEAT_INTERVAL_MS,
     SUBTITLES_DELAY_STEP_MS,
 } from './subtitleDelay';
+
+const EXTERNAL_SUBTITLE_LOAD_ERROR = 70;
 
 const withFallbackLabels = (tracks?: SubtitleTrack[] | null): SubtitleTrack[] => {
     if (!Array.isArray(tracks)) {
@@ -186,6 +188,7 @@ const useSubtitles = ({
     const settingsRef = useRef(settings);
     const trackSelectionLocked = useRef(false);
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
+    const [extraSubtitleRequest, setExtraSubtitleRequest] = useState<{ id: string, status: ExtraSubtitleLoadStatus } | null>(null);
     const subtitleDelayHold = useRef<SubtitleDelayHold | null>(null);
     const subtitleDelayInterval = useInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS);
     const subtitleDelayTimeout = useTimeout(SUBTITLES_DELAY_REPEAT_DELAY_MS);
@@ -232,6 +235,7 @@ const useSubtitles = ({
     const disableSubtitles = useCallback(() => {
         trackSelectionLocked.current = true;
         appliedTrack.current = null;
+        setExtraSubtitleRequest(null);
         setSubtitlesTrack(null);
         setExtraSubtitlesTrack(null);
         streamStateChanged({ subtitlesEnabled: false });
@@ -245,6 +249,7 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = { id: track.id, source: 'embedded' };
+        setExtraSubtitleRequest(null);
         setSubtitlesTrack(track.id);
         rememberTrack(track, true);
     }, [disableSubtitles, rememberTrack, setSubtitlesTrack]);
@@ -257,6 +262,9 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = { id: track.id, source: 'external' };
+        if (videoRef.current.state.selectedExtraSubtitlesTrackId !== track.id) {
+            setExtraSubtitleRequest({ id: track.id, status: 'loading' });
+        }
         setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
     }, [disableSubtitles, rememberTrack, setExtraSubtitlesTrack]);
@@ -363,6 +371,7 @@ const useSubtitles = ({
     useEffect(() => {
         trackSelectionLocked.current = false;
         appliedTrack.current = null;
+        setExtraSubtitleRequest(null);
     }, [video.state.stream]);
 
     useEffect(() => {
@@ -492,6 +501,7 @@ const useSubtitles = ({
         };
 
         const onExtraSubtitlesTrackLoaded = (track: SubtitleTrack) => {
+            setExtraSubtitleRequest((request) => request?.id === track.id ? null : request);
             toast.show({
                 type: 'success',
                 title: t('PLAYER_SUBTITLES_LOADED'),
@@ -506,10 +516,17 @@ const useSubtitles = ({
             });
         };
 
+        const onSubtitleLoadError = ({ code, track }: { code: number, track?: SubtitleTrack }) => {
+            if (code === EXTERNAL_SUBTITLE_LOAD_ERROR && track) {
+                setExtraSubtitleRequest((request) => request?.id === track.id ? { ...request, status: 'failed' } : request);
+            }
+        };
+
         const onExtraSubtitlesTrackAdded = (track: SubtitleTrack) => {
             if (track.local) {
                 trackSelectionLocked.current = true;
                 appliedTrack.current = { id: track.id, source: 'external' };
+                setExtraSubtitleRequest(null);
                 videoRef.current.setExtraSubtitlesTrack(track.id);
             }
         };
@@ -517,12 +534,14 @@ const useSubtitles = ({
         video.events.on('subtitlesTrackLoaded', onSubtitlesTrackLoaded);
         video.events.on('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
         video.events.on('extraSubtitlesTrackAdded', onExtraSubtitlesTrackAdded);
+        video.events.on('error', onSubtitleLoadError);
         video.events.on('implementationChanged', applySubtitleStyle);
 
         return () => {
             video.events.off('subtitlesTrackLoaded', onSubtitlesTrackLoaded);
             video.events.off('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
             video.events.off('extraSubtitlesTrackAdded', onExtraSubtitlesTrackAdded);
+            video.events.off('error', onSubtitleLoadError);
             video.events.off('implementationChanged', applySubtitleStyle);
         };
     }, [applySubtitleStyle, t, toast, video.events]);
@@ -588,6 +607,7 @@ const useSubtitles = ({
         subtitlesSize: video.state.subtitlesSize,
         extraSubtitlesTracks: video.state.extraSubtitlesTracks,
         selectedExtraSubtitlesTrackId: video.state.selectedExtraSubtitlesTrackId,
+        extraSubtitleRequest,
         extraSubtitlesOffset: video.state.extraSubtitlesOffset,
         extraSubtitlesDelay: video.state.extraSubtitlesDelay,
         extraSubtitlesSize: video.state.extraSubtitlesSize,
@@ -603,6 +623,7 @@ const useSubtitles = ({
         changeDelay,
         changeOffset,
         changeSize,
+        extraSubtitleRequest,
         selectEmbeddedTrack,
         selectExtraTrack,
         settings.interfaceLanguage,

@@ -15,6 +15,7 @@ type SubtitleTrack = {
 };
 
 type SubtitleSource = 'embedded' | 'external';
+type ExtraSubtitleLoadStatus = 'loading' | 'failed';
 
 type VideoSubtitleState = {
     stream: unknown | null,
@@ -71,6 +72,7 @@ type SubtitlesMenuProps = {
     subtitlesSize: number | null,
     extraSubtitlesTracks: SubtitleTrack[],
     selectedExtraSubtitlesTrackId: string | null,
+    extraSubtitleRequest: { id: string, status: ExtraSubtitleLoadStatus } | null,
     extraSubtitlesOffset: number | null,
     extraSubtitlesDelay: number | null,
     extraSubtitlesSize: number | null,
