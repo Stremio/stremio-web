@@ -87,11 +87,20 @@ type Catalog<T, D = any> = {
     deepLinks?: D,
 };
 
+// Raw audio format as reported by the player (only the shell / mpv provides it).
+type AudioTrackFormat = {
+    codec: string,
+    profile: string | null,
+    channels: string | null,
+    channelCount: number | null,
+};
+
 type AudioTrack = {
     id: string,
     label: string,
     lang: string,
     origin: string,
+    format?: AudioTrackFormat | null,
 };
 
 type Rating = 'liked' | 'loved' | null;

@@ -3,7 +3,14 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { languages } from 'stremio/common';
 import { Button } from 'stremio/components';
+import { getAudioTrackDetails } from './audioTrackDetails';
 import styles from './AudioMenu.less';
+
+// Names a track title may use for its own language, e.g. "fre", "French", "Français".
+const getLanguageNames = (lang: string) => {
+    const language = languages.find(lang);
+    return [lang, language?.name, language?.local];
+};
 
 type Props = {
     className: string,
@@ -33,30 +40,33 @@ const AudioMenu = memo(forwardRef<HTMLDivElement, Props>(({ className, selectedA
                 </div>
                 <div className={styles['list']}>
                     {
-                        audioTracks.map(({ id, label, lang }, index) => (
-                            <Button
-                                key={index}
-                                title={label}
-                                className={classNames(styles['option'], { 'selected': selectedAudioTrackId === id })}
-                                data-id={id}
-                                onClick={onAudioTrackClick}
-                            >
-                                <div className={styles['info']}>
-                                    <div className={styles['lang']}>
-                                        {languages.label(lang)}
+                        audioTracks.map(({ id, label, lang, format }, index) => {
+                            const details = getAudioTrackDetails({ label, format }, getLanguageNames(lang));
+                            return (
+                                <Button
+                                    key={index}
+                                    title={details || languages.label(lang)}
+                                    className={classNames(styles['option'], { 'selected': selectedAudioTrackId === id })}
+                                    data-id={id}
+                                    onClick={onAudioTrackClick}
+                                >
+                                    <div className={styles['info']}>
+                                        <div className={styles['lang']}>
+                                            {languages.label(lang)}
+                                        </div>
+                                        <div className={styles['label']}>
+                                            {details}
+                                        </div>
                                     </div>
-                                    <div className={styles['label']}>
-                                        {label}
-                                    </div>
-                                </div>
-                                {
-                                    selectedAudioTrackId === id ?
-                                        <div className={styles['icon']} />
-                                        :
-                                        null
-                                }
-                            </Button>
-                        ))
+                                    {
+                                        selectedAudioTrackId === id ?
+                                            <div className={styles['icon']} />
+                                            :
+                                            null
+                                    }
+                                </Button>
+                            );
+                        })
                     }
                 </div>
             </div>
