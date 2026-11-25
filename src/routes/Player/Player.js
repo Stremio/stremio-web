@@ -530,9 +530,6 @@ const Player = () => {
         };
     }, [onPlayPause, onGamepadSeekAndVol]);
 
-    const mediaMetadata = useMediaSession(video.state, player, fullscreen, onPlayRequested, onPauseRequested, onNextVideoRequested);
-    const mediaTitle = mediaMetadata ? [mediaMetadata.artist, mediaMetadata.title].filter(Boolean).join(' - ') : null;
-
     React.useEffect(() => {
         setError(null);
         cancelKeyboardSeek();
@@ -568,7 +565,7 @@ const Player = () => {
                     :
                     null,
                 seriesInfo: player.seriesInfo,
-                mediaTitle,
+                mediaTitle: player.title,
             }, {
                 chromecastTransport: services.chromecast.active ? services.chromecast.transport : null,
                 shellTransport: platform.shell.active ? platform.shell : null,
@@ -606,9 +603,9 @@ const Player = () => {
 
     React.useEffect(() => {
         if (video.state.manifest?.props.includes('mediaTitle')) {
-            video.setMediaTitle(mediaTitle);
+            video.setMediaTitle(player.title);
         }
-    }, [mediaTitle, video.state.manifest, video.setMediaTitle]);
+    }, [player.title, video.state.manifest, video.setMediaTitle]);
 
     React.useEffect(() => {
         const speed = player.streamState?.playbackSpeed;
@@ -699,6 +696,8 @@ const Player = () => {
             discord.setActivity(null);
         };
     }, [discord.setActivity]);
+
+    useMediaSession(video.state, player, fullscreen, onPlayRequested, onPauseRequested, onNextVideoRequested);
 
     React.useEffect(() => {
         const onMediaKey = (action) => {
