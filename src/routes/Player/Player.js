@@ -851,10 +851,9 @@ const Player = () => {
                 return;
             }
 
-            const isSpace = keyboardKeys.includes('Space');
-            if (!isSpace && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
-            if (e.ctrlKey || e.metaKey || e.altKey || (isSpace && e.shiftKey)) {
-                if (isSpace) finishPlaybackSpeedHold('keyboard');
+            if (!keyboardKeys.includes('Space') && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
+            if (e.ctrlKey || e.metaKey || e.altKey || (e.shiftKey && keyboardKeys.includes('Space'))) {
+                if (keyboardKeys.includes('Space')) finishPlaybackSpeedHold('keyboard');
                 return;
             }
 
@@ -864,7 +863,7 @@ const Player = () => {
                 setImmersedDebounced(true);
                 return;
             }
-            if (isSpace) {
+            if (keyboardKeys.includes('Space')) {
                 const phase = finishPlaybackSpeedHold('keyboard');
                 if (phase === 'pending' && !menusOpen && video.state.paused !== null) {
                     if (video.state.paused) {
