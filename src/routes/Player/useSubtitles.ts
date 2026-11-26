@@ -508,6 +508,8 @@ const useSubtitles = ({
 
         const onExtraSubtitlesTrackAdded = (track: SubtitleTrack) => {
             if (track.local) {
+                trackSelectionLocked.current = true;
+                appliedTrack.current = { id: track.id, source: 'external' };
                 videoRef.current.setExtraSubtitlesTrack(track.id);
             }
         };

@@ -163,6 +163,10 @@ const useVideo = () => {
         setProp('videoScale', scale);
     }, [setProp]);
 
+    const setMediaTitle = React.useCallback((title) => {
+        setProp('mediaTitle', title);
+    }, [setProp]);
+
     const setFullscreen = React.useCallback((state) => {
         setProp('fullscreen', state);
     }, [setProp]);
@@ -276,6 +280,7 @@ const useVideo = () => {
         setSubtitlesBold,
         setExtraSubtitlesTrack,
         setVideoScale,
+        setMediaTitle,
         setFullscreen,
         setPictureInPicture,
     };

@@ -375,11 +375,11 @@ const Player = () => {
             toast.show({
                 type: 'error',
                 title: t('ERROR'),
-                message: error.message,
+                message: t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message }),
                 timeout: 3000
             });
         }
-    }, []);
+    }, [t, toast]);
 
     const onPlayRequested = React.useCallback(() => {
         setSeeking(false);
@@ -670,6 +670,7 @@ const Player = () => {
                     :
                     null,
                 seriesInfo: player.seriesInfo,
+                mediaTitle: player.title,
             }, {
                 chromecastTransport: services.chromecast.active ? services.chromecast.transport : null,
                 shellTransport: platform.shell.active ? platform.shell : null,
@@ -704,6 +705,12 @@ const Player = () => {
 
         video.setVideoScale(player.streamState?.videoScale ?? 'contain');
     }, [player.streamState?.videoScale, video.state.manifest, video.state.stream, video.setVideoScale]);
+
+    React.useEffect(() => {
+        if (video.state.manifest?.props.includes('mediaTitle')) {
+            video.setMediaTitle(player.title);
+        }
+    }, [player.title, video.state.manifest, video.setMediaTitle]);
 
     React.useEffect(() => {
         const speed = player.streamState?.playbackSpeed;
@@ -943,7 +950,7 @@ const Player = () => {
         const onKeyDown = (e) => {
             const keyboardKey = getKeyboardShortcutKey(e);
             if (keyboardKey !== 'Space' || e.repeat) return;
-            if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey) return;
+            if (menusOpen || detailsHold.current !== null || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
             startPlaybackSpeedHold('keyboard');
         };
@@ -957,7 +964,7 @@ const Player = () => {
             }
 
             if (!keyboardKeys.includes('Space') && !keyboardKeys.includes('ArrowRight') && !keyboardKeys.includes('ArrowLeft')) return;
-            if (e.ctrlKey || e.metaKey || e.altKey) {
+            if (e.ctrlKey || e.metaKey || e.altKey || (e.shiftKey && keyboardKeys.includes('Space'))) {
                 if (keyboardKeys.includes('Space')) finishPlaybackSpeedHold('keyboard');
                 return;
             }
@@ -1043,7 +1050,7 @@ const Player = () => {
             video.events.off('error', onError);
             video.events.off('ended', onEnded);
         };
-    }, [onEnded]);
+    }, [onEnded, onError]);
 
     React.useEffect(() => {
         const onBarMouseUp = () => {
@@ -1169,6 +1176,7 @@ const Player = () => {
                         className={classnames(styles['layer'], styles['error-layer'])}
                         stream={video.state.stream}
                         {...error}
+                        message={t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message })}
                     />
                     :
                     null

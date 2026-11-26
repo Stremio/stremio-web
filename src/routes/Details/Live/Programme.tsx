@@ -17,9 +17,10 @@ type Props = {
     programme: EPGProgram | null,
     now: number,
     centered?: boolean,
+    compact?: boolean,
 };
 
-const Programme = ({ className, programme, now, centered = false }: Props) => {
+const Programme = ({ className, programme, now, centered = false, compact = false }: Props) => {
     const { t, i18n } = useTranslation();
     const { dayLabel } = useFormatters(now);
     const relativeFormatter = useMemo(() => new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }), [i18n.language]);
@@ -52,7 +53,7 @@ const Programme = ({ className, programme, now, centered = false }: Props) => {
     const overview = programme !== null ? programme.overview : t('LIVE_TV_NO_SCHEDULE');
 
     return (
-        <div className={classNames(className, styles['programme'])} aria-live={'polite'}>
+        <div className={classNames(className, styles['programme'], { [styles['compact']]: compact })} aria-live={'polite'}>
             <div className={styles['headline']}>
                 {
                     programme !== null ?
