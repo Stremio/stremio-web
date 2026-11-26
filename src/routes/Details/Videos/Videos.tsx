@@ -1,8 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import SegmentedControl from 'stremio/components/SegmentedControl';
 import Toggle from 'stremio/components/Toggle';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import screenSizes from 'stremio/common/screen-sizes.less';
@@ -12,7 +11,7 @@ import Panel from '../Panel';
 import Placeholder from '../Placeholder';
 import { DATE_FORMAT, getMinutesLeft, parseDate } from '../format';
 import Search from './Search';
-import SeasonsBar from './SeasonsBar';
+import SeasonPicker from './SeasonPicker';
 import VideoRow from './Video';
 import useScrollMemory from './useScrollMemory';
 import useSeasons from 'stremio/common/useSeasons';
@@ -56,7 +55,6 @@ const Videos = ({
 }: Props) => {
     const { t, i18n } = useTranslation();
     const isMobile = useMediaQuery(`(max-width: ${screenSizes.xxsmall})`);
-    const isTouch = useMediaQuery('(hover: none) and (pointer: coarse)');
     const [search, setSearch] = useState('');
     const listRef = useRef<HTMLDivElement>(null);
 
@@ -86,10 +84,6 @@ const Videos = ({
     const ready = metaItem !== null && !error && videos.length > 0;
     const onSelectVideo = useScrollMemory(listRef, scrollMemoryRef, `${metaItem?.id}:${selectedSeason}`, ready && !hidden);
 
-    const handleSeasonSelect = useCallback((value: string) => {
-        onSeasonSelect(Number(value));
-    }, [onSeasonSelect]);
-
     const showNotifications = metaItem !== null && metaItem.inLibrary && libraryItem !== null && metaItem.videos.length > 0;
 
     if (metaItem === null && !error) {
@@ -114,20 +108,12 @@ const Videos = ({
             ariaLabel={t('VIDEOS')}
             header={
                 seasons.length > 1 && !hidden ?
-                    isTouch ?
-                        <SegmentedControl
-                            options={options}
-                            value={selectedSeason !== null ? String(selectedSeason) : null}
-                            ariaLabel={t('SEASON')}
-                            size={isMobile ? 'large' : 'medium'}
-                            onSelect={handleSeasonSelect}
-                        />
-                        :
-                        <SeasonsBar
-                            options={options}
-                            value={selectedSeason !== null ? String(selectedSeason) : null}
-                            onSelect={handleSeasonSelect}
-                        />
+                    <SeasonPicker
+                        options={options}
+                        value={selectedSeason}
+                        size={isMobile ? 'large' : 'medium'}
+                        onSelect={onSeasonSelect}
+                    />
                     :
                     options.length === 1 ?
                         <div className={styles['season']}>{options[0].label}</div>

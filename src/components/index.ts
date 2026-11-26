@@ -37,7 +37,6 @@ import TextInput from './TextInput';
 import Toggle from './Toggle';
 import Transition from './Transition';
 import UpdateBanner from './UpdateBanner';
-import Video from './Video';
 import ActionsGroup from './ActionsGroup';
 
 export {
@@ -79,6 +78,5 @@ export {
     Toggle,
     Transition,
     UpdateBanner,
-    Video,
     ActionsGroup
 };
