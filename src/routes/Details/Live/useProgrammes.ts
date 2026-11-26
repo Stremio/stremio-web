@@ -2,8 +2,9 @@
 
 import { useMemo } from 'react';
 import { EPGChannel, EPGProgram, toEpgProgram } from 'stremio/common/EPG';
+import getProgrammeKey from './getProgrammeKey';
 
-const useProgrammes = (meta: MetaItemMetaDetails, now: number) => {
+const useProgrammes = (meta: MetaItem & { deepLinks?: MetaItemDeepLinks }, now: number, selectedKey: string | null) => {
     const channel = useMemo<EPGChannel>(() => ({
         id: meta.id,
         type: meta.type,
@@ -23,7 +24,14 @@ const useProgrammes = (meta: MetaItemMetaDetails, now: number) => {
         return programmes.find((programme) => programme.startTime.getTime() <= now && now < programme.endTime.getTime()) ?? null;
     }, [programmes, now]);
 
-    return { channel, programmes, current };
+    const selected = useMemo(() => {
+        return programmes.find((programme) => getProgrammeKey(programme) === selectedKey)
+            ?? programmes.find((programme) => programme.endTime.getTime() > now)
+            ?? programmes[programmes.length - 1]
+            ?? null;
+    }, [programmes, selectedKey, now]);
+
+    return { channel, programmes, current, selected };
 };
 
 export default useProgrammes;
