@@ -10,6 +10,8 @@ import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import styles from './Dropdown.less';
 
 type Props = {
+    containerRef: React.RefObject<HTMLDivElement | null>;
+    onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
     options: MultiselectMenuOption[];
     value?: any;
     menuOpen: boolean | (() => void);
@@ -18,10 +20,9 @@ type Props = {
     onSelect: (value: any) => void;
 };
 
-const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props) => {
+const Dropdown = ({ containerRef, onKeyDown, level, setLevel, options, onSelect, value, menuOpen }: Props) => {
     const { t } = useTranslation();
     const optionsRef = useRef(new Map());
-    const containerRef = useRef<HTMLDivElement>(null);
     const selectedOptionValue = options.find((opt) => opt.value === value)?.value;
 
     const handleSetOptionRef = useCallback((optionValue: any) => (node: HTMLButtonElement | null) => {
@@ -46,13 +47,14 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
         if (optionBounds.top < listBounds.top || optionBounds.bottom > listBounds.bottom) {
             container.scrollBy({ top: optionBounds.top - listBounds.top, behavior: 'smooth' });
         }
-    }, [menuOpen, selectedOptionValue]);
+    }, [containerRef, menuOpen, selectedOptionValue]);
 
     return (
         <div
             className={classNames(styles['dropdown'], { [styles['open']]: menuOpen })}
             role={'listbox'}
             ref={containerRef}
+            onKeyDown={onKeyDown}
         >
             {level > 0 ?
                 <Button className={styles['back-button']} onClick={handleBackClick}>
