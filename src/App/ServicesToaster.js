@@ -1,10 +1,12 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const { useTranslation } = require('react-i18next');
 const { useCore } = require('stremio/core');
 const { useToast, useFileDrop } = require('stremio/common');
 
 const ServicesToaster = () => {
+    const { t } = useTranslation();
     const core = useCore();
     const toast = useToast();
     const filedrop = useFileDrop();
@@ -12,6 +14,14 @@ const ServicesToaster = () => {
     React.useEffect(() => {
         const onCoreEvent = (name, data) => {
             switch (name) {
+                case 'AddonUpgraded': {
+                    toast.show({
+                        type: 'success',
+                        title: t('ADDON_UPGRADED_MSG'),
+                        timeout: 4000
+                    });
+                    break;
+                }
                 case 'TorrentParsed': {
                     toast.show({
                         type: 'success',
@@ -71,7 +81,7 @@ const ServicesToaster = () => {
             core.off('error', onCoreError);
             filedrop.off('*', onFileDrop);
         };
-    }, [core, filedrop, toast]);
+    }, [core, filedrop, toast, t]);
     return null;
 };
 

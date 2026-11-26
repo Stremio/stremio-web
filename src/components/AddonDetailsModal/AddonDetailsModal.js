@@ -3,6 +3,7 @@
 const React = require('react');
 const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
+const { deepEqual } = require('fast-equals');
 const { useCore } = require('stremio/core');
 const ModalDialog = require('stremio/components/ModalDialog');
 const { withCoreSuspender } = require('stremio/common/CoreSuspender');
@@ -51,7 +52,8 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
     const platform = usePlatform();
     const addonDetails = useAddonDetails(transportUrl);
     const [watchActivityTrusted, setWatchActivityTrusted] = React.useState(false);
-    const requiresWatchActivityTrust = addonDetails.localAddon === null &&
+    const requiresWatchActivityTrust = (addonDetails.localAddon === null ||
+        !receivesWatchActivity(addonDetails.localAddon.manifest)) &&
         addonDetails.remoteAddon !== null &&
         addonDetails.remoteAddon.content.type === 'Ready' &&
         !addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurationRequired &&
@@ -91,6 +93,43 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                         if (typeof onCloseRequest === 'function') {
                             onCloseRequest({
                                 type: 'configure',
+                                reactEvent: event,
+                                nativeEvent: event.nativeEvent
+                            });
+                        }
+                    }
+                }
+            }
+            :
+            null;
+        const upgradeButton = addonDetails.localAddon !== null &&
+            addonDetails.remoteAddon !== null &&
+            addonDetails.remoteAddon.content.type === 'Ready' &&
+            addonDetails.localAddon.manifest.id === addonDetails.remoteAddon.content.content.manifest.id &&
+            addonDetails.localAddon.transportUrl === addonDetails.remoteAddon.content.content.transportUrl &&
+            !addonDetails.localAddon.flags.protected &&
+            !addonDetails.remoteAddon.content.content.flags.protected &&
+            !addonDetails.remoteAddon.content.content.manifest.behaviorHints.configurationRequired &&
+            !deepEqual(addonDetails.localAddon, addonDetails.remoteAddon.content.content) ?
+            {
+                className: styles['upgrade-button'],
+                label: t('ADDON_UPGRADE'),
+                props: {
+                    disabled: requiresWatchActivityTrust && !watchActivityTrusted,
+                    onClick: (event) => {
+                        if (requiresWatchActivityTrust && !watchActivityTrusted) {
+                            return;
+                        }
+                        core.transport.dispatch({
+                            action: 'Ctx',
+                            args: {
+                                action: 'UpgradeAddon',
+                                args: addonDetails.remoteAddon.content.content
+                            }
+                        });
+                        if (typeof onCloseRequest === 'function') {
+                            onCloseRequest({
+                                type: 'upgrade',
                                 reactEvent: event,
                                 nativeEvent: event.nativeEvent
                             });
@@ -156,8 +195,8 @@ const AddonDetailsModal = ({ transportUrl, onCloseRequest }) => {
                 }
                 :
                 null;
-        return configureButton && toggleButton ? [cancelButton, configureButton, toggleButton] : configureButton ? [cancelButton, configureButton] : toggleButton ? [cancelButton, toggleButton] : [cancelButton];
-    }, [addonDetails, onCloseRequest, requiresWatchActivityTrust, watchActivityTrusted]);
+        return [cancelButton, configureButton, upgradeButton, toggleButton].filter(Boolean);
+    }, [addonDetails, core, platform, transportUrl, t, onCloseRequest, requiresWatchActivityTrust, watchActivityTrusted]);
     const modalBackground = React.useMemo(() => {
         return addonDetails.remoteAddon?.content.type === 'Ready' ? addonDetails.remoteAddon.content.content.manifest.background : null;
     }, [addonDetails.remoteAddon]);
