@@ -70,9 +70,9 @@ const Player = () => {
     const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
-    const isTorrent = typeof player.selected?.stream.infoHash === 'string';
-    const streamingServerOffline = streamingServer.baseUrl === null && streamingServer.settings?.type === 'Err';
-    const serverRequiredButOffline = isTorrent && streamingServerOffline;
+    const isTorrent = typeof player.selected?.stream.infoHash === 'string' ||
+        player.selected?.stream.url?.startsWith('magnet:') === true;
+    const streamingServerOffline = streamingServer.settings?.type === 'Err';
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
@@ -211,7 +211,6 @@ const Player = () => {
         closeCastDevicesMenu();
     };
     const [error, setError] = React.useState(null);
-    const playbackError = serverRequiredButOffline ? { message: t('SETTINGS_SERVER_UNAVAILABLE') } : error;
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
@@ -539,7 +538,7 @@ const Player = () => {
         cancelKeyboardSeek();
         video.unload();
 
-        if (player.selected && player.stream?.type === 'Ready' && !serverRequiredButOffline && streamingServer.settings?.type !== 'Loading') {
+        if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
             video.load({
                 stream: {
                     ...player.stream.content,
@@ -575,7 +574,7 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, serverRequiredButOffline, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
+    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
@@ -997,7 +996,7 @@ const Player = () => {
                     null
             }
             {
-                (video.state.buffering || !video.state.loaded) && !playbackError ?
+                (video.state.buffering || !video.state.loaded) && !error ?
                     <Buffering
                         ref={bufferingRef}
                         className={classnames(styles['layer'], styles['buffering-layer'])}
@@ -1008,15 +1007,15 @@ const Player = () => {
                     null
             }
             {
-                playbackError !== null ?
+                error !== null ?
                     <Error
                         ref={errorRef}
                         className={classnames(styles['layer'], styles['error-layer'])}
-                        stream={serverRequiredButOffline ? null : video.state.stream}
-                        {...playbackError}
-                        message={serverRequiredButOffline
-                            ? playbackError.message
-                            : t('PLAYER_VIDEO_ERROR_' + playbackError.code, { defaultValue: playbackError.message })}
+                        stream={video.state.stream}
+                        {...error}
+                        message={isTorrent && streamingServerOffline
+                            ? t('SETTINGS_SERVER_UNAVAILABLE')
+                            : t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message })}
                     />
                     :
                     null
