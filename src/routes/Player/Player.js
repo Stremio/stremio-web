@@ -70,6 +70,9 @@ const Player = () => {
     const [player, videoParamsChanged, streamStateChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings] = useSettings();
     const streamingServer = useStreamingServer();
+    const isTorrent = typeof player.selected?.stream.infoHash === 'string' ||
+        player.selected?.stream.url?.startsWith('magnet:') === true;
+    const streamingServerOffline = streamingServer.settings?.type === 'Err';
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
@@ -1010,7 +1013,9 @@ const Player = () => {
                         className={classnames(styles['layer'], styles['error-layer'])}
                         stream={video.state.stream}
                         {...error}
-                        message={t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message })}
+                        message={isTorrent && streamingServerOffline
+                            ? t('SETTINGS_SERVER_UNAVAILABLE')
+                            : t('PLAYER_VIDEO_ERROR_' + error.code, { defaultValue: error.message })}
                     />
                     :
                     null
