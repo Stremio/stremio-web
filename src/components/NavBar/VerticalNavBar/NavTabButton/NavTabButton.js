@@ -6,9 +6,16 @@ const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Image } = require('stremio/components');
 const styles = require('./styles');
-const { Link } = require('react-router-dom');
+const { Link, useLinkClickHandler } = require('react-router-dom');
 
 const NavTabButton = ({ className, logo, icon, label, href, selected, onClick }) => {
+    const navigateWithFocus = useLinkClickHandler(href, { state: { focusSidebar: true } });
+    const onTabClick = (event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented && event.detail === 0 && event.currentTarget === document.activeElement) {
+            navigateWithFocus(event);
+        }
+    };
     const renderLogoFallback = React.useCallback(() => (
         typeof icon === 'string' && icon.length > 0 ?
             <Icon className={styles['icon']} name={icon} />
@@ -25,7 +32,7 @@ const NavTabButton = ({ className, logo, icon, label, href, selected, onClick })
         });
     };
     return (
-        <Link className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} to={href} onClick={onClick} onDoubleClick={onDoubleClick}>
+        <Link className={classnames(className, styles['nav-tab-button-container'], { 'selected': selected })} title={label} to={href} onClick={onTabClick} onDoubleClick={onDoubleClick}>
             {
                 typeof logo === 'string' && logo.length > 0 ?
                     <Image

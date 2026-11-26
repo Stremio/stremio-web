@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useNavigate } = require('react-router');
+const { useLocation, useNavigate } = require('react-router');
 const { useSearchParams } = require('react-router-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -23,11 +23,13 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const routeFocused = useRouteFocused();
     const searchHistory = useSearchHistory();
     const localSearch = useLocalSearch();
+    const location = useLocation();
     const navigate = useNavigate();
     const { handlePlayUrl } = usePlayUrl();
 
     const [historyOpen, openHistory, closeHistory, ] = useBinaryState(query === null ? true : false);
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
+    const [showInputFocus, setShowInputFocus] = React.useState(() => location.state?.focusSearch === true);
     const [previousRoute, setPreviousRoute] = React.useState({ query, active });
     const [, setSearchParams] = useSearchParams();
     const searchInputRef = React.useRef(null);
@@ -38,9 +40,9 @@ const SearchBar = React.memo(({ className, query, active }) => {
         setCurrentQuery(query || '');
     }
 
-    const searchBarOnClick = React.useCallback(() => {
+    const searchBarOnClick = React.useCallback((event) => {
         if (!active) {
-            navigate('/search');
+            navigate('/search', { state: { focusSearch: event.detail === 0 } });
         }
     }, [active, navigate]);
 
@@ -78,7 +80,9 @@ const SearchBar = React.memo(({ className, query, active }) => {
         closeHistory();
     }, [setSearchParams, closeHistory]);
 
-    const queryInputClear = React.useCallback(() => {
+    const queryInputClear = React.useCallback((event) => {
+        setShowInputFocus(event.detail === 0);
+        searchInputRef.current?.focus();
         setCurrentQuery('');
         setSearchParams({});
         navigate('/search');
@@ -104,7 +108,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                 active ?
                     <TextInput
                         ref={searchInputRef}
-                        className={styles['search-input']}
+                        className={classnames(styles['search-input'], { [styles['keyboard-focus']]: showInputFocus })}
                         type={'text'}
                         placeholder={t('SEARCH_OR_PASTE_LINK')}
                         value={currentQuery}
@@ -112,15 +116,18 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         onPaste={queryInputOnPaste}
                         onSubmit={queryInputOnSubmit}
                         onClick={openHistory}
+                        onKeyDown={() => setShowInputFocus(true)}
+                        onPointerDown={() => setShowInputFocus(false)}
+                        onBlur={() => setShowInputFocus(true)}
                     />
                     :
-                    <Button className={styles['search-input']} role={'button'}>
+                    <Button className={styles['search-input']}>
                         <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
                     </Button>
             }
             {
                 currentQuery.length > 0 ?
-                    <Button className={styles['submit-button-container']} role={'button'} aria-label={t('CLEAR')} onClick={queryInputClear}>
+                    <Button className={styles['submit-button-container']} title={t('CLEAR')} onClick={queryInputClear}>
                         <Icon className={styles['icon']} name={'close'} />
                     </Button>
                     :

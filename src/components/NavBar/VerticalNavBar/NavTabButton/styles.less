@@ -15,6 +15,10 @@
         outline-offset: calc(-1 * var(--focus-outline-size));
 
         .label {
+            opacity: 0.6;
+        }
+
+        &:global(.selected) .label {
             opacity: 1;
         }
     }

@@ -17,7 +17,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
     const goBack = useGoBack(originPath);
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
-        <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} role={'button'} aria-label={t('SETTINGS')} onClick={onClick}>
+        <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
             {children}
         </Button>
@@ -27,7 +27,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         <nav {...props} className={classnames(className, styles['horizontal-nav-bar-container'])}>
             {
                 backButton ?
-                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} role={'button'} aria-label={t('BACK')} onClick={onBackButtonClick || goBack}>
+                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} onClick={onBackButtonClick || goBack}>
                         <Icon className={styles['icon']} name={'chevron-back'} />
                     </Button>
                     :
@@ -62,7 +62,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                 }
                 {
                     supported && fullscreenButton ?
-                        <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} role={'button'} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                        <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
                         </Button>
                         :

@@ -5,7 +5,7 @@ import { useGamepad } from '../GamepadContext';
 
 const ROUTES = ['search', 'board', 'discover', 'library', 'calendar', 'addons', 'settings'];
 
-const useVerticalGamepadNavigation = (_sectionRef: React.RefObject<HTMLDivElement>, currentRoute: string) => {
+const useVerticalGamepadNavigation = (_sectionRef: React.RefObject<HTMLElement>, currentRoute: string) => {
     const gamepad = useGamepad();
 
     useEffect(() => {
