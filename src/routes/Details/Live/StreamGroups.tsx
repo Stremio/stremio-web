@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProfile } from 'stremio/common';
 import { Stream } from '../Streams';
+import OfflineNotice from '../Streams/OfflineNotice';
 import LiveFlag from 'stremio/components/LiveFlag';
 import styles from './StreamGroups.less';
 
@@ -32,6 +33,7 @@ const StreamGroups = ({ streams, live, programmeTitle, channelName, onClose }: P
                 <div className={styles['subtitle-text']}>{subtitle}</div>
             </div>
             <div className={styles['groups']} aria-label={t('STREAMS')}>
+                <OfflineNotice />
                 {
                     streams.map((resource) => (
                         resource.content.type === 'Ready' && resource.content.content.length > 0 ?

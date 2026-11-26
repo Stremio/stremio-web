@@ -11,6 +11,7 @@ import HeroArt from '../HeroArt';
 import Logo from 'stremio/components/Logo';
 import Panel from '../Panel';
 import Streams from '../Streams';
+import OfflineNotice from '../Streams/OfflineNotice';
 import Programme from 'stremio/components/Programme';
 import Playback from './Playback';
 import StreamPicker from './StreamPicker';
@@ -96,17 +97,20 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     );
 
     const playback = (
-        <Playback
-            className={styles['playback']}
-            streams={streams}
-            streamsOpen={streamsOpen}
-            inLibrary={meta.inLibrary}
-            current={current}
-            live={live}
-            now={now}
-            onStreamsToggle={onStreamsToggle}
-            onToggleLibrary={onToggleLibrary}
-        />
+        <React.Fragment>
+            <Playback
+                className={styles['playback']}
+                streams={streams}
+                streamsOpen={streamsOpen}
+                inLibrary={meta.inLibrary}
+                current={current}
+                live={live}
+                now={now}
+                onStreamsToggle={onStreamsToggle}
+                onToggleLibrary={onToggleLibrary}
+            />
+            {!streamsOpen ? <OfflineNotice /> : null}
+        </React.Fragment>
     );
 
     return (
