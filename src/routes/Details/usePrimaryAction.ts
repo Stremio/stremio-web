@@ -40,7 +40,7 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
 
         if (video !== null) {
             const minutes = getMinutesLeft(libraryItem, video.id);
-            if (minutes === null || href === null) {
+            if (minutes === null || lastUsed === null) {
                 return null;
             }
 
@@ -67,7 +67,7 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
             href: resumeHref,
             onClick: resumeHref === null ? () => openEpisode(current.deepLinks.metaDetailsStreams) : undefined,
         };
-    }, [metaItem, video, libraryItem, href, target, download, play, resumeHref, openEpisode, t]);
+    }, [metaItem, video, libraryItem, lastUsed, href, target, download, play, resumeHref, openEpisode, t]);
 };
 
 export default usePrimaryAction;
