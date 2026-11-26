@@ -5,7 +5,7 @@ const { createPortal } = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const FocusLock = require('react-focus-lock').default;
-const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
+const { useRouteActive } = require('stremio/common/useRouteFocused');
 const { getInterfaceRect } = require('stremio/common/interfaceScale');
 const styles = require('./styles');
 
@@ -23,7 +23,7 @@ const getAnchorElement = (element) => {
 };
 
 const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassName, renderLabel, renderMenu, dataset, onCloseRequest, ...props }) => {
-    const routeFocused = useRouteFocused();
+    const routeActive = useRouteActive();
     const labelRef = React.useRef(null);
     const menuRef = React.useRef(null);
     const layerRef = React.useRef(null);
@@ -37,7 +37,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
         }
     };
     React.useEffect(() => {
-        if (!routeFocused || !open) {
+        if (!routeActive || !open) {
             return;
         }
         const onCloseEvent = (event) => {
@@ -74,7 +74,7 @@ const Popup = ({ open, direction, portal = false, autoFocus = false, menuClassNa
             window.removeEventListener('mousedown', onCloseEvent);
             window.removeEventListener('pointerdown', onCloseEvent);
         };
-    }, [routeFocused, open, onCloseRequest, dataset, portal]);
+    }, [routeActive, open, onCloseRequest, dataset, portal]);
     React.useLayoutEffect(() => {
         if (open && !portal) {
             const autoDirection = [];
