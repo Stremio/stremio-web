@@ -103,10 +103,18 @@ const Player = () => {
     const shellPictureInPictureSupported = shellActive && shellCapabilities.pictureInPicture;
     const documentPictureInPictureSupported = !shellActive && typeof window.documentPictureInPicture?.requestWindow === 'function';
     const pictureInPictureWindowPending = React.useRef(false);
-    const pictureInPictureSupported = shellPictureInPictureSupported || documentPictureInPictureSupported || video.state.pictureInPicturePossible === true;
-    const pictureInPicture = shellPictureInPictureSupported ? shellPictureInPicture :
-        documentPictureInPictureSupported ? pictureInPictureWindow !== null :
-            video.state.pictureInPictureActive === true;
+    const pictureInPictureSupported = shellPictureInPictureSupported || video.state.pictureInPicturePossible === true || pictureInPictureWindow !== null;
+    const pictureInPicture = React.useMemo(() => {
+        if (shellPictureInPictureSupported) {
+            return shellPictureInPicture;
+        }
+
+        if (documentPictureInPictureSupported) {
+            return pictureInPictureWindow !== null;
+        }
+
+        return video.state.pictureInPictureActive === true;
+    }, [shellPictureInPictureSupported, shellPictureInPicture, documentPictureInPictureSupported, pictureInPictureWindow, video.state.pictureInPictureActive]);
 
     const openPictureInPictureWindow = React.useCallback(() => {
         if (pictureInPictureWindowPending.current) {
@@ -300,6 +308,11 @@ const Player = () => {
         closeCastDevicesMenu();
     };
     const [error, setError] = React.useState(null);
+    React.useEffect(() => {
+        if (error !== null && pictureInPictureWindow !== null) {
+            pictureInPictureWindow.close();
+        }
+    }, [error, pictureInPictureWindow]);
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
