@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { useEpgNow } from 'stremio/common/EPG';
 import Logo from 'stremio/components/Logo';
-import Agenda from 'stremio/routes/Details/Live/Guide/Agenda';
-import Programme from 'stremio/routes/Details/Live/Programme';
-import getProgrammeKey from 'stremio/routes/Details/Live/getProgrammeKey';
-import useProgrammes from 'stremio/routes/Details/Live/useProgrammes';
-import Message from 'stremio/routes/Details/Message';
+import getProgrammeKey from 'stremio/common/EPG/getProgrammeKey';
+import useProgrammes from 'stremio/common/EPG/useProgrammes';
+import Agenda from 'stremio/components/Agenda';
+import Message from 'stremio/components/Message';
+import Programme from 'stremio/components/Programme';
 import styles from './SideDrawer.less';
 
 type Props = {
@@ -35,8 +35,6 @@ const Schedule = ({ metaItem }: Props) => {
                             programmes={programmes}
                             now={now}
                             selectedKey={selected !== null ? getProgrammeKey(selected) : null}
-                            nowToken={0}
-                            isMobile={false}
                             onSelect={setSelectedKey}
                         />
                         :

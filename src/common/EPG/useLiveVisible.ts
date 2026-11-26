@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useEffect } from 'react';
-import { getScrollParent } from './scroll';
+import getScrollParent from 'stremio/common/getScrollParent';
 
 const useLiveVisible = (containerRef: React.RefObject<HTMLElement>, now: number, onChange?: (visible: boolean) => void) => {
     useEffect(() => {

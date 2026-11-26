@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProfile } from 'stremio/common';
 import { Stream } from '../Streams';
-import LiveFlag from './LiveFlag';
+import LiveFlag from 'stremio/components/LiveFlag';
 import styles from './StreamGroups.less';
 
 type Props = {

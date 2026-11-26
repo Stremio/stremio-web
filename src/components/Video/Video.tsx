@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
+import getScrollParent from 'stremio/common/getScrollParent';
+import useRowMenu from 'stremio/common/useRowMenu';
+import { hidesSpoiler } from 'stremio/common/format';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
 import WatchedBadge from 'stremio/components/WatchedBadge';
-import useRowMenu from '../useRowMenu';
-import { hidesSpoiler } from '../format';
-import { getScrollParent } from './useScrollMemory';
 import styles from './Video.less';
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
     openEpisode: (href: string) => void,
     selected: boolean,
     seasonWatched: boolean,
-    minutesLeft: number | null,
+    minutesLeft?: number | null,
     onSelect?: () => void,
     onMarkVideoWatched: (video: Pick<Video, 'id' | 'released'>, watched: boolean) => void,
     onMarkSeasonWatched: (season: number, watched: boolean) => void,
@@ -38,7 +38,7 @@ const renderThumbnailFallback = () => (
     </div>
 );
 
-const Video = ({ video, releasedLabel, hideSpoilers, openEpisode, selected, seasonWatched, minutesLeft, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
+const Video = ({ video, releasedLabel, hideSpoilers, openEpisode, selected, seasonWatched, minutesLeft = null, onSelect, onMarkVideoWatched, onMarkSeasonWatched }: Props) => {
     const { t } = useTranslation();
     const { open, closeMenu, labelProps, menuProps } = useRowMenu();
     const rowRef = useRef<HTMLDivElement>(null);
