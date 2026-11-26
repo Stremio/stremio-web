@@ -26,14 +26,9 @@ const useStreamPlay = (stream: Stream | null, playerType: Settings['playerType']
     const toast = useToast();
     const { t } = useTranslation();
     const deepLinks = stream?.deepLinks;
-    const torrentServerOffline = playerType !== null && typeof stream?.infoHash === 'string' &&
-        deepLinks?.externalPlayer?.streaming === null;
+    const serverOffline = playerType !== null && typeof stream?.infoHash === 'string' && deepLinks?.externalPlayer?.streaming === null;
 
     const streamHref = useMemo((): StreamHref => {
-        if (torrentServerOffline) {
-            return { href: null, target: undefined, download: undefined, external: false };
-        }
-
         const externalPlayer = deepLinks?.externalPlayer;
         if (!deepLinks || !externalPlayer) {
             return { href: deepLinks?.player ?? null, target: undefined, download: undefined, external: false };
@@ -53,20 +48,16 @@ const useStreamPlay = (stream: Stream | null, playerType: Settings['playerType']
             };
         }
 
-        return { href: deepLinks.player, target: undefined, download: undefined, external: false };
-    }, [deepLinks, platform.name, torrentServerOffline]);
+        return { href: serverOffline ? null : deepLinks.player, target: undefined, download: undefined, external: false };
+    }, [deepLinks, platform.name, serverOffline]);
 
     const play = useCallback(() => {
         if (stream === null) {
             return;
         }
 
-        if (torrentServerOffline) {
-            toast.show({
-                type: 'error',
-                title: t('SETTINGS_SERVER_OFFLINE_TITLE'),
-                timeout: 4000,
-            });
+        if (serverOffline) {
+            toast.show({ type: 'error', title: t('SETTINGS_SERVER_UNAVAILABLE'), timeout: 4000 });
             return;
         }
 
@@ -102,9 +93,9 @@ const useStreamPlay = (stream: Stream | null, playerType: Settings['playerType']
             args: { stream },
         });
         onPlay?.(stream);
-    }, [core, playerType, platform.shell.active, canMarkWatched, videoId, videoReleased, stream, toast, onPlay, t, torrentServerOffline]);
+    }, [core, playerType, platform.shell.active, canMarkWatched, videoId, videoReleased, stream, toast, onPlay, serverOffline, t]);
 
-    return { ...streamHref, play, torrentServerOffline };
+    return { ...streamHref, play };
 };
 
 export default useStreamPlay;
