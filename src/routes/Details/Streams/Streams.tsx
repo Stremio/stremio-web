@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useGoBack } from 'stremio-router';
@@ -32,6 +32,17 @@ type Props = {
 
 const ALL_ADDONS_KEY = 'ALL';
 
+const subscribeToOnlineStatus = (onChange: () => void) => {
+    window.addEventListener('online', onChange);
+    window.addEventListener('offline', onChange);
+    return () => {
+        window.removeEventListener('online', onChange);
+        window.removeEventListener('offline', onChange);
+    };
+};
+
+const getOnlineStatus = () => navigator.onLine;
+
 const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisodeSearch }: Props) => {
     const { t } = useTranslation();
     const profile = useProfile();
@@ -39,6 +50,7 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
     const goBack = useGoBack();
     const { openVideos } = useEpisodeNavigation();
     const { groups, loadingCount, total } = useStreamsByAddon(streams);
+    const isOnline = useSyncExternalStore(subscribeToOnlineStatus, getOnlineStatus);
     const [selectedAddon, setSelectedAddon] = useState(ALL_ADDONS_KEY);
     const effectiveSelectedAddon = groups.some(({ addon }) => addon.transportUrl === selectedAddon) ? selectedAddon : ALL_ADDONS_KEY;
 
@@ -138,6 +150,17 @@ const Streams = ({ streams, video, type, canMarkWatched, title, onBack, onEpisod
                     :
                     null
             }
+            <div role={'status'}>
+                {
+                    !isOnline ?
+                        <div className={styles['offline-notice']}>
+                            <Icon className={styles['offline-icon']} name={'warning'} aria-hidden={true} />
+                            {t('NOTIFICATION_OFFLINE')}
+                        </div>
+                        :
+                        null
+                }
+            </div>
             <div className={classNames(styles['loading-line'], { [styles['active']]: loadingCount > 0 })} role={'status'} aria-label={loadingCount > 0 ? loadingLabel : undefined} aria-hidden={loadingCount === 0} />
         </React.Fragment>
     );
