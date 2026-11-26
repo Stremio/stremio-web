@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
@@ -9,7 +10,7 @@ const { default: usePlayOnDevice } = require('../usePlayOnDevice');
 const Option = require('./Option');
 const styles = require('./styles');
 
-const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }, ref) => {
+const OptionsMenu = React.memo(React.forwardRef(({ className, container, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }, ref) => {
     const { t } = useTranslation();
     const platform = usePlatform();
     const toast = useToast();
@@ -94,7 +95,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
         ownerWindowRef.current = event.currentTarget.ownerDocument.defaultView;
     }, []);
 
-    return (
+    const optionsMenu = (
         <div ref={ref} className={classnames(className, styles['options-menu-container'])} onMouseDown={onMouseDown}>
             {
                 streamingUrl || downloadUrl ?
@@ -154,10 +155,12 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
             }
         </div>
     );
+    return container ? ReactDOM.createPortal(optionsMenu, container) : optionsMenu;
 }));
 
 OptionsMenu.propTypes = {
     className: PropTypes.string,
+    container: PropTypes.object,
     stream: PropTypes.object,
     playbackDevices: PropTypes.array,
     extraSubtitlesTracks: PropTypes.array,

@@ -8,23 +8,18 @@ const styles = require('./styles');
 
 const FORWARDED_KEYS = ['Space', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyM', 'Minus', 'Equal', 'KeyG', 'KeyH', 'BracketLeft', 'BracketRight', 'KeyV', 'KeyC', 'KeyN'];
 
-const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWindow, videoRef, onVideoClick, children }) => {
+const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWindow, videoRef, onVideoClick }) => {
     const videoSlotRef = React.useRef(null);
 
     React.useLayoutEffect(() => {
-        const videoElement = videoRef.current;
-        const videoSlot = videoSlotRef.current;
-        if (!videoElement || !videoSlot) {
-            return;
-        }
+        pictureInPictureWindow.document.body.className = classnames(className, styles['picture-in-picture']);
+    }, [pictureInPictureWindow, className]);
 
+    React.useLayoutEffect(() => {
+        const videoElement = videoRef.current;
         const videoParent = videoElement.parentElement;
-        const restoreVideo = () => {
-            if (videoElement.parentElement !== videoParent) {
-                videoParent.appendChild(videoElement);
-            }
-        };
-        videoSlot.appendChild(videoElement);
+        const restoreVideo = () => videoElement.parentElement !== videoParent && videoParent.appendChild(videoElement);
+        videoSlotRef.current.appendChild(videoElement);
         pictureInPictureWindow.addEventListener('pagehide', restoreVideo);
         return () => {
             pictureInPictureWindow.removeEventListener('pagehide', restoreVideo);
@@ -34,22 +29,7 @@ const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWin
 
     React.useEffect(() => {
         const forwardKeyboardEvent = (event) => {
-            if (!FORWARDED_KEYS.includes(event.code)) {
-                return;
-            }
-
-            const forwardedEvent = new KeyboardEvent(event.type, {
-                key: event.key,
-                code: event.code,
-                repeat: event.repeat,
-                ctrlKey: event.ctrlKey,
-                shiftKey: event.shiftKey,
-                altKey: event.altKey,
-                metaKey: event.metaKey,
-                bubbles: true,
-                cancelable: true,
-            });
-            if (!document.dispatchEvent(forwardedEvent)) {
+            if (FORWARDED_KEYS.includes(event.code) && !document.dispatchEvent(new KeyboardEvent(event.type, event))) {
                 event.preventDefault();
             }
         };
@@ -62,10 +42,7 @@ const PictureInPictureWindow = ({ className, videoClassName, pictureInPictureWin
     }, [pictureInPictureWindow]);
 
     return ReactDOM.createPortal(
-        <div className={classnames(className, styles['picture-in-picture'])}>
-            <div ref={videoSlotRef} className={videoClassName} onClick={onVideoClick} />
-            {children}
-        </div>,
+        <div ref={videoSlotRef} className={classnames(videoClassName, styles['video-slot'])} onClick={onVideoClick} />,
         pictureInPictureWindow.document.body
     );
 };
@@ -76,7 +53,6 @@ PictureInPictureWindow.propTypes = {
     pictureInPictureWindow: PropTypes.object.isRequired,
     videoRef: PropTypes.object.isRequired,
     onVideoClick: PropTypes.func,
-    children: PropTypes.node,
 };
 
 module.exports = PictureInPictureWindow;
