@@ -40,7 +40,7 @@ const { default: useSubtitles } = require('./useSubtitles');
 const styles = require('./styles');
 const Video = require('./Video');
 const videoStyles = require('./Video/styles');
-const PictureInPictureWindow = require('./PictureInPictureWindow');
+const { default: PictureInPictureWindow } = require('./PictureInPictureWindow');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
 
