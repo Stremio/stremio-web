@@ -22,12 +22,12 @@ type Props = {
 
 const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props) => {
     const { t } = useTranslation();
-    const optionsRef = useRef(new Map<MultiselectMenuOption['value'], HTMLButtonElement>());
+    const optionsRef = useRef(new Map());
     const containerRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef({ text: '', lastKeyTime: 0 });
     const selectedOptionValue = options.find((opt) => opt.value === value)?.value;
 
-    const handleSetOptionRef = useCallback((optionValue: MultiselectMenuOption['value']) => (node: HTMLButtonElement | null) => {
+    const handleSetOptionRef = useCallback((optionValue: any) => (node: HTMLButtonElement | null) => {
         if (node) {
             optionsRef.current.set(optionValue, node);
         } else {
@@ -53,7 +53,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
 
     useEffect(() => {
         const container = containerRef.current;
-        if (!menuOpen || !container) return;
+        if (!container) return;
 
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.defaultPrevented || event.isComposing || event.ctrlKey || event.altKey || event.metaKey ||
@@ -62,8 +62,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
             }
 
             const focused = document.activeElement;
-            const trigger = container.parentElement?.querySelector('[aria-haspopup="listbox"][aria-expanded="true"]');
-            if (focused !== document.body && !container.contains(focused) && focused !== trigger) return;
+            if (focused !== document.body && !container.parentElement?.contains(focused)) return;
 
             const backspace = event.key === 'Backspace';
             if (!backspace && Array.from(event.key).length !== 1) return;
@@ -90,7 +89,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
 
         window.addEventListener('keydown', onKeyDown, true);
         return () => window.removeEventListener('keydown', onKeyDown, true);
-    }, [menuOpen, options]);
+    }, [options]);
 
     return (
         <div
