@@ -6,8 +6,6 @@ import useEvents from 'stremio/components/EventModal/useEvents';
 import useRemoteConfig from 'stremio/common/RemoteConfig/useRemoteConfig';
 import { useRouteActive } from 'stremio/common/useRouteFocused';
 import { usePlatform } from 'stremio/common/Platform';
-import useBoardTransition from './useBoardTransition';
-import type { Outcome } from './useBoardTransition';
 import useMedia from './useMedia';
 import type { Catalogs, Media, Watching } from './useMedia';
 import Prompt from './Prompt';
@@ -23,7 +21,7 @@ type Shown = {
     media: Media,
 };
 
-type Phase = 'open' | 'held' | 'closing';
+type Phase = 'open' | 'closing';
 
 const PROMPT_TEMPLATE = 'prompt';
 const SPOTLIGHT_TEMPLATE = 'spotlight-intro';
@@ -56,17 +54,6 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
     next.current = key !== null && notification !== null && media !== null ? { key, notification, media } : null;
     const ready = next.current !== null;
     const shownKey = shown?.key ?? null;
-
-    const onTransitionEnd = useCallback((outcome: Outcome) => {
-        if (outcome === 'revealed') {
-            setShown(null);
-            setPhase('open');
-        } else {
-            setPhase((phase) => phase === 'held' ? 'open' : phase);
-        }
-    }, []);
-
-    const [armTransition, primeTransition] = useBoardTransition(shown?.notification.template === SPOTLIGHT_TEMPLATE, onTransitionEnd);
 
     useEffect(() => {
         if (routeActive) {
@@ -107,27 +94,19 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
         }
     }, [shown, phase, dismissNotification]);
 
-    const onAction = useCallback((button: RemoteNotificationButton, event: React.MouseEvent<HTMLElement>) => {
+    const onAction = useCallback((button: RemoteNotificationButton) => {
         if (shown === null || phase !== 'open') {
             return;
         }
 
-        const { id } = shown.notification;
-        const report = () => notificationAction(id, button.id);
-        const armed = button.style === 'primary' && armTransition(id, event.currentTarget, event.detail === 0, report);
-        if (armed) {
-            setPhase('held');
-        }
         if (button.openUrl !== null) {
             platform.openExternal(button.openUrl);
         }
         if (button.navigate !== null && button.navigate.startsWith(DEEP_LINK_PREFIX)) {
             navigate(`/${button.navigate.slice(DEEP_LINK_PREFIX.length)}`);
         }
-        if (!armed) {
-            report();
-        }
-    }, [shown, phase, platform, navigate, notificationAction, armTransition]);
+        notificationAction(shown.notification.id, button.id);
+    }, [shown, phase, platform, navigate, notificationAction]);
 
     const onExited = useCallback(() => {
         setShown(null);
@@ -143,9 +122,7 @@ const RemoteNotification = ({ catalogs, watching }: Props) => {
             notification={shown.notification}
             media={shown.media}
             closing={phase === 'closing'}
-            held={phase === 'held'}
             onAction={onAction}
-            primaryRef={primeTransition}
             onCloseRequest={onCloseRequest}
             onExited={onExited}
         />
