@@ -19,7 +19,7 @@ html:not(.active-slider-within) {
     .player-container.overlayHidden {
         cursor: none;
 
-        .nav-bar-layer, .control-bar-layer, .menu-layer, .side-drawer-button-layer {
+        .nav-bar-layer:not(:focus-within), .control-bar-layer, .menu-layer, .side-drawer-button-layer {
             opacity: 0;
             transition: opacity 200ms;
         }

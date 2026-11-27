@@ -22,6 +22,12 @@
         font-weight: 500;
         cursor: text;
 
+        &:not(input):focus-visible {
+            outline: var(--focus-outline-size) solid var(--primary-foreground-color);
+            outline-offset: calc(-1 * var(--focus-outline-size));
+            border-radius: var(--search-bar-size);
+        }
+
         &::placeholder, .placeholder-label {
             max-height: 1.2em;
             opacity: 1;

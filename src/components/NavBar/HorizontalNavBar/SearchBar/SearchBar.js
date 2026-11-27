@@ -108,27 +108,19 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         type={'text'}
                         placeholder={t('SEARCH_OR_PASTE_LINK')}
                         value={currentQuery}
-                        tabIndex={-1}
                         onChange={queryInputOnChange}
                         onPaste={queryInputOnPaste}
                         onSubmit={queryInputOnSubmit}
                         onClick={openHistory}
                     />
                     :
-                    <div className={styles['search-input']}>
+                    <Button className={styles['search-input']}>
                         <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
-                    </div>
-            }
-            {
-                currentQuery.length > 0 ?
-                    <Button className={styles['submit-button-container']} onClick={queryInputClear}>
-                        <Icon className={styles['icon']} name={'close'} />
-                    </Button>
-                    :
-                    <Button className={styles['submit-button-container']}>
-                        <Icon className={styles['icon']} name={'search'} />
                     </Button>
             }
+            <Button className={styles['submit-button-container']} title={currentQuery.length > 0 ? t('CLEAR') : undefined} onClick={currentQuery.length > 0 ? queryInputClear : undefined}>
+                <Icon className={styles['icon']} name={currentQuery.length > 0 ? 'close' : 'search'} />
+            </Button>
             {
                 historyOpen && (searchHistory?.items?.length || localSearch?.items?.length) ?
                     <div className={styles['menu-container']}>

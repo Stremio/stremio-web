@@ -17,7 +17,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
     const goBack = useGoBack(originPath);
     const [fullscreen, requestFullscreen, exitFullscreen, , supported] = useFullscreen();
     const renderNavMenuLabel = React.useCallback(({ ref, className, onClick, children, }) => (
-        <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} tabIndex={-1} onClick={onClick}>
+        <Button ref={ref} className={classnames(className, styles['button-container'], styles['menu-button-container'])} onClick={onClick}>
             <Icon className={styles['icon']} name={'person-outline'} />
             {children}
         </Button>
