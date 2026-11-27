@@ -38,6 +38,10 @@ const Checkbox = React.forwardRef<HTMLInputElement, Props>(({ name, disabled, cl
     }, [disabled, onChange]);
 
     const onKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+
         if ((event.key === 'Enter' || event.key === ' ') && !disabled) {
             onChange && onChange({
                 type: 'select',
