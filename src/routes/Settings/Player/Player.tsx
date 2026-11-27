@@ -13,6 +13,7 @@ const Player = ({ profile }: Props) => {
     const { t } = useTranslation();
 
     const {
+        showClockToggle,
         subtitlesLanguageSelect,
         subtitlesSizeSelect,
         subtitlesOffsetSelect,
@@ -64,6 +65,9 @@ const Player = ({ profile }: Props) => {
                 </Row>
             </Group>
             <Group title={t('SETTINGS_SECTION_CONTROLS')}>
+                <Row rowId={'clock'} label={t('SETTINGS_PLAYER_SHOW_CLOCK')}>
+                    <Toggle aria-label={t('SETTINGS_PLAYER_SHOW_CLOCK')} {...showClockToggle} />
+                </Row>
                 <Row rowId={'seek'} label={t('SETTINGS_SEEK_KEY')} control={'wide'}>
                     <MultiselectMenu className={'multiselect'} portal={true} {...seekTimeDurationSelect} />
                 </Row>

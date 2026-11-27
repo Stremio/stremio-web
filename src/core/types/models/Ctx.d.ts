@@ -42,6 +42,7 @@ type Settings = {
     subtitlesBold: boolean,
     subtitlesFont: string,
     subtitlesLanguage: string | null,
+    showClockInPlayer: boolean,
     subtitlesOffset: number,
     subtitlesOutlineColor: string,
     subtitlesSize: number,
