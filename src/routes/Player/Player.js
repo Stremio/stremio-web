@@ -45,6 +45,7 @@ const { default: useMediaSession } = require('./useMediaSession');
 const GAMEPAD_HANDLER_ID = 'player';
 
 const CAST_DEVICES_REFRESH_INTERVAL = 5000;
+const TORRENT_METADATA_TIMEOUT_MS = 5000;
 
 const Player = () => {
     const { stream, streamTransportUrl, metaTransportUrl, type, id, videoId } = useParams();
@@ -537,8 +538,17 @@ const Player = () => {
         player.selected?.streamRequest?.path?.type === 'series' &&
         typeof player.selected.stream.infoHash === 'string' &&
         typeof player.selected.stream.fileIdx !== 'number' && !player.selected.stream.fileMustInclude?.length;
-    const waitingForTorrentEpisode = canGuessTorrentFile && player.metaItem?.type === 'Loading';
-    const torrentEpisode = canGuessTorrentFile ? player.seriesInfo : null;
+    const [torrentMetadataTimedOutFor, setTorrentMetadataTimedOutFor] = React.useState(null);
+    const torrentMetadataTimedOut = torrentMetadataTimedOutFor === player.selected;
+    const waitingForTorrentEpisode = canGuessTorrentFile && !torrentMetadataTimedOut && player.metaItem?.type === 'Loading';
+    const playbackStream = canGuessTorrentFile && !torrentMetadataTimedOut && player.seriesInfo ?
+        player.selected.stream : player.stream?.content;
+
+    React.useEffect(() => {
+        if (!waitingForTorrentEpisode) return;
+        const timeout = setTimeout(() => setTorrentMetadataTimedOutFor(player.selected), TORRENT_METADATA_TIMEOUT_MS);
+        return () => clearTimeout(timeout);
+    }, [player.selected, waitingForTorrentEpisode]);
 
     React.useEffect(() => {
         setError(null);
@@ -548,8 +558,7 @@ const Player = () => {
         if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading' && !waitingForTorrentEpisode) {
             video.load({
                 stream: {
-                    // A prebuilt torrent URL bypasses the video player's episode lookup.
-                    ...(torrentEpisode ? player.selected.stream : player.stream.content),
+                    ...playbackStream,
                     subtitles: streamSubtitles
                 },
                 autoplay: true,
@@ -582,7 +591,7 @@ const Player = () => {
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek, waitingForTorrentEpisode, torrentEpisode]);
+    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek, waitingForTorrentEpisode, playbackStream]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
