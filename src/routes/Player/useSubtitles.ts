@@ -104,6 +104,7 @@ const buildCandidates = (
     savedTrack: SubtitlesTrackState | null | undefined,
     subtitlesEnabled: boolean | undefined,
     globalLanguage: string | null,
+    secondaryLanguage: string | null,
 ) => {
     const candidates: SubtitleCandidate[] = [];
     const languagesOrder: string[] = [];
@@ -133,6 +134,7 @@ const buildCandidates = (
 
     addLanguage(savedLanguage);
     addLanguage(normalizeLanguage(globalLanguage));
+    addLanguage(normalizeLanguage(secondaryLanguage));
     if (subtitlesEnabled) {
         addLanguage(normalizeLanguage(CONSTANTS.DEFAULT_SUBTITLES_LANGUAGE));
     }
@@ -372,7 +374,7 @@ const useSubtitles = ({
 
         const subtitlesEnabled = player.streamState?.subtitlesEnabled;
 
-        if (subtitlesEnabled === false || (!subtitlesEnabled && settings.subtitlesLanguage === null)) {
+        if (subtitlesEnabled === false || (!subtitlesEnabled && settings.subtitlesLanguage === null && settings.secondarySubtitlesLanguage === null)) {
             if (video.state.selectedSubtitlesTrackId !== null ||
                 video.state.selectedExtraSubtitlesTrackId !== null) {
                 setSubtitlesTrack(null);
@@ -382,7 +384,7 @@ const useSubtitles = ({
             return;
         }
 
-        const candidates = buildCandidates(player.streamState?.subtitleTrack, subtitlesEnabled, settings.subtitlesLanguage);
+        const candidates = buildCandidates(player.streamState?.subtitleTrack, subtitlesEnabled, settings.subtitlesLanguage, settings.secondarySubtitlesLanguage);
         const bestCandidate = resolveBestCandidate(
             candidates,
             video.state.subtitlesTracks,
@@ -444,6 +446,7 @@ const useSubtitles = ({
     }, [
         player.streamState,
         settings.subtitlesLanguage,
+        settings.secondarySubtitlesLanguage,
         setSubtitlesTrack,
         setExtraSubtitlesTrack,
         setSubtitlesDelay,
@@ -542,7 +545,7 @@ const useSubtitles = ({
             return;
         }
 
-        const candidates = buildCandidates(player.streamState?.subtitleTrack, true, settings.subtitlesLanguage);
+        const candidates = buildCandidates(player.streamState?.subtitleTrack, true, settings.subtitlesLanguage, settings.secondarySubtitlesLanguage);
         const bestCandidate = resolveBestCandidate(
             candidates,
             video.state.subtitlesTracks,
@@ -565,6 +568,7 @@ const useSubtitles = ({
         selectEmbeddedTrack,
         selectExtraTrack,
         settings.subtitlesLanguage,
+        settings.secondarySubtitlesLanguage,
         streamStateChanged,
         video.state.extraSubtitlesTracks,
         video.state.selectedExtraSubtitlesTrackId,
@@ -580,6 +584,8 @@ const useSubtitles = ({
     }, [closeMenus, hasTracks, toggleSubtitlesMenu]));
 
     const menuProps = useMemo(() => ({
+        subtitlesLanguageFilterEnabled: settings.subtitlesLanguageFilterEnabled,
+        secondarySubtitlesLanguage: settings.secondarySubtitlesLanguage,
         subtitlesLanguage: settings.subtitlesLanguage,
         interfaceLanguage: settings.interfaceLanguage,
         subtitlesTracks: video.state.subtitlesTracks,
@@ -605,8 +611,10 @@ const useSubtitles = ({
         changeSize,
         selectEmbeddedTrack,
         selectExtraTrack,
+        settings.subtitlesLanguageFilterEnabled,
         settings.interfaceLanguage,
         settings.subtitlesLanguage,
+        settings.secondarySubtitlesLanguage,
         video.state.extraSubtitlesDelay,
         video.state.extraSubtitlesOffset,
         video.state.extraSubtitlesSize,

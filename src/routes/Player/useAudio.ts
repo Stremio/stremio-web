@@ -31,6 +31,7 @@ const findPreferredTrack = (
     selectedId: string | null,
     savedTrack: AudioTrackState | undefined,
     globalLanguage: string | null,
+    secondaryLanguage: string | null,
 ) => {
     const preferredLanguage = normalizeLanguage(savedTrack?.language);
     const saved = tracks.find((track) => track.id === savedTrack?.id);
@@ -40,7 +41,7 @@ const findPreferredTrack = (
     }
 
     const selected = tracks.find((track) => track.id === selectedId);
-    const languageOrder = [preferredLanguage, normalizeLanguage(globalLanguage)];
+    const languageOrder = [preferredLanguage, normalizeLanguage(globalLanguage), normalizeLanguage(secondaryLanguage)];
     for (const language of languageOrder) {
         if (!language) {
             continue;
@@ -94,6 +95,7 @@ const useAudio = ({ player, video, settings, streamStateChanged }: Args) => {
             video.state.selectedAudioTrackId,
             player.streamState?.audioTrack,
             settings.audioLanguage,
+            settings.secondaryAudioLanguage,
         );
         if (!track) {
             appliedTrack.current = null;
@@ -109,6 +111,7 @@ const useAudio = ({ player, video, settings, streamStateChanged }: Args) => {
     }, [
         player.streamState,
         settings.audioLanguage,
+        settings.secondaryAudioLanguage,
         video.state.audioTracks,
         video.state.selectedAudioTrackId,
         video.state.stream,
