@@ -212,7 +212,8 @@ const Intro = () => {
             value: event.currentTarget.value
         });
     }, []);
-    const emailOnSubmit = React.useCallback(() => {
+    const emailOnSubmit = React.useCallback((event) => {
+        event.preventDefault();
         passwordRef.current.focus();
     }, []);
     const passwordOnChange = React.useCallback((event) => {
@@ -222,13 +223,12 @@ const Intro = () => {
             value: event.currentTarget.value
         });
     }, []);
-    const passwordOnSubmit = React.useCallback(() => {
+    const passwordOnSubmit = React.useCallback((event) => {
         if (state.form === SIGNUP_FORM) {
+            event.preventDefault();
             confirmPasswordRef.current.focus();
-        } else {
-            loginWithEmail();
         }
-    }, [state.form, loginWithEmail]);
+    }, [state.form]);
     const confirmPasswordOnChange = React.useCallback((event) => {
         dispatch({
             type: 'change-credentials',
@@ -236,9 +236,18 @@ const Intro = () => {
             value: event.currentTarget.value
         });
     }, []);
-    const confirmPasswordOnSubmit = React.useCallback(() => {
+    const confirmPasswordOnSubmit = React.useCallback((event) => {
+        event.preventDefault();
         termsRef.current.focus();
     }, []);
+    const formOnSubmit = React.useCallback((event) => {
+        event.preventDefault();
+        if (state.form === SIGNUP_FORM) {
+            signup();
+        } else {
+            loginWithEmail();
+        }
+    }, [state.form, signup, loginWithEmail]);
     const toggleTermsAccepted = React.useCallback(() => {
         dispatch({ type: 'toggle-checkbox', name: 'termsAccepted' });
     }, []);
@@ -303,20 +312,27 @@ const Intro = () => {
                 </div>
             </div>
             <div className={styles['content-container']}>
-                <div className={styles['form-container']}>
+                <form className={styles['form-container']} noValidate={true} onSubmit={formOnSubmit}>
                     <CredentialsTextInput
                         ref={emailRef}
                         className={styles['credentials-text-input']}
                         type={'email'}
+                        name={'email'}
+                        autoComplete={'username'}
+                        enterKeyHint={'next'}
                         placeholder={t('EMAIL')}
                         value={state.email}
                         onChange={emailOnChange}
                         onSubmit={emailOnSubmit}
                     />
                     <CredentialsTextInput
+                        key={`${state.form}-password`}
                         ref={passwordRef}
                         className={styles['credentials-text-input']}
                         type={'password'}
+                        name={'password'}
+                        autoComplete={state.form === SIGNUP_FORM ? 'new-password' : 'current-password'}
+                        enterKeyHint={state.form === SIGNUP_FORM ? 'next' : 'go'}
                         placeholder={t('PASSWORD')}
                         value={state.password}
                         onChange={passwordOnChange}
@@ -329,6 +345,9 @@ const Intro = () => {
                                     ref={confirmPasswordRef}
                                     className={styles['credentials-text-input']}
                                     type={'password'}
+                                    name={'confirm-password'}
+                                    autoComplete={'new-password'}
+                                    enterKeyHint={'next'}
                                     placeholder={t('PASSWORD_CONFIRM')}
                                     value={state.confirmPassword}
                                     onChange={confirmPasswordOnChange}
@@ -368,10 +387,10 @@ const Intro = () => {
                             :
                             null
                     }
-                    <Button className={classnames(styles['form-button'], styles['submit-button'])} onClick={state.form === SIGNUP_FORM ? signup : loginWithEmail}>
+                    <button className={classnames(styles['form-button'], styles['submit-button'])} type={'submit'} tabIndex={0}>
                         <div className={styles['label']}>{state.form === SIGNUP_FORM ? t('SIGN_UP') : t('LOG_IN')}</div>
-                    </Button>
-                </div>
+                    </button>
+                </form>
                 <div className={styles['options-container']}>
                     <Button className={classnames(styles['form-button'], styles['facebook-button'])} onClick={loginWithFacebook}>
                         <Icon className={styles['icon']} name={'facebook'} />

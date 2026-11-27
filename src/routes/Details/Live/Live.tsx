@@ -11,14 +11,14 @@ import HeroArt from '../HeroArt';
 import Logo from 'stremio/components/Logo';
 import Panel from '../Panel';
 import Streams from '../Streams';
-import Programme from './Programme';
+import Programme from 'stremio/components/Programme';
 import Playback from './Playback';
 import StreamPicker from './StreamPicker';
 import GuideHeader from './Guide/GuideHeader';
 import GuideBody from './Guide/GuideBody';
 import useGuide from './Guide/useGuide';
-import useProgrammes from './useProgrammes';
-import getProgrammeKey from './getProgrammeKey';
+import useProgrammes from 'stremio/common/EPG/useProgrammes';
+import getProgrammeKey from 'stremio/common/EPG/getProgrammeKey';
 import styles from './Live.less';
 
 type Props = {

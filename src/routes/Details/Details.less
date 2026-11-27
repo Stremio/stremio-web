@@ -64,11 +64,6 @@
 @container details-viewport (height < @desktop-content-min-height) {
     .details {
         overflow-y: auto;
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-            display: none;
-        }
 
         .content {
             min-height: @desktop-content-min-height;
@@ -89,11 +84,6 @@
             overflow-y: auto;
             overflow-anchor: none;
             overscroll-behavior-y: contain;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
 
             > * {
                 flex: none;
