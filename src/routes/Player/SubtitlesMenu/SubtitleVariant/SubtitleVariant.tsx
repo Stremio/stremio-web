@@ -25,19 +25,19 @@ type SubtitlesTrack = {
 type Props = {
     track: SubtitlesTrack,
     selected: boolean,
-    loadStatus?: ExtraSubtitleLoadStatus,
+    loading?: boolean,
     onSelect: (track: SubtitlesTrack) => void,
 };
 
 const hasValidLabel = (label?: string) => label && label.length > 0 && !label.startsWith('http');
 const ASS_BADGE = 'ASS';
 
-const SubtitleVariant = ({ track, selected, loadStatus, onSelect }: Props) => {
+const SubtitleVariant = ({ track, selected, loading, onSelect }: Props) => {
     const { t } = useTranslation();
     const toast = useToast();
     const buttonRef = useRef<HTMLElement>(null);
     const triggers = useMemo(() => [buttonRef], []);
-    const isActive = selected && !loadStatus;
+    const isActive = selected && !loading;
 
     const downloadUrl = track.fallbackUrl || track.url;
     const variantLabel = hasValidLabel(track.label) ? track.label : languages.label(track.lang);
@@ -85,8 +85,8 @@ const SubtitleVariant = ({ track, selected, loadStatus, onSelect }: Props) => {
                 </div>
                 <div className={styles['variant-origin']}>
                     {
-                        loadStatus ?
-                            <span role={'status'}>{t(loadStatus === 'loading' ? 'SUBTITLES_LOADING' : 'ERR_SUBS_LOADING_TITLE')}</span>
+                        loading ?
+                            <span role={'status'}>{t('SUBTITLES_LOADING')}</span>
                             :
                             t(track.origin)
                     }

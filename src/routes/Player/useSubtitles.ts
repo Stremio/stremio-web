@@ -182,13 +182,13 @@ const useSubtitles = ({
     toggleSubtitlesMenu,
 }: UseSubtitlesArgs): UseSubtitlesResult => {
     const { t } = useTranslation();
-    const { setSubtitlesTrack, setExtraSubtitlesTrack, setSubtitlesDelay, setSubtitlesSize, setSubtitlesOffset } = video;
+    const { setSubtitlesTrack, setSubtitlesDelay, setSubtitlesSize, setSubtitlesOffset } = video;
     const toast = useToast();
     const videoRef = useRef(video);
     const settingsRef = useRef(settings);
     const trackSelectionLocked = useRef(false);
     const appliedTrack = useRef<{ id: string, source: SubtitleSource } | null>(null);
-    const [extraSubtitleRequest, setExtraSubtitleRequest] = useState<{ id: string, status: ExtraSubtitleLoadStatus } | null>(null);
+    const [loadingExtraSubtitleId, setLoadingExtraSubtitleId] = useState<string | null>(null);
     const subtitleDelayHold = useRef<SubtitleDelayHold | null>(null);
     const subtitleDelayInterval = useInterval(SUBTITLES_DELAY_REPEAT_INTERVAL_MS);
     const subtitleDelayTimeout = useTimeout(SUBTITLES_DELAY_REPEAT_DELAY_MS);
@@ -232,10 +232,16 @@ const useSubtitles = ({
         });
     }, [streamStateChanged]);
 
+    const setExtraSubtitlesTrack = useCallback((id: string | null) => {
+        if (id === null || videoRef.current.state.selectedExtraSubtitlesTrackId !== id) {
+            setLoadingExtraSubtitleId(id);
+        }
+        videoRef.current.setExtraSubtitlesTrack(id);
+    }, []);
+
     const disableSubtitles = useCallback(() => {
         trackSelectionLocked.current = true;
         appliedTrack.current = null;
-        setExtraSubtitleRequest(null);
         setSubtitlesTrack(null);
         setExtraSubtitlesTrack(null);
         streamStateChanged({ subtitlesEnabled: false });
@@ -249,7 +255,7 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = { id: track.id, source: 'embedded' };
-        setExtraSubtitleRequest(null);
+        setLoadingExtraSubtitleId(null);
         setSubtitlesTrack(track.id);
         rememberTrack(track, true);
     }, [disableSubtitles, rememberTrack, setSubtitlesTrack]);
@@ -262,9 +268,6 @@ const useSubtitles = ({
 
         trackSelectionLocked.current = true;
         appliedTrack.current = { id: track.id, source: 'external' };
-        if (videoRef.current.state.selectedExtraSubtitlesTrackId !== track.id) {
-            setExtraSubtitleRequest({ id: track.id, status: 'loading' });
-        }
         setExtraSubtitlesTrack(track.id);
         rememberTrack(track, false);
     }, [disableSubtitles, rememberTrack, setExtraSubtitlesTrack]);
@@ -371,7 +374,7 @@ const useSubtitles = ({
     useEffect(() => {
         trackSelectionLocked.current = false;
         appliedTrack.current = null;
-        setExtraSubtitleRequest(null);
+        setLoadingExtraSubtitleId(null);
     }, [video.state.stream]);
 
     useEffect(() => {
@@ -501,7 +504,7 @@ const useSubtitles = ({
         };
 
         const onExtraSubtitlesTrackLoaded = (track: SubtitleTrack) => {
-            setExtraSubtitleRequest((request) => request?.id === track.id ? null : request);
+            setLoadingExtraSubtitleId((id) => id === track.id ? null : id);
             toast.show({
                 type: 'success',
                 title: t('PLAYER_SUBTITLES_LOADED'),
@@ -518,7 +521,7 @@ const useSubtitles = ({
 
         const onSubtitleLoadError = ({ code, track }: { code: number, track?: SubtitleTrack }) => {
             if (code === EXTERNAL_SUBTITLE_LOAD_ERROR && track) {
-                setExtraSubtitleRequest((request) => request?.id === track.id ? { ...request, status: 'failed' } : request);
+                setLoadingExtraSubtitleId((id) => id === track.id ? null : id);
             }
         };
 
@@ -526,8 +529,7 @@ const useSubtitles = ({
             if (track.local) {
                 trackSelectionLocked.current = true;
                 appliedTrack.current = { id: track.id, source: 'external' };
-                setExtraSubtitleRequest(null);
-                videoRef.current.setExtraSubtitlesTrack(track.id);
+                setExtraSubtitlesTrack(track.id);
             }
         };
 
@@ -544,7 +546,7 @@ const useSubtitles = ({
             video.events.off('error', onSubtitleLoadError);
             video.events.off('implementationChanged', applySubtitleStyle);
         };
-    }, [applySubtitleStyle, t, toast, video.events]);
+    }, [applySubtitleStyle, setExtraSubtitlesTrack, t, toast, video.events]);
 
     useShortcut('subtitlesDelay', startSubtitleDelayHold, !menusOpen);
 
@@ -607,7 +609,7 @@ const useSubtitles = ({
         subtitlesSize: video.state.subtitlesSize,
         extraSubtitlesTracks: video.state.extraSubtitlesTracks,
         selectedExtraSubtitlesTrackId: video.state.selectedExtraSubtitlesTrackId,
-        extraSubtitleRequest,
+        loadingExtraSubtitleId,
         extraSubtitlesOffset: video.state.extraSubtitlesOffset,
         extraSubtitlesDelay: video.state.extraSubtitlesDelay,
         extraSubtitlesSize: video.state.extraSubtitlesSize,
@@ -623,7 +625,7 @@ const useSubtitles = ({
         changeDelay,
         changeOffset,
         changeSize,
-        extraSubtitleRequest,
+        loadingExtraSubtitleId,
         selectEmbeddedTrack,
         selectExtraTrack,
         settings.interfaceLanguage,

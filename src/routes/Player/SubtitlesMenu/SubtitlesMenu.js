@@ -196,7 +196,7 @@ const SubtitlesMenu = React.memo(React.forwardRef((props, ref) => {
                                     key={index}
                                     track={track}
                                     selected={props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id}
-                                    loadStatus={!track.embedded && props.extraSubtitleRequest?.id === track.id ? props.extraSubtitleRequest.status : undefined}
+                                    loading={!track.embedded && props.loadingExtraSubtitleId === track.id}
                                     onSelect={subtitlesTrackOnSelect}
                                 />
                             ))}
@@ -277,10 +277,7 @@ SubtitlesMenu.propTypes = {
         ass: PropTypes.bool
     })),
     selectedExtraSubtitlesTrackId: PropTypes.string,
-    extraSubtitleRequest: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        status: PropTypes.oneOf(['loading', 'failed']).isRequired,
-    }),
+    loadingExtraSubtitleId: PropTypes.string,
     extraSubtitlesOffset: PropTypes.number,
     extraSubtitlesDelay: PropTypes.number,
     extraSubtitlesSize: PropTypes.number,
