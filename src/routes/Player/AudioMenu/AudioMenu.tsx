@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { languages } from 'stremio/common';
 import { Button } from 'stremio/components';
+import Stepper from '../SubtitlesMenu/Stepper';
+import { SUBTITLES_DELAY_STEP_MS } from '../subtitleDelay';
 import styles from './AudioMenu.less';
 
 type Props = {
@@ -10,15 +12,21 @@ type Props = {
     selectedAudioTrackId: string | null,
     audioTracks: AudioTrack[],
     onAudioTrackSelected: (id: string) => void,
+    audioDelay: number | null,
+    onAudioDelayChanged: (delay: number) => void,
 };
 
-const AudioMenu = memo(forwardRef<HTMLDivElement, Props>(({ className, selectedAudioTrackId, audioTracks, onAudioTrackSelected }: Props, ref) => {
+const AudioMenu = memo(forwardRef<HTMLDivElement, Props>(({ className, selectedAudioTrackId, audioTracks, onAudioTrackSelected, audioDelay, onAudioDelayChanged }: Props, ref) => {
     const { t } = useTranslation();
 
     const onAudioTrackClick = useCallback(({ currentTarget }: MouseEvent) => {
         const id = currentTarget.getAttribute('data-id')!;
         onAudioTrackSelected && onAudioTrackSelected(id);
     }, [onAudioTrackSelected]);
+
+    const onDelayChanged = useCallback((seconds: number) => {
+        onAudioDelayChanged(Math.round(seconds * 1000));
+    }, [onAudioDelayChanged]);
 
     const onMouseDown = (event: MouseEvent) => {
         // @ts-expect-error: Property 'audioMenuClosePrevented' does not exist on type 'MouseEvent'.
@@ -59,6 +67,18 @@ const AudioMenu = memo(forwardRef<HTMLDivElement, Props>(({ className, selectedA
                         ))
                     }
                 </div>
+                {
+                    audioDelay !== null &&
+                        <Stepper
+                            accelerate
+                            className={styles['stepper']}
+                            label={'DELAY'}
+                            value={audioDelay / 1000}
+                            unit={'s'}
+                            step={SUBTITLES_DELAY_STEP_MS / 1000}
+                            onChange={onDelayChanged}
+                        />
+                }
             </div>
         </div>
     );

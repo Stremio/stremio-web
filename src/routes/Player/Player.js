@@ -180,7 +180,7 @@ const Player = () => {
         }
     }, [castDevicesMenuOpen, refreshCastDevices]);
 
-    const onAudioTrackSelected = useAudio({
+    const { selectTrack: onAudioTrackSelected, audioDelay, changeDelay: onAudioDelayChanged } = useAudio({
         player,
         video,
         settings,
@@ -1157,6 +1157,8 @@ const Player = () => {
                     audioTracks={video.state.audioTracks}
                     selectedAudioTrackId={video.state.selectedAudioTrackId}
                     onAudioTrackSelected={onAudioTrackSelected}
+                    audioDelay={audioDelay}
+                    onAudioDelayChanged={onAudioDelayChanged}
                 />
             </Transition>
             <Transition when={speedMenuOpen} name={'fade'}>

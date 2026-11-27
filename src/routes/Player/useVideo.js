@@ -27,6 +27,7 @@ const useVideo = () => {
         hdrInfo: null,
         audioTracks: [],
         selectedAudioTrackId: null,
+        audioDelay: null,
         subtitlesTracks: [],
         selectedSubtitlesTrackId: null,
         subtitlesOffset: null,
@@ -123,6 +124,10 @@ const useVideo = () => {
 
     const setAudioTrack = React.useCallback((id) => {
         setProp('selectedAudioTrackId', id);
+    }, [setProp]);
+
+    const setAudioDelay = React.useCallback((delay) => {
+        setProp('audioDelay', delay);
     }, [setProp]);
 
     const setSubtitlesTrack = React.useCallback((id) => {
@@ -263,6 +268,7 @@ const useVideo = () => {
         setTime,
         setPlaybackSpeed,
         setAudioTrack,
+        setAudioDelay,
         setSubtitlesTrack,
         setSubtitlesDelay,
         setSubtitlesSize,
