@@ -39,6 +39,8 @@ const { default: useAudio } = require('./useAudio');
 const { default: useSubtitles } = require('./useSubtitles');
 const styles = require('./styles');
 const Video = require('./Video');
+const videoStyles = require('./Video/styles');
+const { default: PictureInPictureWindow } = require('./PictureInPictureWindow');
 const { default: Indicator } = require('./Indicator/Indicator');
 const { default: useMediaSession } = require('./useMediaSession');
 
@@ -75,7 +77,8 @@ const Player = () => {
     const streamingServerOffline = streamingServer.settings?.type === 'Err';
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
-    const routeFocused = useRouteFocused();
+    const [pictureInPictureFocused, setPictureInPictureFocused] = React.useState(false);
+    const routeFocused = useRouteFocused() || pictureInPictureFocused;
     const platform = usePlatform();
     const toast = useToast();
     const discord = useDiscord();
@@ -96,6 +99,86 @@ const Player = () => {
     const setImmersedDebounced = React.useCallback(debounce(setImmersed, 3000), []);
     const barPressed = React.useRef(false);
     const [fullscreen, , , toggleFullscreen, , setVideoElement] = useFullscreen();
+    const { active: shellActive, capabilities: shellCapabilities, send: shellSend, on: shellOn, off: shellOff } = platform.shell;
+    const setVideoPictureInPicture = video.setPictureInPicture;
+    const [shellPictureInPicture, setShellPictureInPicture] = React.useState(false);
+    const [pictureInPictureWindow, setPictureInPictureWindow] = React.useState(null);
+    const shellPictureInPictureSupported = shellActive && shellCapabilities.pictureInPicture;
+    const documentPictureInPictureSupported = !shellActive && typeof window.documentPictureInPicture?.requestWindow === 'function';
+    const pictureInPictureWindowPending = React.useRef(false);
+    const pictureInPictureSupported = shellPictureInPictureSupported || video.state.pictureInPicturePossible === true || pictureInPictureWindow !== null;
+    const pictureInPicture = shellPictureInPicture || pictureInPictureWindow !== null || (!documentPictureInPictureSupported && video.state.pictureInPictureActive === true);
+
+    const openPictureInPictureWindow = React.useCallback(() => {
+        if (pictureInPictureWindowPending.current) {
+            return;
+        }
+
+        pictureInPictureWindowPending.current = true;
+        const videoRect = video.containerRef.current?.getBoundingClientRect();
+        const height = 360;
+        const width = videoRect && videoRect.height > 0 ? Math.round(height * videoRect.width / videoRect.height) : 640;
+        window.documentPictureInPicture.requestWindow({ width, height })
+            .then((newWindow) => {
+                document.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
+                    newWindow.document.head.appendChild(node.cloneNode(true));
+                });
+                newWindow.document.documentElement.style.cssText = document.documentElement.style.cssText;
+                newWindow.addEventListener('pagehide', () => {
+                    setPictureInPictureWindow((currentWindow) => currentWindow === newWindow ? null : currentWindow);
+                });
+                setPictureInPictureWindow(newWindow);
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                pictureInPictureWindowPending.current = false;
+            });
+    }, []);
+
+    const togglePictureInPicture = React.useCallback(() => {
+        if (shellPictureInPictureSupported) {
+            shellSend('win-set-pip', { enabled: !pictureInPicture });
+        } else if (pictureInPictureWindow !== null) {
+            pictureInPictureWindow.close();
+        } else if (documentPictureInPictureSupported) {
+            openPictureInPictureWindow();
+        } else {
+            setVideoPictureInPicture(!pictureInPicture);
+        }
+    }, [shellPictureInPictureSupported, documentPictureInPictureSupported, pictureInPicture, pictureInPictureWindow, openPictureInPictureWindow, shellSend, setVideoPictureInPicture]);
+
+    React.useEffect(() => {
+        if (pictureInPictureWindow === null) {
+            return;
+        }
+
+        closeMenus();
+        const onFocus = () => setPictureInPictureFocused(true);
+        const onBlur = () => setPictureInPictureFocused(false);
+        setPictureInPictureFocused(pictureInPictureWindow.document.hasFocus());
+        pictureInPictureWindow.addEventListener('focus', onFocus);
+        pictureInPictureWindow.addEventListener('blur', onBlur);
+        return () => {
+            pictureInPictureWindow.removeEventListener('focus', onFocus);
+            pictureInPictureWindow.removeEventListener('blur', onBlur);
+            setPictureInPictureFocused(false);
+            pictureInPictureWindow.close();
+        };
+    }, [pictureInPictureWindow]);
+
+    React.useEffect(() => {
+        if (!shellPictureInPictureSupported) {
+            return;
+        }
+
+        const onPictureInPictureChanged = (data) => setShellPictureInPicture(data?.enabled === true);
+        shellOn('win-pip-changed', onPictureInPictureChanged);
+        return () => {
+            shellOff('win-pip-changed', onPictureInPictureChanged);
+            shellSend('win-set-pip', { enabled: false });
+            setShellPictureInPicture(false);
+        };
+    }, [shellPictureInPictureSupported, shellSend, shellOn, shellOff]);
 
     React.useEffect(() => {
         const el = video.containerRef.current?.querySelector('video');
@@ -211,6 +294,11 @@ const Player = () => {
         closeCastDevicesMenu();
     };
     const [error, setError] = React.useState(null);
+    React.useEffect(() => {
+        if (error !== null && pictureInPictureWindow !== null) {
+            pictureInPictureWindow.close();
+        }
+    }, [error, pictureInPictureWindow]);
 
     const VIDEO_SCALES = ['contain', 'cover', 'fill'];
     const VIDEO_SCALE_LABELS = { contain: t('PLAYER_SCALE_FIT'), cover: t('PLAYER_SCALE_CROP'), fill: t('PLAYER_SCALE_STRETCH') };
@@ -368,7 +456,7 @@ const Player = () => {
         resizeObserver.observe(videoContainerElement);
         resizeObserver.observe(controlBarElement);
         return () => resizeObserver.disconnect();
-    }, [overlayHidden, video.state.manifest, video.setSubtitlesOffsetMinimum]);
+    }, [overlayHidden, pictureInPictureWindow, video.state.manifest, video.setSubtitlesOffsetMinimum]);
 
     const onPlaybackSpeedChanged = React.useCallback((speed) => {
         video.setPlaybackSpeed(speed);
@@ -960,11 +1048,13 @@ const Player = () => {
 
         window.addEventListener('mouseup', onBarMouseUp);
         window.addEventListener('blur', onBarMouseUp);
+        pictureInPictureWindow?.addEventListener('mouseup', onBarMouseUp);
         return () => {
             window.removeEventListener('mouseup', onBarMouseUp);
             window.removeEventListener('blur', onBarMouseUp);
+            pictureInPictureWindow?.removeEventListener('mouseup', onBarMouseUp);
         };
-    }, []);
+    }, [pictureInPictureWindow]);
 
     React.useLayoutEffect(() => {
         return () => {
@@ -1035,7 +1125,7 @@ const Player = () => {
                     :
                     null
             }
-            <ContextMenu on={[video.containerRef, bufferingRef, errorRef]} autoClose>
+            <ContextMenu on={pictureInPictureWindow === null ? [video.containerRef, bufferingRef, errorRef] : [bufferingRef, errorRef]} autoClose>
                 <OptionsMenu
                     className={classnames(styles['layer'], styles['menu-layer'])}
                     stream={player?.selected?.stream}
@@ -1061,8 +1151,22 @@ const Player = () => {
                     :
                     null
             }
+            {
+                pictureInPictureWindow !== null ?
+                    <PictureInPictureWindow
+                        className={classnames(styles['player-container'], { [styles['overlayHidden']]: overlayHidden })}
+                        videoClassName={classnames(styles['layer'], videoStyles['video-container'])}
+                        pictureInPictureWindow={pictureInPictureWindow}
+                        videoRef={video.containerRef}
+                        onVideoClick={onVideoClick}
+                    />
+                    :
+                    null
+            }
             <ControlBar
+                key={pictureInPictureWindow === null ? 'page' : 'picture-in-picture'}
                 ref={controlBarRef}
+                container={pictureInPictureWindow?.document.body}
                 className={classnames(styles['layer'], styles['control-bar-layer'])}
                 paused={video.state.paused}
                 time={keyboardSeekTime ?? video.state.time}
@@ -1071,6 +1175,8 @@ const Player = () => {
                 volume={video.state.volume}
                 muted={video.state.muted}
                 playbackSpeed={video.state.playbackSpeed}
+                pictureInPicture={pictureInPicture}
+                pictureInPictureSupported={pictureInPictureSupported}
                 subtitlesTracks={allSubtitleTracks}
                 audioTracks={video.state.audioTracks}
                 metaItem={player.metaItem}
@@ -1098,6 +1204,8 @@ const Player = () => {
                 buffering={video.state.buffering || !video.state.loaded}
                 onVideoScaleChanged={onVideoScaleChanged}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
+                onTogglePictureInPicture={togglePictureInPicture}
+                menusHidden={pictureInPictureWindow !== null}
                 onToggleSideDrawer={toggleSideDrawer}
                 onButtonsMenuOpenChanged={setControlBarMenuOpen}
                 onMouseDown={onBarMouseDown}
@@ -1169,6 +1277,7 @@ const Player = () => {
             <Transition when={optionsMenuOpen} name={'fade'}>
                 <OptionsMenu
                     className={classnames(styles['layer'], styles['menu-layer'])}
+                    container={pictureInPictureWindow?.document.body}
                     stream={player.selected?.stream}
                     playbackDevices={playbackDevices}
                     extraSubtitlesTracks={extraSubtitleTracks}

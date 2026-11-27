@@ -133,3 +133,18 @@
         }
     }
 }
+
+.control-bar-container .control-bar-buttons-container.menus-hidden {
+    .control-bar-buttons-menu-button, .control-bar-buttons-menu-container > :not(.inline-button) {
+        display: none;
+    }
+
+    .control-bar-buttons-menu-container {
+        position: static;
+        display: flex;
+        padding: 0;
+        margin: 0;
+        background-color: transparent;
+        box-shadow: none;
+    }
+}

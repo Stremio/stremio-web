@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
@@ -9,11 +10,12 @@ const { default: usePlayOnDevice } = require('../usePlayOnDevice');
 const Option = require('./Option');
 const styles = require('./styles');
 
-const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }, ref) => {
+const OptionsMenu = React.memo(React.forwardRef(({ className, container, stream, playbackDevices, extraSubtitlesTracks, selectedExtraSubtitlesTrackId }, ref) => {
     const { t } = useTranslation();
     const platform = usePlatform();
     const toast = useToast();
     const { streamingUrl, playOnDevice } = usePlayOnDevice(stream);
+    const ownerWindowRef = React.useRef(window);
     const [downloadUrl, magnetUrl] = React.useMemo(() => {
         return stream !== null ?
             stream.deepLinks &&
@@ -36,7 +38,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
 
     const onCopyStreamButtonClick = React.useCallback(() => {
         if (streamingUrl || downloadUrl) {
-            navigator.clipboard.writeText(streamingUrl || downloadUrl)
+            ownerWindowRef.current.navigator.clipboard.writeText(streamingUrl || downloadUrl)
                 .then(() => {
                     toast.show({
                         type: 'success',
@@ -58,7 +60,7 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
     }, [streamingUrl, downloadUrl]);
     const onCopyMagnetButtonClick = React.useCallback(() => {
         if (magnetUrl) {
-            navigator.clipboard.writeText(magnetUrl)
+            ownerWindowRef.current.navigator.clipboard.writeText(magnetUrl)
                 .then(() => {
                     toast.show({
                         type: 'success',
@@ -90,9 +92,10 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
 
     const onMouseDown = React.useCallback((event) => {
         event.nativeEvent.optionsMenuClosePrevented = true;
+        ownerWindowRef.current = event.currentTarget.ownerDocument.defaultView;
     }, []);
 
-    return (
+    const optionsMenu = (
         <div ref={ref} className={classnames(className, styles['options-menu-container'])} onMouseDown={onMouseDown}>
             {
                 streamingUrl || downloadUrl ?
@@ -152,10 +155,12 @@ const OptionsMenu = React.memo(React.forwardRef(({ className, stream, playbackDe
             }
         </div>
     );
+    return container ? ReactDOM.createPortal(optionsMenu, container) : optionsMenu;
 }));
 
 OptionsMenu.propTypes = {
     className: PropTypes.string,
+    container: PropTypes.object,
     stream: PropTypes.object,
     playbackDevices: PropTypes.array,
     extraSubtitlesTracks: PropTypes.array,

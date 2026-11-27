@@ -33,26 +33,32 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
         const normalizedValue = stepValueRef.current ? parseFloat((Math.round(value / stepValueRef.current) * stepValueRef.current).toFixed(2)) : value;
         return normalizedValue;
     }, []);
+    const thumbWindowRef = React.useRef(window);
     const retainThumb = React.useCallback(() => {
-        window.addEventListener('blur', onBlur);
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('touchend', onTouchEnd);
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('touchmove', onTouchMove);
-        document.documentElement.className = classnames(document.documentElement.className, styles['active-slider-within']);
+        const thumbWindow = sliderContainerRef.current?.ownerDocument.defaultView ?? window;
+        thumbWindowRef.current = thumbWindow;
+        thumbWindow.addEventListener('blur', onBlur);
+        thumbWindow.addEventListener('mouseup', onMouseUp);
+        thumbWindow.addEventListener('touchend', onTouchEnd);
+        thumbWindow.addEventListener('mousemove', onMouseMove);
+        thumbWindow.addEventListener('touchmove', onTouchMove);
+        const rootElement = thumbWindow.document.documentElement;
+        rootElement.className = classnames(rootElement.className, styles['active-slider-within']);
     }, []);
     const releaseThumb = React.useCallback(() => {
         cancelThumbAnimation();
-        window.removeEventListener('blur', onBlur);
-        window.removeEventListener('mouseup', onMouseUp);
-        window.removeEventListener('touchend', onTouchEnd);
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('touchmove', onTouchMove);
-        const classList = document.documentElement.className.split(' ');
+        const thumbWindow = thumbWindowRef.current;
+        thumbWindow.removeEventListener('blur', onBlur);
+        thumbWindow.removeEventListener('mouseup', onMouseUp);
+        thumbWindow.removeEventListener('touchend', onTouchEnd);
+        thumbWindow.removeEventListener('mousemove', onMouseMove);
+        thumbWindow.removeEventListener('touchmove', onTouchMove);
+        const rootElement = thumbWindow.document.documentElement;
+        const classList = rootElement.className.split(' ');
         const classIndex = classList.indexOf(styles['active-slider-within']);
         if (classIndex !== -1) {
             classList.splice(classIndex, 1);
-            document.documentElement.className = classnames(classList);
+            rootElement.className = classnames(classList);
         }
     }, []);
     const onBlur = React.useCallback(() => {

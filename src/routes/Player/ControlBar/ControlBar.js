@@ -1,6 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
@@ -28,6 +29,8 @@ const ControlBar = React.forwardRef(({
     volume,
     muted,
     playbackSpeed,
+    pictureInPicture,
+    pictureInPictureSupported,
     subtitlesTracks,
     audioTracks,
     metaItem,
@@ -56,6 +59,9 @@ const ControlBar = React.forwardRef(({
     buffering,
     onVideoScaleChanged,
     onToggleStatisticsMenu,
+    onTogglePictureInPicture,
+    menusHidden,
+    container,
     onTouchEnd,
     onButtonsMenuOpenChanged,
     ...props
@@ -140,7 +146,7 @@ const ControlBar = React.forwardRef(({
             chromecast.off('stateChanged', onStateChanged);
         };
     }, []);
-    return (
+    const controlBar = (
         <div ref={ref} {...props} onTouchStart={props.onMouseOver} onTouchMove={props.onMouseMove} onTouchEnd={onTouchEnd} className={classnames(className, styles['control-bar-container'])}>
             <SeekBar
                 className={styles['seek-bar']}
@@ -156,7 +162,7 @@ const ControlBar = React.forwardRef(({
                 seekable={seekable}
                 buffering={buffering}
             />
-            <div className={styles['control-bar-buttons-container']}>
+            <div className={classnames(styles['control-bar-buttons-container'], { [styles['menus-hidden']]: menusHidden })}>
                 <Button className={classnames(styles['control-bar-button'], { 'disabled': typeof paused !== 'boolean' })} title={paused ? t('PLAYER_PLAY') : t('PLAYER_PAUSE')} tabIndex={-1} onClick={onPlayPauseButtonClick}>
                     <Icon className={styles['icon']} name={typeof paused !== 'boolean' || paused ? 'play' : 'pause'} />
                 </Button>
@@ -197,6 +203,12 @@ const ControlBar = React.forwardRef(({
                 </Button>
                 <div className={classnames(styles['control-bar-buttons-menu-container'], { 'open': buttonsMenuOpen })}>
                     {
+                        pictureInPictureSupported &&
+                            <Button className={classnames(styles['control-bar-button'], styles['inline-button'])} title={t(pictureInPicture ? 'PLAYER_EXIT_PICTURE_IN_PICTURE' : 'PLAYER_PICTURE_IN_PICTURE')} tabIndex={-1} onClick={onTogglePictureInPicture}>
+                                <Icon className={styles['icon']} name={pictureInPicture ? 'pip-exit' : 'pip-enter'} />
+                            </Button>
+                    }
+                    {
                         statisticsAvailable &&
                             <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                                 <Icon className={styles['icon']} name={'network'} />
@@ -222,16 +234,17 @@ const ControlBar = React.forwardRef(({
                             :
                             null
                     }
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
+                    <Button className={classnames(styles['control-bar-button'], styles['inline-button'], { 'disabled': videoScale === null })} title={videoScaleLabel} tabIndex={-1} onClick={onVideoScaleChanged}>
                         <Icon className={styles['icon']} name={VIDEO_SCALE_ICONS[videoScale || 'contain']} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
+                    <Button className={classnames(styles['control-bar-button'], styles['inline-button'], { 'disabled': !stream })} tabIndex={-1} onMouseDown={onOptionsButtonMouseDown} onClick={onToggleOptionsMenu}>
                         <Icon className={styles['icon']} name={'more-horizontal'} />
                     </Button>
                 </div>
             </div>
         </div>
     );
+    return container ? ReactDOM.createPortal(controlBar, container) : controlBar;
 });
 
 ControlBar.propTypes = {
@@ -243,6 +256,10 @@ ControlBar.propTypes = {
     volume: PropTypes.number,
     muted: PropTypes.bool,
     playbackSpeed: PropTypes.number,
+    pictureInPicture: PropTypes.bool,
+    pictureInPictureSupported: PropTypes.bool,
+    menusHidden: PropTypes.bool,
+    container: PropTypes.object,
     videoScale: PropTypes.string,
     videoScaleLabel: PropTypes.string,
     live: PropTypes.bool,
@@ -271,6 +288,7 @@ ControlBar.propTypes = {
     shellCastSupported: PropTypes.bool,
     onToggleCastDevicesMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onTogglePictureInPicture: PropTypes.func,
     onMouseOver: PropTypes.func,
     onMouseMove: PropTypes.func,
     onTouchEnd: PropTypes.func,

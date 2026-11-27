@@ -46,6 +46,8 @@ const useVideo = () => {
         extraSubtitlesBold: null,
         assSubtitlesStylingActive: false,
         fullscreen: null,
+        pictureInPicturePossible: null,
+        pictureInPictureActive: null,
     });
 
     const dispatch = React.useCallback((action, options) => {
@@ -169,6 +171,10 @@ const useVideo = () => {
         setProp('fullscreen', state);
     }, [setProp]);
 
+    const setPictureInPicture = React.useCallback((state) => {
+        setProp('pictureInPictureActive', state);
+    }, [setProp]);
+
     const setSubtitlesTextColor = React.useCallback((color) => {
         setProp('subtitlesTextColor', color);
         setProp('extraSubtitlesTextColor', color);
@@ -276,6 +282,7 @@ const useVideo = () => {
         setVideoScale,
         setMediaTitle,
         setFullscreen,
+        setPictureInPicture,
     };
 };
 
