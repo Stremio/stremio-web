@@ -71,6 +71,7 @@ type SubtitlesMenuProps = {
     subtitlesSize: number | null,
     extraSubtitlesTracks: SubtitleTrack[],
     selectedExtraSubtitlesTrackId: string | null,
+    loadingExtraSubtitleId: string | null,
     extraSubtitlesOffset: number | null,
     extraSubtitlesDelay: number | null,
     extraSubtitlesSize: number | null,
