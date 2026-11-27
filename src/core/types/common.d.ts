@@ -87,11 +87,11 @@ type Catalog<T, D = any> = {
     deepLinks?: D,
 };
 
-// Raw audio format as reported by the player (only the shell / mpv provides it).
+// Audio format as reported by the player, normalized by stremio-video (only the shell / mpv provides it).
 type AudioTrackFormat = {
-    codec: string,
-    profile: string | null,
-    channels: string | null,
+    codec: string, // lowercase FFmpeg codec id, 'pcm' for all PCM variants
+    profile: string | null, // FFmpeg profile name, e.g. 'Dolby Digital Plus + Dolby Atmos'
+    channels: string | null, // layout as 'X.Y', e.g. '5.1'
     channelCount: number | null,
 };
 

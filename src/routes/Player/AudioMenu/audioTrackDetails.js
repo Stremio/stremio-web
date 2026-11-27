@@ -16,6 +16,7 @@ const CODEC_NAMES = {
     vorbis: 'Vorbis',
     mp3: 'MP3',
     mp2: 'MP2',
+    pcm: 'PCM',
 };
 
 const CHANNELS_BY_COUNT = {
@@ -52,21 +53,9 @@ const containsWord = (text, word) => {
     return new RegExp(`(^|[^a-z0-9])${escapeRegExp(word)}($|[^a-z0-9])`).test(text);
 };
 
-const normalizeCodec = (codec) => {
-    const value = codec.toLowerCase();
-    return value.startsWith('pcm_') ? 'pcm' : value;
-};
-
-const getProfile = (format) => {
-    return typeof format.profile === 'string' && format.profile.toLowerCase() !== 'unknown' ?
-        format.profile
-        :
-        '';
-};
-
 const getCodecName = (format) => {
-    const codec = normalizeCodec(format.codec);
-    const profile = getProfile(format);
+    const codec = format.codec;
+    const profile = typeof format.profile === 'string' ? format.profile : '';
 
     if (codec === 'dts') {
         // FFmpeg profiles: DTS, DTS-ES, DTS 96/24, DTS-HD HRA, DTS-HD MA, DTS Express, DTS-HD MA + DTS:X
@@ -78,17 +67,13 @@ const getCodecName = (format) => {
         return profile;
     }
 
-    const name = CODEC_NAMES[codec] ?? (codec === 'pcm' ? 'PCM' : codec.toUpperCase());
+    const name = CODEC_NAMES[codec] ?? codec.toUpperCase();
     return /atmos/i.test(profile) ? `${name} Atmos` : name;
 };
 
 const getChannels = (format) => {
     if (typeof format.channels === 'string') {
-        // FFmpeg layout names like "5.1(side)" or "7.1(wide)"
-        const layout = format.channels.toLowerCase().replace(/\(.*\)$/, '');
-        if (layout === 'mono') return '1.0';
-        if (layout === 'stereo') return '2.0';
-        if (/^\d+\.\d+(\.\d+)?$/.test(layout)) return layout;
+        return format.channels;
     }
 
     if (typeof format.channelCount === 'number' && format.channelCount > 0) {
@@ -118,7 +103,7 @@ const getMentionedCodec = (title) => {
 // A title naming a different codec ("DTS-HD MA 7.1" on a TrueHD track) is not a description of it.
 const titleDescribesFormat = (title, format) => {
     const text = title.toLowerCase();
-    if (getMentionedCodec(text) !== normalizeCodec(format.codec)) {
+    if (getMentionedCodec(text) !== format.codec) {
         return false;
     }
 

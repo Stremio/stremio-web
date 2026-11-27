@@ -26,7 +26,7 @@ describe('getAudioFormatLabel', () => {
     });
 
     it('adds Atmos from the profile', () => {
-        expect(getAudioFormatLabel(format('eac3', { profile: 'Dolby Digital Plus + Dolby Atmos', channels: '5.1(side)', channelCount: 6 })))
+        expect(getAudioFormatLabel(format('eac3', { profile: 'Dolby Digital Plus + Dolby Atmos', channels: '5.1', channelCount: 6 })))
             .toBe('Dolby Digital Plus Atmos 5.1');
         expect(getAudioFormatLabel(format('truehd', { profile: 'Dolby TrueHD + Dolby Atmos', channels: '7.1', channelCount: 8 })))
             .toBe('Dolby TrueHD Atmos 7.1');
@@ -40,22 +40,22 @@ describe('getAudioFormatLabel', () => {
     });
 
     it('names AAC variants and other codecs', () => {
-        expect(getAudioFormatLabel(format('aac', { profile: 'LC', channels: 'stereo', channelCount: 2 }))).toBe('AAC 2.0');
+        expect(getAudioFormatLabel(format('aac', { profile: 'LC', channels: '2.0', channelCount: 2 }))).toBe('AAC 2.0');
         expect(getAudioFormatLabel(format('aac', { profile: 'HE-AAC', channelCount: 2 }))).toBe('HE-AAC 2.0');
         expect(getAudioFormatLabel(format('opus', { channelCount: 2 }))).toBe('Opus 2.0');
         expect(getAudioFormatLabel(format('flac', { channelCount: 8 }))).toBe('FLAC 7.1');
-        expect(getAudioFormatLabel(format('pcm_s24le', { channelCount: 2 }))).toBe('PCM 2.0');
+        expect(getAudioFormatLabel(format('pcm', { channelCount: 2 }))).toBe('PCM 2.0');
         expect(getAudioFormatLabel(format('wmapro', { channelCount: 3 }))).toBe('WMAPRO 3ch');
     });
 
-    it('prefers a known layout name over the count', () => {
-        expect(getAudioFormatLabel(format('aac', { channels: 'mono', channelCount: 1 }))).toBe('AAC 1.0');
-        expect(getAudioFormatLabel(format('flac', { channels: '7.1(wide)', channelCount: 8 }))).toBe('FLAC 7.1');
-        expect(getAudioFormatLabel(format('ac3', { channels: '5.0(side)', channelCount: 5 }))).toBe('Dolby Digital 5.0');
+    it('prefers the layout over the count', () => {
+        expect(getAudioFormatLabel(format('aac', { channels: '1.0', channelCount: 1 }))).toBe('AAC 1.0');
+        expect(getAudioFormatLabel(format('ac3', { channels: '5.0', channelCount: 5 }))).toBe('Dolby Digital 5.0');
+        expect(getAudioFormatLabel(format('truehd', { channels: '5.1.2', channelCount: 8 }))).toBe('Dolby TrueHD 5.1.2');
     });
 
-    it('ignores an "unknown" profile and missing channels', () => {
-        expect(getAudioFormatLabel(format('eac3', { profile: 'unknown', channelCount: 6 }))).toBe('Dolby Digital Plus 5.1');
+    it('works without profile and channels', () => {
+        expect(getAudioFormatLabel(format('eac3', { channelCount: 6 }))).toBe('Dolby Digital Plus 5.1');
         expect(getAudioFormatLabel(format('flac'))).toBe('FLAC');
     });
 });
@@ -83,7 +83,7 @@ describe('getAudioTrackDetails', () => {
             .toBe('DTS-HD MA 5.1');
         expect(getAudioTrackDetails({ label: 'TrueHD 7.1 Atmos', format: format('truehd', { channels: '7.1', channelCount: 8 }) }, ENGLISH))
             .toBe('TrueHD 7.1 Atmos');
-        expect(getAudioTrackDetails({ label: 'DD 5.1', format: format('ac3', { channels: '5.1(side)', channelCount: 6 }) }, ENGLISH))
+        expect(getAudioTrackDetails({ label: 'DD 5.1', format: format('ac3', { channels: '5.1', channelCount: 6 }) }, ENGLISH))
             .toBe('DD 5.1');
         expect(getAudioTrackDetails({ label: 'AAC Stereo', format: format('aac', { channelCount: 2 }) }, ENGLISH))
             .toBe('AAC Stereo');
