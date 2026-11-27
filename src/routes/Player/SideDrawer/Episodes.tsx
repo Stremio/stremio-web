@@ -8,9 +8,9 @@ import { useCore } from 'stremio/core';
 import { usePlatform } from 'stremio/common/Platform';
 import useProfile from 'stremio/common/useProfile';
 import useSeasons from 'stremio/common/useSeasons';
-import { formatDate } from 'stremio/routes/Details/format';
-import SeasonPicker from 'stremio/routes/Details/Videos/SeasonPicker';
-import VideoRow from 'stremio/routes/Details/Videos/Video';
+import { formatDate } from 'stremio/common/format';
+import SeasonPicker from 'stremio/components/SeasonPicker';
+import VideoRow from 'stremio/components/Video';
 import styles from './SideDrawer.less';
 
 type Props = {
@@ -84,7 +84,6 @@ const Episodes = ({ videos: allVideos, season: initialSeason, selected }: Props)
                             openEpisode={openEpisode}
                             selected={video.id === selected}
                             seasonWatched={seasonWatched}
-                            minutesLeft={null}
                             onMarkVideoWatched={onMarkVideoWatched}
                             onMarkSeasonWatched={onMarkSeasonWatched}
                         />

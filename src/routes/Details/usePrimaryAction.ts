@@ -6,7 +6,7 @@ import { useModelState, useProfile } from 'stremio/common';
 import type { PrimaryAction } from './Actions';
 import useStreamPlay from './Streams/useStreamPlay';
 import useEpisodeNavigation from './useEpisodeNavigation';
-import { getEpisodeLabel, getMinutesLeft } from './format';
+import { getEpisodeLabel, getMinutesLeft } from 'stremio/common/format';
 
 type ContinueWatchingPreview = {
     items: { _id: string, state: { videoId: string | null }, deepLinks: LibraryItemDeepLinks }[],

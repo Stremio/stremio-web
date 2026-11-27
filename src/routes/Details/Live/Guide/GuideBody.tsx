@@ -3,9 +3,9 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { EPGProgram } from 'stremio/common/EPG';
-import Message from '../../Message';
-import getProgrammeKey from '../getProgrammeKey';
-import Agenda from './Agenda';
+import Message from 'stremio/components/Message';
+import getProgrammeKey from 'stremio/common/EPG/getProgrammeKey';
+import Agenda from 'stremio/components/Agenda';
 import Timeline from './Timeline';
 import type { GuideView } from './useGuide';
 
