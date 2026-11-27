@@ -6,7 +6,7 @@ import { useModelState, useProfile } from 'stremio/common';
 import type { PrimaryAction } from './Actions';
 import useStreamPlay from './Streams/useStreamPlay';
 import useEpisodeNavigation from './useEpisodeNavigation';
-import { getEpisodeLabel, getMinutesLeft } from './format';
+import { getEpisodeLabel, getMinutesLeft } from 'stremio/common/format';
 
 type ContinueWatchingPreview = {
     items: { _id: string, state: { videoId: string | null }, deepLinks: LibraryItemDeepLinks }[],
@@ -40,7 +40,7 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
 
         if (video !== null) {
             const minutes = getMinutesLeft(libraryItem, video.id);
-            if (minutes === null || href === null) {
+            if (minutes === null || lastUsed === null) {
                 return null;
             }
 
@@ -67,7 +67,7 @@ const usePrimaryAction = (metaItem: MetaItemMetaDetails | null, video: Video | n
             href: resumeHref,
             onClick: resumeHref === null ? () => openEpisode(current.deepLinks.metaDetailsStreams) : undefined,
         };
-    }, [metaItem, video, libraryItem, href, target, download, play, resumeHref, openEpisode, t]);
+    }, [metaItem, video, libraryItem, lastUsed, href, target, download, play, resumeHref, openEpisode, t]);
 };
 
 export default usePrimaryAction;

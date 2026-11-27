@@ -17,9 +17,7 @@ type Props = {
     notification: RemoteNotification,
     media: Media,
     closing: boolean,
-    held: boolean,
-    onAction: (button: RemoteNotificationButton, event: React.MouseEvent<HTMLElement>) => void,
-    primaryRef: (element: HTMLElement | null) => void,
+    onAction: (button: RemoteNotificationButton) => void,
     onCloseRequest: () => void,
     onExited: () => void,
 };
@@ -27,7 +25,7 @@ type Props = {
 const SHEET_QUERY = `(max-width: ${styles.sheetWidth})`;
 const EXIT_DURATION = Number.parseInt(styles.exitDurationMs, 10);
 
-const Prompt = ({ notification, media, closing, held, onAction, primaryRef, onCloseRequest, onExited }: Props) => {
+const Prompt = ({ notification, media, closing, onAction, onCloseRequest, onExited }: Props) => {
     const { t } = useTranslation();
     const titleId = useId();
     const bodyId = useId();
@@ -38,7 +36,7 @@ const Prompt = ({ notification, media, closing, held, onAction, primaryRef, onCl
     const plain = media.peek === null && media.image === null;
 
     useEffect(() => {
-        if (sheet || closing || held || !routeFocused) {
+        if (sheet || closing || !routeFocused) {
             return;
         }
 
@@ -51,7 +49,7 @@ const Prompt = ({ notification, media, closing, held, onAction, primaryRef, onCl
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [sheet, closing, held, routeFocused, modalsContainer, onCloseRequest]);
+    }, [sheet, closing, routeFocused, modalsContainer, onCloseRequest]);
 
     useEffect(() => {
         if (sheet || !closing) {
@@ -105,9 +103,8 @@ const Prompt = ({ notification, media, closing, held, onAction, primaryRef, onCl
                                 notification.buttons.map((button) => (
                                     <Button
                                         key={button.id}
-                                        ref={button.style === 'primary' ? primaryRef : undefined}
                                         className={classNames(styles['action'], styles[button.style === 'primary' ? 'primary' : 'secondary'])}
-                                        onClick={(event) => onAction(button, event)}
+                                        onClick={() => onAction(button)}
                                     >
                                         <div className={styles['label']}>{button.label}</div>
                                     </Button>

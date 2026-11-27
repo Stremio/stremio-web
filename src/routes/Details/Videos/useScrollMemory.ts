@@ -1,17 +1,9 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useCallback, useEffect } from 'react';
+import getScrollParent from 'stremio/common/getScrollParent';
 
 export type ScrollMemory = { key: string, top: number };
-
-export const getScrollParent = (element: HTMLElement | null): HTMLElement | null => {
-    let parent = element?.parentElement ?? null;
-    while (parent !== null && !['auto', 'scroll', 'overlay'].includes(window.getComputedStyle(parent).overflowY)) {
-        parent = parent.parentElement;
-    }
-
-    return parent;
-};
 
 const useScrollMemory = (
     listRef: React.RefObject<HTMLElement>,

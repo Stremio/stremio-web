@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useGoBack, useNavigateWithOrigin } from 'stremio-router';
@@ -8,12 +8,14 @@ import { HorizontalNavBar } from 'stremio/components/NavBar';
 import DelayedRenderer from 'stremio/components/DelayedRenderer';
 import { useContentGamepadNavigation } from 'stremio/services/GamepadNavigation';
 import { useProfile, withCoreSuspender } from 'stremio/common';
-import { hidesSpoiler } from './format';
+import { hidesSpoiler } from 'stremio/common/format';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import useDetails from './useDetails';
 import useSeason from './useSeason';
 import useEpisodeNavigation from './useEpisodeNavigation';
+import useDirectEpisode from './useDirectEpisode';
+import useLiveChannel from './useLiveChannel';
 import useExternalPlayerCallback from './useExternalPlayerCallback';
 import useDetailsActions from './useDetailsActions';
 import usePrimaryAction from './usePrimaryAction';
@@ -23,6 +25,7 @@ import Background from './Background';
 import HeroArt from './HeroArt';
 import Hero from './Hero';
 import Actions from './Actions';
+import type { PrimaryAction } from './Actions';
 import Toolbar from './Actions/Toolbar';
 import Videos from './Videos';
 import type { ScrollMemory } from './Videos';
@@ -30,7 +33,7 @@ import Streams from './Streams';
 import Live from './Live';
 import Placeholder from './Placeholder';
 import Panel from './Panel';
-import Message from './Message';
+import Message from 'stremio/components/Message';
 import styles from './Details.less';
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
@@ -48,6 +51,99 @@ const LivePlaceholder = () => {
                 <Placeholder variant={isMobile ? 'agenda' : 'timeline'} />
             </Panel>
         </div>
+    );
+};
+
+type MetaHeroArtProps = {
+    metaItem: MetaItemMetaDetails,
+    video: Video | null,
+    hideSpoilers: boolean,
+};
+
+const MetaHeroArt = ({ metaItem, video, hideSpoilers }: MetaHeroArtProps) => {
+    const { t } = useTranslation();
+
+    if (video === null) {
+        return (
+            <HeroArt art={metaItem.background} logo={metaItem.logo} name={metaItem.name} />
+        );
+    }
+
+    return (
+        <HeroArt
+            art={metaItem.background}
+            still={video.thumbnail}
+            logo={metaItem.logo}
+            name={metaItem.name}
+            label={
+                typeof video.season === 'number' && typeof video.episode === 'number' ?
+                    `${metaItem.name} · ${t('SEASON_NUMBER', { season: video.season })} · ${t('EPISODE')} ${video.episode}`
+                    :
+                    metaItem.name
+            }
+            title={video.title || video.id}
+            blurred={typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, hideSpoilers)}
+        />
+    );
+};
+
+type HeroContentProps = {
+    metaPath: ResourceRequestPath | null,
+    meta: MetaDetails['metaItem'],
+    metaItem: MetaItemMetaDetails | null,
+    placeholder: 'hero' | 'episode',
+    video: Video | null,
+    libraryItem: LibraryItem | null,
+    ratingInfo: MetaDetails['ratingInfo'],
+    primary: PrimaryAction | null,
+    actions: ReturnType<typeof useDetailsActions>,
+    isMobile: boolean,
+};
+
+const HeroContent = ({ metaPath, meta, metaItem, placeholder, video, libraryItem, ratingInfo, primary, actions, isMobile }: HeroContentProps) => {
+    const { t } = useTranslation();
+    const { share } = useMetaLinks(metaItem?.links);
+
+    if (metaPath === null) {
+        return (
+            <DelayedRenderer delay={500}>
+                <Message label={t('ERR_NO_META_SELECTED')} />
+            </DelayedRenderer>
+        );
+    }
+
+    if (meta === null) {
+        return (
+            <Message label={t('ERR_NO_ADDONS_FOR_META')} />
+        );
+    }
+
+    if (meta.content.type === 'Err') {
+        return (
+            <Message label={t('ERR_NO_META_FOUND')} />
+        );
+    }
+
+    if (metaItem === null) {
+        return (
+            <Placeholder variant={placeholder} />
+        );
+    }
+
+    return (
+        <Hero key={metaItem.id} metaItem={metaItem} video={video} libraryItem={libraryItem} compact={isMobile}>
+            <Actions
+                primary={primary}
+                trailerHref={metaItem.trailerStreams[0]?.deepLinks.player ?? null}
+                inLibrary={metaItem.inLibrary}
+                onToggleLibrary={actions.toggleLibrary}
+                watched={metaItem.watched}
+                onToggleWatched={actions.toggleWatched}
+                ratingInfo={ratingInfo}
+                shareUrl={share?.href ?? null}
+                toggles={!isMobile}
+            />
+        </Hero>
     );
 };
 
@@ -73,26 +169,16 @@ const Details = () => {
             :
             null;
     }, [metaItem, streamPath]);
-    const addonUrl = details.metaItem?.addon.transportUrl;
-    const isEpgProvider = useMemo(() => {
-        return profile.addons.some((addon) => addon.transportUrl === addonUrl && addon.manifest.behaviorHints?.epgProvider === true);
-    }, [profile.addons, addonUrl]);
-    const isLiveMeta = isEpgProvider && metaItem !== null && (metaItem.behaviorHints?.isLive === true || metaItem.type === 'tv');
+    const live = useLiveChannel(type, details, metaItem, profile.addons);
     const canMarkWatched = video !== null && details.libraryItem?.state.video_id === video.id && details.libraryItem.state.duration > 0;
-    const { share } = useMetaLinks(metaItem?.links);
-    const trailerHref = metaItem?.trailerStreams[0]?.deepLinks.player ?? null;
     const [season, setSeason] = useSeason();
     const actions = useDetailsActions(metaItem, details.libraryItem);
     const primary = usePrimaryAction(metaItem, video, details.libraryItem, details.streams, canMarkWatched);
     const originPath = useMemo(() => getStoredOrigin(), [getStoredOrigin]);
     const leave = useGoBack(originPath);
-    const { fromVideos, insertVideos, openEpisode } = useEpisodeNavigation();
-    const directVideo = video !== null && video.id === videoId && !fromVideos && !metaItem?.behaviorHints.defaultVideoId ? video : null;
-    const [streams, setStreams] = useState(details.streams);
-    if (directVideo === null && streams !== details.streams) {
-        setStreams(details.streams);
-    }
+    const { fromVideos, openEpisode } = useEpisodeNavigation();
 
+    const streamsLoading = streamPath === null && metaPath !== null && type === 'movie' && metaLoading;
     const videosVisible = streamPath === null && metaPath !== null && !(type === 'movie' && metaLoading);
     const [videosMounted, setVideosMounted] = useState(videosVisible);
     if (videosVisible && !videosMounted) {
@@ -102,15 +188,8 @@ const Details = () => {
 
     useExternalPlayerCallback({ type, id, videoId }, details);
     useContentGamepadNavigation(contentRef, GAMEPAD_HANDLER_ID);
-    useHeroCollapse(rootRef, contentRef, isMobile && !isLiveMeta);
-
-    const insertedVideosKeyRef = useRef<string | null>(null);
-    useEffect(() => {
-        if (directVideo !== null && insertedVideosKeyRef.current !== location.key) {
-            insertedVideosKeyRef.current = location.key;
-            insertVideos(directVideo);
-        }
-    }, [directVideo, location.key, insertVideos]);
+    useHeroCollapse(rootRef, contentRef, isMobile && live.channel === null);
+    const streams = useDirectEpisode(video, videoId, metaItem, details.streams);
 
     const onEpisodeSearch = useCallback((season: number, episode: number) => {
         const nextVideoId = encodeURIComponent(`${id}:${season}:${episode}`);
@@ -133,7 +212,7 @@ const Details = () => {
         />
     );
 
-    if (type === 'tv' && (details.selected === null || (isEpgProvider && details.metaItem?.content.type === 'Loading'))) {
+    if (live.loading) {
         return (
             <div className={styles['details']}>
                 {navBar}
@@ -142,13 +221,13 @@ const Details = () => {
         );
     }
 
-    if (isLiveMeta && metaItem !== null) {
+    if (live.channel !== null) {
         return (
             <Live
-                key={metaItem.id}
+                key={live.channel.id}
                 className={styles['details']}
                 contentRef={contentRef}
-                meta={metaItem}
+                meta={live.channel}
                 streams={details.streams}
                 isMobile={isMobile}
                 onToggleLibrary={actions.toggleLibrary}
@@ -170,53 +249,23 @@ const Details = () => {
             <div ref={contentRef} className={styles['content']}>
                 {
                     isMobile && metaItem !== null ?
-                        <HeroArt
-                            art={metaItem.background}
-                            still={video?.thumbnail}
-                            logo={metaItem.logo}
-                            name={metaItem.name}
-                            label={
-                                video !== null && typeof video.season === 'number' && typeof video.episode === 'number' ?
-                                    `${metaItem.name} · ${t('SEASON_NUMBER', { season: video.season })} · ${t('EPISODE')} ${video.episode}`
-                                    :
-                                    video !== null ? metaItem.name : null
-                            }
-                            title={video !== null ? video.title || video.id : null}
-                            blurred={video !== null && typeof video.thumbnail === 'string' && video.thumbnail.length > 0 && hidesSpoiler(video, profile.settings.hideSpoilers)}
-                        />
+                        <MetaHeroArt metaItem={metaItem} video={video} hideSpoilers={profile.settings.hideSpoilers} />
                         :
                         null
                 }
                 <div className={styles['hero']}>
-                    {
-                        metaPath === null ?
-                            <DelayedRenderer delay={500}>
-                                <Message label={t('ERR_NO_META_SELECTED')} />
-                            </DelayedRenderer>
-                            :
-                            details.metaItem === null ?
-                                <Message label={t('ERR_NO_ADDONS_FOR_META')} />
-                                :
-                                details.metaItem.content.type === 'Err' ?
-                                    <Message label={t('ERR_NO_META_FOUND')} />
-                                    :
-                                    metaItem === null ?
-                                        <Placeholder variant={streamPath !== null && type !== 'movie' ? 'episode' : 'hero'} />
-                                        :
-                                        <Hero key={metaItem.id} metaItem={metaItem} video={video} libraryItem={details.libraryItem} compact={isMobile}>
-                                            <Actions
-                                                primary={primary}
-                                                trailerHref={trailerHref}
-                                                inLibrary={metaItem.inLibrary}
-                                                onToggleLibrary={actions.toggleLibrary}
-                                                watched={metaItem.watched}
-                                                onToggleWatched={actions.toggleWatched}
-                                                ratingInfo={details.ratingInfo}
-                                                shareUrl={share?.href ?? null}
-                                                toggles={!isMobile}
-                                            />
-                                        </Hero>
-                    }
+                    <HeroContent
+                        metaPath={metaPath}
+                        meta={details.metaItem}
+                        metaItem={metaItem}
+                        placeholder={streamPath !== null && type !== 'movie' ? 'episode' : 'hero'}
+                        video={video}
+                        libraryItem={details.libraryItem}
+                        ratingInfo={details.ratingInfo}
+                        primary={primary}
+                        actions={actions}
+                        isMobile={isMobile}
+                    />
                 </div>
                 {
                     streamPath !== null ?
@@ -228,12 +277,15 @@ const Details = () => {
                             onEpisodeSearch={onEpisodeSearch}
                         />
                         :
-                        metaPath !== null && type === 'movie' && metaLoading ?
-                            <Panel ariaLabel={t('STREAMS')} header={<Placeholder variant={'control'} />}>
-                                <Placeholder variant={'streams'} />
-                            </Panel>
-                            :
-                            null
+                        null
+                }
+                {
+                    streamsLoading ?
+                        <Panel ariaLabel={t('STREAMS')} header={<Placeholder variant={'control'} />}>
+                            <Placeholder variant={'streams'} />
+                        </Panel>
+                        :
+                        null
                 }
                 {
                     videosMounted ?
@@ -267,10 +319,13 @@ const Details = () => {
                         ratingInfo={details.ratingInfo}
                     />
                     :
-                    isMobile && metaLoading ?
-                        <Placeholder variant={'dock'} />
-                        :
-                        null
+                    null
+            }
+            {
+                isMobile && metaLoading ?
+                    <Placeholder variant={'dock'} />
+                    :
+                    null
             }
         </div>
     );

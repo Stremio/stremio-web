@@ -4,11 +4,11 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { EPGProgram, formatEpgTimeRange, getEpgProgress } from 'stremio/common/EPG';
-import { parseDate } from '../format';
-import Links from '../Hero/Links';
+import { parseDate } from 'stremio/common/format';
+import Links from 'stremio/components/Links';
 import useMetaLinks from 'stremio/common/useMetaLinks';
 import ContentRating from 'stremio/components/ContentRating';
-import useFormatters from './Guide/useFormatters';
+import useFormatters from 'stremio/common/EPG/useFormatters';
 import getRelativeTime from './getRelativeTime';
 import styles from './Programme.less';
 

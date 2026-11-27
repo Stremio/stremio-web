@@ -2,7 +2,8 @@
 
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EPGProgram, epgDateKey } from 'stremio/common/EPG';
+import type { EPGProgram } from './types';
+import { epgDateKey } from './utils';
 
 const useFormatters = (now: number) => {
     const { t, i18n } = useTranslation();
