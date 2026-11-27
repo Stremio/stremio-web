@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import Button from 'stremio/components/Button';
 import { useProfile } from 'stremio/common';
-import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from '../format';
+import { formatDate, getMinutesLeft, hidesSpoiler, parseDate } from 'stremio/common/format';
 import useMetaLinks from 'stremio/common/useMetaLinks';
 import Logo from 'stremio/components/Logo';
 import Still from './Still';
 import Facts from 'stremio/components/MetaPreview/Facts';
 import Description from './Description';
-import Links from './Links';
+import Links from 'stremio/components/Links';
 import styles from './Hero.less';
 
 type Props = {

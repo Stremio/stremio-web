@@ -1,7 +1,8 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { useMemo } from 'react';
-import { EPGChannel, EPGProgram, toEpgProgram } from 'stremio/common/EPG';
+import type { EPGChannel, EPGProgram } from './types';
+import { toEpgProgram } from './utils';
 import getProgrammeKey from './getProgrammeKey';
 
 const useProgrammes = (meta: MetaItem & { deepLinks?: MetaItemDeepLinks }, now: number, selectedKey: string | null) => {

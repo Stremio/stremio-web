@@ -6,20 +6,20 @@ import Icon from '@stremio/stremio-icons/react';
 import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import ProgressBar from 'stremio/components/ProgressBar';
+import LiveFlag from 'stremio/components/LiveFlag';
 import { EPGProgram, epgDateKey, getEpgProgress } from 'stremio/common/EPG';
-import LiveFlag from '../LiveFlag';
-import getProgrammeKey from '../getProgrammeKey';
-import useFormatters from './useFormatters';
-import useReveal from './useReveal';
-import useLiveVisible from './useLiveVisible';
+import getProgrammeKey from 'stremio/common/EPG/getProgrammeKey';
+import useFormatters from 'stremio/common/EPG/useFormatters';
+import useReveal from 'stremio/common/EPG/useReveal';
+import useLiveVisible from 'stremio/common/EPG/useLiveVisible';
 import styles from './Agenda.less';
 
 type Props = {
     programmes: EPGProgram[],
     now: number,
     selectedKey: string | null,
-    nowToken: number,
-    isMobile: boolean,
+    nowToken?: number,
+    isMobile?: boolean,
     onSelect: (key: string) => void,
     onLiveVisible?: (visible: boolean) => void,
 };
@@ -34,7 +34,7 @@ const renderFallback = () => null;
 
 const getSelectedRow = (container: HTMLElement) => container.querySelector<HTMLElement>('[aria-pressed="true"]');
 
-const Agenda = ({ programmes, now, selectedKey, nowToken, isMobile, onSelect, onLiveVisible }: Props) => {
+const Agenda = ({ programmes, now, selectedKey, nowToken = 0, isMobile = false, onSelect, onLiveVisible }: Props) => {
     const { time, timeRange, duration, dayLabel } = useFormatters(now);
     const containerRef = useRef<HTMLDivElement>(null);
 

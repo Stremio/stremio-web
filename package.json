@@ -22,7 +22,7 @@
         "@babel/runtime": "7.29.2",
         "@sentry/browser": "8.42.0",
         "@stremio/stremio-colors": "5.2.0",
-        "@stremio/stremio-core-web": "0.67.2",
+        "@stremio/stremio-core-web": "0.67.3",
         "@stremio/stremio-icons": "5.18.0",
         "@stremio/stremio-video": "0.1.1",
         "bowser": "2.14.1",
@@ -49,7 +49,7 @@
         "react-router": "6.30.0",
         "react-router-dom": "6.30.0",
         "spatial-navigation-polyfill": "github:Stremio/spatial-navigation#64871b1422466f5f45d24ebc8bbd315b2ebab6a6",
-        "stremio-translations": "github:Stremio/stremio-translations#5819bfed8c8cba8a746b5a11eb17169a54ede5e5",
+        "stremio-translations": "github:Stremio/stremio-translations#858d24d7cb660c6b9fdf19d8757051e53f488300",
         "url": "0.11.4",
         "use-long-press": "^3.3.0",
         "workbox-window": "7.4.1"

@@ -6,12 +6,13 @@ import Button from 'stremio/components/Button';
 import Image from 'stremio/components/Image';
 import { EPGProgram, getEpgProgress } from 'stremio/common/EPG';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
-import LiveFlag from '../LiveFlag';
-import getProgrammeKey from '../getProgrammeKey';
-import useFormatters from './useFormatters';
-import useReveal from './useReveal';
-import useLiveVisible from './useLiveVisible';
-import { getScrollParent, scrollToFraction } from './scroll';
+import LiveFlag from 'stremio/components/LiveFlag';
+import getProgrammeKey from 'stremio/common/EPG/getProgrammeKey';
+import useFormatters from 'stremio/common/EPG/useFormatters';
+import useReveal from 'stremio/common/EPG/useReveal';
+import useLiveVisible from 'stremio/common/EPG/useLiveVisible';
+import getScrollParent from 'stremio/common/getScrollParent';
+import { scrollToFraction } from 'stremio/common/EPG/scroll';
 import styles from './Timeline.less';
 
 type Props = {
