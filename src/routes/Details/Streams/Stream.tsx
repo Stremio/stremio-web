@@ -9,7 +9,7 @@ import Image from 'stremio/components/Image';
 import Popup from 'stremio/components/Popup';
 import ProgressBar from 'stremio/components/ProgressBar';
 import useToast from 'stremio/common/Toast/useToast';
-import useRowMenu from '../useRowMenu';
+import useRowMenu from 'stremio/common/useRowMenu';
 import useStreamPlay from './useStreamPlay';
 import styles from './Stream.less';
 

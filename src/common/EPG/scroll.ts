@@ -1,15 +1,7 @@
 // Copyright (C) 2017-2026 Smart code 203358507
 
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
-
-export const getScrollParent = (element: HTMLElement | null): HTMLElement | null => {
-    let parent = element?.parentElement ?? null;
-    while (parent !== null && !['auto', 'scroll', 'overlay'].includes(window.getComputedStyle(parent).overflowY)) {
-        parent = parent.parentElement;
-    }
-
-    return parent;
-};
+import getScrollParent from 'stremio/common/getScrollParent';
 
 const getOffsetInParent = (element: HTMLElement, parent: HTMLElement) => {
     return getInterfaceRect(element).top - getInterfaceRect(parent).top;

@@ -8,7 +8,7 @@ import { HorizontalNavBar } from 'stremio/components/NavBar';
 import DelayedRenderer from 'stremio/components/DelayedRenderer';
 import { useContentGamepadNavigation } from 'stremio/services/GamepadNavigation';
 import { useProfile, withCoreSuspender } from 'stremio/common';
-import { hidesSpoiler } from './format';
+import { hidesSpoiler } from 'stremio/common/format';
 import useMediaQuery from 'stremio/common/useMediaQuery';
 import screenSizes from 'stremio/common/screen-sizes.less';
 import useDetails from './useDetails';
@@ -33,7 +33,7 @@ import Streams from './Streams';
 import Live from './Live';
 import Placeholder from './Placeholder';
 import Panel from './Panel';
-import Message from './Message';
+import Message from 'stremio/components/Message';
 import styles from './Details.less';
 
 const GAMEPAD_HANDLER_ID = 'metadetails';
