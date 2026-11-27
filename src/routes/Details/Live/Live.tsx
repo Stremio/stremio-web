@@ -97,20 +97,17 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
     );
 
     const playback = (
-        <React.Fragment>
-            <Playback
-                className={styles['playback']}
-                streams={streams}
-                streamsOpen={streamsOpen}
-                inLibrary={meta.inLibrary}
-                current={current}
-                live={live}
-                now={now}
-                onStreamsToggle={onStreamsToggle}
-                onToggleLibrary={onToggleLibrary}
-            />
-            {!streamsOpen ? <OfflineNotice /> : null}
-        </React.Fragment>
+        <Playback
+            className={styles['playback']}
+            streams={streams}
+            streamsOpen={streamsOpen}
+            inLibrary={meta.inLibrary}
+            current={current}
+            live={live}
+            now={now}
+            onStreamsToggle={onStreamsToggle}
+            onToggleLibrary={onToggleLibrary}
+        />
     );
 
     return (
@@ -130,6 +127,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                             <section className={styles['summary']}>
                                 <Programme programme={selected} now={now} centered={isMobile} />
                                 {playback}
+                                {!streamsOpen ? <OfflineNotice /> : null}
                             </section>
                             <h2 className={styles['guide-title']}>{t('LIVE_TV_SCHEDULE')}</h2>
                             {panel}
@@ -150,6 +148,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                                     <div className={styles['spacer']} />
                                     <Programme programme={selected} now={now} centered={isMobile} />
                                     {playback}
+                                    {!streamsOpen ? <OfflineNotice /> : null}
                                 </div>
                             </div>
                             {
