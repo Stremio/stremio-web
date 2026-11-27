@@ -44,12 +44,14 @@
 
                 .info {
                     flex: 1;
+                    min-width: 0;
                     display: flex;
                     flex-direction: column;
                     gap: 0.25rem;
 
                     .lang, .label {
                         flex: auto;
+                        overflow: hidden;
                         text-wrap: nowrap;
                         text-overflow: ellipsis;
                     }
