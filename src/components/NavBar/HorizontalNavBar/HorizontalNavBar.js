@@ -27,7 +27,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
         <nav {...props} className={classnames(className, styles['horizontal-nav-bar-container'])}>
             {
                 backButton ?
-                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} onClick={onBackButtonClick || goBack}>
+                    <Button className={classnames(styles['button-container'], styles['back-button-container'])} tabIndex={-1} onClick={onBackButtonClick || goBack}>
                         <Icon className={styles['icon']} name={'chevron-back'} />
                     </Button>
                     :
@@ -62,7 +62,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                 }
                 {
                     supported && fullscreenButton ?
-                        <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
+                        <Button className={styles['button-container']} title={fullscreen ? t('EXIT_FULLSCREEN') : t('ENTER_FULLSCREEN')} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
                             <Icon className={styles['icon']} name={fullscreen ? 'minimize' : 'maximize'} />
                         </Button>
                         :

@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { useLocation, useNavigate } = require('react-router');
+const { useNavigate } = require('react-router');
 const { useSearchParams } = require('react-router-dom');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
@@ -23,13 +23,11 @@ const SearchBar = React.memo(({ className, query, active }) => {
     const routeFocused = useRouteFocused();
     const searchHistory = useSearchHistory();
     const localSearch = useLocalSearch();
-    const location = useLocation();
     const navigate = useNavigate();
     const { handlePlayUrl } = usePlayUrl();
 
     const [historyOpen, openHistory, closeHistory, ] = useBinaryState(query === null ? true : false);
     const [currentQuery, setCurrentQuery] = React.useState(query || '');
-    const [showInputFocus, setShowInputFocus] = React.useState(() => location.state?.focusSearch === true);
     const [previousRoute, setPreviousRoute] = React.useState({ query, active });
     const [, setSearchParams] = useSearchParams();
     const searchInputRef = React.useRef(null);
@@ -40,9 +38,9 @@ const SearchBar = React.memo(({ className, query, active }) => {
         setCurrentQuery(query || '');
     }
 
-    const searchBarOnClick = React.useCallback((event) => {
+    const searchBarOnClick = React.useCallback(() => {
         if (!active) {
-            navigate('/search', { state: { focusSearch: event.detail === 0 } });
+            navigate('/search');
         }
     }, [active, navigate]);
 
@@ -80,9 +78,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
         closeHistory();
     }, [setSearchParams, closeHistory]);
 
-    const queryInputClear = React.useCallback((event) => {
-        setShowInputFocus(event.detail === 0);
-        searchInputRef.current?.focus();
+    const queryInputClear = React.useCallback(() => {
         setCurrentQuery('');
         setSearchParams({});
         navigate('/search');
@@ -108,7 +104,7 @@ const SearchBar = React.memo(({ className, query, active }) => {
                 active ?
                     <TextInput
                         ref={searchInputRef}
-                        className={classnames(styles['search-input'], { [styles['keyboard-focus']]: showInputFocus })}
+                        className={styles['search-input']}
                         type={'text'}
                         placeholder={t('SEARCH_OR_PASTE_LINK')}
                         value={currentQuery}
@@ -116,25 +112,15 @@ const SearchBar = React.memo(({ className, query, active }) => {
                         onPaste={queryInputOnPaste}
                         onSubmit={queryInputOnSubmit}
                         onClick={openHistory}
-                        onKeyDown={() => setShowInputFocus(true)}
-                        onPointerDown={() => setShowInputFocus(false)}
-                        onBlur={() => setShowInputFocus(true)}
                     />
                     :
                     <Button className={styles['search-input']}>
                         <div className={styles['placeholder-label']}>{ t('SEARCH_OR_PASTE_LINK') }</div>
                     </Button>
             }
-            {
-                currentQuery.length > 0 ?
-                    <Button className={styles['submit-button-container']} title={t('CLEAR')} onClick={queryInputClear}>
-                        <Icon className={styles['icon']} name={'close'} />
-                    </Button>
-                    :
-                    <div className={styles['submit-button-container']} aria-hidden={'true'}>
-                        <Icon className={styles['icon']} name={'search'} />
-                    </div>
-            }
+            <Button className={styles['submit-button-container']} title={currentQuery.length > 0 ? t('CLEAR') : undefined} onClick={currentQuery.length > 0 ? queryInputClear : undefined}>
+                <Icon className={styles['icon']} name={currentQuery.length > 0 ? 'close' : 'search'} />
+            </Button>
             {
                 historyOpen && (searchHistory?.items?.length || localSearch?.items?.length) ?
                     <div className={styles['menu-container']}>

@@ -53,7 +53,7 @@ const App = () => {
                 toggleGamepadModal();
                 break;
             case 'navigateSearch':
-                navigate('/search', { state: { focusSearch: true } });
+                navigate('/search');
                 break;
             case 'navigateTabs': {
                 const index = Number(key) - 1;
