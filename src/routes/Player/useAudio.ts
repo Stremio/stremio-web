@@ -11,6 +11,7 @@ type Args = {
             audioTracks: AudioTrack[],
             selectedAudioTrackId: string | null,
             audioDelay?: number | null,
+            manifest?: { props: string[] } | null,
         },
         setAudioTrack: (id: string) => void,
         setAudioDelay: (delay: number) => void,
@@ -116,7 +117,8 @@ const useAudio = ({ player, video, settings, streamStateChanged }: Args) => {
         video.state.stream,
     ]);
 
-    const audioDelaySupported = typeof video.state.audioDelay === 'number';
+    const audioDelaySupported = typeof video.state.audioDelay === 'number' && video.state.manifest?.props.includes('audioDelay') === true;
+    const tracksLoaded = video.state.audioTracks.length > 0;
     const savedAudioDelay = player.streamState?.audioDelay;
 
     const appliedDelay = useRef<number | null>(null);
@@ -132,13 +134,13 @@ const useAudio = ({ player, video, settings, streamStateChanged }: Args) => {
     }, [video.state.stream]);
 
     useEffect(() => {
-        if (video.state.stream === null || !audioDelaySupported || typeof savedAudioDelay !== 'number' || savedAudioDelay === appliedDelay.current) {
+        if (video.state.stream === null || !tracksLoaded || !audioDelaySupported || typeof savedAudioDelay !== 'number' || savedAudioDelay === appliedDelay.current) {
             return;
         }
 
         appliedDelay.current = savedAudioDelay;
         videoRef.current.setAudioDelay(savedAudioDelay);
-    }, [audioDelaySupported, savedAudioDelay, video.state.stream]);
+    }, [audioDelaySupported, tracksLoaded, savedAudioDelay, video.state.stream]);
 
     return {
         selectTrack,
