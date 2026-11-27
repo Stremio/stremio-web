@@ -11,6 +11,7 @@ import HeroArt from '../HeroArt';
 import Logo from 'stremio/components/Logo';
 import Panel from '../Panel';
 import Streams from '../Streams';
+import OfflineNotice from '../Streams/OfflineNotice';
 import Programme from 'stremio/components/Programme';
 import Playback from './Playback';
 import StreamPicker from './StreamPicker';
@@ -126,6 +127,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                             <section className={styles['summary']}>
                                 <Programme programme={selected} now={now} centered={isMobile} />
                                 {playback}
+                                {!streamsOpen ? <OfflineNotice /> : null}
                             </section>
                             <h2 className={styles['guide-title']}>{t('LIVE_TV_SCHEDULE')}</h2>
                             {panel}
@@ -146,6 +148,7 @@ const Live = ({ className, contentRef, meta, streams, isMobile, onToggleLibrary,
                                     <div className={styles['spacer']} />
                                     <Programme programme={selected} now={now} centered={isMobile} />
                                     {playback}
+                                    {!streamsOpen ? <OfflineNotice /> : null}
                                 </div>
                             </div>
                             {
