@@ -534,15 +534,14 @@ const Player = () => {
         };
     }, [onPlayPause, onGamepadSeekAndVol]);
 
-    const canGuessTorrentFile = !casting && streamingServer.baseUrl !== null &&
-        player.selected?.streamRequest?.path?.type === 'series' &&
-        typeof player.selected.stream.infoHash === 'string' &&
-        typeof player.selected.stream.fileIdx !== 'number' && !player.selected.stream.fileMustInclude?.length;
     const [torrentMetadataTimedOutFor, setTorrentMetadataTimedOutFor] = React.useState(null);
     const torrentMetadataTimedOut = torrentMetadataTimedOutFor === player.selected;
-    const waitingForTorrentEpisode = canGuessTorrentFile && !torrentMetadataTimedOut && player.metaItem?.type === 'Loading';
-    const playbackStream = canGuessTorrentFile && !torrentMetadataTimedOut && player.seriesInfo ?
-        player.selected.stream : player.stream?.content;
+    const waitingForTorrentEpisode = !torrentMetadataTimedOut && player.metaItem?.type === 'Loading' &&
+        !casting && streamingServer.baseUrl !== null &&
+        player.selected?.streamRequest?.path?.type === 'series' &&
+        typeof player.selected.stream.infoHash === 'string' &&
+        (player.selected.stream.fileIdx === null || typeof player.selected.stream.fileIdx === 'undefined') &&
+        !player.selected.stream.fileMustInclude?.length;
 
     React.useEffect(() => {
         if (!waitingForTorrentEpisode) return;
@@ -558,7 +557,7 @@ const Player = () => {
         if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading' && !waitingForTorrentEpisode) {
             video.load({
                 stream: {
-                    ...playbackStream,
+                    ...player.stream.content,
                     subtitles: streamSubtitles
                 },
                 autoplay: true,
@@ -584,14 +583,14 @@ const Player = () => {
                         streamingServer.selected.transportUrl
                     :
                     null,
-                seriesInfo: player.seriesInfo,
+                seriesInfo: torrentMetadataTimedOut ? null : player.seriesInfo,
                 mediaTitle: player.title,
             }, {
                 chromecastTransport: services.chromecast.active ? services.chromecast.transport : null,
                 shellTransport: platform.shell.active ? platform.shell : null,
             });
         }
-    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek, waitingForTorrentEpisode, playbackStream]);
+    }, [streamingServer.baseUrl, player.selected, player.stream, streamSubtitles, forceTranscoding, casting, cancelKeyboardSeek, waitingForTorrentEpisode]);
 
     React.useEffect(() => {
         !seeking && timeChanged(video.state.time, video.state.duration, video.state.manifest?.name);
