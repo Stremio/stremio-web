@@ -9,6 +9,8 @@ import Icon from '@stremio/stremio-icons/react';
 import { getInterfaceRect } from 'stremio/common/interfaceScale';
 import styles from './Dropdown.less';
 
+const TYPEAHEAD_TIMEOUT_MS = 700;
+
 type Props = {
     options: MultiselectMenuOption[];
     value?: any;
@@ -22,6 +24,7 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
     const { t } = useTranslation();
     const optionsRef = useRef(new Map());
     const containerRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef({ text: '', lastKeyTime: 0 });
     const selectedOptionValue = options.find((opt) => opt.value === value)?.value;
 
     const handleSetOptionRef = useCallback((optionValue: any) => (node: HTMLButtonElement | null) => {
@@ -47,6 +50,46 @@ const Dropdown = ({ level, setLevel, options, onSelect, value, menuOpen }: Props
             container.scrollBy({ top: optionBounds.top - listBounds.top, behavior: 'smooth' });
         }
     }, [menuOpen, selectedOptionValue]);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.defaultPrevented || event.isComposing || event.ctrlKey || event.altKey || event.metaKey ||
+                !container.getClientRects().length) {
+                return;
+            }
+
+            const focused = document.activeElement;
+            if (focused !== document.body && !container.parentElement?.contains(focused)) return;
+
+            const backspace = event.key === 'Backspace';
+            if (!backspace && Array.from(event.key).length !== 1) return;
+            const { text, lastKeyTime } = searchRef.current;
+            const previous = event.timeStamp - lastKeyTime <= TYPEAHEAD_TIMEOUT_MS ? text : '';
+            if (event.key === ' ' && previous.length === 0) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            const query = backspace ? Array.from(previous).slice(0, -1).join('') : previous + event.key.toLocaleLowerCase();
+            searchRef.current = { text: query, lastKeyTime: event.timeStamp };
+            if (query.length === 0) return;
+
+            const characters = Array.from(query);
+            const cycling = !backspace && characters.every((character) => character === characters[0]);
+            const prefix = cycling ? characters[0] : query;
+            const choices = options.filter((option) => optionsRef.current.has(option.value));
+            const current = choices.findIndex((option) => optionsRef.current.get(option.value) === focused);
+            const start = current < 0 ? 0 : current + Number(cycling);
+            const match = [...choices.slice(start), ...choices.slice(0, start)]
+                .find((option) => option.label.trimStart().toLocaleLowerCase().startsWith(prefix));
+            if (match) optionsRef.current.get(match.value)?.focus();
+        };
+
+        window.addEventListener('keydown', onKeyDown, true);
+        return () => window.removeEventListener('keydown', onKeyDown, true);
+    }, [options]);
 
     return (
         <div
